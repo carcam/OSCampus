@@ -1,0 +1,10 @@
+mkdir:
+    - components/com_oscampus
+    - administrator/components/com_oscampus
+    - media/com_oscampus
+symlinks:
+    - src/oscampus.xml: administrator/components/com_oscampus/oscampus.xml
+    - src/script.install.php : administrator/components/com_oscampus/script.install.php
+    - src/admin : administrator/components/com_oscampus
+    - src/site : components/com_oscampus
+    - media : media/com_oscampus

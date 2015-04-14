@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5" method="upgrade">
+    <name>COM_OSCAMPUS</name>
+    <author>OSTraining</author>
+    <creationDate>April 13, 2015</creationDate>
+    <copyright>Copyright (C) 2015 OSTraining.com</copyright>
+    <license>GPL v3</license>
+    <authorEmail>info@ostraining.com</authorEmail>
+    <authorUrl>https://www.ostraining.com</authorUrl>
+    <version>0.0.0</version>
+    <description>COM_OSCAMPUS_COMPONENT_DESCRIPTION</description>
+
+    <scriptfile>script.install.php</scriptfile>
+
+<!--
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install/mysql/install.sql</file>
+        </sql>
+    </install>
+-->
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install/mysql/uninstall.sql</file>
+        </sql>
+    </uninstall>
+
+    <update>
+        <schemas>
+            <schemapath type="mysql" charset="utf8">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+
+    <media destination="com_oscampus" folder="media">
+    </media>
+
+    <files folder="site">
+        <filename>controller.php</filename>
+        <filename>oscampus.php</filename>
+    </files>
+
+    <administration>
+        <menu img="../media/com_oscampus/images/icon-16-oscampus.png">COM_OSCAMPUS_ADMINMENU</menu>
+
+        <files folder="admin">
+            <folder>language</folder>
+            <folder>library</folder>
+            <folder>sql</folder>
+            <filename>access.xml</filename>
+            <filename>controller.php</filename>
+            <filename>include.php</filename>
+            <filename>oscampus.php</filename>
+        </files>
+    </administration>
+
+    <alledia>
+        <element>oscampus</element>
+        <namespace>Oscampus</namespace>
+        <license>free</license>
+
+        <obsolete/>
+    </alledia>
+</extension>
