@@ -36,6 +36,7 @@
     </media>
 
     <files folder="site">
+        <folder>views</folder>
         <filename>controller.php</filename>
         <filename>oscampus.php</filename>
     </files>
