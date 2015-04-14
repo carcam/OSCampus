@@ -32,6 +32,7 @@
     </update>
 
     <media destination="com_oscampus" folder="media">
+        <folder>css</folder>
     </media>
 
     <files folder="site">

@@ -1,0 +1,695 @@
+/* General
+ ========================================================================== */
+.ost-container p,
+.ost-container h1,
+.ost-container h2,
+.ost-container h3,
+.ost-container div,
+.ost-container li,
+.ost-container span,
+.ost-container label,
+.ost-container td {
+    color: #333333;
+    text-align: left;
+}
+
+.ost-container input,
+.ost-container textarea,
+.ost-container select {
+    color: #555555;
+}
+
+.ost-container div{
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.ost-container p{
+    font-size: 13px;
+    line-height: 20px;
+    margin: 0 0 20px;
+    font-weight: 400;
+}
+
+.ost-container h1,
+.ost-container h2,
+.ost-container h3,
+.ost-container h4 {
+    color: #333333;
+    line-height: 30px;
+    font-weight: 600;
+    margin: 20px 0;
+    padding: 5px 0;
+    text-transform: none;
+}
+
+.ost-container h1 {
+    font-size: 35px;
+    line-height: 40px;
+}
+
+.ost-container h2 {
+    font-size: 30px;
+    line-height: 35px;
+}
+
+.ost-container h3 {
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.ost-container h4 {
+    font-size: 18px;
+    line-height: 23px;
+    margin: 0 0 20px 0;
+    padding: 0 0 5px 0;
+}
+
+.ost-container h2 span,
+.ost-container h2 span i:before,
+.ost-container h3 span,
+.ost-container h3 span i:before,
+.ost-container h4 span,
+.ost-container h4 span i:before {
+    color: #999999;
+    font-weight: 300;
+}
+
+.ost-container i:before{
+    color: #333333;
+}
+
+.ost-container .page-header {
+    border: 0;
+    padding: 0;
+    margin: 0 0 40px 0;
+}
+
+.ost-container a {
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    text-decoration: underline;
+    color: #2184cd;
+}
+
+.ost-container .simplerenew-plan {
+    -moz-transition: all 0.2s linear;
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
+.ost-container a:hover {
+    color: #666666;
+}
+
+.ost-container strong {
+    font-weight: 600;
+}
+
+/* Form elements
+ ========================================================================== */
+.ost-container input[type="text"],
+.ost-container input[type="email"],
+.ost-container input[type="password"],
+.ost-container textarea,
+.ost-container select {
+    color: #666666;
+    font-size: 13px;
+    margin: 0 0 20px;
+    font-weight: 400;
+    border: 1px solid #999999;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -o-border-radius: 2px;
+    padding: 9px 10px;
+    width: 90%;
+    background: #ffffff;
+}
+
+.ost-container input[type="text"]:focus,
+.ost-container input[type="email"]:focus,
+.ost-container input[type="password"]:focus,
+.ost-container textarea:focus,
+.ost-container select:focus,
+.ost-container input:focus:invalid:focus, 
+.ost-container textarea:focus:invalid:focus, 
+.ost-container select:focus:invalid:focus{
+    color: #666666;
+    border-color: #999999;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    background: #ffffff;
+}
+
+.ost-container select {
+    height: 38px;
+}
+
+.ost-container input[readonly],
+.ost-container input[readonly]:hover,
+.ost-container input[readonly]:focus{
+    background: #f2f2f2;
+}
+
+.ost-container input.small-width,
+.ost-container textarea.small-width {
+    width: 55px;
+}
+
+.ost-container select.small-width {
+    width: 90px;
+}
+
+.ost-container input.medium-width,
+.ost-container textarea.medium-width {
+    width: 130px;
+}
+
+.ost-container select.medium-width {
+    width: 140px;
+}
+
+.ost-container input[type="radio"] {
+    margin-bottom: 5px;
+}
+
+.ost-container input[type="checkbox"] {
+    margin: 0 0 2px 0;
+}
+
+.ost-container input[type="submit"],
+.ost-container button {
+    background: #666666;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -o-border-radius: 2px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 18px;
+    margin-bottom: 0;
+    padding: 4px 12px;
+    text-align: center;
+    transition: all 0.2s linear 0s;
+    -moz-transition: all 0.2s linear 0s;
+    -webkit-transition: all 0.2s linear 0s;
+    -o-transition: all 0.2s linear 0s;
+    vertical-align: middle;
+    border: none;
+    padding: 9px 15px;
+    margin-bottom: 10px;
+}
+
+.ost-container input[type="submit"]:hover,
+.ost-container input[type="submit"]:focus,
+.ost-container button:hover,
+.ost-container button:focus {
+    background: #999999;
+}
+
+.ost-container input[type="submit"].btn-main,
+.ost-container button.btn-main {
+    background: #2184CD;
+}
+
+.ost-container input[type="submit"].btn-main:hover,
+.ost-container input[type="submit"].btn-main:focus,
+.ost-container button.btn-main:hover,
+.ost-container button.btn-main:focus {
+    background: #41A1D6;
+}
+
+.ost-container input[type="submit"].btn-big,
+.ost-container button.btn-big{
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.ost-container input[type="submit"].btn-warning, 
+.ost-container button.btn-warning{
+    background:#ff0000;
+}
+
+.ost-container input[type="submit"].btn-warning:hover, 
+.ost-container input[type="submit"].btn-warning:focus, 
+.ost-container button.btn-warning:hover, 
+.ost-container button.btn-warning:focus{
+    background:#FF4D4D;
+}
+
+.ost-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: default;
+}
+
+.ost-container label span {
+    color: #ff0000;
+}
+
+.ost-container button i:before{
+    color:#ffffff;
+}
+
+/* Toggle
+ ========================================================================== */
+.ost-container input.ost-toggle {
+    position: absolute;
+    margin-left: -9999px;
+    visibility: hidden;
+}
+
+.ost-container input.ost-toggle + label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    padding: 2px;
+    width: 65px;
+    height: 25px;
+    background-color: #999;
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -o-border-radius: 50px;
+    transition: background 0.4s;
+}
+
+.ost-container input.ost-toggle + label:before,
+.ost-container input.ost-toggle + label:after {
+    display: block;
+    position: absolute;
+    content: "";
+}
+
+.ost-container input.ost-toggle + label:before {
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    right: 2px;
+    background-color: #fff;
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -o-border-radius: 50px;
+    transition: background 0.4s;
+}
+
+.ost-container input.ost-toggle + label:after {
+    top: 4px;
+    left: 4px;
+    bottom: 4px;
+    width: 35px;
+    background-color: #999;
+    border-radius: 50px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -o-border-radius: 50px;
+    transition: margin 0.4s, background 0.4s;
+    color: #fff;
+    text-align: center;
+    line-height: 21px;
+    content: "off";
+}
+
+.ost-container input.ost-toggle:checked + label {
+    background-color: #8cc14c;
+}
+
+.ost-container input.ost-toggle:checked + label:after {
+    margin-left: 26px;
+    background-color: #8cc14c;
+    content: "on";
+}
+
+/* Validation form
+ ========================================================================== */
+.ost-container input.ost_error, 
+.ost-container textarea.ost_error, 
+.ost-container select.ost_error{
+    border-color: #ff0000;
+}
+.ost-container input.ost_valid, 
+.ost-container textarea.ost_valid, 
+.ost-container select.ost_valid{
+    border-color: #8cc14c;
+}
+.ost-container label.ost_error{
+    background: #ff0000;
+    color: #ffffff;
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: -21px;
+    padding: 1px 5px;
+    position: absolute;
+}
+
+.ost-container label.ost_error .ost-tooltip-icon:before {
+    color: #fff;
+}
+
+.ost-container #plancode-error{
+    margin-top: 30px;
+}
+
+.ost-container #coupon-area{
+	margin-top: 8px;
+}
+
+.ost-container #coupon_code-message{
+    background: #f2fae3;
+    padding: 15px;
+    border: 1px solid rgba(101,159,19, 0.2);
+    font-weight: 700;
+}
+
+.ost-container #coupon_code-message div{
+    font-weight: 400;
+}
+
+.ost-container #coupon_code-message,
+.ost-container #coupon_code-message div{
+    color: #659f13;
+    font-size: 13px;
+}
+
+.ost-container .coupon-toggle{
+	font-weight: 700;
+	font-size: 14px;
+}
+
+/* Tooltips
+ ========================================================================== */
+.ost-container .ost-tooltip-icon:before{
+    color: #999;
+}
+.ost-container .ost-tooltip {
+    position: relative;
+    display: inline;
+}
+.ost-container .ost-tooltip span {
+    position: absolute;
+    width:140px;
+    color: #FFFFFF;
+    background: #666666;
+    height: auto;
+    min-height: 30px;
+    line-height: 18px;
+    text-align: center;
+    visibility: hidden;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -o-border-radius: 6px;
+    font-size: 13px;
+    padding: 10px;
+}
+.ost-container .ost-tooltip span:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    width: 0; height: 0;
+    border-top: 8px solid #666666;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+}
+.ost-container .ost-tooltip:hover.ost-tooltip span {
+    visibility: visible;
+    bottom: 30px;
+    left: 50%;
+    margin-left: -76px;
+    z-index: 999;
+}
+
+/* Help classes
+ ========================================================================== */
+div.ost-alert-warning{
+    background: #fff1f0;
+    border: 1px solid rgba(216,80,48, 0.2);
+    color: #d85030;
+    padding: 15px;
+    margin: 2px 0;
+}
+
+div.ost-alert-success{
+    background: #f2fae3;
+    border: 1px solid rgba(101,159,19, 0.2);
+    color: #659f13;
+    padding: 15px;
+    margin: 2px 0;
+}
+
+div.ost-alert-notify{
+    background: #ebf7fd;
+    border: 1px solid rgba(45,112,145,0.2);
+    color: #2d7091;
+    padding: 15px;
+    margin: 2px 0;
+}
+
+/* Subscribe view
+ ========================================================================== */
+.ost-container .tab-disabled  h4,
+.ost-container .tab-disabled  h4 i:before{
+    color: #545454;
+}
+
+.payment-tabs h4{
+    margin: 4px 0;
+    padding: 5px 0;
+}
+
+span.simplerenew-plan{
+    background: #2184cd;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+span.simplerenew-plan:hover,
+span.simplerenew-plan:focus,
+span.simplerenew-plan.simplerenew-plan-selected{
+    background: #8cc14c;
+}
+
+#tab_paypal,
+#tab_card{
+    border-color: #cccccc;
+    border-radius: 3px 3px 0 0;
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-radius: 3px 3px 0 0;
+    -o-border-radius: 3px 3px 0 0;
+    margin-right: 1px;
+}
+
+#content_card,
+#content_paypal{
+    border-color: #cccccc;
+    border-radius: 0px 3px 3px 3px;
+    -moz-border-radius: 0px 3px 3px 3px;
+    -webkit-border-radius: 0px 3px 3px 3px;
+    -o-border-radius: 0px 3px 3px 3px;
+}
+
+.content-enabled,
+.tab-enabled{
+    background: #fbfbfb;
+}
+
+#billing_cc_number,
+#billing_cc_cvv,
+#billing_cc_year,
+#billing_cc_month {
+    
+}
+
+.ost-container .ost-alert-notify.m-bottom{
+    margin-bottom: 30px;
+}
+
+.ost-container .ost-text-disabled{
+    color: #666666;
+    font-weight: 400;
+}
+
+.ost-container .ost-text-enabled{
+    color: #ffffff;
+}
+
+.ost-container button[disabled] i:before {
+    color: #555555;
+}
+
+.ost-container button[disabled],
+.ost-container button[disabled]:hover,
+.ost-container button[disabled]:focus {
+    box-shadow: 0 0 5px #ccc inset;
+    -moz-box-shadow: 0 0 5px #ccc inset;
+    -webkit-box-shadow: 0 0 5px #ccc inset;
+    -o-box-shadow: 0 0 5px #ccc inset;
+    background: #f2f2f2;
+}
+
+.ost-container span.simplerenew-plan-trial {
+    background: url(../../images/trial-bg.png) no-repeat right center;
+    background-size: auto 100%;
+    color: #fff;
+    font-weight: 600;
+    padding: 6px 30px 5px 12px;
+    margin-left: -4px;
+}
+
+.ost-container .simplerenew-plan input[type="radio"],
+.ost-container .simplerenew-plan input[type="checkbox"] {
+    display: none;
+}
+.simplerenew-plan:before {
+    content: "\f10c";
+    font-family:'FAwesome';
+    width: 20px;
+    line-height: 18px;
+    display: inline-block;
+    opacity: 0.4;
+}
+.simplerenew-plan.simplerenew-plan-selected:before {
+    content: "\f00c";
+    opacity: 1;
+}
+
+/* Listing
+ ========================================================================== */
+.ost-row-one{
+    background: rgba(242,242,242,0.8);
+}
+
+.ost-row-two{
+    background: rgba(242,242,242,0.2);
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.ost-row-heading [class*="block"],
+.ost-row-one [class*="block"],
+.ost-row-two [class*="block"]{
+    padding: 15px 10px;
+}
+
+.ost-row-one [class*="block"] label,
+.ost-row-two [class*="block"] label{
+    margin: 0;
+}
+
+.ost-container .ost-row-one.m-bottom,
+.ost-container .ost-row-two.m-bottom {
+    margin-bottom: 50px;
+}
+
+.ost-row-one a,
+.ost-row-two a {
+    background: #2184cd;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -o-border-radius: 2px;
+    color: #fff;
+    display: inline-block;
+    text-decoration: none;
+    padding: 4px 10px;
+    margin-bottom: 4px;
+}
+
+.ost-row-one a:hover,
+.ost-row-two a:hover,
+.ost-row-one a:focus,
+.ost-row-two a:focus,
+.ost-row-one a:active,
+.ost-row-two a:active {
+    background: #41a1d6;
+    text-decoration: none;
+    color: #fff;
+}
+
+.ost-row-one a i:before,
+.ost-row-two a i:before {
+    color: #fff;
+}
+
+.ost-container .ost-row-heading > div{
+    font-weight: bold;
+}
+
+.ost-container .ost-row-heading {
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    background: #fff;
+}
+
+/* Media queries
+ ========================================================================== */
+@media (min-width: 960px) {
+
+}
+
+@media (max-width: 768px) {
+    /* form elements */
+    .ost-container input[type="text"],
+    .ost-container input[type="email"],
+    .ost-container input[type="password"],
+    .ost-container textarea,
+    .ost-container select {
+        width: 80%;
+    }
+    /* Listing */
+    .ost-container .ost-row-heading {
+        display: none;
+    }
+    .ost-row-one [class*="block"],
+    .ost-row-two [class*="block"]{
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* form elements */
+    .ost-container input[type="text"],
+    .ost-container input[type="email"],
+    .ost-container input[type="password"],
+    .ost-container textarea,
+    .ost-container select {
+        width: 90%;
+    }
+    /* Subscribe view */
+    #tab_card,
+    #tab_paypal{
+        width: 110px;
+    }
+    #tab_paypal h4,
+    #tab_card h4{
+        font-size: 15px;
+    }
+    .ost-container span.simplerenew-plan-trial {
+        background: #ed8034;
+        margin-left: 35px;
+        border-radius: 0 0 4px 4px;
+        -moz-border-radius: 0 0 4px 4px;
+        -webkit-border-radius: 0 0 4px 4px;
+        -o-border-radius: 0 0 4px 4px;
+        display: inline-block;
+        margin-bottom: 4px;
+        margin-top: -4px;
+    }
+}
