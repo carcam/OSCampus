@@ -9,3 +9,5 @@
 defined('_JEXEC') or die();
 ?>
 <h1>Under Construction</h1>
+Equivalent to something like
+<a href="https://www.ostraining.com/courses/class/wordpress/why" target="_blank">Why Wordpress</a>

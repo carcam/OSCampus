@@ -9,3 +9,5 @@
 defined('_JEXEC') or die();
 ?>
 <h1>Under Construction</h1>
+This page is meant to be equivalent to
+<a href="https://www.ostraining.com/courses/" target="_blank">Online Training Classes</a>
