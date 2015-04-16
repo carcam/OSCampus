@@ -33,6 +33,7 @@
 
     <media destination="com_oscampus" folder="media">
         <folder>css</folder>
+        <folder>images</folder>
     </media>
 
     <files folder="site">
