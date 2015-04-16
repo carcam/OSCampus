@@ -22,6 +22,12 @@ abstract class OscampusViewAdmin extends OscampusView
         $this->state = $this->get('State');
     }
 
+    public function display($tpl = null)
+    {
+        $this->setTitle();
+        parent::display($tpl);
+    }
+
     /**
      * Default admin screen title
      *
