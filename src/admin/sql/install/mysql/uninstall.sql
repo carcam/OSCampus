@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS `ext53_oscampus_classes_pathways`;
+DROP TABLE IF EXISTS `ext53_oscampus_classes_modules`;
+DROP TABLE IF EXISTS `ext53_oscampus_modules_lessons`;
+DROP TABLE IF EXISTS `ext53_oscampus_students_lessons`;
+DROP TABLE IF EXISTS `ext53_oscampus_certificates`;
+DROP TABLE IF EXISTS `ext53_oscampus_lessons`;
+DROP TABLE IF EXISTS `ext53_oscampus_pathways`;
+DROP TABLE IF EXISTS `ext53_oscampus_classes`;
+DROP TABLE IF EXISTS `ext53_oscampus_students`;
+DROP TABLE IF EXISTS `ext53_oscampus_modules`;
+DROP TABLE IF EXISTS `ext53_oscampus_levels`;
+DROP TABLE IF EXISTS `ext53_oscampus_instructors`;

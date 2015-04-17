@@ -9,3 +9,6 @@
 defined('_JEXEC') or die();
 ?>
 <h1>Under Construction</h1>
+
+<p>Run the <a href="index.php?option=com_oscampus&task=import.import">current import</a></p>
+<p>(Don't worry - it's safe to run whenever you want!</p>
