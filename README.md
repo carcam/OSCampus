@@ -1,7 +1,7 @@
-OS Campus
+OSCampus
 =========
 
-OS Training's in-house LMS
+OSTraining's in-house LMS
 
 ## Requirements
 
