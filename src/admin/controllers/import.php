@@ -86,11 +86,39 @@ class OscampusControllerImport extends OscampusControllerBase
         'ordering'      => null
     );
 
+    protected $modules    = array();
+    protected $modulesMap = array(
+        'id'           => null,
+        'pid'          => null, // Filled in via callback
+        'title'        => 'title',
+        'alias'        => 'alias',
+        'description'  => 'description',
+        'image'        => null,
+        'published'    => 'published',
+        'startpublish' => null,
+        'endpublish'   => null,
+        'metatitle'    => null,
+        'metakwd'      => null,
+        'metadesc'     => null,
+        'afterfinish'  => null,
+        'url'          => null,
+        'pagetitle'    => null,
+        'pagecontent'  => null,
+        'ordering'     => 'ordering',
+        'locked'       => null,
+        'media_id'     => null,
+        'access'       => 'access'
+    );
+
     public function import()
     {
+        error_reporting(-1);
+        ini_set('display_errors', 1);
+
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
         $this->clearTable('#__oscampus_courses_pathways', false);
+        $this->clearTable('#__oscampus_modules');
         $this->clearTable('#__oscampus_certificates');
         $this->clearTable('#__oscampus_courses');
         $this->clearTable('#__oscampus_pathways');
@@ -98,9 +126,37 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->loadCourses();
         $this->loadInstructors();
+        $this->loadModules();
         $this->loadCertificates();
 
         $this->displayResults();
+
+        error_reporting(0);
+        ini_set('display_errors', 0);
+    }
+
+    /**
+     * Load course modules
+     * MUST be run after courses/pathway import
+     */
+    protected function loadModules()
+    {
+        $courses = $this->courses;
+
+        $this->copyTable(
+            '#__guru_days',
+            '#__oscampus_modules',
+            $this->modulesMap,
+            'id',
+            function ($guruData, $convertedData) use ($courses) {
+                $oldId = $guruData['pid'];
+                if (isset($courses[$oldId])) {
+                    $convertedData->courses_id = $courses[$oldId]->id;
+                    return true;
+                }
+                return false;
+            }
+        );
     }
 
     /**
