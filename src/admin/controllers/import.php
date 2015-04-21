@@ -10,6 +10,9 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
+    protected $courses  = array();
+    protected $pathways = array();
+
     protected $courseMap = array(
         'id'                     => null,
         'catid'                  => null, // Moving to pathways
@@ -50,35 +53,96 @@ class OscampusControllerImport extends OscampusControllerBase
         'cms_type'               => null
     );
 
+    protected $pathwayMap = array(
+        'id'          => null,
+        'name'        => 'title',
+        'alias'       => 'alias',
+        'published'   => 'published',
+        'description' => 'description',
+        'image'       => 'image',
+        'ordering'    => 'ordering'
+    );
+
     public function import()
     {
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
-        $courses = $this->copyTable('#__guru_program', '#__oscampus_courses', $this->courseMap);
+        $this->loadCourses();
 
+        $db = JFactory::getDbo();
+        $courseQuery = $db->getQuery(true)
+            ->select('cp.*, c.title Course, p.title Pathway')
+            ->from('#__oscampus_courses c')
+            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
+            ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+            ->order('p.title, p.id, c.title');
+
+        $courses = $db->setQuery($courseQuery)->loadObjectList();
+        echo '<ol>';
+        $lastPath = null;
         foreach ($courses as $course) {
-            echo '<br/>' . $course->oldId . ' => ' . $course->id . ': ' . $course->title;
+            if ($lastPath != $course->pathways_id) {
+                if ($lastPath !== null) {
+                    echo '<br/></ol>';
+                }
+                echo sprintf('%s (%s)', $course->Pathway, $course->pathways_id);
+                echo '<ol>';
+            }
+            echo sprintf('<li>%s (%s)</li>', $course->Course, $course->courses_id);
+            $lastPath = $course->pathways_id;
         }
+        echo '</ol>';
+    }
 
+    /**
+     * Import courses/pathways
+     */
+    protected function loadCourses()
+    {
+        $dbGuru   = $this->getGuruDbo();
+        $dbCampus = JFactory::getDbo();
+
+        $this->clearTable('#__oscampus_courses_pathways', false);
+        $this->courses  = $this->copyTable('#__guru_program', '#__oscampus_courses', $this->courseMap);
+        $this->pathways = $this->copyTable('#__guru_category', '#__oscampus_pathways', $this->pathwayMap);
+
+        $categoryQuery = $dbGuru->getQuery(true)
+            ->select('id AS courses_id, catid AS pathways_id')
+            ->from('#__guru_program');
+        $categories    = $dbGuru->setQuery($categoryQuery)->loadObjectList();
+        foreach ($categories as $category) {
+            if (isset($this->courses[$category->courses_id]) && isset($this->pathways[$category->pathways_id])) {
+                $category->courses_id  = $this->courses[$category->courses_id]->id;
+                $category->pathways_id = $this->pathways[$category->pathways_id]->id;
+                $dbCampus->insertObject('#__oscampus_courses_pathways', $category);
+                if ($error = $dbCampus->getErrorMsg()) {
+                    echo $error;
+                    return;
+                }
+            }
+        }
     }
 
     protected function copyTable($from, $to, array $map)
     {
-        $dbGuru = $this->getGuruDbo();
+        $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $dbCampus->setQuery('Delete From ' . $dbCampus->quoteName($to))->execute();
-        $dbCampus->setQuery('Alter Table ' . $dbCampus->quoteName($to) . ' AUTO_INCREMENT=1')->execute();
+        $this->clearTable($to);
 
         $guruQuery = $dbGuru->getQuery(true)
             ->select('*')
-            ->from($from);
+            ->from($from)
+            ->order('id');
 
-        $fields = array_filter($map);
-        $guruData = $dbGuru->setQuery($guruQuery)->loadAssocList();
+        $fields     = array_filter($map);
+        $guruData   = $dbGuru->setQuery($guruQuery)->loadAssocList();
         $campusData = array();
         foreach ($guruData as $row) {
-            $converted = (object)array();
+            $converted = (object)array(
+                'created'          => JFactory::getDate()->toSql(),
+                'created_by_alias' => 'Guru Import'
+            );
             foreach ($fields as $guruField => $campusField) {
                 $converted->$campusField = $row[$guruField];
             }
@@ -89,10 +153,9 @@ class OscampusControllerImport extends OscampusControllerBase
 
             }
             if ($newId = $dbCampus->insertid()) {
-                $converted->oldId = $row['id'];
                 $converted->id = $newId;
             }
-            $campusData[] = $converted;
+            $campusData[$row['id']] = $converted;
         }
 
         return $campusData;
@@ -116,5 +179,29 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $dbo = JDatabase::getInstance($options);
         return $dbo;
+    }
+
+    /**
+     * Delete all records from selected table and optionally reset auto_increment
+     *
+     * @param string $table
+     * @param bool   $autoinc
+     */
+    protected function clearTable($table, $autoinc = true)
+    {
+        $db = JFactory::getDbo();
+
+        $db->setQuery('Delete From ' . $db->quoteName($table))->execute();
+        if ($error = $db->getErrorMsg()) {
+            echo $error;
+            die;
+        }
+        if ($autoinc) {
+            $db->setQuery('Alter Table ' . $db->quoteName($table) . ' AUTO_INCREMENT=1')->execute();
+            if ($error = $db->getErrorMsg()) {
+                echo $error;
+                die;
+            }
+        }
     }
 }
