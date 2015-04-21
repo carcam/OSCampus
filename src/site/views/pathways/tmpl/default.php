@@ -14,7 +14,7 @@ This page is meant to be equivalent to
 
 <div class="ost-container oscampus-pathways">
 
-    <div class="ost-section">
+    <div class="ost-section ost-course-list">
         <div class="block4">
             <a href="#">
                 <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
@@ -26,7 +26,7 @@ This page is meant to be equivalent to
     </div>
     <!-- .ost-section -->
 
-    <div class="ost-section">
+    <div class="ost-section ost-course-list">
         <div class="block4">
             <a href="#">
                 <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
@@ -38,7 +38,7 @@ This page is meant to be equivalent to
     </div>
     <!-- .ost-section -->
 
-    <div class="ost-section">
+    <div class="ost-section ost-course-list">
         <div class="block4">
             <a href="#">
                 <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
