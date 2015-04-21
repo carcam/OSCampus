@@ -1,54 +1,54 @@
 /* Admin
  ========================================================================== */
-.ost-container .ost-steps{
+.osc-container .osc-steps{
     text-align: center;
 }
-.ost-container .ost-connector{
+.osc-container .osc-connector{
     display:table-cell;
     height:90px;
 }
-.ost-container .ost-step{
+.osc-container .osc-step{
     margin-top:15px;
 }
-.ost-container .ost-steps img{
+.osc-container .osc-steps img{
     position: relative;
     top: 50%;
 }
-.ost-container .ost-steps .btn{
+.osc-container .osc-steps .btn{
     margin-top: 6px;
 }
-.ost-container .ost-error{
+.osc-container .osc-error{
     color: #b94a48;
 }
-.ost-container .ost-ok{
+.osc-container .osc-ok{
     color: #468847;
 }
-.ost-container-welcome,
-.ost-container-dashboard{
+.osc-container-welcome,
+.osc-container-dashboard{
     margin: 25px 0;
 }
 
 /* Override of normal input fields
 =============================================================================== */
-#ost-narrative input,
-#ost-narrative select,
-#ost-narrative textarea {
+#osc-narrative input,
+#osc-narrative select,
+#osc-narrative textarea {
     width: auto;
     margin: 0px;
     padding: 0px;
 }
 
-#ost-narrative input {
+#osc-narrative input {
     border-style: none none solid;
     box-shadow: none;
     text-align: center;
 }
 
-#ost-narrative .chzn-container {
+#osc-narrative .chzn-container {
     margin-bottom: 6px;
     width: auto !important;
 }
 
-#ost-narrative label {
+#osc-narrative label {
     display: none;
 }

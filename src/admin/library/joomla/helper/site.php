@@ -54,19 +54,19 @@ abstract class OscampusHelperSite
 
             // Assign font-family to specific tags
             $style = array(
-                '.ost-container p,',
-                '.ost-container h1,',
-                '.ost-container h2,',
-                '.ost-container h3,',
-                '.ost-container div,',
-                '.ost-container li,',
-                '.ost-container span,',
-                '.ost-container label,',
-                '.ost-container td,',
-                '.ost-container input,',
-                '.ost-container button,',
-                '.ost-container textarea,',
-                '.ost-container select {',
+                '.osc-container p,',
+                '.osc-container h1,',
+                '.osc-container h2,',
+                '.osc-container h3,',
+                '.osc-container div,',
+                '.osc-container li,',
+                '.osc-container span,',
+                '.osc-container label,',
+                '.osc-container td,',
+                '.osc-container input,',
+                '.osc-container button,',
+                '.osc-container textarea,',
+                '.osc-container select {',
                 "   font-family: '" . $font[0] . "', " . $font[1] . ';',
                 '}'
             );

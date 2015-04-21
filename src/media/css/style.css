@@ -1,27 +1,27 @@
 /* Help classes
  ========================================================================== */
-.ost-container .m-bottom {
+.osc-container .m-bottom {
     margin-bottom: 30px;
 }
 
-.ost-container .m-top {
+.osc-container .m-top {
     margin-top: 30px;
 }
 
-.ost-container .p-bottom {
+.osc-container .p-bottom {
     padding-bottom: 30px;
 }
 
-.ost-container .p-full{
+.osc-container .p-full{
     padding: 30px;
 }
 
-.ost-container .b-bottom {
+.osc-container .b-bottom {
     border-bottom: 1px solid #f2f2f2;
 }
 
 /* Media Queries
  ========================================================================== */
 @media (max-width: 480px){
-    
+
 }
