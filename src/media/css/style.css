@@ -1,23 +1,33 @@
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,300'; /* remove this later */
+
+.osc-container p,
+.osc-container h1,
+.osc-container h2,
+.osc-container h3,
+.osc-container div,
+.osc-container li,
+.osc-container span,
+.osc-container label,
+.osc-container td,
+.osc-container input,
+.osc-container button,
+.osc-container textarea,
+.osc-container select {
+    font-family: 'Open Sans', sans-serif !important; /* remove this later */
+}
+
 /* Help classes
  ========================================================================== */
-.osc-container .m-bottom {
-    margin-bottom: 30px;
+.osc-container .a-center {
+    text-align: center;
 }
 
-.osc-container .m-top {
-    margin-top: 30px;
+.osc-container .a-right {
+    text-align: right;
 }
 
-.osc-container .p-bottom {
-    padding-bottom: 30px;
-}
-
-.osc-container .p-full{
-    padding: 30px;
-}
-
-.osc-container .b-bottom {
-    border-bottom: 1px solid #f2f2f2;
+.osc-container .a-left {
+    text-align: left;
 }
 
 /* Media Queries

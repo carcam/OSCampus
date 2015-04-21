@@ -50,8 +50,11 @@
 }
 
 .osc-container h2 {
-    font-size: 30px;
-    line-height: 35px;
+    margin: 0 0 7px 0 !important; /* remove !important later */
+    font-size: 28px !important; /* remove !important later */
+    font-weight: 400 !important; /* remove !important later */
+    line-height: 35px !important; /* remove !important later */
+    padding: 0 !important; /* remove !important later */
 }
 
 .osc-container h3 {
@@ -69,6 +72,12 @@
 .osc-container .page-header {
     border: 0;
     padding: 0;
+    margin: 0 0 40px 0;
+}
+
+.osc-container .page-header h1 {
+    font-size: 40px;
+    line-height: 50px;
     margin: 0 0 40px 0;
 }
 
@@ -343,14 +352,132 @@ div.osc-alert-notify{
 
 /* Pathways
  ========================================================================== */
-.osc-course-list {
+.osc-container .osc-section .block4.osc-course-image {
+    width: 27.623931623931625%;
+}
+
+.osc-container .osc-section .block8.osc-course-description {
+    width: 69.81196581196582%;
+}
+
+.osc-container .osc-course-list {
+    border-bottom: 1px solid #f2f2f2;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+}
+
+.osc-container .osc-course-image img {
+    margin-top: 3px;
+}
+
+.osc-container .osc-course-item {
+    margin-bottom: 10px;
+}
+
+.osc-container .osc-course-start {
+    text-align: right;
+}
+
+.osc-container .osc-course-start a {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    vertical-align: middle;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    line-height: 30px;
+    min-height: 30px;
+    padding: 0 12px;
+    background: #2184cd;
+    color: #ffffff;
+    box-shadow: inset 0 -1px 0 rgba(32, 61, 97, 0.05);
+    border-radius: 50px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    -webkit-transition: background-color 0.15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Labels
+ ========================================================================== */
+.osc-container .osc-label {
+    background-color: #F2F2F2;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    color: #666;
+    display: inline-block;
+    padding: 2px 8px 2px 26px;
+    text-align: center;
+    text-transform: none;
+    vertical-align: middle;
+    margin: 0 1px 0 0;
+}
+
+.osc-label-wordpress {
+
+}
+
+.osc-label-joomla {
+
+}
+
+.osc-label-drupal {
+
+}
+
+.osc-label-seo {
+
+}
+
+.osc-label-dev {
+
+}
+
+.osc-label-css {
+
+}
+
+.osc-label-time {
+
+}
+
+.osc-label-trainer {
+
+}
+
+.osc-label-basic {
+
+}
+
+.osc-label-intermediate {
+
+}
+
+.osc-label-advanced {
 
 }
 
 /* Media queries
  ========================================================================== */
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
+    /* pathways */
+    .osc-container .osc-section .block4.osc-course-image {
+        width: 27.623931623931625%;
+    }
+    .osc-container .osc-section .block8.osc-course-description {
+        width: 69.81196581196582%;
+    }
+}
 
+@media (min-width: 768px) and (max-width: 979px) {
+    /* pathways */
+    .osc-container .osc-section .block4.osc-course-image {
+        width: 27.623931623931625%;
+    }
+    .osc-container .osc-section .block8.osc-course-description {
+        width: 69.81196581196582%;
+        margin-left: 2.56410256410255%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -369,6 +496,26 @@ div.osc-alert-notify{
     .osc-row-one [class*="block"],
     .osc-row-two [class*="block"]{
         padding: 5px 10px;
+    }
+}
+
+@media (max-width: 767px) {
+    /* pathways */
+    .osc-container .osc-section .block4.osc-course-image,
+    .osc-container .osc-section .block8.osc-course-description {
+        width: 100%;
+        margin-left: 0;
+    }
+    .osc-container .osc-course-image img {
+        margin-bottom: 10px;
+    }
+    .osc-container .osc-course-start {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+    /* labels */
+    .osc-container .osc-label {
+        margin-bottom: 4px;
     }
 }
 
