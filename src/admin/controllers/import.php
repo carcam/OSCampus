@@ -10,12 +10,14 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
-    protected $courses  = array();
-    protected $pathways = array();
+    protected $users       = null;
+    protected $courses     = array();
+    protected $pathways    = array();
+    protected $instructors = array();
 
     protected $courseMap = array(
         'id'                     => null,
-        'catid'                  => null, // Moving to pathways
+        'catid'                  => null, // Moved to pathways
         'name'                   => 'title',
         'alias'                  => 'alias',
         'description'            => null,
@@ -33,7 +35,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'pre_req_books'          => null,
         'reqmts'                 => null,
         'author'                 => null, // instructors_id
-        'level'                  => null, // Do we want to specify levels for courses? (Nick says yes - here only)
+        'level'                  => null,
         'priceformat'            => null,
         'skip_module'            => null,
         'chb_free_courses'       => null,
@@ -63,35 +65,71 @@ class OscampusControllerImport extends OscampusControllerBase
         'ordering'    => 'ordering'
     );
 
+    protected $instructorMap = array(
+        'id'            => null,
+        'userid'        => 'users_id',
+        'full_bio'      => 'bio',
+        'images'        => 'image',
+        'emaillink'     => null,
+        'website'       => null,
+        'blog'          => null,
+        'facebook'      => null,
+        'twitter'       => null,
+        'show_email'    => null,
+        'show_website'  => null,
+        'show_blog'     => null,
+        'show_facebook' => null,
+        'show_twitter'  => null,
+        'author_title'  => null,
+        'ordering'      => null
+    );
+
     public function import()
     {
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
         $this->loadCourses();
+        $this->loadInstructors();
 
-        $db = JFactory::getDbo();
-        $courseQuery = $db->getQuery(true)
-            ->select('cp.*, c.title Course, p.title Pathway')
-            ->from('#__oscampus_courses c')
-            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
-            ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
-            ->order('p.title, p.id, c.title');
+        $this->displayResults();
+    }
 
-        $courses = $db->setQuery($courseQuery)->loadObjectList();
-        echo '<ol>';
-        $lastPath = null;
-        foreach ($courses as $course) {
-            if ($lastPath != $course->pathways_id) {
-                if ($lastPath !== null) {
-                    echo '<br/></ol>';
+    /**
+     * Import Instructors
+     * Must be called after courses are loaded
+     */
+    protected function loadInstructors()
+    {
+        $users = $this->getUsers();
+
+        $this->instructors = $this->copyTable(
+            '#__guru_authors',
+            '#__oscampus_instructors',
+            $this->instructorMap,
+            'id',
+            function ($guruData, $convertedData) use ($users) {
+                if (isset($users[$convertedData->users_id])) {
+                    $parameters                = array(
+                        'website'  => (string)preg_replace('#^https?://#', '', $guruData['website']),
+                        'blog'     => (string)preg_replace('#^https?://#', '', $guruData['blog']),
+                        'facebook' => (string)preg_replace('#^https?://(www\.)?(facebook\.com/)?#', '',
+                            $guruData['facebook']),
+                        'twitter'  => (string)preg_replace('#^https?://(www\.)?(twitter\.com/)?#', '',
+                            $guruData['twitter']),
+                        'show'     => array(
+                            'website'  => (string)(int)$guruData['show_website'],
+                            'email'    => (string)(int)$guruData['show_email'],
+                            'blog'     => (string)(int)$guruData['show_blog'],
+                            'facebook' => (string)(int)$guruData['show_facebook'],
+                            'twitter'  => (string)(int)$guruData['show_twitter']
+                        )
+                    );
+                    $convertedData->parameters = json_encode($parameters);
+                    return true;
                 }
-                echo sprintf('%s (%s)', $course->Pathway, $course->pathways_id);
-                echo '<ol>';
+                return false;
             }
-            echo sprintf('<li>%s (%s)</li>', $course->Course, $course->courses_id);
-            $lastPath = $course->pathways_id;
-        }
-        echo '</ol>';
+        );
     }
 
     /**
@@ -123,7 +161,20 @@ class OscampusControllerImport extends OscampusControllerBase
         }
     }
 
-    protected function copyTable($from, $to, array $map)
+    /**
+     * Copy data from a Guru table to an OSCampus table using a field map.
+     * The Guru table MUST contain a single primary key field. The OSCampus
+     * table is assumed to contain the created/created_by_alias fields.
+     *
+     * @param string   $from
+     * @param string   $to
+     * @param array    $map
+     * @param string   $key
+     * @param callable $callable
+     *
+     * @return array
+     */
+    protected function copyTable($from, $to, array $map, $key = 'id', $callable = null)
     {
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
@@ -133,7 +184,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $guruQuery = $dbGuru->getQuery(true)
             ->select('*')
             ->from($from)
-            ->order('id');
+            ->order($key);
 
         $fields     = array_filter($map);
         $guruData   = $dbGuru->setQuery($guruQuery)->loadAssocList();
@@ -146,16 +197,19 @@ class OscampusControllerImport extends OscampusControllerBase
             foreach ($fields as $guruField => $campusField) {
                 $converted->$campusField = $row[$guruField];
             }
-            $dbCampus->insertObject($to, $converted);
-            if ($error = $dbCampus->getErrorMsg()) {
-                echo 'ERROR: ' . $error;
-                die;
 
+            if (is_callable($callable) ? $callable($row, $converted) : true) {
+                $dbCampus->insertObject($to, $converted);
+                if ($error = $dbCampus->getErrorMsg()) {
+                    echo 'ERROR: ' . $error;
+                    die;
+
+                }
+                if ($newId = $dbCampus->insertid()) {
+                    $converted->id = $newId;
+                }
+                $campusData[$row[$key]] = $converted;
             }
-            if ($newId = $dbCampus->insertid()) {
-                $converted->id = $newId;
-            }
-            $campusData[$row['id']] = $converted;
         }
 
         return $campusData;
@@ -203,5 +257,60 @@ class OscampusControllerImport extends OscampusControllerBase
                 die;
             }
         }
+    }
+
+    protected function displayResults()
+    {
+        $db = JFactory::getDbo();
+
+        // Pathways/Courses
+        echo '<div style="float: left;">';
+
+        echo sprintf(
+            '<p>%s Pathways / %s Courses</p><ol>',
+            number_format(count($this->pathways)),
+            number_format(count($this->courses))
+        );
+
+        $courseQuery = $db->getQuery(true)
+            ->select('cp.*, c.title Course, p.title Pathway')
+            ->from('#__oscampus_courses c')
+            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
+            ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+            ->order('p.title, p.id, c.title');
+
+        $courses  = $db->setQuery($courseQuery)->loadObjectList();
+        $lastPath = null;
+        foreach ($courses as $course) {
+            if ($lastPath != $course->pathways_id) {
+                if ($lastPath !== null) {
+                    echo '<br/></ol></li>';
+                }
+                echo '<li>' . $course->Pathway . '<ol>';
+            }
+            echo sprintf('<li>%s</li>', $course->Course);
+            $lastPath = $course->pathways_id;
+        }
+        echo '</li></ol></div>';
+
+        // Instructors
+        echo '<div style="float: left;">';
+
+        echo '<p>' . number_format(count($this->instructors)) . ' Instructors</p><ol>';
+        foreach ($this->instructors as $oldId => $instructor) {
+            $user = $this->users[$instructor->users_id];
+            echo '<li>' . $user->username . ': ' . $instructor->image . '</li>';
+        }
+        echo '</ol></div>';
+    }
+
+    protected function getUsers()
+    {
+        if ($this->users === null) {
+            $this->users = $this->getGuruDbo()
+                ->setQuery('Select * From #__users')
+                ->loadObjectList('id');
+        }
+        return $this->users;
     }
 }
