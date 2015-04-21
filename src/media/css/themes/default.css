@@ -66,20 +66,6 @@
     padding: 0 0 5px 0;
 }
 
-.ost-container h2 span,
-.ost-container h2 span i:before,
-.ost-container h3 span,
-.ost-container h3 span i:before,
-.ost-container h4 span,
-.ost-container h4 span i:before {
-    color: #999999;
-    font-weight: 300;
-}
-
-.ost-container i:before{
-    color: #333333;
-}
-
 .ost-container .page-header {
     border: 0;
     padding: 0;
@@ -93,13 +79,6 @@
     transition: all 0.2s linear;
     text-decoration: underline;
     color: #2184cd;
-}
-
-.ost-container .simplerenew-plan {
-    -moz-transition: all 0.2s linear;
-    -webkit-transition: all 0.2s linear;
-    -o-transition: all 0.2s linear;
-    transition: all 0.2s linear;
 }
 
 .ost-container a:hover {
@@ -247,6 +226,16 @@
     background:#FF4D4D;
 }
 
+.ost-container button[disabled],
+.ost-container button[disabled]:hover,
+.ost-container button[disabled]:focus {
+    box-shadow: 0 0 5px #ccc inset;
+    -moz-box-shadow: 0 0 5px #ccc inset;
+    -webkit-box-shadow: 0 0 5px #ccc inset;
+    -o-box-shadow: 0 0 5px #ccc inset;
+    background: #f2f2f2;
+}
+
 .ost-container label {
     display: block;
     margin-bottom: 5px;
@@ -257,184 +246,6 @@
 
 .ost-container label span {
     color: #ff0000;
-}
-
-.ost-container button i:before{
-    color:#ffffff;
-}
-
-/* Toggle
- ========================================================================== */
-.ost-container input.ost-toggle {
-    position: absolute;
-    margin-left: -9999px;
-    visibility: hidden;
-}
-
-.ost-container input.ost-toggle + label {
-    display: block;
-    position: relative;
-    cursor: pointer;
-    outline: none;
-    user-select: none;
-    padding: 2px;
-    width: 65px;
-    height: 25px;
-    background-color: #999;
-    border-radius: 50px;
-    -moz-border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -o-border-radius: 50px;
-    transition: background 0.4s;
-}
-
-.ost-container input.ost-toggle + label:before,
-.ost-container input.ost-toggle + label:after {
-    display: block;
-    position: absolute;
-    content: "";
-}
-
-.ost-container input.ost-toggle + label:before {
-    top: 2px;
-    left: 2px;
-    bottom: 2px;
-    right: 2px;
-    background-color: #fff;
-    border-radius: 50px;
-    -moz-border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -o-border-radius: 50px;
-    transition: background 0.4s;
-}
-
-.ost-container input.ost-toggle + label:after {
-    top: 4px;
-    left: 4px;
-    bottom: 4px;
-    width: 35px;
-    background-color: #999;
-    border-radius: 50px;
-    -moz-border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -o-border-radius: 50px;
-    transition: margin 0.4s, background 0.4s;
-    color: #fff;
-    text-align: center;
-    line-height: 21px;
-    content: "off";
-}
-
-.ost-container input.ost-toggle:checked + label {
-    background-color: #8cc14c;
-}
-
-.ost-container input.ost-toggle:checked + label:after {
-    margin-left: 26px;
-    background-color: #8cc14c;
-    content: "on";
-}
-
-/* Validation form
- ========================================================================== */
-.ost-container input.ost_error, 
-.ost-container textarea.ost_error, 
-.ost-container select.ost_error{
-    border-color: #ff0000;
-}
-.ost-container input.ost_valid, 
-.ost-container textarea.ost_valid, 
-.ost-container select.ost_valid{
-    border-color: #8cc14c;
-}
-.ost-container label.ost_error{
-    background: #ff0000;
-    color: #ffffff;
-    display: block;
-    font-size: 12px;
-    font-weight: 400;
-    margin-top: -21px;
-    padding: 1px 5px;
-    position: absolute;
-}
-
-.ost-container label.ost_error .ost-tooltip-icon:before {
-    color: #fff;
-}
-
-.ost-container #plancode-error{
-    margin-top: 30px;
-}
-
-.ost-container #coupon-area{
-	margin-top: 8px;
-}
-
-.ost-container #coupon_code-message{
-    background: #f2fae3;
-    padding: 15px;
-    border: 1px solid rgba(101,159,19, 0.2);
-    font-weight: 700;
-}
-
-.ost-container #coupon_code-message div{
-    font-weight: 400;
-}
-
-.ost-container #coupon_code-message,
-.ost-container #coupon_code-message div{
-    color: #659f13;
-    font-size: 13px;
-}
-
-.ost-container .coupon-toggle{
-	font-weight: 700;
-	font-size: 14px;
-}
-
-/* Tooltips
- ========================================================================== */
-.ost-container .ost-tooltip-icon:before{
-    color: #999;
-}
-.ost-container .ost-tooltip {
-    position: relative;
-    display: inline;
-}
-.ost-container .ost-tooltip span {
-    position: absolute;
-    width:140px;
-    color: #FFFFFF;
-    background: #666666;
-    height: auto;
-    min-height: 30px;
-    line-height: 18px;
-    text-align: center;
-    visibility: hidden;
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    -o-border-radius: 6px;
-    font-size: 13px;
-    padding: 10px;
-}
-.ost-container .ost-tooltip span:after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -8px;
-    width: 0; height: 0;
-    border-top: 8px solid #666666;
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-}
-.ost-container .ost-tooltip:hover.ost-tooltip span {
-    visibility: visible;
-    bottom: 30px;
-    left: 50%;
-    margin-left: -76px;
-    z-index: 999;
 }
 
 /* Help classes
@@ -461,114 +272,6 @@ div.ost-alert-notify{
     color: #2d7091;
     padding: 15px;
     margin: 2px 0;
-}
-
-/* Subscribe view
- ========================================================================== */
-.ost-container .tab-disabled  h4,
-.ost-container .tab-disabled  h4 i:before{
-    color: #545454;
-}
-
-.payment-tabs h4{
-    margin: 4px 0;
-    padding: 5px 0;
-}
-
-span.simplerenew-plan{
-    background: #2184cd;
-    color: #ffffff;
-    font-size: 14px;
-}
-
-span.simplerenew-plan:hover,
-span.simplerenew-plan:focus,
-span.simplerenew-plan.simplerenew-plan-selected{
-    background: #8cc14c;
-}
-
-#tab_paypal,
-#tab_card{
-    border-color: #cccccc;
-    border-radius: 3px 3px 0 0;
-    -moz-border-radius: 3px 3px 0 0;
-    -webkit-border-radius: 3px 3px 0 0;
-    -o-border-radius: 3px 3px 0 0;
-    margin-right: 1px;
-}
-
-#content_card,
-#content_paypal{
-    border-color: #cccccc;
-    border-radius: 0px 3px 3px 3px;
-    -moz-border-radius: 0px 3px 3px 3px;
-    -webkit-border-radius: 0px 3px 3px 3px;
-    -o-border-radius: 0px 3px 3px 3px;
-}
-
-.content-enabled,
-.tab-enabled{
-    background: #fbfbfb;
-}
-
-#billing_cc_number,
-#billing_cc_cvv,
-#billing_cc_year,
-#billing_cc_month {
-    
-}
-
-.ost-container .ost-alert-notify.m-bottom{
-    margin-bottom: 30px;
-}
-
-.ost-container .ost-text-disabled{
-    color: #666666;
-    font-weight: 400;
-}
-
-.ost-container .ost-text-enabled{
-    color: #ffffff;
-}
-
-.ost-container button[disabled] i:before {
-    color: #555555;
-}
-
-.ost-container button[disabled],
-.ost-container button[disabled]:hover,
-.ost-container button[disabled]:focus {
-    box-shadow: 0 0 5px #ccc inset;
-    -moz-box-shadow: 0 0 5px #ccc inset;
-    -webkit-box-shadow: 0 0 5px #ccc inset;
-    -o-box-shadow: 0 0 5px #ccc inset;
-    background: #f2f2f2;
-}
-
-.ost-container span.simplerenew-plan-trial {
-    background: url(../../images/trial-bg.png) no-repeat right center;
-    background-size: auto 100%;
-    color: #fff;
-    font-weight: 600;
-    padding: 6px 30px 5px 12px;
-    margin-left: -4px;
-}
-
-.ost-container .simplerenew-plan input[type="radio"],
-.ost-container .simplerenew-plan input[type="checkbox"] {
-    display: none;
-}
-.simplerenew-plan:before {
-    content: "\f10c";
-    font-family:'FAwesome';
-    width: 20px;
-    line-height: 18px;
-    display: inline-block;
-    opacity: 0.4;
-}
-.simplerenew-plan.simplerenew-plan-selected:before {
-    content: "\f00c";
-    opacity: 1;
 }
 
 /* Listing
@@ -671,25 +374,5 @@ span.simplerenew-plan.simplerenew-plan-selected{
     .ost-container textarea,
     .ost-container select {
         width: 90%;
-    }
-    /* Subscribe view */
-    #tab_card,
-    #tab_paypal{
-        width: 110px;
-    }
-    #tab_paypal h4,
-    #tab_card h4{
-        font-size: 15px;
-    }
-    .ost-container span.simplerenew-plan-trial {
-        background: #ed8034;
-        margin-left: 35px;
-        border-radius: 0 0 4px 4px;
-        -moz-border-radius: 0 0 4px 4px;
-        -webkit-border-radius: 0 0 4px 4px;
-        -o-border-radius: 0 0 4px 4px;
-        display: inline-block;
-        margin-bottom: 4px;
-        margin-top: -4px;
     }
 }
