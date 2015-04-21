@@ -8,6 +8,6 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewClass extends OscampusViewSite
+class OscampusViewCourse extends OscampusViewSite
 {
 }

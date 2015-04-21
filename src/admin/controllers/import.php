@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
-    protected $classMap = array(
+    protected $courseMap = array(
         'id'                     => null,
         'catid'                  => null, // Moving to pathways
         'name'                   => 'title',
@@ -23,14 +23,14 @@ class OscampusControllerImport extends OscampusControllerBase
         'startpublish'           => 'publish_up',
         'endpublish'             => 'publish_down',
         'metatitle'              => null,
-        'metakwd'                => 'metakey',
-        'metadesc'               => 'metadesc',
+        'metakwd'                => null,
+        'metadesc'               => null,
         'ordering'               => 'ordering',
         'pre_req'                => null,
         'pre_req_books'          => null,
         'reqmts'                 => null,
         'author'                 => null, // instructors_id
-        'level'                  => null, // Do we want to specify levels for classes?
+        'level'                  => null, // Do we want to specify levels for courses? (Nick says yes - here only)
         'priceformat'            => null,
         'skip_module'            => null,
         'chb_free_courses'       => null,
@@ -54,10 +54,10 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
-        $classes = $this->copyTable('#__guru_program', '#__oscampus_classes', $this->classMap);
+        $courses = $this->copyTable('#__guru_program', '#__oscampus_courses', $this->courseMap);
 
-        foreach ($classes as $class) {
-            echo '<br/>' . $class->oldId . ' => ' . $class->id . ': ' . $class->title;
+        foreach ($courses as $course) {
+            echo '<br/>' . $course->oldId . ' => ' . $course->id . ': ' . $course->title;
         }
 
     }
@@ -83,6 +83,11 @@ class OscampusControllerImport extends OscampusControllerBase
                 $converted->$campusField = $row[$guruField];
             }
             $dbCampus->insertObject($to, $converted);
+            if ($error = $dbCampus->getErrorMsg()) {
+                echo 'ERROR: ' . $error;
+                die;
+
+            }
             if ($newId = $dbCampus->insertid()) {
                 $converted->oldId = $row['id'];
                 $converted->id = $newId;
