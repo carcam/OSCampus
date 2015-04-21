@@ -10,11 +10,11 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
-    protected $users       = null;
-    protected $courses     = array();
-    protected $pathways    = array();
-    protected $instructors = array();
+    protected $users        = null;
+    protected $errors       = array();
+    protected $certificates = array();
 
+    protected $courses   = array();
     protected $courseMap = array(
         'id'                     => null,
         'catid'                  => null, // Moved to pathways
@@ -55,6 +55,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'cms_type'               => null
     );
 
+    protected $pathways   = array();
     protected $pathwayMap = array(
         'id'          => null,
         'name'        => 'title',
@@ -65,6 +66,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'ordering'    => 'ordering'
     );
 
+    protected $instructors   = array();
     protected $instructorMap = array(
         'id'            => null,
         'userid'        => 'users_id',
@@ -88,10 +90,56 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
+        $this->clearTable('#__oscampus_courses_pathways', false);
+        $this->clearTable('#__oscampus_certificates');
+        $this->clearTable('#__oscampus_courses');
+        $this->clearTable('#__oscampus_pathways');
+        $this->clearTable('#__oscampus_instructors');
+
         $this->loadCourses();
         $this->loadInstructors();
+        $this->loadCertificates();
 
         $this->displayResults();
+    }
+
+    /**
+     * Load certificates earned by users
+     * MUST be run after courses and instructors are loaded
+     */
+    protected function loadCertificates()
+    {
+        $dbGuru   = $this->getGuruDbo();
+        $dbCampus = JFactory::getDbo();
+
+        $users        = $this->getUsers();
+        $certificates = $dbGuru->setQuery('Select * From #__guru_mycertificates')->loadObjectList();
+        foreach ($certificates as $c) {
+            if (isset($this->courses[$c->course_id])
+                && isset($users[$c->user_id])
+            ) {
+                $newCertificate = (object)array(
+                    'users_id'    => $c->user_id,
+                    'courses_id'  => $this->courses[$c->course_id]->id,
+                    'date_earned' => $c->datecertificate
+                );
+                $dbCampus->insertObject('#__oscampus_certificates', $newCertificate, 'id');
+                if ($error = $dbCampus->getErrorMsg()) {
+                    $this->errors[] = 'Certificate: ' . $error;
+                } else {
+                    $newCertificate->id         = $dbCampus->insertid();
+                    $this->certificates[$c->id] = $newCertificate;
+                }
+            } else {
+                $this->errors[] = sprintf(
+                    'Skipped Certificate: %s (%s/%s/%s)',
+                    $c->datecertificate,
+                    $c->course_id,
+                    $c->author_id,
+                    $c->user_id
+                );
+            }
+        }
     }
 
     /**
@@ -110,12 +158,26 @@ class OscampusControllerImport extends OscampusControllerBase
             function ($guruData, $convertedData) use ($users) {
                 if (isset($users[$convertedData->users_id])) {
                     $parameters                = array(
-                        'website'  => (string)preg_replace('#^https?://#', '', $guruData['website']),
-                        'blog'     => (string)preg_replace('#^https?://#', '', $guruData['blog']),
-                        'facebook' => (string)preg_replace('#^https?://(www\.)?(facebook\.com/)?#', '',
-                            $guruData['facebook']),
-                        'twitter'  => (string)preg_replace('#^https?://(www\.)?(twitter\.com/)?#', '',
-                            $guruData['twitter']),
+                        'website'  => (string)preg_replace(
+                            '#^https?://#',
+                            '',
+                            $guruData['website']
+                        ),
+                        'blog'     => (string)preg_replace(
+                            '#^https?://#',
+                            '',
+                            $guruData['blog']
+                        ),
+                        'facebook' => (string)preg_replace(
+                            '#^https?://(www\.)?(facebook\.com/)?#',
+                            '',
+                            $guruData['facebook']
+                        ),
+                        'twitter'  => (string)preg_replace(
+                            '#^https?://(www\.)?(twitter\.com/)?#',
+                            '',
+                            $guruData['twitter']
+                        ),
                         'show'     => array(
                             'website'  => (string)(int)$guruData['show_website'],
                             'email'    => (string)(int)$guruData['show_email'],
@@ -140,7 +202,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $this->clearTable('#__oscampus_courses_pathways', false);
         $this->courses  = $this->copyTable('#__guru_program', '#__oscampus_courses', $this->courseMap);
         $this->pathways = $this->copyTable('#__guru_category', '#__oscampus_pathways', $this->pathwayMap);
 
@@ -154,8 +215,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 $category->pathways_id = $this->pathways[$category->pathways_id]->id;
                 $dbCampus->insertObject('#__oscampus_courses_pathways', $category);
                 if ($error = $dbCampus->getErrorMsg()) {
-                    echo $error;
-                    return;
+                    $this->errors[] = $error;
                 }
             }
         }
@@ -179,8 +239,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $this->clearTable($to);
-
         $guruQuery = $dbGuru->getQuery(true)
             ->select('*')
             ->from($from)
@@ -201,9 +259,8 @@ class OscampusControllerImport extends OscampusControllerBase
             if (is_callable($callable) ? $callable($row, $converted) : true) {
                 $dbCampus->insertObject($to, $converted);
                 if ($error = $dbCampus->getErrorMsg()) {
-                    echo 'ERROR: ' . $error;
-                    die;
-
+                    $this->errors[] = $error;
+                    return array();
                 }
                 if ($newId = $dbCampus->insertid()) {
                     $converted->id = $newId;
@@ -263,6 +320,11 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $db = JFactory::getDbo();
 
+        if ($this->errors) {
+            echo join('<br/>', $this->errors);
+            echo '<hr/>';
+        }
+
         // Pathways/Courses
         echo '<div style="float: left;">';
 
@@ -302,6 +364,12 @@ class OscampusControllerImport extends OscampusControllerBase
             echo '<li>' . $user->username . ': ' . $instructor->image . '</li>';
         }
         echo '</ol></div>';
+
+        // Certificates
+        echo '<div style="float: left;">';
+
+        echo '<p>' . number_format(count($this->certificates)) . ' Certificates</p>';
+        echo '</div>';
     }
 
     protected function getUsers()
