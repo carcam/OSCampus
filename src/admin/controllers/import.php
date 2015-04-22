@@ -34,7 +34,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'pre_req'                => null,
         'pre_req_books'          => null,
         'reqmts'                 => null,
-        'author'                 => null, // instructors_id
+        'author'                 => null, // Must be converted when importing instructors
         'level'                  => null,
         'priceformat'            => null,
         'skip_module'            => null,
@@ -248,6 +248,31 @@ class OscampusControllerImport extends OscampusControllerBase
                 return false;
             }
         );
+
+        $dbGuru = $this->getGuruDbo();
+        $coursesQuery = $dbGuru->getQuery(true)
+            ->select('p.id, a.id authors_id')
+            ->from('#__guru_program p')
+            ->innerJoin('#__guru_authors a ON a.userid = p.author');
+        $courses = $dbGuru->setQuery($coursesQuery)->loadObjectList();
+
+        $db = JFactory::getDbo();
+        foreach ($courses as $course) {
+            if (isset($this->courses[$course->id])) {
+                $oldKey = $course->authors_id;
+                $update = (object)array(
+                    'id' => $this->courses[$course->id]->id,
+                    'instructors_id' => null
+                );
+                if (isset($this->instructors[$oldKey])) {
+                    $update->instructors_id = $this->instructors[$oldKey]->id;
+                }
+                $db->updateObject('#__oscampus_courses', $update, 'id', true);
+                if ($error = $db->getErrorMsg()) {
+                    $this->errors[] = $error;
+                }
+            }
+        }
     }
 
     /**
@@ -415,7 +440,14 @@ class OscampusControllerImport extends OscampusControllerBase
                 if ($lastCourse !== null && $lastPath == $course->pathways_id) {
                     echo '<br/></ol></li>';
                 }
-                echo sprintf('<li>%s (Instructor: %s)<ol>', $course->Course, $course->username);
+
+                $params = new JRegistry($course->parameters);
+                echo sprintf(
+                    '<li>%s (Instructor: %s / %s)<ol>',
+                    $course->Course,
+                    $params->get('website'),
+                    $course->username
+                );
             }
             echo sprintf('<li>%s</li>', $course->Module);
 
