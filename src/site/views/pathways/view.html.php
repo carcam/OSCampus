@@ -10,4 +10,18 @@ defined('_JEXEC') or die();
 
 class OscampusViewPathways extends OscampusViewSite
 {
+    /**
+     * @var array
+     */
+    protected $items = array();
+
+    public function display($tpl = null)
+    {
+        /** @var OscampusModelPathways $model */
+        $model = $this->getModel();
+
+        $this->items = $model->getItems();
+
+        parent::display($tpl);
+    }
 }

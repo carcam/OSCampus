@@ -15,43 +15,27 @@ defined('_JEXEC') or die();
         <h1>Online Training</h1>
     </div>
 
-    <div class="osc-section osc-course-list">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
-        </div>
-        <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
-        </div>
-    </div>
-    <!-- .osc-section -->
+    <?php
+    foreach ($this->items as $item) :
+        ?>
+        <div class="osc-section osc-course-list">
+            <div class="block4 osc-course-image">
+                <?php
+                $itemId = JFactory::getApplication()->input->getInt('Itemid');
+                $image = JHtml::_('image', $item->image, $item->title);
+                $link = JRoute::_('index.php?view=pathway&pid=' . $item->id . '&Itemid=' . $itemId);
+                echo JHtml::_('link', $link, $image);
+                ?>
+            </div>
+            <div class="block8 osc-course-description">
+                <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
 
-    <div class="osc-section osc-course-list">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
+                <?php echo $item->description; ?>
+            </div>
         </div>
-        <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
-        </div>
-    </div>
-    <!-- .osc-section -->
-
-    <div class="osc-section osc-course-list">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
-        </div>
-        <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
-        </div>
-    </div>
+    <?php
+    endforeach;
+    ?>
     <!-- .osc-section -->
 
 </div>
