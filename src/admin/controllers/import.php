@@ -505,38 +505,11 @@ class OscampusControllerImport extends OscampusControllerBase
         foreach ($images as $image) {
             if ($image->image) {
                 $path      = $sourceRoot . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
-                $extension = substr($image->image, strrpos($image->image, '.'));
-                $fileName  = basename($image->image, $extension);
-                $newPath   = $targetRoot . '/' . $fileName . '.png';
+                $fileName  = basename($image->image);
+                $newPath   = $targetRoot . '/' . $fileName;
                 if (!is_file(JPATH_SITE . $newPath)) {
-                    $type = @exif_imagetype($path);
-                    switch ($type) {
-                        case IMAGETYPE_JPEG:
-                            $blob = imagecreatefromjpeg($path);
-                            break;
-
-                        case IMAGETYPE_GIF:
-                            $blob = imagecreatefromgif($path);
-                            break;
-
-                        case IMAGETYPE_PNG:
-                            $blob = imagecreatefrompng($path);
-                            break;
-
-                        case '':
-                            $this->errors[] = 'Failed image load: ' . $image->image;
-                            break;
-
-                        default:
-                            $this->errors[] = 'Unknown image type: ' . $image->image;
-                            break;
-                    }
-                    if (empty($blob)) {
-                        $this->errors[] = 'Image Skipped: ' . $path;
-                    } else {
-                        imagepng($blob, JPATH_SITE . $newPath);
-                        imagedestroy($blob);
-                    }
+                    $fileData = file_get_contents($path);
+                    JFile::write(JPATH_SITE . $newPath, $fileData);
                 }
                 $image->image = $newPath;
                 $db->updateObject($table, $image, 'id');
