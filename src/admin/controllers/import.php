@@ -511,7 +511,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     $fileData = file_get_contents($path);
                     JFile::write(JPATH_SITE . $newPath, $fileData);
                 }
-                $image->image = $newPath;
+                $image->image = substr($newPath, 1);
                 $db->updateObject($table, $image, 'id');
             }
         }
