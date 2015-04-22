@@ -254,19 +254,19 @@ class OscampusControllerImport extends OscampusControllerBase
             }
         );
 
-        $dbGuru = $this->getGuruDbo();
+        $dbGuru       = $this->getGuruDbo();
         $coursesQuery = $dbGuru->getQuery(true)
             ->select('p.id, a.id authors_id')
             ->from('#__guru_program p')
             ->innerJoin('#__guru_authors a ON a.userid = p.author');
-        $courses = $dbGuru->setQuery($coursesQuery)->loadObjectList();
+        $courses      = $dbGuru->setQuery($coursesQuery)->loadObjectList();
 
         $db = JFactory::getDbo();
         foreach ($courses as $course) {
             if (isset($this->courses[$course->id])) {
                 $oldKey = $course->authors_id;
                 $update = (object)array(
-                    'id' => $this->courses[$course->id]->id,
+                    'id'             => $this->courses[$course->id]->id,
                     'instructors_id' => null
                 );
                 if (isset($this->instructors[$oldKey])) {
