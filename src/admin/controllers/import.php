@@ -21,7 +21,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'catid'                  => null, // Moved to pathways
         'name'                   => 'title',
         'alias'                  => 'alias',
-        'description'            => null,
+        'description'            => 'description',
         'introtext'              => null,
         'image'                  => 'image',
         'emails'                 => null,
@@ -36,7 +36,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'pre_req_books'          => null,
         'reqmts'                 => null,
         'author'                 => null, // Must be converted when importing instructors
-        'level'                  => null,
+        'level'                  => 'difficulty',
         'priceformat'            => null,
         'skip_module'            => null,
         'chb_free_courses'       => null,
@@ -288,7 +288,26 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $this->courses  = $this->copyTable('#__guru_program', '#__oscampus_courses', $this->courseMap);
+        $levels = array(
+            0 => 'easy',
+            1 => 'intermediate',
+            2 => 'advanced'
+        );
+
+        $this->courses  = $this->copyTable(
+            '#__guru_program',
+            '#__oscampus_courses',
+            $this->courseMap,
+            'id',
+            function ($guruData, $converted) use ($levels) {
+                if (isset($levels[$converted->difficulty])) {
+                    $converted->difficulty = $levels[$converted->difficulty];
+                } else {
+                    $converted->difficulty = 'unknown';
+                }
+                return true;
+            }
+        );
         $this->pathways = $this->copyTable('#__guru_category', '#__oscampus_pathways', $this->pathwayMap);
 
         $categoryQuery = $dbGuru->getQuery(true)
@@ -504,9 +523,9 @@ class OscampusControllerImport extends OscampusControllerBase
         $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
         foreach ($images as $image) {
             if ($image->image) {
-                $path      = $sourceRoot . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
-                $fileName  = basename($image->image);
-                $newPath   = $targetRoot . '/' . $fileName;
+                $path     = $sourceRoot . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
+                $fileName = basename($image->image);
+                $newPath  = $targetRoot . '/' . $fileName;
                 if (!is_file(JPATH_SITE . $newPath)) {
                     $fileData = file_get_contents($path);
                     JFile::write(JPATH_SITE . $newPath, $fileData);
