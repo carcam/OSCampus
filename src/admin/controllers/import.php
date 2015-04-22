@@ -143,7 +143,7 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $courses = $this->courses;
 
-        $this->copyTable(
+        $this->modules = $this->copyTable(
             '#__guru_days',
             '#__oscampus_modules',
             $this->modulesMap,
@@ -376,56 +376,61 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $db = JFactory::getDbo();
 
-        if ($this->errors) {
-            echo join('<br/>', $this->errors);
-            echo '<hr/>';
-        }
+        echo '<div style="float: left; width:50%">';
 
-        // Pathways/Courses
-        echo '<div style="float: left;">';
-
-        echo sprintf(
-            '<p>%s Pathways / %s Courses</p><ol>',
-            number_format(count($this->pathways)),
-            number_format(count($this->courses))
-        );
+        echo '<ul>';
+        echo '<li>' . number_format(count($this->pathways)) . ' Pathways</li>';
+        echo '<li>' . number_format(count($this->courses)) . ' Courses</li>';
+        echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
+        echo '<li>' . number_format(count($this->instructors)) . ' Instructors</li>';
+        echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
+        echo '</ul>';
 
         $courseQuery = $db->getQuery(true)
-            ->select('cp.*, c.title Course, p.title Pathway')
+            ->select('cp.*, c.title Course, p.title Pathway, m.title Module, u.username')
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
-            ->order('p.title, p.id, c.title');
+            ->leftJoin('#__oscampus_instructors i ON i.id = c.instructors_id')
+            ->leftJoin('#__users u ON u.id = i.users_id')
+            ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
+            ->order('p.title, p.id, c.title, c.id, m.ordering');
 
-        $courses  = $db->setQuery($courseQuery)->loadObjectList();
-        $lastPath = null;
+        $courses    = $db->setQuery($courseQuery)->loadObjectList();
+        $lastPath   = null;
+        $lastCourse = null;
+
+        echo '<ol>';
         foreach ($courses as $course) {
             if ($lastPath != $course->pathways_id) {
+                if ($lastCourse !== null) {
+                    echo '</ol></li>';
+                }
                 if ($lastPath !== null) {
+                    echo '<hr style="width: 75%;"/></li></ol>';
+                }
+                echo sprintf('<li>%s<ol>', $course->Pathway);
+            }
+            if ($lastCourse != $course->courses_id) {
+                if ($lastCourse !== null && $lastPath == $course->pathways_id) {
                     echo '<br/></ol></li>';
                 }
-                echo '<li>' . $course->Pathway . '<ol>';
+                echo sprintf('<li>%s (Instructor: %s)<ol>', $course->Course, $course->username);
             }
-            echo sprintf('<li>%s</li>', $course->Course);
-            $lastPath = $course->pathways_id;
+            echo sprintf('<li>%s</li>', $course->Module);
+
+            $lastPath   = $course->pathways_id;
+            $lastCourse = $course->courses_id;
         }
-        echo '</li></ol></div>';
+        echo '</ol>';
 
-        // Instructors
-        echo '<div style="float: left;">';
-
-        echo '<p>' . number_format(count($this->instructors)) . ' Instructors</p><ol>';
-        foreach ($this->instructors as $oldId => $instructor) {
-            $user = $this->users[$instructor->users_id];
-            echo '<li>' . $user->username . ': ' . $instructor->image . '</li>';
-        }
-        echo '</ol></div>';
-
-        // Certificates
-        echo '<div style="float: left;">';
-
-        echo '<p>' . number_format(count($this->certificates)) . ' Certificates</p>';
         echo '</div>';
+
+        if ($this->errors) {
+            echo '<div style="float: left;">';
+            echo join('<br/>', $this->errors);
+            echo '</div>';
+        }
     }
 
     protected function getUsers()
