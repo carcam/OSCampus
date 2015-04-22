@@ -30,7 +30,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'metatitle'              => null,
         'metakwd'                => null,
         'metadesc'               => null,
-        'ordering'               => 'ordering',
+        'ordering'               => null, // Moved to junction with pathways
         'pre_req'                => null,
         'pre_req_books'          => null,
         'reqmts'                 => null,
@@ -262,7 +262,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->pathways = $this->copyTable('#__guru_category', '#__oscampus_pathways', $this->pathwayMap);
 
         $categoryQuery = $dbGuru->getQuery(true)
-            ->select('id AS courses_id, catid AS pathways_id')
+            ->select('id AS courses_id, catid AS pathways_id, ordering')
             ->from('#__guru_program');
         $categories    = $dbGuru->setQuery($categoryQuery)->loadObjectList();
         foreach ($categories as $category) {
@@ -387,14 +387,14 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '</ul>';
 
         $courseQuery = $db->getQuery(true)
-            ->select('cp.*, c.title Course, p.title Pathway, m.title Module, u.username')
+            ->select('cp.*, c.title Course, p.title Pathway, m.title Module, u.username, i.parameters')
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
             ->leftJoin('#__oscampus_instructors i ON i.id = c.instructors_id')
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
-            ->order('p.title, p.id, c.title, c.id, m.ordering');
+            ->order('p.title, p.id, cp.ordering, c.title, c.id, m.ordering');
 
         $courses    = $db->setQuery($courseQuery)->loadObjectList();
         $lastPath   = null;
