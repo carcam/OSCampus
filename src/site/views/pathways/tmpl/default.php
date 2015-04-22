@@ -22,8 +22,8 @@ defined('_JEXEC') or die();
             <div class="block4 osc-course-image">
                 <?php
                 $itemId = JFactory::getApplication()->input->getInt('Itemid');
-                $image = JHtml::_('image', $item->image, $item->title);
-                $link = JRoute::_('index.php?view=pathway&pid=' . $item->id . '&Itemid=' . $itemId);
+                $image  = JHtml::_('image', $item->image, $item->title);
+                $link   = JRoute::_('index.php?view=pathway&pid=' . $item->id . '&Itemid=' . $itemId);
                 echo JHtml::_('link', $link, $image);
                 ?>
             </div>
@@ -33,9 +33,9 @@ defined('_JEXEC') or die();
                 <?php echo $item->description; ?>
             </div>
         </div>
+        <!-- .osc-section -->
     <?php
     endforeach;
     ?>
-    <!-- .osc-section -->
 
 </div>
