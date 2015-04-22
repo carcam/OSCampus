@@ -13,6 +13,7 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $users        = null;
     protected $errors       = array();
     protected $certificates = array();
+    protected $images       = array();
 
     protected $courses   = array();
     protected $courseMap = array(
@@ -128,6 +129,10 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadInstructors();
         $this->loadModules();
         $this->loadCertificates();
+
+        $this->images['Instructor Images'] = $this->copyImages('#__oscampus_instructors', 'instructors');
+        $this->images['Course Images']     = $this->copyImages('#__oscampus_courses', 'courses');
+        $this->images['Pathway Images']    = $this->copyImages('#__oscampus_pathways', 'pathways');
 
         $this->displayResults();
 
@@ -409,6 +414,9 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
         echo '<li>' . number_format(count($this->instructors)) . ' Instructors</li>';
         echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
+        foreach ($this->images as $imageFolder => $images) {
+            echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
+        }
         echo '</ul>';
 
         $courseQuery = $db->getQuery(true)
@@ -473,5 +481,67 @@ class OscampusControllerImport extends OscampusControllerBase
                 ->loadObjectList('id');
         }
         return $this->users;
+    }
+
+    /**
+     * Copy images from original guru source
+     *
+     * @param string $table
+     * @param string $folder
+     *
+     * @return array
+     */
+    protected function copyImages($table, $folder)
+    {
+        $sourceRoot = 'https://www.ostraining.com';
+        $targetRoot = '/images/stories/oscampus/' . trim($folder, '\\/');
+        if (is_dir(JPATH_SITE . $targetRoot)) {
+            JFolder::delete(JPATH_SITE . $targetRoot);
+        }
+        JFolder::create(JPATH_SITE . $targetRoot);
+
+        $db     = JFactory::getDbo();
+        $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
+        foreach ($images as $image) {
+            if ($image->image) {
+                $path      = $sourceRoot . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
+                $extension = substr($image->image, strrpos($image->image, '.'));
+                $fileName  = basename($image->image, $extension);
+                $newPath   = $targetRoot . '/' . $fileName . '.png';
+                if (!is_file(JPATH_SITE . $newPath)) {
+                    $type = @exif_imagetype($path);
+                    switch ($type) {
+                        case IMAGETYPE_JPEG:
+                            $blob = imagecreatefromjpeg($path);
+                            break;
+
+                        case IMAGETYPE_GIF:
+                            $blob = imagecreatefromgif($path);
+                            break;
+
+                        case IMAGETYPE_PNG:
+                            $blob = imagecreatefrompng($path);
+                            break;
+
+                        case '':
+                            $this->errors[] = 'Failed image load: ' . $image->image;
+                            break;
+
+                        default:
+                            $this->errors[] = 'Unknown image type: ' . $image->image;
+                            break;
+                    }
+                    if (empty($blob)) {
+                        $this->errors[] = 'Image Skipped: ' . $path;
+                    } else {
+                        imagepng($blob, JPATH_SITE . $newPath);
+                        imagedestroy($blob);
+                    }
+                }
+                $image->image = $newPath;
+                $db->updateObject($table, $image, 'id');
+            }
+        }
+        return $images;
     }
 }
