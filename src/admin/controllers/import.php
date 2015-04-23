@@ -140,6 +140,7 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('display_errors', 1);
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+        echo '<p><a href="index.php?option=com_oscampus&task=import.setinstructor">Set a demo instructor</a> (when referenced users are not available)</p>';
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
@@ -166,6 +167,38 @@ class OscampusControllerImport extends OscampusControllerBase
 
         error_reporting(0);
         ini_set('display_errors', 0);
+    }
+
+    /**
+     * Set all instructors to one available user.
+     * This will help a little while we are still in testing
+     * and none of the users referenced in the db are on this system
+     * 
+     */
+    public function setinstructor()
+    {
+        $db = JFactory::getDbo();
+
+        $db->setQuery(
+            'ALTER TABLE ' . $db->quoteName('#__oscampus_instructors')
+            . ' DROP INDEX ' . $db->quoteName('idx_users_id')
+            . ', ADD INDEX ' . $db->quoteName('idx_users_id')
+            . ' (' . $db->quoteName('users_id') . ')'
+        )
+            ->execute();
+
+        $user = JFactory::getUser(747);
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__oscampus_instructors')
+            . ' SET users_id = ' . $user->id . ' where users_id > 0'
+        )
+            ->execute();
+
+
+        $this->setRedirect(
+            'index.php?option=com_oscampus',
+            sprintf('Set testing/demo instructor to %s &lt;%s&gt;', $user->name, $user->username)
+        );
     }
 
     /**
@@ -580,7 +613,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')
             ->order('p.ordering, cp.ordering, m.ordering, l.ordering');
 
-        $rows = $db->setQuery($courseQuery)->loadObjectList();
+        $rows    = $db->setQuery($courseQuery)->loadObjectList();
         $display = array();
         foreach ($rows as $row) {
             $pid = $row->pathways_id;
@@ -590,7 +623,8 @@ class OscampusControllerImport extends OscampusControllerBase
             if (!isset($display[$pid])) {
                 $display[$pid] = (object)array(
                     'title' => $row->Pathway,
-                    'items' => array());
+                    'items' => array()
+                );
             }
             $path = $display[$pid];
 
