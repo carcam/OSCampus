@@ -7,25 +7,30 @@
  */
 
 defined('_JEXEC') or die();
+
+$pathwayName = empty($this->items[0]) ? '' : $this->items[0]->pathway;
 ?>
 
 <div class="osc-container oscampus-pathway">
 
     <div class="page-header">
-        <h1>WordPress Videos</h1>
+        <h1><?php echo $pathwayName; ?></h1>
     </div>
 
+    <?php
+    foreach ($this->items as $item) :
+        $image = JHtml::_('image', $item->image, $item->title);
+        $link = '#';
+    ?>
     <div class="osc-section osc-course-item">
         <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
+            <?php echo JHtml::_('link', $link, $image); ?>
         </div>
         <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
+            <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
+            <?php echo $item->introtext ?: $item->description; ?>
             <div class="osc-course-start">
-                <a href="#">Start this class</a>
+                <?php echo JHtml::_('link', $link, JText::_('COM_OSCAMPUS_START_THIS_CLASS')); ?>
             </div>
         </div>
     </div>
@@ -33,64 +38,23 @@ defined('_JEXEC') or die();
 
     <div class="osc-section osc-course-list">
         <div class="block12">
-            <span class="osc-label osc-label-wordpress">WordPress</span>
-            <span class="osc-label osc-label-basic">Basic</span>
-            <span class="osc-label osc-label-time">23 mins</span>
-            <span class="osc-label osc-label-trainer">Topher DeRosia</span>
+            <span class="osc-label osc-label-wordpress">
+                WordPress
+            </span>
+            <span class="osc-label osc-label-basic">
+                <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
+            </span>
+            <span class="osc-label osc-label-time">
+                <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
+            </span>
+            <span class="osc-label osc-label-trainer">
+                <?php echo $item->instructor; ?>
+            </span>
         </div>
     </div>
     <!-- .osc-section -->
-
-    <div class="osc-section osc-course-item">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
-        </div>
-        <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
-            <div class="osc-course-start">
-                <a href="#">Start this class</a>
-            </div>
-        </div>
-    </div>
-    <!-- .osc-section -->
-
-    <div class="osc-section osc-course-list">
-        <div class="block12">
-            <span class="osc-label osc-label-wordpress">WordPress</span>
-            <span class="osc-label osc-label-basic">Basic</span>
-            <span class="osc-label osc-label-time">23 mins</span>
-            <span class="osc-label osc-label-trainer">Topher DeRosia</span>
-        </div>
-    </div>
-    <!-- .osc-section -->
-
-    <div class="osc-section osc-course-item">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img src="https://www.ostraining.com/cdn/images/stories/guru/categories/thumbs/WordPress.jpg" alt="Category Image">
-            </a>
-        </div>
-        <div class="block8 osc-course-description">
-            <h2><a href="#">WordPress Videos</a></h2>
-            <p>WordPress is easy to use and easy to modify. For these reasons, WordPress is the mosc popular way for people to build a website.  Millions of people every day use it to create blogs and websites.</p>
-            <div class="osc-course-start">
-                <a href="#">Start this class</a>
-            </div>
-        </div>
-    </div>
-    <!-- .osc-section -->
-
-    <div class="osc-section osc-course-list">
-        <div class="block12">
-            <span class="osc-label osc-label-wordpress">WordPress</span>
-            <span class="osc-label osc-label-basic">Basic</span>
-            <span class="osc-label osc-label-time">23 mins</span>
-            <span class="osc-label osc-label-trainer">Topher DeRosia</span>
-        </div>
-    </div>
-    <!-- .osc-section -->
+    <?php
+    endforeach;
+    ?>
 
 </div>
