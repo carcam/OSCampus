@@ -30,7 +30,7 @@ defined('_JEXEC') or die();
             <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
             <?php echo $item->introtext ?: $item->description; ?>
             <div class="osc-course-start">
-                <?php echo JHtml::_('link', $link, JText::_('COM_OSCAMPUS_START_THIS_CLASS')); ?>
+                <?php echo JHtml::_('link', $link, JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="btn-main"'); ?>
             </div>
         </div>
     </div>
@@ -38,10 +38,10 @@ defined('_JEXEC') or die();
 
     <div class="osc-section osc-course-list">
         <div class="block12">
-            <span class="osc-label" style="background-image: url(/path/to/small-image-here.png);">
+            <span class="osc-label osc-label-category" style="background-image: url(/path/to/small-image-here.png);">
                 <?php echo $item->tags; ?>
             </span>
-            <span class="osc-label osc-label-basic">
+            <span class="osc-label osc-label-<?php echo $item->difficulty; ?>">
                 <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
             </span>
             <span class="osc-label osc-label-time">

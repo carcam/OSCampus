@@ -205,33 +205,60 @@
 }
 
 .osc-container input[type="submit"].btn-main,
-.osc-container button.btn-main {
-    background: #2184CD;
+.osc-container button.btn-main,
+.osc-container a.btn-main {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    vertical-align: middle;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    line-height: 30px;
+    min-height: 30px;
+    padding: 0 12px;
+    background: #2184cd;
+    color: #ffffff;
+    box-shadow: inset 0 -1px 0 rgba(32, 61, 97, 0.05);
+    border-radius: 50px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    -webkit-transition: background-color 0.15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
 }
 
 .osc-container input[type="submit"].btn-main:hover,
 .osc-container input[type="submit"].btn-main:focus,
 .osc-container button.btn-main:hover,
-.osc-container button.btn-main:focus {
+.osc-container button.btn-main:focus,
+.osc-container a.btn-main:hover,
+.osc-container a.btn-main:focus {
     background: #41A1D6;
+    box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -webkit-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -o-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
 }
 
 .osc-container input[type="submit"].btn-big,
-.osc-container button.btn-big{
+.osc-container button.btn-big,
+.osc-container a.btn-big {
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
 }
 
-.osc-container input[type="submit"].btn-warning, 
-.osc-container button.btn-warning{
+.osc-container input[type="submit"].btn-warning,
+.osc-container button.btn-warning,
+.osc-container a.btn-warning {
     background:#ff0000;
 }
 
 .osc-container input[type="submit"].btn-warning:hover, 
-.osc-container input[type="submit"].btn-warning:focus, 
-.osc-container button.btn-warning:hover, 
-.osc-container button.btn-warning:focus{
+.osc-container input[type="submit"].btn-warning:focus,
+.osc-container button.btn-warning:hover,
+.osc-container button.btn-warning:focus,
+.osc-container a.btn-warning:hover,
+.osc-container a.btn-warning:focus {
     background:#FF4D4D;
 }
 
@@ -378,40 +405,11 @@ div.osc-alert-notify{
     text-align: right;
 }
 
-.osc-container .osc-course-start a {
-    display: inline-block;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    vertical-align: middle;
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    line-height: 30px;
-    min-height: 30px;
-    padding: 0 12px;
-    background: #2184cd;
-    color: #ffffff;
-    box-shadow: inset 0 -1px 0 rgba(32, 61, 97, 0.05);
-    border-radius: 50px;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    -webkit-transition: background-color 0.15s ease-in-out;
-    transition: background-color 0.15s ease-in-out;
-}
-
 /* Labels
  ========================================================================== */
 .osc-container .osc-label {
     background-color: #F2F2F2;
-    background-repeat: no-repeat;
-    background-position: 8px center;
-    background-size: auto 11px;
     color: #666;
-    display: inline-block;
-    padding: 2px 8px 2px 23px;
-    text-align: center;
-    text-transform: none;
-    vertical-align: middle;
-    margin: 0 1px 0 0;
 }
 
 .osc-label-time {
@@ -422,8 +420,8 @@ div.osc-alert-notify{
     background-image: url(../../images/icon-trainer.png);
 }
 
-.osc-label-basic {
-    background-image: url(../../images/icon-basic.png);
+.osc-label-easy {
+    background-image: url(../../images/icon-easy.png);
 }
 
 .osc-label-intermediate {
@@ -432,6 +430,10 @@ div.osc-alert-notify{
 
 .osc-label-advanced {
     background-image: url(../../images/icon-advanced.png);
+}
+
+.osc-label-category {
+    background-image: url(../../images/icon-category.png);
 }
 
 /* Media queries
