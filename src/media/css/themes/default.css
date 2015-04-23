@@ -404,57 +404,34 @@ div.osc-alert-notify{
     background-color: #F2F2F2;
     background-repeat: no-repeat;
     background-position: 8px center;
+    background-size: auto 11px;
     color: #666;
     display: inline-block;
-    padding: 2px 8px 2px 26px;
+    padding: 2px 8px 2px 23px;
     text-align: center;
     text-transform: none;
     vertical-align: middle;
     margin: 0 1px 0 0;
 }
 
-.osc-label-wordpress {
-
-}
-
-.osc-label-joomla {
-
-}
-
-.osc-label-drupal {
-
-}
-
-.osc-label-seo {
-
-}
-
-.osc-label-dev {
-
-}
-
-.osc-label-css {
-
-}
-
 .osc-label-time {
-
+    background-image: url(../../images/icon-time.png);
 }
 
 .osc-label-trainer {
-
+    background-image: url(../../images/icon-trainer.png);
 }
 
 .osc-label-basic {
-
+    background-image: url(../../images/icon-basic.png);
 }
 
 .osc-label-intermediate {
-
+    background-image: url(../../images/icon-intermediate.png);
 }
 
 .osc-label-advanced {
-
+    background-image: url(../../images/icon-advanced.png);
 }
 
 /* Media queries
