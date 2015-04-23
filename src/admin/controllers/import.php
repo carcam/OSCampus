@@ -578,7 +578,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
             ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')
-            ->order('p.title, p.id, cp.ordering, c.title, c.id, m.ordering');
+            ->order('p.ordering, cp.ordering, m.ordering, l.ordering');
 
         $rows = $db->setQuery($courseQuery)->loadObjectList();
         $display = array();
