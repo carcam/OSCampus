@@ -38,7 +38,7 @@ defined('_JEXEC') or die();
 
     <div class="osc-section osc-course-list">
         <div class="block12">
-            <span class="osc-label osc-label-wordpress">
+            <span class="osc-label" style="background-image: url(/path/to/small-image-here.png);">
                 <?php echo $item->tags; ?>
             </span>
             <span class="osc-label osc-label-basic">
