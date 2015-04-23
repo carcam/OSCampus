@@ -94,7 +94,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'pid'          => null, // Filled in via callback
         'title'        => 'title',
         'alias'        => 'alias',
-        'description'  => 'description',
+        'description'  => null,
         'image'        => null,
         'published'    => 'published',
         'startpublish' => null,
@@ -109,7 +109,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'ordering'     => 'ordering',
         'locked'       => null,
         'media_id'     => null,
-        'access'       => 'access'
+        'access'       => null
     );
 
     public function import()
