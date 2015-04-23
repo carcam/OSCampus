@@ -173,7 +173,7 @@ class OscampusControllerImport extends OscampusControllerBase
      * Set all instructors to one available user.
      * This will help a little while we are still in testing
      * and none of the users referenced in the db are on this system
-     * 
+     *
      */
     public function setinstructor()
     {
