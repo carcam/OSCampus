@@ -15,12 +15,18 @@ class OscampusViewPathway extends OscampusViewSite
      */
     protected $items = array();
 
+    /**
+     * @var object
+     */
+    protected $pathway = null;
+
     public function display($tpl = null)
     {
         /** @var OscampusModelPathway $model */
         $model = $this->getModel();
 
-        $this->items = $model->getItems();
+        $this->items   = $model->getItems();
+        $this->pathway = $model->getPathway();
 
         parent::display($tpl);
     }

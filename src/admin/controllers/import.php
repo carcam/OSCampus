@@ -14,6 +14,7 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $errors       = array();
     protected $certificates = array();
     protected $images       = array();
+    protected $tags         = array();
 
     protected $courses   = array();
     protected $courseMap = array(
@@ -119,6 +120,8 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
         $this->clearTable('#__oscampus_courses_pathways', false);
+        $this->clearTable('#__oscampus_courses_tags', false);
+        $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_modules');
         $this->clearTable('#__oscampus_certificates');
         $this->clearTable('#__oscampus_courses');
@@ -126,6 +129,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_instructors');
 
         $this->loadCourses();
+        $this->loadTags();
         $this->loadInstructors();
         $this->loadModules();
         $this->loadCertificates();
@@ -138,6 +142,53 @@ class OscampusControllerImport extends OscampusControllerBase
 
         error_reporting(0);
         ini_set('display_errors', 0);
+    }
+
+    /**
+     * Import cms_type field as tags
+     */
+    protected function loadTags()
+    {
+        $dbGuru    = $this->getGuruDbo();
+        $queryTags = $dbGuru->getQuery(true)
+            ->select('trim(cms_type) title')
+            ->from('#__guru_program')
+            ->where('cms_type != ' . $dbGuru->quote(''))
+            ->order('id asc')
+            ->group('1');
+
+        $tags = $dbGuru->setQuery($queryTags)->loadObjectList();
+
+        $db         = JFactory::getDbo();
+        $this->tags = array();
+        foreach ($tags as $tag) {
+            $tag->alias = OscampusApplicationHelper::stringURLSafe($tag->title);
+            $db->insertObject('#__oscampus_tags', $tag);
+            $tag->id                 = $db->insertid();
+            $this->tags[$tag->title] = $tag;
+        }
+
+        $queryCourses = $dbGuru->getQuery(true)
+            ->select('id, trim(cms_type) cms_type')
+            ->from('#__guru_program')
+            ->where('cms_type != ' . $dbGuru->quote(''));
+
+        $courses = $dbGuru->setQuery($queryCourses)->loadObjectList();
+        foreach ($courses as $course) {
+            $tagTitle = trim($course->cms_type);
+            if (isset($this->courses[$course->id]) && isset($this->tags[$course->cms_type])) {
+                $newRow = (object)array(
+                    'courses_id' => $this->courses[$course->id]->id,
+                    'tags_id'    => $this->tags[$course->cms_type]->id
+                );
+                $db->insertObject('#__oscampus_courses_tags', $newRow);
+                if ($error = $db->getErrorMsg()) {
+                    $this->errors[] = 'Skipped Tag: ' . $error;
+                }
+            } else {
+                $this->errors[] = 'Skipped Tag: ' . $course->id . ' / ' . $course->cms_type;
+            }
+        }
     }
 
     /**
@@ -307,7 +358,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 }
 
                 if (preg_match('#(.*?)<hr\s+id="system-readmore"\s*/?>(.*)#ms', $converted->description, $matches)) {
-                    $converted->introtext = trim($matches[1]);
+                    $converted->introtext   = trim($matches[1]);
                     $converted->description = trim($matches[2]);
                 }
                 return true;

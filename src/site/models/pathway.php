@@ -36,12 +36,56 @@ class OscampusModelPathway extends OscampusModelList
         $items = parent::getItems();
 
         $tbd = JText::_('COM_OSCAMPUS_INSTRUCTOR_UNKNOWN');
-        foreach ($items as $item) {
+
+        $courses = array();
+        foreach ($items as $idx => $item) {
+            $courses[$item->id] = $idx;
+
+            $item->tags = array();
             if (!$item->instructor) {
                 $item->instructor = $tbd;
             }
         }
+
+        // Format tags
+        // @TODO: This is a pretty brain-dead way to handle tags
+        $db       = $this->getDbo();
+        $tagQuery = $db->getQuery(true)
+            ->select('ct.*, t.title')
+            ->from('#__oscampus_courses_tags ct')
+            ->innerJoin('#__oscampus_tags t ON t.id = ct.tags_id')
+            ->innerJoin('#__oscampus_courses c ON c.id = ct.courses_id')
+            ->where('c.id IN (' . join(',', array_keys($courses)) . ')');
+        $tags     = $db->setQuery($tagQuery)->loadObjectList();
+        foreach ($tags as $tag) {
+            if (isset($courses[$tag->courses_id])) {
+                $idx                 = $courses[$tag->courses_id];
+                $items[$idx]->tags[] = $tag->title;
+            }
+        }
+        array_walk($items, function ($item) {
+            $item->tags = join(', ', $item->tags);
+        });
+
         return $items;
+    }
+
+    /**
+     * Get the current pathway information
+     *
+     * @return object
+     */
+    public function getPathway()
+    {
+        $pathway = $this->getState('pathway');
+        if ($pathway === null) {
+            if ($pid = (int)$this->getState('pathway.id')) {
+                $db      = $this->getDbo();
+                $pathway = $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pid)->loadObject();
+                $this->setState('pathway', $pathway);
+            }
+        }
+        return $pathway;
     }
 
     protected function populateState($ordering = null, $direction = null)

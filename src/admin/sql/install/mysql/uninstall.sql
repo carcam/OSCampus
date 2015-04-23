@@ -1,6 +1,9 @@
 DROP TABLE IF EXISTS `ext53_oscampus_courses_pathways`;
 DROP TABLE IF EXISTS `ext53_oscampus_pathways`;
 
+DROP TABLE IF EXISTS `ext53_oscampus_courses_tags`;
+DROP TABLE IF EXISTS `ext53_oscampus_tags`;
+
 DROP TABLE IF EXISTS `ext53_oscampus_users_lessons`;
 DROP TABLE IF EXISTS `ext53_oscampus_certificates`;
 

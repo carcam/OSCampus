@@ -8,13 +8,13 @@
 
 defined('_JEXEC') or die();
 
-$pathwayName = empty($this->items[0]) ? '' : $this->items[0]->pathway;
+/** @var OscampusViewPathway $this */
 ?>
 
 <div class="osc-container oscampus-pathway">
 
     <div class="page-header">
-        <h1><?php echo $pathwayName; ?></h1>
+        <h1><?php echo $this->pathway->title; ?></h1>
     </div>
 
     <?php
@@ -39,7 +39,7 @@ $pathwayName = empty($this->items[0]) ? '' : $this->items[0]->pathway;
     <div class="osc-section osc-course-list">
         <div class="block12">
             <span class="osc-label osc-label-wordpress">
-                WordPress
+                <?php echo $item->tags; ?>
             </span>
             <span class="osc-label osc-label-basic">
                 <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
