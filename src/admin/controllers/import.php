@@ -21,7 +21,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'catid'                  => null, // Moved to pathways
         'name'                   => 'title',
         'alias'                  => 'alias',
-        'description'            => 'description',
+        'description'            => 'description', // Will be split into introtext using readmore <br/>
         'introtext'              => null,
         'image'                  => 'image',
         'emails'                 => null,
@@ -52,7 +52,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'updated'                => null,
         'certificate_course_msg' => null,
         'avg_certc'              => null,
-        'course_length'          => null,
+        'course_length'          => 'length',
         'cms_type'               => null
     );
 
@@ -304,6 +304,11 @@ class OscampusControllerImport extends OscampusControllerBase
                     $converted->difficulty = $levels[$converted->difficulty];
                 } else {
                     $converted->difficulty = 'unknown';
+                }
+
+                if (preg_match('#(.*?)<hr\s+id="system-readmore"\s*/?>(.*)#ms', $converted->description, $matches)) {
+                    $converted->introtext = trim($matches[1]);
+                    $converted->description = trim($matches[2]);
                 }
                 return true;
             }
