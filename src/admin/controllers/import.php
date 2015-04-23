@@ -112,6 +112,28 @@ class OscampusControllerImport extends OscampusControllerBase
         'access'       => null
     );
 
+    protected $lessons    = array();
+    protected $lessonsMap = array(
+        'id'              => null,
+        'modules_id'      => 'modules_id', // Derived Guru field in query
+        'name'            => 'title',
+        'alias'           => 'alias',
+        'category'        => null,
+        'difficultylevel' => null,
+        'points'          => null,
+        'image'           => null,
+        'published'       => 'published',
+        'startpublish'    => 'created',
+        'endpublish'      => null,
+        'metatitle'       => null,
+        'metakwd'         => null,
+        'metadesc'        => null,
+        'time'            => null,
+        'ordering'        => 'ordering',
+        'step_access'     => null,
+        'final_lesson'    => null
+    );
+
     public function import()
     {
         error_reporting(-1);
@@ -122,6 +144,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
         $this->clearTable('#__oscampus_tags');
+        $this->clearTable('#__oscampus_lessons');
         $this->clearTable('#__oscampus_modules');
         $this->clearTable('#__oscampus_certificates');
         $this->clearTable('#__oscampus_courses');
@@ -132,6 +155,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadTags();
         $this->loadInstructors();
         $this->loadModules();
+        $this->loadLessons();
         $this->loadCertificates();
 
         $this->images['Instructor Images'] = $this->copyImages('#__oscampus_instructors', 'instructors');
@@ -142,6 +166,39 @@ class OscampusControllerImport extends OscampusControllerBase
 
         error_reporting(0);
         ini_set('display_errors', 0);
+    }
+
+    /**
+     * Import Guru tasks as lessons
+     * MUST be run after modules import
+     */
+    protected function loadLessons()
+    {
+        $dbGuru       = $this->getGuruDbo();
+        $queryLessons = $dbGuru->getQuery(true)
+            ->select('d.id modules_id, t.*')
+            ->from('#__guru_task t')
+            ->innerJoin('#__guru_mediarel mr ON mr.media_id = t.id')
+            ->innerJoin('#__guru_days d ON d.id = mr.type_id')
+            ->where('mr.type=' . $dbGuru->quote('dtask'));
+
+        $modules       = $this->modules;
+        $this->lessons = $this->copyTable(
+            $queryLessons,
+            '#__oscampus_lessons',
+            $this->lessonsMap,
+            'id',
+            function ($guruData, $converted) use ($modules) {
+                $oldKey = $converted->modules_id;
+                if (isset($modules[$oldKey])) {
+                    $converted->modules_id = $modules[$oldKey]->id;
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
     }
 
     /**
@@ -388,11 +445,11 @@ class OscampusControllerImport extends OscampusControllerBase
      * The Guru table MUST contain a single primary key field. The OSCampus
      * table is assumed to contain the created/created_by_alias fields.
      *
-     * @param string   $from
-     * @param string   $to
-     * @param array    $map
-     * @param string   $key
-     * @param callable $callable
+     * @param JDatabaseQuery|string $from
+     * @param string                $to
+     * @param array                 $map
+     * @param string                $key
+     * @param callable              $callable
      *
      * @return array
      */
@@ -401,10 +458,15 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $guruQuery = $dbGuru->getQuery(true)
-            ->select('*')
-            ->from($from)
-            ->order($key);
+        if ($from instanceof JDatabaseQuery) {
+            $guruQuery = $from;
+
+        } else {
+            $guruQuery = $dbGuru->getQuery(true)
+                ->select('*')
+                ->from($from)
+                ->order($key);
+        }
 
         $fields     = array_filter($map);
         $guruData   = $dbGuru->setQuery($guruQuery)->loadAssocList();
@@ -490,55 +552,83 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
         echo '<li>' . number_format(count($this->instructors)) . ' Instructors</li>';
         echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
+        echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }
         echo '</ul>';
 
         $courseQuery = $db->getQuery(true)
-            ->select('cp.*, c.title Course, p.title Pathway, m.title Module, u.username, i.parameters')
+            ->select(
+                array(
+                    'cp.*',
+                    'l.modules_id',
+                    'p.title Pathway',
+                    'c.title Course',
+                    'm.title Module',
+                    'l.title Lesson',
+                    'u.username',
+                    'i.parameters'
+                )
+            )
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
             ->leftJoin('#__oscampus_instructors i ON i.id = c.instructors_id')
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
+            ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')
             ->order('p.title, p.id, cp.ordering, c.title, c.id, m.ordering');
 
-        $courses    = $db->setQuery($courseQuery)->loadObjectList();
-        $lastPath   = null;
-        $lastCourse = null;
+        $rows = $db->setQuery($courseQuery)->loadObjectList();
+        $display = array();
+        foreach ($rows as $row) {
+            $pid = $row->pathways_id;
+            $cid = $row->courses_id;
+            $mid = $row->modules_id;
 
-        echo '<ol>';
-        foreach ($courses as $course) {
-            if ($lastPath != $course->pathways_id) {
-                if ($lastCourse !== null) {
-                    echo '</ol></li>';
-                }
-                if ($lastPath !== null) {
-                    echo '<hr style="width: 75%;"/></li></ol>';
-                }
-                echo sprintf('<li>%s<ol>', $course->Pathway);
+            if (!isset($display[$pid])) {
+                $display[$pid] = (object)array(
+                    'title' => $row->Pathway,
+                    'items' => array());
             }
-            if ($lastCourse != $course->courses_id) {
-                if ($lastCourse !== null && $lastPath == $course->pathways_id) {
-                    echo '<br/></ol></li>';
-                }
+            $path = $display[$pid];
 
-                $params = new JRegistry($course->parameters);
-                echo sprintf(
-                    '<li>%s (Instructor: %s / %s)<ol>',
-                    $course->Course,
-                    $params->get('website'),
-                    $course->username
+            if (!isset($path->items[$cid])) {
+                $path->items[$cid] = (object)array(
+                    'title' => $row->Course,
+                    'items' => array()
                 );
             }
-            echo sprintf('<li>%s</li>', $course->Module);
+            $course = $path->items[$cid];
 
-            $lastPath   = $course->pathways_id;
-            $lastCourse = $course->courses_id;
+            if (!isset($course->items[$mid])) {
+                $course->items[$mid] = (object)array(
+                    'title' => $row->Module,
+                    'items' => array()
+                );
+            }
+            $module = $course->items[$mid];
+
+            $module->items[] = $row->Lesson;
         }
-        echo '</ol>';
+
+        foreach ($display as $path) {
+            echo '<h2>' . $path->title . '</h2>';
+            echo '<ol>';
+            foreach ($path->items as $course) {
+                echo '<li>' . $course->title . '<ol>';
+                foreach ($course->items as $module) {
+                    echo '<li>' . $module->title . '<ol>';
+                    foreach ($module->items as $lesson) {
+                        echo '<li>' . $lesson . '</li>';
+                    }
+                    echo '</li></ol>';
+                }
+                echo '<br/></li></ol>';
+            }
+            echo '</li></ol>';
+        }
 
         echo '</div>';
 
