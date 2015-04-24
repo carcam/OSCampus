@@ -15,6 +15,8 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $certificates = array();
     protected $images       = array();
     protected $tags         = array();
+    protected $viewCount    = 0;
+    protected $log          = array();
 
     protected $courses   = array();
     protected $courseMap = array(
@@ -142,8 +144,11 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
         echo '<p><a href="index.php?option=com_oscampus&task=import.setinstructor">Set a demo instructor</a> (when referenced users are not available)</p>';
 
+        $this->log['Start'] = microtime(true);
+
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
+        $this->clearTable('#__oscampus_users_lessons');
         $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_lessons');
         $this->clearTable('#__oscampus_modules');
@@ -151,17 +156,37 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_courses');
         $this->clearTable('#__oscampus_pathways');
         $this->clearTable('#__oscampus_instructors');
+        $this->log['Clear Tables'] = microtime(true);
 
         $this->loadCourses();
-        $this->loadTags();
-        $this->loadInstructors();
-        $this->loadModules();
-        $this->loadLessons();
-        $this->loadCertificates();
+        $this->log['Load Courses'] = microtime(true);
 
-        $this->images['Instructor Images'] = $this->copyImages('#__oscampus_instructors', 'instructors');
-        $this->images['Course Images']     = $this->copyImages('#__oscampus_courses', 'courses');
-        $this->images['Pathway Images']    = $this->copyImages('#__oscampus_pathways', 'pathways');
+        $this->loadTags();
+        $this->log['Load Tags'] = microtime(true);
+
+        $this->loadInstructors();
+        $this->log['Load Instructors'] = microtime(true);
+
+        $this->loadModules();
+        $this->log['Load Modules'] = microtime(true);
+
+        $this->loadLessons();
+        $this->log['Load Lessons'] = microtime(true);
+
+        $this->loadCertificates();
+        $this->log['Load Certificates'] = microtime(true);
+
+        $this->loadViewed();
+        $this->log['Load Viewed'] = microtime(true);
+
+        $this->images['Instructor Images']  = $this->copyImages('#__oscampus_instructors', 'instructors');
+        $this->log['Load Instructor Image'] = microtime(true);
+
+        $this->images['Course Images']   = $this->copyImages('#__oscampus_courses', 'courses');
+        $this->log['Load Course Images'] = microtime(true);
+
+        $this->images['Pathway Images']   = $this->copyImages('#__oscampus_pathways', 'pathways');
+        $this->log['Load Pathway Images'] = microtime(true);
 
         $this->displayResults();
 
@@ -199,6 +224,69 @@ class OscampusControllerImport extends OscampusControllerBase
             'index.php?option=com_oscampus',
             sprintf('Set testing/demo instructor to %s &lt;%s&gt;', $user->name, $user->username)
         );
+    }
+
+    /**
+     * Import Viewed lessons
+     * MUST be run after all pathways, courses, modules and lessons
+     */
+    public function loadViewed()
+    {
+        $dbGuru   = $this->getGuruDbo();
+        $dbCampus = JFactory::getDbo();
+
+        $viewedQuery = $dbGuru->getQuery(true)
+            ->select('*')
+            ->from('#__guru_viewed_lesson')
+            ->where(
+                array(
+                    'pid > 0',
+                    'user_id > 0',
+                    'lesson_id != ' . $dbGuru->quote('')
+                )
+            )
+            ->order('user_id');
+
+        $keys   = array('users_id', 'lessons_id', 'completed', 'last_visit');
+        $offset = 0;
+        $limit  = 50;
+        while ($items = $dbGuru->setQuery($viewedQuery, $offset, $limit)->loadObjectList()) {
+            $data = array();
+            foreach ($items as $item) {
+                $lessons = explode('||', trim($item->lesson_id, '|'));
+
+                foreach ($lessons as $lesson) {
+                    if (isset($this->lessons[$lesson])) {
+                        $data[] = array(
+                            'users_id'   => $item->user_id,
+                            'lessons_id' => $this->lessons[$lesson]->id,
+                            'completed'  => str_replace('0000-00-00', '', $item->date_completed) ?: null,
+                            'last_visit' => str_replace('0000-00-00', '', $item->date_last_visit) ?: null
+                        );
+                    }
+                }
+            }
+
+            array_walk($data, function (&$values) use ($dbCampus) {
+
+                $newValues = array_map(array($dbCampus, 'quote'), $values);
+                $values    = str_replace($dbCampus->quote(''), 'NULL', join(',', $newValues));
+            });
+
+            $insertQuery = $dbCampus->getQuery(true)
+                ->insert('#__oscampus_users_lessons')
+                ->columns($keys)
+                ->values($data);
+
+            $dbCampus->setQuery($insertQuery)->execute();
+            if ($error = $dbCampus->getErrorMsg()) {
+                $this->errors[] = $error;
+                return;
+            }
+
+            $this->viewCount += count($data);
+            $offset += $limit;
+        }
     }
 
     /**
@@ -501,8 +589,13 @@ class OscampusControllerImport extends OscampusControllerBase
                 ->order($key);
         }
 
-        $fields     = array_filter($map);
-        $guruData   = $dbGuru->setQuery($guruQuery)->loadAssocList();
+        $fields   = array_filter($map);
+        $guruData = $dbGuru->setQuery($guruQuery)->loadAssocList();
+        if ($error = $dbGuru->getErrorMsg()) {
+            $this->errors[] = $error;
+            return array();
+        }
+
         $campusData = array();
         foreach ($guruData as $row) {
             $converted = (object)array(
@@ -510,7 +603,11 @@ class OscampusControllerImport extends OscampusControllerBase
                 'created_by_alias' => 'Guru Import'
             );
             foreach ($fields as $guruField => $campusField) {
-                $converted->$campusField = $row[$guruField];
+                if (isset($row[$guruField])) {
+                    if (substr($row[$guruField], 0, 10) != '0000-00-00') {
+                        $converted->$campusField = $row[$guruField];
+                    }
+                }
             }
 
             if (is_callable($callable) ? $callable($row, $converted) : true) {
@@ -522,7 +619,12 @@ class OscampusControllerImport extends OscampusControllerBase
                 if ($newId = $dbCampus->insertid()) {
                     $converted->id = $newId;
                 }
-                $campusData[$row[$key]] = $converted;
+
+                if ($key && isset($row[$key])) {
+                    $campusData[$row[$key]] = $converted;
+                } else {
+                    $campusData[] = $converted;
+                }
             }
         }
 
@@ -577,7 +679,7 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $db = JFactory::getDbo();
 
-        echo '<div style="float: left; width:50%">';
+        echo '<div style="float: left; width:40%">';
 
         echo '<ul>';
         echo '<li>' . number_format(count($this->pathways)) . ' Pathways</li>';
@@ -586,6 +688,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->instructors)) . ' Instructors</li>';
         echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
         echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
+        echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }
@@ -666,11 +769,59 @@ class OscampusControllerImport extends OscampusControllerBase
 
         echo '</div>';
 
+        echo '<div style="float: left; padding: 10px;">';
+        echo '<h2>Time Log</h2>';
+        $start = null;
+        $last  = null;
+        foreach ($this->log as $text => $time) {
+            if ($start === null) {
+                $last = $start = $time;
+            }
+
+            echo sprintf(
+                '%s&gt; %s %s %s<br/>',
+                date('Y-m-d H:i:s', $time),
+                $this->timeStamp($time - $start),
+                $this->timeStamp($time - $last),
+                $text
+            );
+
+            $last = $time;
+        }
+        echo '</div>';
+
         if ($this->errors) {
             echo '<div style="float: left;">';
+            echo '<h2>Error Log</h2>';
             echo join('<br/>', $this->errors);
             echo '</div>';
         }
+    }
+
+    /**
+     * Format a number into H:M:S.U timestamp
+     *
+     * @param float $timestamp
+     *
+     * @return string
+     */
+    protected function timeStamp($timestamp)
+    {
+        $hours    = 0;
+        $minutes  = 0;
+        $seconds  = (int)$timestamp;
+        $useconds = (int)(($timestamp - $seconds) * 1000);
+
+        if ($seconds > 60) {
+            $minutes = (int)$seconds / 60;
+            $seconds -= ($minutes * 60);
+        }
+        if ($minutes > 60) {
+            $hours = (int)$minutes[1] / 60;
+            $minutes -= ($hours * 60);
+        }
+
+        return sprintf('%02d:%02d.%03d', $minutes, $seconds, $useconds);
     }
 
     protected function getUsers()
