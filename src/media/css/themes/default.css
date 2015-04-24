@@ -421,6 +421,10 @@ div.osc-alert-notify{
     width: auto;
 }
 
+.osc-container .osc-section.osc-course-tabs > div:first-child {
+    margin-left: 3px;
+}
+
 .osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
     background: #f2f2f2;
     border-color: #f2f2f2;
@@ -521,14 +525,6 @@ div.osc-alert-notify{
     .osc-container select {
         width: 80%;
     }
-    /* Listing */
-    .osc-container .osc-row-heading {
-        display: none;
-    }
-    .osc-row-one [class*="block"],
-    .osc-row-two [class*="block"]{
-        padding: 5px 10px;
-    }
     /* tabs */
     .osc-container .osc-section.osc-course-tabs > div {
         margin-bottom: 2px;
@@ -537,6 +533,19 @@ div.osc-alert-notify{
         width: 100%;
         float: none;
         text-align: left;
+    }
+    .osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        -o-box-shadow: none;
+        border-right-width: 1px;
+        border-left-width: 1px;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+    .osc-container .osc-section.osc-course-tabs > div:first-child {
+        margin-left: 0;
     }
     .osc-container .osc-section .osc-check-viewed {
         display: none;
