@@ -15,19 +15,105 @@ defined('_JEXEC') or die();
         <h1>Why WordPress?</h1>
     </div>
 
-    <div class="osc-section osc-course-details">
-        <div class="block4 osc-course-image">
-            <a href="#">
-                <img alt="" src="https://www.ostraining.com/cdn/images/stories/guru/courses/thumbs/Why-WordPress-User.jpg">
-            </a>
-        </div>
-        <div class="block8 osc-course-description">
-            <p>Teacher: Topher DeRosia<br/>
-            Released: March 24, 2014<br/>
-            Level: Beginner<br/>
-            Certificate: Finish lessons, plus pass quizzes with an average of 70%</p>
+    <div class="osc-course-details">
+        <div class="osc-section">
+            <div class="block4 osc-course-image">
+                <a href="#">
+                    <img alt="" src="https://www.ostraining.com/cdn/images/stories/guru/courses/thumbs/Why-WordPress-User.jpg">
+                </a>
+            </div>
+            <div class="block8 osc-course-description">
+                <div class="osc-course-info"><strong>Teacher:</strong> Topher DeRosia<br/>
+                <strong>Released:</strong> March 24, 2014<br/>
+                <strong>Level:</strong> Beginner<br/>
+                <strong>Certificate:</strong> Finish lessons, plus pass quizzes with an average of 70%</div>
+            </div>
         </div>
     </div>
     <!-- .osc-section -->
+
+    <div class="osc-section osc-course-tabs">
+        <div data-content="#content-content" class="block2">
+            Table of Contents
+        </div>
+        <div data-content="#content-description" class="block2 osc-tab-disabled">
+            Description
+        </div>
+        <div data-content="#content-teacher" class="block2 osc-tab-disabled">
+            Teacher
+        </div>
+        <div data-content="#content-requirements" class="block2 osc-tab-disabled">
+            Requirements
+        </div>
+    </div>
+    <!-- .osc-course-tabs -->
+
+    <div id="content-content" class="osc-course-tabs-content">
+        <div class="osc-table">
+            <div class="osc-section osc-row-heading">
+                <div class="block12"><i class="uk-icon uk-icon-play"></i> Course separator</div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"><i class="uk-icon uk-icon-check"></i> Viewed</div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"><i class="uk-icon uk-icon-check"></i> Viewed</div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"><i class="uk-icon uk-icon-check"></i> Viewed</div>
+            </div>
+            <div class="osc-section osc-row-heading">
+                <div class="block12"><i class="uk-icon uk-icon-play"></i> Course separator</div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"><i class="uk-icon uk-icon-check"></i> Viewed</div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"><i class="uk-icon uk-icon-check"></i> Viewed</div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-two">
+                <div class="block10"><a href="#">Lesson name goes here</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+            <div class="osc-section osc-row-one">
+                <div class="block10"><a href="#">Quiz</a></div>
+                <div class="block2 osc-check-viewed"></div>
+            </div>
+        </div>
+    </div>
+    <!-- #content-lessons -->
 
 </div>
