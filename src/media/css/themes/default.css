@@ -396,7 +396,8 @@ div.osc-alert-notify{
 
 /* Course
  ========================================================================== */
-.osc-course-info {
+.osc-container .osc-course-info {
+    font-size: 14px;
     line-height: 24px;
 }
 
