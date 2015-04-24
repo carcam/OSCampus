@@ -39,7 +39,7 @@ defined('_JEXEC') or die();
         <div data-content="#content-description" class="block2 osc-tab-disabled">
             Description
         </div>
-        <div data-content="#content-teacher" class="block2 osc-tab-disabled">
+        <div data-content="#content-trainer" class="block2 osc-tab-disabled">
             Teacher
         </div>
         <div data-content="#content-requirements" class="block2 osc-tab-disabled">
@@ -115,5 +115,20 @@ defined('_JEXEC') or die();
         </div>
     </div>
     <!-- #content-lessons -->
+
+    <div id="content-description" class="osc-course-tabs-content" style="display: none">
+        <p>Description goes here</p>
+    </div>
+    <!-- #content-description -->
+
+    <div id="content-trainer" class="osc-course-tabs-content" style="display: none">
+        <p>Trainer goes here</p>
+    </div>
+    <!-- #content-trainer -->
+
+    <div id="content-requirements" class="osc-course-tabs-content" style="display: none">
+        <p>Requirements goes here</p>
+    </div>
+    <!-- #content-requirements -->
 
 </div>
