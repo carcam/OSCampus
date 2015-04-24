@@ -8,6 +8,26 @@
 
 defined('_JEXEC') or die();
 ?>
-<h1>Under Construction</h1>
-Equivalent to something like
-<a href="https://www.ostraining.com/courses/class/wordpress/why" target="_blank">Why Wordpress</a>
+
+<div class="osc-container oscampus-course">
+
+    <div class="page-header">
+        <h1>Why WordPress?</h1>
+    </div>
+
+    <div class="osc-section osc-course-details">
+        <div class="block4 osc-course-image">
+            <a href="#">
+                <img alt="" src="https://www.ostraining.com/cdn/images/stories/guru/courses/thumbs/Why-WordPress-User.jpg">
+            </a>
+        </div>
+        <div class="block8 osc-course-description">
+            <p>Teacher: Topher DeRosia<br/>
+            Released: March 24, 2014<br/>
+            Level: Beginner<br/>
+            Certificate: Finish lessons, plus pass quizzes with an average of 70%</p>
+        </div>
+    </div>
+    <!-- .osc-section -->
+
+</div>
