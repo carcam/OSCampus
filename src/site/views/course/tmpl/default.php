@@ -7,26 +7,34 @@
  */
 
 defined('_JEXEC') or die();
+
+/**
+ * @var OscampusViewCourse $this
+ */
 ?>
 
 <div class="osc-container oscampus-course">
 
     <div class="page-header">
-        <h1>Why WordPress?</h1>
+        <h1><?php echo $this->course->title; ?></h1>
     </div>
 
     <div class="osc-course-details">
         <div class="osc-section">
             <div class="block4 osc-course-image">
-                <a href="#">
-                    <img alt="" src="https://www.ostraining.com/cdn/images/stories/guru/courses/thumbs/Why-WordPress-User.jpg">
-                </a>
+                <?php echo JHtml::_('image', $this->course->image, $this->course->title); ?>
             </div>
             <div class="block8 osc-course-description">
-                <div class="osc-course-info"><strong>Teacher:</strong> Topher DeRosia<br/>
-                <strong>Released:</strong> March 24, 2014<br/>
-                <strong>Level:</strong> Beginner<br/>
-                <strong>Certificate:</strong> Finish lessons, plus pass quizzes with an average of 70%</div>
+                <div class="osc-course-info">
+                    <strong>Teacher:</strong> <?php echo $this->instructor->name; ?>
+                    <br/>
+                    <strong>Released:</strong> UNDER CONSTRUCTION
+                    <br/>
+                    <strong>Level:</strong>
+                    <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $this->course->difficulty); ?>
+                    <br/>
+                    <strong>Certificate:</strong> UNDER CONSTRUCTION
+                </div>
             </div>
         </div>
     </div>
