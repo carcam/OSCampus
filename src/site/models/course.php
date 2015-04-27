@@ -37,6 +37,17 @@ class OscampusModelCourse extends OscampusModelSite
 
         $instructor = $db->setQuery($query)->loadObject();
 
+        $instructor->parameters = new JRegistry($instructor->parameters);
+        $instructor->links = array();
+
+        $showLinks = $instructor->parameters->get('show');
+        foreach ($showLinks as $linkName => $show) {
+            $link = $instructor->parameters->get($linkName);
+            if ($show && $link) {
+                $instructor->links[$linkName] = $link;
+            }
+        }
+
         return $instructor;
     }
 
