@@ -48,6 +48,7 @@
         <menu img="../media/com_oscampus/images/icon-16-oscampus.png">COM_OSCAMPUS_ADMINMENU</menu>
 
         <files folder="admin">
+            <folder>controllers</folder>
             <folder>language</folder>
             <folder>library</folder>
             <folder>sql</folder>

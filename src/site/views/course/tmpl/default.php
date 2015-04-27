@@ -11,6 +11,8 @@ defined('_JEXEC') or die();
 /**
  * @var OscampusViewCourse $this
  */
+
+JHtml::_('osc.tabs', '.osc-course-tabs div');
 ?>
 
 <div class="osc-container oscampus-course">
