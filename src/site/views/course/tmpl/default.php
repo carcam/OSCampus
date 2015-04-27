@@ -33,7 +33,7 @@ defined('_JEXEC') or die();
                     <strong>Level:</strong>
                     <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $this->course->difficulty); ?>
                     <br/>
-                    <strong>Certificate:</strong> UNDER CONSTRUCTION
+                    <strong>Certificate:</strong> <?php echo JText::_('COM_OSCAMPUS_CERTIFICATE_REQUIREMENT'); ?>
                 </div>
             </div>
         </div>
