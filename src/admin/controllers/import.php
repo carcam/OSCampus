@@ -29,7 +29,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'image'                  => 'image',
         'emails'                 => null,
         'published'              => 'published',
-        'startpublish'           => 'created',
+        'startpublish'           => 'released',
         'endpublish'             => null,
         'metatitle'              => null,
         'metakwd'                => null,
@@ -540,6 +540,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     $converted->introtext   = trim($matches[1]);
                     $converted->description = trim($matches[2]);
                 }
+                $converted->created = $guruData['startpublish'];
                 return true;
             }
         );

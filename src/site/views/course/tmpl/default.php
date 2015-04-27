@@ -28,7 +28,7 @@ defined('_JEXEC') or die();
                 <div class="osc-course-info">
                     <strong>Teacher:</strong> <?php echo $this->instructor->name; ?>
                     <br/>
-                    <strong>Released:</strong> UNDER CONSTRUCTION
+                    <strong>Released:</strong> <?php echo JHtml::_('date', $this->course->released, 'F j, Y'); ?>
                     <br/>
                     <strong>Level:</strong>
                     <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $this->course->difficulty); ?>
