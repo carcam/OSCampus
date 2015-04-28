@@ -49,6 +49,9 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
         <div data-content="#content-description" class="block2 osc-tab-disabled">
             <?php echo JText::_('COM_OSCAMPUS_COURSE_DESCRIPTION'); ?>
         </div>
+        <div data-content="#content-files" class="block2 osc-tab-disabled">
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_EXERCISE_FILES'); ?>
+        </div>
         <?php
         if ($this->teacher->id) :
             ?>
@@ -67,6 +70,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
     <?php
     echo $this->loadTemplate('content');
     echo $this->loadTemplate('description');
+    echo $this->loadTemplate('files');
     if ($this->teacher->id) {
         echo $this->loadTemplate('teacher');
     }
