@@ -44,22 +44,22 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
 
     <div class="osc-section osc-course-tabs">
         <div data-content="#content-content" class="block2">
-            <?php echo JText::_('COM_OSCAMPUS_VIEW_COURSE_TOC'); ?>
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_TOC'); ?>
         </div>
         <div data-content="#content-description" class="block2 osc-tab-disabled">
-            <?php echo JText::_('COM_OSCAMPUS_VIEW_COURSE_DESCRIPTION'); ?>
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_DESCRIPTION'); ?>
         </div>
         <?php
         if ($this->instructor->id) :
             ?>
             <div data-content="#content-trainer" class="block2 osc-tab-disabled">
-                <?php echo JText::_('COM_OSCAMPUS_VIEW_COURSE_INSTRUCTOR'); ?>
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_INSTRUCTOR'); ?>
             </div>
         <?php
         endif;
         ?>
         <div data-content="#content-requirements" class="block2 osc-tab-disabled">
-            <?php echo JText::_('COM_OSCAMPUS_VIEW_COURSE_REQUIREMENTS'); ?>
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_REQUIREMENTS'); ?>
         </div>
     </div>
     <!-- .osc-course-tabs -->
