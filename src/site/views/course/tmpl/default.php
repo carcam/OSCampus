@@ -28,7 +28,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             </div>
             <div class="block8 osc-course-description">
                 <div class="osc-course-info">
-                    <strong>Teacher:</strong> <?php echo $this->instructor->name; ?>
+                    <strong>Teacher:</strong> <?php echo $this->teacher->name; ?>
                     <br/>
                     <strong>Released:</strong> <?php echo JHtml::_('date', $this->course->released, 'F j, Y'); ?>
                     <br/>
@@ -50,10 +50,10 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             <?php echo JText::_('COM_OSCAMPUS_COURSE_DESCRIPTION'); ?>
         </div>
         <?php
-        if ($this->instructor->id) :
+        if ($this->teacher->id) :
             ?>
-            <div data-content="#content-trainer" class="block2 osc-tab-disabled">
-                <?php echo JText::_('COM_OSCAMPUS_COURSE_INSTRUCTOR'); ?>
+            <div data-content="#content-teacher" class="block2 osc-tab-disabled">
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_TEACHER'); ?>
             </div>
         <?php
         endif;
@@ -67,8 +67,8 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
     <?php
     echo $this->loadTemplate('content');
     echo $this->loadTemplate('description');
-    if ($this->instructor->id) {
-        echo $this->loadTemplate('instructor');
+    if ($this->teacher->id) {
+        echo $this->loadTemplate('teacher');
     }
     echo $this->loadTemplate('requirements');
     ?>

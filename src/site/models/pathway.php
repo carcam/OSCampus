@@ -13,11 +13,11 @@ class OscampusModelPathway extends OscampusModelList
     protected function getListQuery()
     {
         $query = parent::getListQuery()
-            ->select('cp.*, p.title pathway, u.name instructor, c.*')
+            ->select('cp.*, p.title pathway, u.name teacher, c.*')
             ->from('#__oscampus_pathways p')
             ->innerJoin('#__oscampus_courses_pathways cp ON cp.pathways_id = p.id')
             ->innerJoin('#__oscampus_courses c ON c.id = cp.courses_id')
-            ->leftJoin('#__oscampus_instructors i ON i.id = c.instructors_id')
+            ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->where(
                 array(
@@ -35,15 +35,15 @@ class OscampusModelPathway extends OscampusModelList
     {
         $items = parent::getItems();
 
-        $tbd = JText::_('COM_OSCAMPUS_INSTRUCTOR_UNKNOWN');
+        $tbd = JText::_('COM_OSCAMPUS_TEACHER_UNKNOWN');
 
         $courses = array();
         foreach ($items as $idx => $item) {
             $courses[$item->id] = $idx;
 
             $item->tags = array();
-            if (!$item->instructor) {
-                $item->instructor = $tbd;
+            if (!$item->teacher) {
+                $item->teacher = $tbd;
             }
         }
 

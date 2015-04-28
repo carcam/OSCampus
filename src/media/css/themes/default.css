@@ -124,8 +124,8 @@
 .osc-container input[type="password"]:focus,
 .osc-container textarea:focus,
 .osc-container select:focus,
-.osc-container input:focus:invalid:focus, 
-.osc-container textarea:focus:invalid:focus, 
+.osc-container input:focus:invalid:focus,
+.osc-container textarea:focus:invalid:focus,
 .osc-container select:focus:invalid:focus{
     color: #666666;
     border-color: #999999;
@@ -253,7 +253,7 @@
     background:#ff0000;
 }
 
-.osc-container input[type="submit"].btn-warning:hover, 
+.osc-container input[type="submit"].btn-warning:hover,
 .osc-container input[type="submit"].btn-warning:focus,
 .osc-container button.btn-warning:hover,
 .osc-container button.btn-warning:focus,
@@ -474,8 +474,8 @@ div.osc-alert-notify{
     background-image: url(../../images/icon-time.png);
 }
 
-.osc-label-trainer {
-    background-image: url(../../images/icon-trainer.png);
+.osc-label-teacher {
+    background-image: url(../../images/icon-teacher.png);
 }
 
 .osc-label-easy {

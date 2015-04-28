@@ -50,8 +50,8 @@ $itemId = $itemId ? '&Itemid=' . $itemId : '';
             <span class="osc-label osc-label-time">
                 <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
             </span>
-            <span class="osc-label osc-label-trainer">
-                <?php echo $item->instructor; ?>
+            <span class="osc-label osc-label-teacher">
+                <?php echo $item->teacher; ?>
             </span>
         </div>
     </div>

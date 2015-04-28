@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 class OscampusViewCourse extends OscampusViewSite
 {
     protected $course     = null;
-    protected $instructor = null;
+    protected $teacher = null;
     protected $lessons    = array();
 
     public function display($tpl = null)
@@ -20,7 +20,7 @@ class OscampusViewCourse extends OscampusViewSite
         $model = $this->getModel();
 
         $this->course     = $model->getCourse();
-        $this->instructor = $model->getInstructor();
+        $this->teacher = $model->getTeacher();
         $this->lessons    = $model->getLessons();
 
         parent::display($tpl);

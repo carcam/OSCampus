@@ -38,7 +38,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'pre_req'                => null,
         'pre_req_books'          => null,
         'reqmts'                 => null,
-        'author'                 => null, // Must be converted when importing instructors
+        'author'                 => null, // Must be converted when importing teachers
         'level'                  => 'difficulty',
         'priceformat'            => null,
         'skip_module'            => null,
@@ -70,8 +70,8 @@ class OscampusControllerImport extends OscampusControllerBase
         'ordering'    => 'ordering'
     );
 
-    protected $instructors   = array();
-    protected $instructorMap = array(
+    protected $teachers   = array();
+    protected $teacherMap = array(
         'id'            => null,
         'userid'        => 'users_id',
         'full_bio'      => 'bio',
@@ -142,7 +142,7 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('display_errors', 1);
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
-        echo '<p><a href="index.php?option=com_oscampus&task=import.setinstructor">Set a demo instructor</a> (when referenced users are not available)</p>';
+        echo '<p><a href="index.php?option=com_oscampus&task=import.setteacher">Set a demo teacher</a> (when referenced users are not available)</p>';
 
         $this->log['Start'] = microtime(true);
 
@@ -155,7 +155,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_certificates');
         $this->clearTable('#__oscampus_courses');
         $this->clearTable('#__oscampus_pathways');
-        $this->clearTable('#__oscampus_instructors');
+        $this->clearTable('#__oscampus_teachers');
         $this->log['Clear Tables'] = microtime(true);
 
         $this->loadCourses();
@@ -164,8 +164,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadTags();
         $this->log['Load Tags'] = microtime(true);
 
-        $this->loadInstructors();
-        $this->log['Load Instructors'] = microtime(true);
+        $this->loadTeachers();
+        $this->log['Load Teachers'] = microtime(true);
 
         $this->loadModules();
         $this->log['Load Modules'] = microtime(true);
@@ -179,8 +179,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadViewed();
         $this->log['Load Viewed'] = microtime(true);
 
-        $this->images['Instructor Images']  = $this->copyImages('#__oscampus_instructors', 'instructors');
-        $this->log['Load Instructor Image'] = microtime(true);
+        $this->images['Teacher Images']  = $this->copyImages('#__oscampus_teachers', 'teachers');
+        $this->log['Load Teacher Image'] = microtime(true);
 
         $this->images['Course Images']   = $this->copyImages('#__oscampus_courses', 'courses');
         $this->log['Load Course Images'] = microtime(true);
@@ -195,17 +195,17 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
-     * Set all instructors to one available user.
+     * Set all teachers to one available user.
      * This will help a little while we are still in testing
      * and none of the users referenced in the db are on this system
      *
      */
-    public function setinstructor()
+    public function setteacher()
     {
         $db = JFactory::getDbo();
 
         $db->setQuery(
-            'ALTER TABLE ' . $db->quoteName('#__oscampus_instructors')
+            'ALTER TABLE ' . $db->quoteName('#__oscampus_teachers')
             . ' DROP INDEX ' . $db->quoteName('idx_users_id')
             . ', ADD INDEX ' . $db->quoteName('idx_users_id')
             . ' (' . $db->quoteName('users_id') . ')'
@@ -214,7 +214,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $user = JFactory::getUser(747);
         $db->setQuery(
-            'UPDATE ' . $db->quoteName('#__oscampus_instructors')
+            'UPDATE ' . $db->quoteName('#__oscampus_teachers')
             . ' SET users_id = ' . $user->id . ' where users_id > 0'
         )
             ->execute();
@@ -222,7 +222,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->setRedirect(
             'index.php?option=com_oscampus',
-            sprintf('Set testing/demo instructor to %s &lt;%s&gt;', $user->name, $user->username)
+            sprintf('Set testing/demo teacher to %s &lt;%s&gt;', $user->name, $user->username)
         );
     }
 
@@ -395,7 +395,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     /**
      * Load certificates earned by users
-     * MUST be run after courses and instructors are loaded
+     * MUST be run after courses and teachers are loaded
      */
     protected function loadCertificates()
     {
@@ -433,17 +433,17 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
-     * Import Instructors
+     * Import Teachers
      * Must be called after courses are loaded
      */
-    protected function loadInstructors()
+    protected function loadTeachers()
     {
         $users = $this->getUsers();
 
-        $this->instructors = $this->copyTable(
+        $this->teachers = $this->copyTable(
             '#__guru_authors',
-            '#__oscampus_instructors',
-            $this->instructorMap,
+            '#__oscampus_teachers',
+            $this->teacherMap,
             'id',
             function ($guruData, $convertedData) use ($users) {
                 if (isset($users[$convertedData->users_id])) {
@@ -496,10 +496,10 @@ class OscampusControllerImport extends OscampusControllerBase
                 $oldKey = $course->authors_id;
                 $update = (object)array(
                     'id'             => $this->courses[$course->id]->id,
-                    'instructors_id' => null
+                    'teachers_id' => null
                 );
-                if (isset($this->instructors[$oldKey])) {
-                    $update->instructors_id = $this->instructors[$oldKey]->id;
+                if (isset($this->teachers[$oldKey])) {
+                    $update->teachers_id = $this->teachers[$oldKey]->id;
                 }
                 $db->updateObject('#__oscampus_courses', $update, 'id', true);
                 if ($error = $db->getErrorMsg()) {
@@ -686,7 +686,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->pathways)) . ' Pathways</li>';
         echo '<li>' . number_format(count($this->courses)) . ' Courses</li>';
         echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
-        echo '<li>' . number_format(count($this->instructors)) . ' Instructors</li>';
+        echo '<li>' . number_format(count($this->teachers)) . ' Teachers</li>';
         echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
         echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
@@ -711,7 +711,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
-            ->leftJoin('#__oscampus_instructors i ON i.id = c.instructors_id')
+            ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
             ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')

@@ -24,31 +24,31 @@ class OscampusModelCourse extends OscampusModelSite
         return $course;
     }
 
-    public function getInstructor()
+    public function getTeacher()
     {
         $db = JFactory::getDbo();
 
         $query = $db->getQuery(true)
             ->select('i.*, u.username, u.name, u.email')
-            ->from('#__oscampus_instructors i')
-            ->innerJoin('#__oscampus_courses c ON c.instructors_id = i.id')
+            ->from('#__oscampus_teachers i')
+            ->innerJoin('#__oscampus_courses c ON c.teachers_id = i.id')
             ->leftJoin(('#__users u ON u.id = i.users_id'))
             ->where('c.id = ' . (int)$this->getState('course.id'));
 
-        $instructor = $db->setQuery($query)->loadObject();
+        $teacher = $db->setQuery($query)->loadObject();
 
-        $instructor->parameters = new JRegistry($instructor->parameters);
-        $instructor->links = array();
+        $teacher->parameters = new JRegistry($teacher->parameters);
+        $teacher->links = array();
 
-        $showLinks = $instructor->parameters->get('show');
+        $showLinks = $teacher->parameters->get('show');
         foreach ($showLinks as $linkName => $show) {
-            $link = $instructor->parameters->get($linkName);
+            $link = $teacher->parameters->get($linkName);
             if ($show && $link) {
-                $instructor->links[$linkName] = $link;
+                $teacher->links[$linkName] = $link;
             }
         }
 
-        return $instructor;
+        return $teacher;
     }
 
     public function getLessons()
