@@ -38,7 +38,7 @@ class OscampusModelCourse extends OscampusModelSite
         $teacher = $db->setQuery($query)->loadObject();
 
         $teacher->parameters = new JRegistry($teacher->parameters);
-        $teacher->links = array();
+        $teacher->links      = array();
 
         $showLinks = $teacher->parameters->get('show');
         foreach ($showLinks as $linkName => $show) {
@@ -68,7 +68,25 @@ class OscampusModelCourse extends OscampusModelSite
             )
             ->order('m.ordering ASC, l.ordering ASC');
 
-        $lessons = $db->setQuery($query)->loadObjectList();
+        $list = $db->setQuery($query)->loadObjectList();
+
+        $lessons = array();
+        $module  = (object)array(
+            'id'      => null,
+            'title'   => null,
+            'lessons' => array()
+        );
+        foreach ($list as $lesson) {
+            if ($lesson->modules_id != $module->id) {
+                if ($module->lessons) {
+                    $lessons[] = clone $module;
+                }
+                $module->id = $lesson->modules_id;
+                $module->title = $lesson->module_title;
+                $module->lessons = array();
+            }
+            $module->lessons[] = $lesson;
+        }
 
         return $lessons;
     }
