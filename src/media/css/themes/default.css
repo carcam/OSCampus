@@ -312,6 +312,10 @@ div.osc-alert-notify{
 
 /* Listing
  ========================================================================== */
+.osc-table {
+    border-top: 1px solid rgba(102,102,102,0.15);
+}
+
 .osc-row-one{
     background: rgba(242,242,242,0.3);
     border-bottom: 1px dashed #f2f2f2;
@@ -374,6 +378,23 @@ div.osc-alert-notify{
 .osc-container .osc-row-heading {
     background: #fff;
     border-bottom: 1px solid rgba(102,102,102,0.15);
+}
+
+/* Teacher
+ ========================================================================== */
+.osc-container .osc-teacher-image {
+    float: left;
+    margin: 5px 20px 10px 0;
+}
+
+.osc-container .osc-level-icon {
+    height: 11px;
+    margin-bottom: 4px;
+    width: auto;
+}
+
+.osc-container .osc-teacher-description {
+    display: table;
 }
 
 /* Pathways
@@ -558,8 +579,8 @@ div.osc-alert-notify{
     .osc-container .osc-section.osc-course-tabs > div:first-child {
         margin-left: 0;
     }
-    .osc-container .osc-section .osc-check-viewed {
-        display: none;
+    .osc-container .osc-hide-tablet {
+        display: none !important;
     }
     .osc-course-tabs-content {
         margin-top: 0;

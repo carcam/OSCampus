@@ -28,7 +28,7 @@ defined('_JEXEC') or die();
                             <?php echo $lesson->title; ?>
                         </a>
                     </div>
-                    <div class="block3 osc-check-viewed">
+                    <div class="block3 osc-check-viewed osc-hide-tablet">
                         <i class="fa fa-check"></i> Viewed
                     </div>
                 </div>
