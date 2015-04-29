@@ -28,16 +28,34 @@ class OscampusModelCourse extends OscampusModelSite
     {
         $db = JFactory::getDbo();
 
+        $cid = (int)$this->getState('course.id');
+
         $query = $db->getQuery(true)
             ->select('i.*, u.username, u.name, u.email')
             ->from('#__oscampus_teachers i')
             ->innerJoin('#__oscampus_courses c ON c.teachers_id = i.id')
             ->leftJoin(('#__users u ON u.id = i.users_id'))
-            ->where('c.id = ' . (int)$this->getState('course.id'));
-
+            ->where('c.id = ' . $cid);
         $teacher = $db->setQuery($query)->loadObject();
 
         $teacher->links = json_decode($teacher->links);
+
+        // Get other courses for this teacher
+        $queryCourses = $db->getQuery(true)
+            ->select('p.title pathway_title, c.*')
+            ->from('#__oscampus_teachers t')
+            ->innerJoin('#__oscampus_courses c ON c.teachers_id = t.id')
+            ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
+            ->innerJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+            ->where(
+                array(
+                    'c.id != ' . $cid,
+                    't.id = ' . $teacher->id
+                )
+            )
+            ->order('p.ordering ASC, cp.ordering ASC, c.title ASC');
+
+        $teacher->courses = $db->setQuery($queryCourses)->loadObjectList();
 
         return $teacher;
     }
