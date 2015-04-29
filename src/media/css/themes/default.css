@@ -324,12 +324,20 @@ div.osc-alert-notify{
 
 .osc-row-one [class*="block"],
 .osc-row-two [class*="block"]{
-    padding: 10px 10px 10px 40px;
+    padding: 10px;
 }
 
 .osc-row-heading [class*="block"] {
-    padding: 10px 10px 10px 20px;
+    padding: 10px;
     font-weight: bold;
+}
+
+.osc-container .p-left-x[class*="block"] {
+    padding-left: 20px;
+}
+
+.osc-container .p-left-xx[class*="block"] {
+    padding-left: 38px;
 }
 
 .osc-row-one [class*="block"] label,
@@ -365,7 +373,7 @@ div.osc-alert-notify{
 
 .osc-container .osc-row-heading {
     background: #fff;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgba(102,102,102,0.15);
 }
 
 /* Pathways

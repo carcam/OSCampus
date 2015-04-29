@@ -15,7 +15,7 @@ defined('_JEXEC') or die();
         foreach ($this->lessons as $module) :
             ?>
             <div class="osc-section osc-row-heading">
-                <div class="block12"><i class="fa fa-align-justify"></i>
+                <div class="block12 p-left-x"><i class="fa fa-align-justify"></i>
                     <?php echo $module->title; ?>
                 </div>
             </div>
@@ -23,7 +23,7 @@ defined('_JEXEC') or die();
             foreach ($module->lessons as $i => $lesson) :
                 ?>
                 <div class="<?php echo 'osc-section ' . ($i%2 ? 'osc-row-two' : 'osc-row-one'); ?>">
-                    <div class="block9">
+                    <div class="block9 p-left-xx">
                         <a href="javascript:alert('Under Construction');">
                             <?php echo $lesson->title; ?>
                         </a>
