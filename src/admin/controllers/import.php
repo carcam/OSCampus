@@ -447,36 +447,42 @@ class OscampusControllerImport extends OscampusControllerBase
             'id',
             function ($guruData, $convertedData) use ($users) {
                 if (isset($users[$convertedData->users_id])) {
-                    $parameters                = array(
-                        'website'  => (string)preg_replace(
-                            '#^https?://#',
-                            '',
-                            $guruData['website']
+                    $links                = array(
+                        array(
+                            'type' => 'website',
+                            'link' => $guruData['website'],
+                            'show' => (bool)$guruData['show_website'],
                         ),
-                        'blog'     => (string)preg_replace(
-                            '#^https?://#',
-                            '',
-                            $guruData['blog']
+                        array(
+                            'type' => 'email',
+                            'link' => null,
+                            'show' => (bool)$guruData['show_email']
                         ),
-                        'facebook' => (string)preg_replace(
-                            '#^https?://(www\.)?(facebook\.com/)?#',
-                            '',
-                            $guruData['facebook']
+                        array(
+                            'type' => 'blog',
+                            'link' => $guruData['blog'],
+                            'show' => (bool)$guruData['show_blog'],
                         ),
-                        'twitter'  => (string)preg_replace(
-                            '#^https?://(www\.)?(twitter\.com/)?#',
-                            '',
-                            $guruData['twitter']
+                        array(
+                            'type' => 'facebook',
+                            'link' => (string)preg_replace(
+                                '#^https?://(www\.)?(facebook\.com/)?#',
+                                '',
+                                $guruData['facebook']
+                            ),
+                            'show' => (string)(int)$guruData['show_facebook'],
                         ),
-                        'show'     => array(
-                            'website'  => (string)(int)$guruData['show_website'],
-                            'email'    => (string)(int)$guruData['show_email'],
-                            'blog'     => (string)(int)$guruData['show_blog'],
-                            'facebook' => (string)(int)$guruData['show_facebook'],
-                            'twitter'  => (string)(int)$guruData['show_twitter']
+                        array(
+                            'type' => 'twitter',
+                            'link' => (string)preg_replace(
+                                '#^https?://(www\.)?(twitter\.com/)?#',
+                                '',
+                                $guruData['twitter']
+                            ),
+                            'show' => (string)(int)$guruData['show_twitter']
                         )
                     );
-                    $convertedData->parameters = json_encode($parameters);
+                    $convertedData->links = json_encode($links);
                     return true;
                 }
                 return false;
@@ -495,7 +501,7 @@ class OscampusControllerImport extends OscampusControllerBase
             if (isset($this->courses[$course->id])) {
                 $oldKey = $course->authors_id;
                 $update = (object)array(
-                    'id'             => $this->courses[$course->id]->id,
+                    'id'          => $this->courses[$course->id]->id,
                     'teachers_id' => null
                 );
                 if (isset($this->teachers[$oldKey])) {
@@ -705,13 +711,13 @@ class OscampusControllerImport extends OscampusControllerBase
                     'm.title Module',
                     'l.title Lesson',
                     'u.username',
-                    'i.parameters'
+                    't.links'
                 )
             )
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
-            ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
+            ->leftJoin('#__oscampus_teachers t ON t.id = c.teachers_id')
             ->leftJoin('#__users u ON u.id = i.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
             ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')

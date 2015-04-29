@@ -37,16 +37,7 @@ class OscampusModelCourse extends OscampusModelSite
 
         $teacher = $db->setQuery($query)->loadObject();
 
-        $teacher->parameters = new JRegistry($teacher->parameters);
-        $teacher->links      = array();
-
-        $showLinks = $teacher->parameters->get('show');
-        foreach ($showLinks as $linkName => $show) {
-            $link = $teacher->parameters->get($linkName);
-            if ($show && $link) {
-                $teacher->links[$linkName] = $link;
-            }
-        }
+        $teacher->links = json_decode($teacher->links);
 
         return $teacher;
     }
@@ -81,11 +72,14 @@ class OscampusModelCourse extends OscampusModelSite
                 if ($module->lessons) {
                     $lessons[] = clone $module;
                 }
-                $module->id = $lesson->modules_id;
-                $module->title = $lesson->module_title;
+                $module->id      = $lesson->modules_id;
+                $module->title   = $lesson->module_title;
                 $module->lessons = array();
             }
             $module->lessons[] = $lesson;
+        }
+        if ($module->lessons) {
+            $lessons[] = clone $module;
         }
 
         return $lessons;
