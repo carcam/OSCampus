@@ -313,13 +313,13 @@ div.osc-alert-notify{
 /* Listing
  ========================================================================== */
 .osc-row-one{
-    background: rgba(242,242,242,0.1);
-    border-bottom: 1px solid #f2f2f2;
+    background: rgba(242,242,242,0.3);
+    border-bottom: 1px dashed #f2f2f2;
 }
 
 .osc-row-two{
     background: #ffffff;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px dashed #f2f2f2;
 }
 
 .osc-row-one [class*="block"],
@@ -329,6 +329,7 @@ div.osc-alert-notify{
 
 .osc-row-heading [class*="block"] {
     padding: 10px 10px 10px 20px;
+    font-weight: bold;
 }
 
 .osc-row-one [class*="block"] label,
@@ -364,6 +365,7 @@ div.osc-alert-notify{
 
 .osc-container .osc-row-heading {
     background: #fff;
+    border-bottom: 1px solid #ccc;
 }
 
 /* Pathways
