@@ -86,7 +86,7 @@
     -webkit-transition: all 0.2s linear;
     -o-transition: all 0.2s linear;
     transition: all 0.2s linear;
-    text-decoration: underline;
+    text-decoration: none;
     color: #2184cd;
 }
 
@@ -451,6 +451,14 @@ div.osc-alert-notify{
     text-align: center;
     padding: 6px 14px;
     width: auto;
+    border-radius: 6px 6px 0 00;
+    -moz-border-radius: 6px 6px 0 0;
+    -webkit-border-radius: 6px 6px 0 0;
+    -o-border-radius: 6px 6px 0 0;
+    box-shadow: 0 1px 0 #f2f2f2 inset;
+    -moz-box-shadow: 0 1px 0 #f2f2f2 inset;
+    -webkit-box-shadow: 0 1px 0 #f2f2f2 inset;
+    -o-box-shadow: 0 1px 0 #f2f2f2 inset;
 }
 
 .osc-container .osc-section.osc-course-tabs > div:first-child {
@@ -459,15 +467,10 @@ div.osc-alert-notify{
 
 .osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
     background: #f2f2f2;
-    border-color: #f2f2f2;
-    box-shadow: 0 -1px 0 #ccc inset;
-    -moz-box-shadow: 0 -1px 0 #ccc inset;
-    -webkit-box-shadow: 0 -1px 0 #ccc inset;
-    -o-box-shadow: 0 -1px 0 #ccc inset;
-    border-right-width: 0;
-    border-left-width: 0;
-    padding-left: 15px;
-    padding-right: 15px;
+    box-shadow: 0 1px 0 #fff inset, 0 -1px 0 #ccc inset;
+    -moz-box-shadow: 0 1px 0 #fff inset, 0 -1px 0 #ccc inset;
+    -webkit-box-shadow: 0 1px 0 #fff inset, 0 -1px 0 #ccc inset;
+    -o-box-shadow: 0 1px 0 #fff inset, 0 -1px 0 #ccc inset;
 }
 
 .osc-container .osc-course-tabs > div {
@@ -486,6 +489,10 @@ div.osc-alert-notify{
     margin-top: -1px;
     padding: 30px;
     background: #ffffff;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -o-border-radius: 6px;
 }
 
 .osc-container .osc-check-viewed {
@@ -565,6 +572,10 @@ div.osc-alert-notify{
         width: 100%;
         float: none;
         text-align: left;
+        border-radius: 6px;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -o-border-radius: 6px;
     }
     .osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
         box-shadow: none;
