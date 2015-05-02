@@ -22,17 +22,17 @@ defined('_JEXEC') or die();
     <?php
     if ($this->teacher->courses) :
     ?>
-    <h3>Courses by this teacher</h3>
+    <h3><?php echo JText::_('COM_OSCAMPUS_TEACHER_COURSES'); ?></h3>
     <div class="osc-table">
         <div class="osc-section osc-row-heading osc-hide-tablet">
             <div class="block6">
-                Name
+                <?php echo JText::_('COM_OSCAMPUS_TEACHER_NAME'); ?>
             </div>
             <div class="block2">
-                Level
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY'); ?>
             </div>
             <div class="block4">
-                Release Date
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_RELEASE_DATE') ;?>
             </div>
         </div>
         <?php
