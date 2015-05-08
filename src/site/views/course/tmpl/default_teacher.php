@@ -42,13 +42,13 @@ defined('_JEXEC') or die();
                 <div class="block6">
                     <?php echo JHtml::_('link', "javascript:alert('Under Construction');", $course->title); ?>
                 </div>
-                <div class="block2 osc-hide-tablet">
+                <div class="block3 osc-hide-tablet">
                     <?php
                     echo JHtml::_('image', Juri::base() . '/media/com_oscampus/images/icon-' . $course->difficulty, '', 'class="osc-level-icon"'). ' ';
                     echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $course->difficulty);
                     ?>
                 </div>
-                <div class="block4 osc-hide-tablet">
+                <div class="block3 osc-hide-tablet">
                     <?php echo JHtml::_('date', $course->released, 'F j, Y'); ?>
                 </div>
             </div>
