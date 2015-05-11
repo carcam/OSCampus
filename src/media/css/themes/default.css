@@ -334,6 +334,12 @@
     color: #ff0000;
 }
 
+.osc-container a i,
+.osc-container button i,
+.osc-container input[type="submit"] i {
+    line-height: inherit;
+}
+
 /* Help classes
  ========================================================================== */
 div.osc-alert-warning{
@@ -580,6 +586,12 @@ div.osc-alert-notify{
 
 .osc-label-category {
     background-image: url(../../images/icon-category.png);
+}
+
+/* Lesson
+ ========================================================================== */
+#course-navigation {
+    float: right;
 }
 
 /* Media queries
