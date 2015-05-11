@@ -204,9 +204,9 @@
     background: #999999;
 }
 
-.osc-container input[type="submit"].btn-main,
-.osc-container button.btn-main,
-.osc-container a.btn-main {
+.osc-container input[type="submit"].osc-btn-main,
+.osc-container button.osc-btn-main,
+.osc-container a.osc-btn-main {
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -226,12 +226,12 @@
     transition: background-color 0.15s ease-in-out;
 }
 
-.osc-container input[type="submit"].btn-main:hover,
-.osc-container input[type="submit"].btn-main:focus,
-.osc-container button.btn-main:hover,
-.osc-container button.btn-main:focus,
-.osc-container a.btn-main:hover,
-.osc-container a.btn-main:focus {
+.osc-container input[type="submit"].osc-btn-main:hover,
+.osc-container input[type="submit"].osc-btn-main:focus,
+.osc-container button.osc-btn-main:hover,
+.osc-container button.osc-btn-main:focus,
+.osc-container a.osc-btn-main:hover,
+.osc-container a.osc-btn-main:focus {
     background: #41A1D6;
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
     -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
