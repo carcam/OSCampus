@@ -234,26 +234,26 @@
     -o-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
 }
 
-.osc-container input[type="submit"].btn-big,
-.osc-container button.btn-big,
-.osc-container a.btn-big {
+.osc-container input[type="submit"].osc-btn-big,
+.osc-container button.osc-btn-big,
+.osc-container a.osc-btn-big {
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
 }
 
-.osc-container input[type="submit"].btn-warning,
-.osc-container button.btn-warning,
-.osc-container a.btn-warning {
+.osc-container input[type="submit"].osc-btn-warning,
+.osc-container button.osc-btn-warning,
+.osc-container a.osc-btn-warning {
     background:#ff0000;
 }
 
-.osc-container input[type="submit"].btn-warning:hover,
-.osc-container input[type="submit"].btn-warning:focus,
-.osc-container button.btn-warning:hover,
-.osc-container button.btn-warning:focus,
-.osc-container a.btn-warning:hover,
-.osc-container a.btn-warning:focus {
+.osc-container input[type="submit"].osc-btn-warning:hover,
+.osc-container input[type="submit"].osc-btn-warning:focus,
+.osc-container button.osc-btn-warning:hover,
+.osc-container button.osc-btn-warning:focus,
+.osc-container a.osc-btn-warning:hover,
+.osc-container a.osc-btn-warning:focus {
     background:#FF4D4D;
 }
 
@@ -265,6 +265,61 @@
     -webkit-box-shadow: 0 0 5px #ccc inset;
     -o-box-shadow: 0 0 5px #ccc inset;
     background: #f2f2f2;
+}
+
+.osc-btn-group {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    font-size: 0.001px;
+    white-space: nowrap;
+}
+
+.osc-btn-group > * {
+    display: inline-block;
+}
+
+.osc-btn-group .osc-btn {
+    vertical-align: top;
+}
+
+.osc-btn-group > .osc-btn-main:not(:first-child):not(:last-child),
+.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn-main,
+.osc-btn-group > .osc-btn-main:first-child,
+.osc-btn-group > div:first-child .osc-btn-main {
+    margin-right: 1px;
+}
+
+.osc-btn-group > .osc-btn-main:not(:first-child):not(:last-child),
+.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn-main {
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -o-border-radius: 0;
+}
+
+.osc-btn-group > .osc-btn-main:first-child,
+.osc-btn-group > div:first-child .osc-btn-main {
+    border-bottom-right-radius: 0;
+    -moz-border-bottom-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -o-border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    -moz-border-top-right-radius: 0;
+    -webkit-border-top-right-radius: 0;
+    -o-border-top-right-radius: 0;
+}
+
+.osc-btn-group > .osc-btn-main:last-child,
+.osc-btn-group > div:last-child .osc-btn-main {
+    border-bottom-left-radius: 0;
+    -moz-border-bottom-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -o-border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    -moz-border-top-left-radius: 0;
+    -webkit-border-top-left-radius: 0;
+    -o-border-top-left-radius: 0;
 }
 
 .osc-container label {
