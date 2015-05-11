@@ -43,7 +43,7 @@ This will be specific lessons. Right now this means either (login at ostraining.
                         <i class="fa fa-check"></i>
                         <span class="uk-hidden-small uk-hidden-medium">Autoplay</span>
                     </a>
-                    <a href="#" class="osc-btn-main wistia_button focus hidden" id="wistia_NaN_focus_button">
+                    <a href="#" class="osc-btn-main osc-btn-active wistia_button focus hidden" id="wistia_NaN_focus_button">
                         <i class="fa fa-times"></i>
                         <span class="uk-hidden-small uk-hidden-medium">Focus</span>
                     </a>
@@ -56,10 +56,12 @@ This will be specific lessons. Right now this means either (login at ostraining.
                         <span class="uk-hidden-small uk-hidden-medium">Home</span>
                     </a>
                     <a href="#" class="osc-btn-main" id="prevbut">
-                        <span class="uk-hidden-small uk-hidden-medium">Prev</span> <i class="fa fa-angle-left"></i>
+                        <i class="fa fa-angle-left"></i> 
+                        <span class="uk-hidden-small uk-hidden-medium">Prev</span>
                     </a>
                     <a href="#" class="osc-btn-main" id="nextbut">
-                        <span class="uk-hidden-small uk-hidden-medium">Next</span> <i class="fa fa-angle-right"></i>
+                        <span class="uk-hidden-small uk-hidden-medium">Next</span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
                 </div>
             </div>

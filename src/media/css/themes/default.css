@@ -1,14 +1,6 @@
 /* General
  ========================================================================== */
-.osc-container p,
-.osc-container h1,
-.osc-container h2,
-.osc-container h3,
-.osc-container div,
-.osc-container li,
-.osc-container span,
-.osc-container label,
-.osc-container td {
+.osc-container {
     color: #333333;
     text-align: left;
 }
@@ -228,10 +220,13 @@
 
 .osc-container input[type="submit"].osc-btn-main:hover,
 .osc-container input[type="submit"].osc-btn-main:focus,
+.osc-container input[type="submit"].osc-btn-main.osc-btn-active,
 .osc-container button.osc-btn-main:hover,
 .osc-container button.osc-btn-main:focus,
+.osc-container button.osc-btn-main.osc-btn-active,
 .osc-container a.osc-btn-main:hover,
-.osc-container a.osc-btn-main:focus {
+.osc-container a.osc-btn-main:focus,
+.osc-container a.osc-btn-main.osc-btn-active {
     background: #41A1D6;
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
     -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
