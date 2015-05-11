@@ -31,6 +31,42 @@ This will be specific lessons. Right now this means either (login at ostraining.
         <h1>Lesson name</h1>
     </div>
 
+    <div class="osc-lesson-links">
+        <div class="osc-section">
+            <div class="block6">
+                <div class="osc-button-group wistia_buttons_container" id="wistia_NaN_buttons_container">
+                    <a href="#" class="osc-btn-main wistia_button download hidden" id="wistia_NaN_download_button">
+                        <i class="fa fa-cloud-download"></i>
+                        <span class="uk-hidden-small uk-hidden-medium"> Download</span>
+                    </a>
+                    <a href="#" class="osc-btn-main wistia_button autoplay hidden" id="wistia_NaN_autoplay_button">
+                        <i class="fa fa-check"></i>
+                        <span class="uk-hidden-small uk-hidden-medium">Autoplay</span>
+                    </a>
+                    <a href="#" class="osc-btn-main wistia_button focus hidden" id="wistia_NaN_focus_button">
+                        <i class="fa fa-times"></i>
+                        <span class="uk-hidden-small uk-hidden-medium">Focus</span>
+                    </a>
+                </div>
+            </div>
+            <div class="block6">
+                <div class="osc-button-group hidden" id="course-navigation">
+                    <a href="#" class="osc-btn-main">
+                        <i class="fa fa-bars"></i>
+                        <span class="uk-hidden-small uk-hidden-medium">Home</span>
+                    </a>
+                    <a href="#" class="osc-btn-main" id="prevbut">
+                        <span class="uk-hidden-small uk-hidden-medium">Prev</span> <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a href="#" class="osc-btn-main" id="nextbut">
+                        <span class="uk-hidden-small uk-hidden-medium">Next</span> <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- .osc-section -->
+
     <div class="osc-lesson-embed">
         <?php echo JHTML::_('content.prepare', '{wistia}bbql2oyrgi{/wistia}'); ?>
     </div>
