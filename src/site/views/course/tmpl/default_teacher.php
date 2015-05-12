@@ -37,10 +37,11 @@ defined('_JEXEC') or die();
         </div>
         <?php
         foreach ($this->teacher->courses as $i => $course) :
+            $courseLink = JRoute::_(OscampusRoute::get('courses') . '&view=course&cid=' . $course->id);
             ?>
             <div class="<?php echo 'osc-section ' . ($i % 2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                 <div class="block6">
-                    <?php echo JHtml::_('link', "javascript:alert('Under Construction');", $course->title); ?>
+                    <?php echo JHtml::_('link', $courseLink, $course->title); ?>
                 </div>
                 <div class="block3 osc-hide-tablet">
                     <?php
