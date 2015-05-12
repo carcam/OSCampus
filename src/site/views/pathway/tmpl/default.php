@@ -20,7 +20,7 @@ defined('_JEXEC') or die();
     <?php
     foreach ($this->items as $item) :
         $image = JHtml::_('image', $item->image, $item->title);
-        $link = OscampusRoute::get('pathways') . '&view=course&cid=' . $item->id;
+        $link  = JRoute::_(OscampusRoute::get('pathways') . '&view=course&cid=' . $item->id);
     ?>
     <div class="osc-section osc-course-item">
         <div class="block4 osc-course-image">
