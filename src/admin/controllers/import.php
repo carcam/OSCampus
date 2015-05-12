@@ -148,6 +148,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
+        $this->clearTable('#__oscampus_courses_required', false);
         $this->clearTable('#__oscampus_users_lessons');
         $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_lessons');
@@ -268,7 +269,6 @@ class OscampusControllerImport extends OscampusControllerBase
             }
 
             array_walk($data, function (&$values) use ($dbCampus) {
-
                 $newValues = array_map(array($dbCampus, 'quote'), $values);
                 $values    = str_replace($dbCampus->quote(''), 'NULL', join(',', $newValues));
             });
@@ -566,6 +566,47 @@ class OscampusControllerImport extends OscampusControllerBase
                 }
             }
         }
+
+        $this->loadPrerequisites();
+    }
+
+    /**
+     * Load pre-requisite courses.
+     * Should only be called after $this->loadCourses() completes
+     */
+    protected function loadPrerequisites()
+    {
+        $dbGuru   = $this->getGuruDbo();
+        $dbCampus = JFactory::getDbo();
+
+        $prereqQuery = $dbGuru->getQuery(true)
+            ->select('mr.type_id courses_id, mr.media_id required_id')
+            ->from('#__guru_mediarel mr')
+            ->where('mr.type = ' . $dbGuru->quote('preq'));
+
+        $rows = $dbGuru->setQuery($prereqQuery)->loadObjectList();
+        $data = array();
+        foreach ($rows as $row) {
+            $coursesId  = $row->courses_id;
+            $requiredId = $row->required_id;
+            if (isset($this->courses[$coursesId]) && isset($this->courses[$requiredId])) {
+                $coursesId  = $this->courses[$coursesId]->id;
+                $requiredId = $this->courses[$requiredId]->id;
+                $data[]     = "{$coursesId},{$requiredId}";
+            }
+        }
+
+        if ($data) {
+            $insertQuery = $dbCampus->getQuery(true)
+                ->insert('#__oscampus_courses_required')
+                ->columns('courses_id,required_id')
+                ->values($data);
+
+            $dbCampus->setQuery($insertQuery)->execute();
+            if ($error = $dbCampus->getErrorMsg()) {
+                $this->errors[] = $error;
+            }
+        }
     }
 
     /**
@@ -718,12 +759,16 @@ class OscampusControllerImport extends OscampusControllerBase
             ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
             ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
             ->leftJoin('#__oscampus_teachers t ON t.id = c.teachers_id')
-            ->leftJoin('#__users u ON u.id = i.users_id')
+            ->leftJoin('#__users u ON u.id = t.users_id')
             ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
             ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')
             ->order('p.ordering, cp.ordering, m.ordering, l.ordering');
 
-        $rows    = $db->setQuery($courseQuery)->loadObjectList();
+        $rows = $db->setQuery($courseQuery)->loadObjectList();
+        if ($error = $db->getErrorMsg()) {
+            $this->errors[] = $error;
+        }
+
         $display = array();
         foreach ($rows as $row) {
             $pid = $row->pathways_id;
