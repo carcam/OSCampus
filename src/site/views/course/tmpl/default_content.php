@@ -28,9 +28,11 @@ defined('_JEXEC') or die();
                             <?php echo $lesson->title; ?>
                         </a>
                     </div>
+                    <?php if (isset($this->viewed[$lesson->id])) : ?>
                     <div class="block3 osc-check-viewed osc-hide-tablet">
                         <i class="fa fa-check"></i> Viewed
                     </div>
+                    <?php endif; ?>
                 </div>
                 <?php
             endforeach;

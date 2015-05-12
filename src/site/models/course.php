@@ -115,6 +115,39 @@ class OscampusModelCourse extends OscampusModelSite
         return $lessons;
     }
 
+    /**
+     * Get lesson viewed info for the selected user in the currently selected course
+     *
+     * @return array
+     */
+    public function getViewedLessons()
+    {
+        $uid = (int)$this->getState('user.id');
+        $cid = (int)$this->getState('course.id');
+
+        if ($uid > 0 && $cid > 0) {
+            $db = $this->getDbo();
+
+            $query = $db->getQuery(true)
+                ->select('ul.*')
+                ->from('#__oscampus_users_lessons ul')
+                ->innerJoin('#__oscampus_lessons l ON l.id = ul.lessons_id')
+                ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
+                ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
+                ->where(
+                    array(
+                        'c.id = ' . $cid,
+                        'ul.users_id = ' . $uid
+                    )
+                );
+
+            $viewed = $db->setQuery($query)->loadObjectList('lessons_id');
+            return $viewed;
+        }
+
+        return array();
+    }
+
     protected function populateState()
     {
         $app = JFactory::getApplication();
@@ -122,5 +155,7 @@ class OscampusModelCourse extends OscampusModelSite
         $cid = $app->input->getInt('cid');
         $this->setState('course.id', $cid);
 
+        $uid = $app->input->getInt('uid', JFactory::getUser()->id);
+        $this->setState('user.id', $uid);
     }
 }

@@ -25,6 +25,11 @@ class OscampusViewCourse extends OscampusViewSite
      */
     protected $lessons = array();
 
+    /**
+     * @var array
+     */
+    protected $viewed = array();
+
     public function display($tpl = null)
     {
         /** @var OscampusModelCourse $model */
@@ -33,6 +38,7 @@ class OscampusViewCourse extends OscampusViewSite
         $this->course  = $model->getCourse();
         $this->teacher = $model->getTeacher();
         $this->lessons = $model->getLessons();
+        $this->viewed  = $model->getViewedLessons();
 
         parent::display($tpl);
     }
