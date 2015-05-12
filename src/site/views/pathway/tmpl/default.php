@@ -9,9 +9,6 @@
 defined('_JEXEC') or die();
 
 /** @var OscampusViewPathway $this */
-
-$itemId = JFactory::getApplication()->input->getInt('Itemid');
-$itemId = $itemId ? '&Itemid=' . $itemId : '';
 ?>
 
 <div class="osc-container oscampus-pathway">
@@ -23,7 +20,7 @@ $itemId = $itemId ? '&Itemid=' . $itemId : '';
     <?php
     foreach ($this->items as $item) :
         $image = JHtml::_('image', $item->image, $item->title);
-        $link = 'index.php?option=com_oscampus&view=course&cid=' . $item->id . $itemId;
+        $link = OscampusRoute::get('pathways') . '&view=course&cid=' . $item->id;
     ?>
     <div class="osc-section osc-course-item">
         <div class="block4 osc-course-image">
