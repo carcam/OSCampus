@@ -16,6 +16,11 @@ class OscampusViewCourse extends OscampusViewSite
     protected $course = null;
 
     /**
+     * @var array
+     */
+    protected $required = array();
+
+    /**
      * @var object
      */
     protected $teacher = null;
@@ -35,10 +40,11 @@ class OscampusViewCourse extends OscampusViewSite
         /** @var OscampusModelCourse $model */
         $model = $this->getModel();
 
-        $this->course  = $model->getCourse();
-        $this->teacher = $model->getTeacher();
-        $this->lessons = $model->getLessons();
-        $this->viewed  = $model->getViewedLessons();
+        $this->course   = $model->getCourse();
+        $this->required = $model->getRequired();
+        $this->teacher  = $model->getTeacher();
+        $this->lessons  = $model->getLessons();
+        $this->viewed   = $model->getViewedLessons();
 
         parent::display($tpl);
     }
