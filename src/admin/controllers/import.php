@@ -18,6 +18,13 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $viewCount    = 0;
     protected $log          = array();
 
+    protected $groupToView = array(
+        1         => 1, // Public group == Public View Level
+        2         => 2, // Non-member == Registered VL
+        14        => 3, // Video Member == Video, Personal, Pro, Admin VL
+        'default' => 3 // Use use most restrictive VL if something goes wrong
+    );
+
     protected $courses   = array();
     protected $courseMap = array(
         'id'                     => null,
@@ -132,7 +139,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'metadesc'        => null,
         'time'            => null,
         'ordering'        => 'ordering',
-        'step_access'     => null,
+        'step_access'     => 'access',
         'final_lesson'    => null
     );
 
@@ -148,7 +155,6 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
-        $this->clearTable('#__oscampus_courses_required', false);
         $this->clearTable('#__oscampus_users_lessons');
         $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_lessons');
@@ -313,9 +319,12 @@ class OscampusControllerImport extends OscampusControllerBase
                 $oldKey = $converted->modules_id;
                 if (isset($modules[$oldKey])) {
                     $converted->modules_id = $modules[$oldKey]->id;
+                    $converted->access     =
+                        isset($this->groupToView[$converted->access]) ?
+                            $this->groupToView[$converted->access] :
+                            $this->groupToView['default'];
                     return true;
                 }
-
                 return false;
             }
         );
