@@ -17,8 +17,9 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $tags         = array();
     protected $viewCount    = 0;
     protected $log          = array();
-
-    protected $groupToView = array(
+    protected $imagePath    = null;
+    protected $filePath     = null;
+    protected $groupToView  = array(
         1         => 1, // Public group == Public View Level
         2         => 2, // Non-member == Registered VL
         14        => 3, // Video Member == Video, Personal, Pro, Admin VL
@@ -151,6 +152,9 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
         echo '<p><a href="index.php?option=com_oscampus&task=import.setteacher">Set a demo teacher</a> (when referenced users are not available)</p>';
 
+        $this->imagePath = 'https://www.ostraining.com';
+        $this->filePath  = 'https://www.ostraining.com/media/files';
+
         $this->log['Start'] = microtime(true);
 
         $this->clearTable('#__oscampus_courses_pathways', false);
@@ -234,10 +238,40 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
+     * Temporary method while we work out lesson management structure
+     */
+    protected function loadExerciseFiles()
+    {
+        $dbGuru = $this->getGuruDbo();
+
+        $query = $dbGuru->getQuery(true)
+            ->select('mr.type_id courses_id, m.name title, instructions notes, local filename')
+            ->from('#__guru_media as m')
+            ->innerJoin('#__guru_mediarel as mr ON m.id=mr.media_id')
+            ->where('mr.type=' . $dbGuru->quote('pmed'));
+
+        $files = $dbGuru->setQuery($query)->loadObjectList();
+        foreach ($files as $file) {
+            $path = $this->filePath . '/' . $file->filename;
+            $fp   = curl_init($path);
+            if ($fp) {
+                $file->filename = JHtml::_('link', $path, $file->filename) . ' [OK]';
+                curl_close($fp);
+            } else {
+                $file->filename .= ' [FAIL]';
+            }
+        }
+
+        echo '<pre>';
+        print_r($files);
+        echo '</pre>';
+    }
+
+    /**
      * Import Viewed lessons
      * MUST be run after all pathways, courses, modules and lessons
      */
-    public function loadViewed()
+    protected function loadViewed()
     {
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
@@ -864,8 +898,7 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function copyImages($table, $folder)
     {
-        $sourceRoot = 'https://www.ostraining.com';
-        $targetRoot = '/images/stories/oscampus/' . trim($folder, '\\/');
+        $targetRoot      = '/images/stories/oscampus/' . trim($folder, '\\/');
         if (is_dir(JPATH_SITE . $targetRoot)) {
             JFolder::delete(JPATH_SITE . $targetRoot);
         }
@@ -875,7 +908,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
         foreach ($images as $image) {
             if ($image->image) {
-                $path     = $sourceRoot . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
+                $path     = $this->imagePath . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
                 $fileName = basename($image->image);
                 $newPath  = $targetRoot . '/' . $fileName;
                 if (!is_file(JPATH_SITE . $newPath)) {
