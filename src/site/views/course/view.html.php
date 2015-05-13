@@ -16,11 +16,6 @@ class OscampusViewCourse extends OscampusViewSite
     protected $course = null;
 
     /**
-     * @var array
-     */
-    protected $required = array();
-
-    /**
      * @var object
      */
     protected $teacher = null;
@@ -41,7 +36,6 @@ class OscampusViewCourse extends OscampusViewSite
         $model = $this->getModel();
 
         $this->course   = $model->getCourse();
-        $this->required = $model->getRequired();
         $this->teacher  = $model->getTeacher();
         $this->lessons  = $model->getLessons();
         $this->viewed   = $model->getViewedLessons();

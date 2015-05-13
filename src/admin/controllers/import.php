@@ -566,47 +566,6 @@ class OscampusControllerImport extends OscampusControllerBase
                 }
             }
         }
-
-        $this->loadPrerequisites();
-    }
-
-    /**
-     * Load pre-requisite courses.
-     * Should only be called after $this->loadCourses() completes
-     */
-    protected function loadPrerequisites()
-    {
-        $dbGuru   = $this->getGuruDbo();
-        $dbCampus = JFactory::getDbo();
-
-        $prereqQuery = $dbGuru->getQuery(true)
-            ->select('mr.type_id courses_id, mr.media_id required_id')
-            ->from('#__guru_mediarel mr')
-            ->where('mr.type = ' . $dbGuru->quote('preq'));
-
-        $rows = $dbGuru->setQuery($prereqQuery)->loadObjectList();
-        $data = array();
-        foreach ($rows as $row) {
-            $coursesId  = $row->courses_id;
-            $requiredId = $row->required_id;
-            if (isset($this->courses[$coursesId]) && isset($this->courses[$requiredId])) {
-                $coursesId  = $this->courses[$coursesId]->id;
-                $requiredId = $this->courses[$requiredId]->id;
-                $data[]     = "{$coursesId},{$requiredId}";
-            }
-        }
-
-        if ($data) {
-            $insertQuery = $dbCampus->getQuery(true)
-                ->insert('#__oscampus_courses_required')
-                ->columns('courses_id,required_id')
-                ->values($data);
-
-            $dbCampus->setQuery($insertQuery)->execute();
-            if ($error = $dbCampus->getErrorMsg()) {
-                $this->errors[] = $error;
-            }
-        }
     }
 
     /**

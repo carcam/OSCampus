@@ -7,7 +7,6 @@ DROP TABLE IF EXISTS `ext53_oscampus_tags`;
 DROP TABLE IF EXISTS `ext53_oscampus_users_lessons`;
 DROP TABLE IF EXISTS `ext53_oscampus_certificates`;
 
-DROP TABLE IF EXISTS `ext53_oscampus_courses_required`;
 DROP TABLE IF EXISTS `ext53_oscampus_lessons`;
 DROP TABLE IF EXISTS `ext53_oscampus_modules`;
 DROP TABLE IF EXISTS `ext53_oscampus_courses`;

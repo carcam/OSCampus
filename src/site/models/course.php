@@ -148,30 +148,6 @@ class OscampusModelCourse extends OscampusModelSite
         return array();
     }
 
-    /**
-     * Get courses required for taking the selected course
-     *
-     * @return array
-     */
-    public function getRequired()
-    {
-        $db = $this->getDbo();
-        $cid = (int)$this->getState('course.id');
-
-        if ($cid) {
-            $query = $db->getQuery(true)
-                ->select('r.*')
-                ->from('#__oscampus_courses r')
-                ->innerJoin('#__oscampus_courses_required cr ON cr.required_id = r.id')
-                ->where('cr.courses_id = ' . $cid);
-
-            $required = $db->setQuery($query)->loadObjectList();
-            return $required;
-        }
-
-        return array();
-    }
-
     protected function populateState()
     {
         $app = JFactory::getApplication();

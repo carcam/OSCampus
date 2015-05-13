@@ -61,9 +61,6 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
         <?php
         endif;
         ?>
-        <div data-content="#content-requirements" class="block2 osc-tab-disabled">
-            <?php echo JText::_('COM_OSCAMPUS_COURSE_REQUIREMENTS'); ?>
-        </div>
     </div>
     <!-- .osc-course-tabs -->
 
@@ -74,6 +71,5 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
     if ($this->teacher->id) {
         echo $this->loadTemplate('teacher');
     }
-    echo $this->loadTemplate('requirements');
     ?>
 </div>
