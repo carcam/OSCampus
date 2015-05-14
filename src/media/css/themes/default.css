@@ -631,11 +631,11 @@ div.osc-alert-notify{
 }
 
 .osc-container .osc-positive-color {
-    color: #669900;
+    color: #008200;
 }
 
 .osc-container .osc-negative-color {
-    color: #ed8034;
+    color: #ff0000;
 }
 
 .osc-container .osc-quiz-time-labels,
