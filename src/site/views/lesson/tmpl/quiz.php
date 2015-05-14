@@ -70,7 +70,7 @@ defined('_JEXEC') or die();
         </div>
         <div class="block8">
             <div class="osc-quiz-right">
-                <strong>Your score:</strong> <strong class="osc-negative-color">99%</strong>, minimum score to pass is: <strong class="osc-negative-color">70%</strong>.<br/>
+                <strong>Your score:</strong> <strong class="osc-positive-color">99%</strong>, minimum score to pass is: <strong class="osc-positive-color">70%</strong>.<br/>
                 <strong>Congratulations! You passed!</strong>
             </div>
         </div>
@@ -107,7 +107,7 @@ defined('_JEXEC') or die();
         </div>
         <div class="block8">
             <div class="osc-quiz-right">
-                <strong>Your score:</strong> <strong class="osc-negative-color">28%</strong>, minimum score to pass is: <strong class="osc-negative-color">70%</strong>.<br/>
+                <strong>Your score:</strong> <strong class="osc-negative-color">28%</strong>, minimum score to pass is: <strong class="osc-positive-color">70%</strong>.<br/>
                 <strong>Would you like to take it again now?</strong><br/>
                 <div class="osc-btn-group">
                     <button type="submit" class="osc-btn osc-btn-main">Yes, I want to try again!</button><button type="submit" class="osc-btn">Later</button>
