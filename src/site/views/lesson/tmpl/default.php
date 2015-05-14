@@ -57,7 +57,7 @@ This will be specific lessons. Right now this means either (login at ostraining.
             </a>
         </div>
     </div>
-    <!-- .osc-section -->
+    <!-- .osc-lesson-links -->
 
     <div class="osc-lesson-embed">
         <?php echo JHTML::_('content.prepare', '{wistia}bbql2oyrgi{/wistia}'); ?>

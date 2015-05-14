@@ -594,6 +594,47 @@ div.osc-alert-notify{
     float: right;
 }
 
+/* Quiz
+ ========================================================================== */
+.osc-quiz-details {
+    border: 1px solid #f2f2f2;
+}
+
+.osc-quiz-left {
+    border-right: 1px solid #f2f2f2;
+    text-align: center;
+}
+
+.osc-container .osc-quiz-left,
+.osc-container .osc-quiz-right {
+    padding: 30px 15px;
+    font-size: 14px;
+}
+
+.osc-container .osc-quiz-right {
+    line-height: 30px;
+}
+
+.osc-label-color {
+    color: #669900;
+}
+
+.osc-quiz-time-labels {
+    font-size: 18px;
+}
+
+.osc-quiz-time-left {
+    color: #203d61;
+    font-size: 18px;
+}
+
+.osc-quiz-time {
+    color: #203d61;
+    font-size: 50px;
+    line-height: 50px;
+    padding-top: 10px;
+}
+
 /* Media queries
  ========================================================================== */
 @media (min-width: 1200px) {
