@@ -47,7 +47,7 @@ defined('_JEXEC') or die();
         <!-- .osc-section -->
 
         <div>
-            <button type="submit" class="osc-btn">Submit</button>
+            <button type="submit" class="osc-btn osc-btn-main">Submit</button>
         </div>
     </form>
 

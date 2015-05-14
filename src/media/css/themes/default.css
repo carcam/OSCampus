@@ -174,7 +174,7 @@
     color: #FFFFFF;
     cursor: pointer;
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 18px;
     margin-bottom: 0;
     padding: 4px 12px;
@@ -196,9 +196,7 @@
     background: #999999;
 }
 
-.osc-container input[type="submit"].osc-btn,
-.osc-container button.osc-btn,
-.osc-container a.osc-btn {
+.osc-container .osc-btn {
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -218,15 +216,9 @@
     transition: background-color 0.15s ease-in-out;
 }
 
-.osc-container input[type="submit"].osc-btn:hover,
-.osc-container input[type="submit"].osc-btn:focus,
-.osc-container input[type="submit"].osc-btn.osc-btn-active,
-.osc-container button.osc-btn:hover,
-.osc-container button.osc-btn:focus,
-.osc-container button.osc-btn.osc-btn-active,
-.osc-container a.osc-btn:hover,
-.osc-container a.osc-btn:focus,
-.osc-container a.osc-btn.osc-btn-active {
+.osc-container .osc-btn:hover,
+.osc-container .osc-btn:focus,
+.osc-container .osc-btn.osc-btn-active {
     background: #7ebce0;
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
     -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
@@ -234,26 +226,18 @@
     -o-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
 }
 
-.osc-container input[type="submit"].osc-btn-big,
-.osc-container button.osc-btn-big,
-.osc-container a.osc-btn-big {
+.osc-container .osc-btn-big {
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
 }
 
-.osc-container input[type="submit"].osc-btn-warning,
-.osc-container button.osc-btn-warning,
-.osc-container a.osc-btn-warning {
+.osc-container .osc-btn-warning {
     background:#ff0000;
 }
 
-.osc-container input[type="submit"].osc-btn-warning:hover,
-.osc-container input[type="submit"].osc-btn-warning:focus,
-.osc-container button.osc-btn-warning:hover,
-.osc-container button.osc-btn-warning:focus,
-.osc-container a.osc-btn-warning:hover,
-.osc-container a.osc-btn-warning:focus {
+.osc-container .osc-btn-warning:hover,
+.osc-container .osc-btn-warning:focus {
     background:#FF4D4D;
 }
 
@@ -265,6 +249,26 @@
     -webkit-box-shadow: 0 0 5px #ccc inset;
     -o-box-shadow: 0 0 5px #ccc inset;
     background: #f2f2f2;
+}
+
+.osc-container .osc-btn-main {
+    box-shadow: 0 1px 0 #eaa21c;
+    -moz-box-shadow: 0 1px 0 #eaa21c;
+    -webkit-box-shadow: 0 1px 0 #eaa21c;
+    -o-box-shadow: 0 1px 0 #eaa21c;
+    color: #3f4044;
+    font-weight: 600;
+    background: #feb123;
+}
+
+.osc-container .osc-btn-main:hover,
+.osc-container .osc-btn-main:focus {
+    box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -webkit-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    -o-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
+    color: #fff;
+    background: #ed8034;
 }
 
 .osc-btn-group {
