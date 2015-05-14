@@ -268,6 +268,47 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
+     * Temporary method while we work out media storage
+     */
+    protected function loadLessonMedia()
+    {
+        $dbGuru = $this->getGuruDbo();
+
+        $query = $dbGuru->getQuery(true)
+            ->select(
+                array(
+                    't.id lessons_id',
+                    'mr.layout',
+                    't.name task',
+                    'm.id media_id',
+                    'm.name media_name',
+                    'm.type media_type',
+                    'm.code media_content',
+                    'm.auto_play media_autoplay',
+                    'q.id quiz_id',
+                    'q.name quiz_name',
+                    'q.max_score quiz_passing_score',
+                    'q.nb_quiz_select_up quiz_num_questions',
+                    'q.limit_time quiz_time_limit',
+                    'q.limit_time_f quiz_finish_alert',
+                    'q.startpublish quiz_created'
+                )
+            )
+            ->from('#__guru_program p')
+            ->innerJoin('#__guru_days d ON d.pid = p.id')
+            ->innerJoin('#__guru_mediarel tr ON tr.type_id = d.id AND tr.type=' . $dbGuru->quote('dtask'))
+            ->innerJoin('#__guru_task t ON t.id = tr.media_id')
+            ->innerJoin('#__guru_mediarel lr ON lr.type_id = t.id AND lr.type=' . $dbGuru->quote('scr_l'))
+            ->innerJoin('#__guru_mediarel mr ON mr.type_id = t.id AND mr.layout=lr.media_id')
+            ->leftJoin('#__guru_media m ON m.id = mr.media_id And mr.layout != 12')
+            ->leftJoin('#__guru_quiz q ON q.id = mr.media_id AND mr.layout = 12');
+
+        $mediaList = $dbGuru->setQuery($query)->loadObjectList();
+
+        echo count($mediaList);
+    }
+
+    /**
      * Import Viewed lessons
      * MUST be run after all pathways, courses, modules and lessons
      */
@@ -898,7 +939,7 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function copyImages($table, $folder)
     {
-        $targetRoot      = '/images/stories/oscampus/' . trim($folder, '\\/');
+        $targetRoot = '/images/stories/oscampus/' . trim($folder, '\\/');
         if (is_dir(JPATH_SITE . $targetRoot)) {
             JFolder::delete(JPATH_SITE . $targetRoot);
         }
