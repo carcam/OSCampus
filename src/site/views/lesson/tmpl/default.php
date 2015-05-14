@@ -33,25 +33,25 @@ This will be specific lessons. Right now this means either (login at ostraining.
 
     <div class="osc-lesson-links">
         <div class="osc-btn-group wistia_buttons_container" id="wistia_NaN_buttons_container">
-            <a href="#" class="osc-btn-main wistia_button download hidden" id="wistia_NaN_download_button">
+            <a href="#" class="osc-btn wistia_button download hidden" id="wistia_NaN_download_button">
                 <i class="fa fa-cloud-download"></i>
                 <span class="osc-hide-tablet"> Download</span>
-            </a><a href="#" class="osc-btn-main wistia_button autoplay hidden" id="wistia_NaN_autoplay_button">
+            </a><a href="#" class="osc-btn wistia_button autoplay hidden" id="wistia_NaN_autoplay_button">
                 <i class="fa fa-check"></i>
                 <span class="osc-hide-tablet">Autoplay</span>
-            </a><a href="#" class="osc-btn-main osc-btn-active wistia_button focus hidden" id="wistia_NaN_focus_button">
+            </a><a href="#" class="osc-btn osc-btn-active wistia_button focus hidden" id="wistia_NaN_focus_button">
                 <i class="fa fa-times"></i>
                 <span class="osc-hide-tablet">Focus</span>
             </a>
         </div>
         <div class="osc-btn-group hidden" id="course-navigation">
-            <a href="#" class="osc-btn-main">
+            <a href="#" class="osc-btn">
                 <i class="fa fa-bars"></i>
                 <span class="osc-hide-tablet">Home</span>
-            </a><a href="#" class="osc-btn-main" id="prevbut">
+            </a><a href="#" class="osc-btn" id="prevbut">
                 <i class="fa fa-angle-left"></i>
                 <span class="osc-hide-tablet">Prev</span>
-            </a><a href="#" class="osc-btn-main" id="nextbut">
+            </a><a href="#" class="osc-btn" id="nextbut">
                 <span class="osc-hide-tablet">Next</span>
                 <i class="fa fa-angle-right"></i>
             </a>

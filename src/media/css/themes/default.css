@@ -196,9 +196,9 @@
     background: #999999;
 }
 
-.osc-container input[type="submit"].osc-btn-main,
-.osc-container button.osc-btn-main,
-.osc-container a.osc-btn-main {
+.osc-container input[type="submit"].osc-btn,
+.osc-container button.osc-btn,
+.osc-container a.osc-btn {
     display: inline-block;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -218,15 +218,15 @@
     transition: background-color 0.15s ease-in-out;
 }
 
-.osc-container input[type="submit"].osc-btn-main:hover,
-.osc-container input[type="submit"].osc-btn-main:focus,
-.osc-container input[type="submit"].osc-btn-main.osc-btn-active,
-.osc-container button.osc-btn-main:hover,
-.osc-container button.osc-btn-main:focus,
-.osc-container button.osc-btn-main.osc-btn-active,
-.osc-container a.osc-btn-main:hover,
-.osc-container a.osc-btn-main:focus,
-.osc-container a.osc-btn-main.osc-btn-active {
+.osc-container input[type="submit"].osc-btn:hover,
+.osc-container input[type="submit"].osc-btn:focus,
+.osc-container input[type="submit"].osc-btn.osc-btn-active,
+.osc-container button.osc-btn:hover,
+.osc-container button.osc-btn:focus,
+.osc-container button.osc-btn.osc-btn-active,
+.osc-container a.osc-btn:hover,
+.osc-container a.osc-btn:focus,
+.osc-container a.osc-btn.osc-btn-active {
     background: #7ebce0;
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
     -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
@@ -283,23 +283,23 @@
     vertical-align: top;
 }
 
-.osc-btn-group > .osc-btn-main:not(:first-child):not(:last-child),
-.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn-main,
-.osc-btn-group > .osc-btn-main:first-child,
-.osc-btn-group > div:first-child .osc-btn-main {
+.osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
+.osc-btn-group > .osc-btn:first-child,
+.osc-btn-group > div:first-child .osc-btn {
     margin-right: 1px;
 }
 
-.osc-btn-group > .osc-btn-main:not(:first-child):not(:last-child),
-.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn-main {
+.osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn {
     border-radius: 0;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     -o-border-radius: 0;
 }
 
-.osc-btn-group > .osc-btn-main:first-child,
-.osc-btn-group > div:first-child .osc-btn-main {
+.osc-btn-group > .osc-btn:first-child,
+.osc-btn-group > div:first-child .osc-btn {
     border-bottom-right-radius: 0;
     -moz-border-bottom-right-radius: 0;
     -webkit-border-bottom-right-radius: 0;
@@ -310,8 +310,8 @@
     -o-border-top-right-radius: 0;
 }
 
-.osc-btn-group > .osc-btn-main:last-child,
-.osc-btn-group > div:last-child .osc-btn-main {
+.osc-btn-group > .osc-btn:last-child,
+.osc-btn-group > div:last-child .osc-btn {
     border-bottom-left-radius: 0;
     -moz-border-bottom-left-radius: 0;
     -webkit-border-bottom-left-radius: 0;

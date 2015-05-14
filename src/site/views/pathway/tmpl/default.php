@@ -30,7 +30,7 @@ defined('_JEXEC') or die();
             <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
             <?php echo $item->introtext ?: $item->description; ?>
             <div class="osc-course-start">
-                <?php echo JHtml::_('link', "javascript:alert('Under Construction');", JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="osc-btn-main"'); ?>
+                <?php echo JHtml::_('link', "javascript:alert('Under Construction');", JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="osc-btn"'); ?>
             </div>
         </div>
     </div>
