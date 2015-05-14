@@ -557,6 +557,54 @@ div.osc-alert-notify{
     font-size: 12px;
 }
 
+/* Dashboard Tabs
+ ========================================================================== */
+.osc-container .osc-dashboard-tabs.osc-dashboard-tabs .osc-section.osc-course-tabs {
+
+}
+
+.osc-container .osc-dashboard-tabs .osc-section.osc-course-tabs > div:first-child {
+    margin-left: 0;
+}
+
+.osc-container .osc-dashboard-tabs .osc-section.osc-course-tabs > div {
+    text-align: left;
+    width: 100%;
+    border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -o-border-radius: 4px 0 0 4px;
+    margin-bottom: 3px;
+    margin-right: 0;
+    border-width: 1px 0 1px 1px;
+}
+
+.osc-container .osc-dashboard-tabs .osc-section.osc-course-tabs > div.osc-tab-disabled {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, -1px 0 0 #ccc inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, -1px 0 0 #ccc inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, -1px 0 0 #ccc inset;
+    -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, -1px 0 0 #ccc inset;
+}
+
+.osc-container .osc-dashboard-tabs .block4 {
+    margin-right: -1px;
+    width: 32%;
+}
+
+.osc-container .osc-dashboard-tabs .block8 {
+    margin-left: 0;
+    margin-top: 1px;
+    width: 68%;
+}
+
+.osc-dashboard-tabs .osc-course-tabs-content {
+    border-radius: 0 4px 4px 4px;
+    -moz-border-radius: 0 4px 4px 4px;
+    -webkit-border-radius: 0 4px 4px 4px;
+    -o-border-radius: 0 4px 4px 4px;
+    min-height: 180px;
+}
+
 /* Labels
  ========================================================================== */
 .osc-container .osc-label {
