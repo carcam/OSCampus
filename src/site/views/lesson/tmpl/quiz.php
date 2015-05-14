@@ -81,7 +81,7 @@ defined('_JEXEC') or die();
         <h4><i class="fa fa-check"></i> 1. What is the right answer here?</h4>
         <ul class="osc-quiz-options">
             <li>This is the answer one</li>
-            <li>This is the answer two</li>
+            <li><strong>This is the answer two</strong></li>
             <li>This is the answer three</li>
             <li>This is the answer four</li>
         </ul>
