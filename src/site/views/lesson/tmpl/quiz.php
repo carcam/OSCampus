@@ -33,4 +33,46 @@ defined('_JEXEC') or die();
     </div>
     <!-- .osc-section -->
 
+    <h2>Form</h2>
+    <form name="osc_quiz" method="post" action="">
+        <div class="osc-quiz-question">
+            <h4>1. What is the right answer here?</h4>
+            <ul class="osc-quiz-options">
+                <li><input type="radio" name="q1" value="a"> This is the answer one</li>
+                <li><input type="radio" name="q1" value="b"> This is the answer two</li>
+                <li><input type="radio" name="q1" value="c"> This is the answer three</li>
+                <li><input type="radio" name="q1" value="d"> This is the answer four</li>
+            </ul>
+        </div>
+        <!-- .osc-section -->
+
+        <div>
+            <button type="submit" class="osc-btn-main">Submit</button>
+        </div>
+    </form>
+
+    <h2>Right answer</h2>
+    <div class="osc-quiz-question">
+        <h4><i class="fa fa-check"></i> 1. What is the right answer here?</h4>
+        <ul class="osc-quiz-options">
+            <li>This is the answer one</li>
+            <li>This is the answer two</li>
+            <li>This is the answer three</li>
+            <li>This is the answer four</li>
+        </ul>
+    </div>
+    <!-- .osc-section -->
+
+    <h2>Wrong answer</h2>
+    <div class="osc-quiz-question">
+        <h4><i class="fa fa-times"></i> 1. What is the right answer here?</h4>
+        <ul class="osc-quiz-options">
+            <li>This is the answer one</li>
+            <li>This is the answer two</li>
+            <li>This is the answer three</li>
+            <li>This is the answer four</li>
+        </ul>
+    </div>
+    <!-- .osc-section -->
+
 </div>

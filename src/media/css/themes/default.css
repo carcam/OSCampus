@@ -55,8 +55,8 @@
 }
 
 .osc-container h4 {
-    font-size: 18px;
-    line-height: 23px;
+    font-size: 16px;
+    line-height: 21px;
     margin: 0 0 20px 0;
     padding: 0 0 5px 0;
 }
@@ -596,11 +596,12 @@ div.osc-alert-notify{
 
 /* Quiz
  ========================================================================== */
-.osc-quiz-details {
+.osc-container .osc-quiz-details {
     border: 1px solid #f2f2f2;
+    margin-bottom: 30px;
 }
 
-.osc-quiz-left {
+.osc-container .osc-quiz-left {
     border-right: 1px solid #f2f2f2;
     text-align: center;
 }
@@ -615,24 +616,55 @@ div.osc-alert-notify{
     line-height: 30px;
 }
 
-.osc-label-color {
+.osc-container .osc-label-color {
     color: #669900;
 }
 
-.osc-quiz-time-labels {
+.osc-container .osc-quiz-time-labels {
     font-size: 18px;
 }
 
-.osc-quiz-time-left {
+.osc-container .osc-quiz-time-left {
     color: #203d61;
     font-size: 18px;
 }
 
-.osc-quiz-time {
+.osc-container .osc-quiz-time {
     color: #203d61;
     font-size: 50px;
     line-height: 50px;
     padding-top: 10px;
+}
+
+.osc-container .osc-quiz-question h4 {
+    background: #f7f7f7;
+    border-bottom: 1px solid #dadada;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.osc-container .osc-quiz-options {
+    list-style: none !important; /* remove !important later */
+    padding-left: 0 !important; /* remove !important later */
+    margin-bottom: 20px !important; /* remove !important later */
+}
+
+.osc-container .osc-quiz-options li {
+    line-height: 26px !important; /* remove !important later */
+    padding-left: 15px !important; /* remove !important later */
+}
+
+.oscampus-quiz .fa-check {
+    color: #008200;
+}
+
+.oscampus-quiz .fa-times {
+    color: #ff0000;
+}
+
+.oscampus-quiz .fa {
+    font-size: 20px;
 }
 
 /* Media queries
@@ -698,6 +730,14 @@ div.osc-alert-notify{
     }
     .osc-course-tabs-content {
         margin-top: 0;
+    }
+    /* quiz */
+    .osc-container .osc-quiz-left {
+        border-bottom: 1px solid #f2f2f2;
+        border-right: none;
+    }
+    .osc-container .osc-quiz-right {
+        text-align: center;
     }
 }
 
