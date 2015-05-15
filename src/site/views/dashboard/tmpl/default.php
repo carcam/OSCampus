@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 JHtml::_('osc.tabs', '.osc-course-tabs div');
 ?>
 
-<div class="osc-container oscampus-dashboard">
+<div class="osc-container oscampus-dashboard" id="oscampus">
 
     <div class="page-header">
         <h1>Dashboard</h1>
