@@ -33,11 +33,11 @@ defined('_JEXEC') or die();
                 <i class="fa fa-bars"></i>
                 <span class="osc-hide-tablet">Home</span>
             </a><a href="#" class="osc-btn" id="prevbut">
-                <i class="fa fa-angle-left"></i>
+                <i class="fa fa-chevron-left"></i>
                 <span class="osc-hide-tablet">Prev</span>
             </a><a href="#" class="osc-btn" id="nextbut">
                 <span class="osc-hide-tablet">Next</span>
-                <i class="fa fa-angle-right"></i>
+                <i class="fa fa-chevron-right"></i>
             </a>
         </div>
     </div>
