@@ -59,34 +59,41 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
         </div>
         <div class="block8 osc-dashboard-tabs-right">
             <div id="content-my-classes" class="osc-course-tabs-content">
-                My Classes
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all the available classes</a></li>
+                </ul>
             </div>
-            <!-- #content- -->
+            <!-- #content-my-classes -->
 
             <div id="content-my-certificates" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
                 My Certificates
             </div>
-            <!-- #content- -->
+            <!-- #content-my-certificates -->
 
             <div id="content-my-forum" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
                 My Forum Topics
             </div>
-            <!-- #content- -->
+            <!-- #content-my-forum -->
 
             <div id="content-my-stats" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
                 My Stats
             </div>
-            <!-- #content- -->
+            <!-- #content-my-stats -->
 
             <div id="content-new-classes" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
                 New Classes
             </div>
-            <!-- #content- -->
+            <!-- #content-new-classes -->
 
             <div id="content-new-blog" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
                 New on the Blog
             </div>
-            <!-- #content- -->
+            <!-- #content-new-blog -->
         </div>
     </div>
     <!-- .osc-section -->

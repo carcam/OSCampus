@@ -614,6 +614,21 @@ div.osc-alert-notify{
     -o-box-shadow: 0 1px 0 #f2f2f2 inset;
 }
 
+.osc-dashboard-tabs ul {
+    margin: 0 !important; /* remove !important later */
+    list-style: none !important; /* remove !important later */
+    padding-left: 0 !important; /* remove !important later */
+}
+
+.osc-dashboard-tabs ul li {
+    border-bottom: 1px dashed #f2f2f2 !important; /* remove !important later */
+    padding: 10px 0 !important; /* remove !important later */
+}
+
+.osc-dashboard-tabs ul li:first-child {
+    padding-top: 0 !important; /* remove !important later */
+}
+
 /* Labels
  ========================================================================== */
 .osc-container .osc-label {
