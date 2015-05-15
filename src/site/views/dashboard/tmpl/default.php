@@ -32,30 +32,30 @@ defined('_JEXEC') or die();
     <!-- .osc-section -->
 
     <div class="osc-section osc-dashboard-tabs">
-        <div class="block4">
+        <div class="block4 osc-dashboard-tabs-left">
             <div class="osc-section osc-course-tabs">
                 <div data-content="#content-my-classes" class="block12">
-                    My Classes
+                    <i class="fa fa-file-o"></i> My Classes
                 </div>
                 <div data-content="#content-my-certificates" class="block12 osc-tab-disabled">
-                    My Certificates
+                    <i class="fa fa-certificate"></i> My Certificates
                 </div>
                 <div data-content="#content-my-forum" class="block12 osc-tab-disabled">
-                    My Forum Topics
+                    <i class="fa fa-life-ring"></i> My Forum Topics
                 </div>
                 <div data-content="#content-my-stats" class="block12 osc-tab-disabled">
-                    My Stats
+                    <i class="fa fa-line-chart"></i> My Stats
                 </div>
                 <div data-content="#content-new-classes" class="block12 osc-tab-disabled">
-                    New Classes
+                    <i class="fa fa-plus-circle"></i> New Classes
                 </div>
                 <div data-content="#content-new-blog" class="block12 osc-tab-disabled">
-                    New on the Blog
+                    <i class="fa fa-pencil-square-o"></i> New on the Blog
                 </div>
             </div>
             <!-- .osc-section -->
         </div>
-        <div class="block8">
+        <div class="block8 osc-dashboard-tabs-right">
             <div id="content-my-classes" class="osc-course-tabs-content">
                 My Classes
             </div>
