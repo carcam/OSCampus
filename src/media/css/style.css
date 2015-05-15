@@ -1,24 +1,24 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,300'; /* remove this later */
 
-.osc-container p,
-.osc-container h1,
-.osc-container h2,
-.osc-container h3,
-.osc-container div,
-.osc-container li,
-.osc-container span,
-.osc-container label,
-.osc-container td,
-.osc-container input,
-.osc-container button,
-.osc-container textarea,
-.osc-container select {
-    font-family: 'Open Sans', sans-serif !important; /* remove this later */
+#oscampus.osc-container p,
+#oscampus.osc-container h1,
+#oscampus.osc-container h2,
+#oscampus.osc-container h3,
+#oscampus.osc-container div,
+#oscampus.osc-container li,
+#oscampus.osc-container span,
+#oscampus.osc-container label,
+#oscampus.osc-container td,
+#oscampus.osc-container input,
+#oscampus.osc-container button,
+#oscampus.osc-container textarea,
+#oscampus.osc-container select {
+    font-family: 'Open Sans', sans-serif;
 }
 
 /* Labels
  ========================================================================== */
-.osc-container .osc-label {
+#oscampus.osc-container .osc-label {
     background-repeat: no-repeat;
     background-position: 8px center;
     background-size: auto 11px;
@@ -32,15 +32,15 @@
 
 /* Help classes
  ========================================================================== */
-.osc-container .a-center {
+#oscampus.osc-container .a-center {
     text-align: center;
 }
 
-.osc-container .a-right {
+#oscampus.osc-container .a-right {
     text-align: right;
 }
 
-.osc-container .a-left {
+#oscampus.osc-container .a-left {
     text-align: left;
 }
 

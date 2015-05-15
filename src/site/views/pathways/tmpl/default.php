@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 ?>
 
-<div class="osc-container oscampus-pathways">
+<div class="osc-container oscampus-pathways" id="oscampus">
 
     <div class="page-header">
         <h1>Online Training</h1>
