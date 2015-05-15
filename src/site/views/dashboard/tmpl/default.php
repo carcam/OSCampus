@@ -72,27 +72,62 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             <!-- #content-my-classes -->
 
             <div id="content-my-certificates" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
-                My Certificates
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all my certificates</a></li>
+                </ul>
             </div>
             <!-- #content-my-certificates -->
 
             <div id="content-my-forum" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
-                My Forum Topics
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all my forum topics</a></li>
+                </ul>
             </div>
             <!-- #content-my-forum -->
 
             <div id="content-my-stats" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
-                My Stats
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all my stats</a></li>
+                </ul>
             </div>
             <!-- #content-my-stats -->
 
             <div id="content-new-classes" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
-                New Classes
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all the new classes</a></li>
+                </ul>
             </div>
             <!-- #content-new-classes -->
 
             <div id="content-new-blog" class="osc-course-tabs-content osc-course-tabs-content-right" style="display: none">
-                New on the Blog
+                <ul>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">Lorem ipsum dolor sit ame consecteur</a></li>
+                    <li><a href="javascript:void(0)">See all the blogs</a></li>
+                </ul>
             </div>
             <!-- #content-new-blog -->
         </div>
