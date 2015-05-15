@@ -17,6 +17,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
         <h1>Dashboard</h1>
     </div>
 
+    <!-- This can be added as a separate Custom HTML module -->
     <div class="osc-section osc-dashboard-announcements">
         <div class="block3">
             You've completed <strong>3 certificates</strong> and watched <strong>387 videos</strong>
