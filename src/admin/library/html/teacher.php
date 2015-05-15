@@ -10,6 +10,10 @@ defined('_JEXEC') or die();
 
 abstract class OscTeacher
 {
+    protected static $linkIcons = array(
+        'default' => '<i class="fa"></i>'
+    );
+
     public static function links($teacher, $options = null)
     {
         $html = array();
@@ -20,7 +24,10 @@ abstract class OscTeacher
                     $data->link = $teacher->email;
                 }
                 if ($link = static::createLink($data)) {
+                    $type = isset(static::$linkIcons[$data->type]) ? $data->type : 'default';
+
                     $html[] = '<span class="osc-teacher-' . $data->type . '">';
+                    $html[] = static::$linkIcons[$type];
                     $html[] = JHtml::_(
                         'link',
                         $link,
