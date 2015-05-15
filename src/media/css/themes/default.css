@@ -30,7 +30,7 @@
 #oscampus.osc-container h4 {
     color: #333333;
     line-height: 30px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 20px 0;
     padding: 5px 0;
     text-transform: none;
@@ -488,7 +488,7 @@
     line-height: 24px;
 }
 
-.osc-course-details {
+#oscampus.osc-container .osc-course-details {
     margin-bottom: 30px;
     padding: 12px 15px 15px;
     border: 1px solid #f2f2f2;
@@ -557,6 +557,88 @@
     font-size: 12px;
 }
 
+/* Announcements
+ ========================================================================== */
+#oscampus.osc-container .osc-dashboard-announcements {
+    border: 1px solid #cccccc;
+    margin-bottom: 30px;
+    text-align: center;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block2,
+#oscampus.osc-container .osc-dashboard-announcements .block3,
+#oscampus.osc-container .osc-dashboard-announcements .block4,
+#oscampus.osc-container .osc-dashboard-announcements .block5,
+#oscampus.osc-container .osc-dashboard-announcements .block6 {
+    box-shadow: -1px 0 0 #ccc inset;
+    -moz-box-shadow: -1px 0 0 #ccc inset;
+    -webkit-box-shadow: -1px 0 0 #ccc inset;
+    -o-box-shadow: -1px 0 0 #ccc inset;
+    min-height: 162px;
+    padding: 30px;
+    color: #2d7091;
+    margin-left: 0;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block2 {
+    width: 20%;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block3 {
+    width: 25%;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block4 {
+    width: 30%;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block5 {
+    width: 40%;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block6 {
+    width: 50%;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block2:last-child,
+#oscampus.osc-container .osc-dashboard-announcements .block3:last-child,
+#oscampus.osc-container .osc-dashboard-announcements .block4:last-child,
+#oscampus.osc-container .osc-dashboard-announcements .block5:last-child,
+#oscampus.osc-container .osc-dashboard-announcements .block6:last-child {
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    -o-border-radius: 0 4px 4px 0;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .block2:first-child,
+#oscampus.osc-container .osc-dashboard-announcements .block3:first-child,
+#oscampus.osc-container .osc-dashboard-announcements .block4:first-child,
+#oscampus.osc-container .osc-dashboard-announcements .block5:first-child,
+#oscampus.osc-container .osc-dashboard-announcements .block6:first-child {
+    border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -o-border-radius: 4px 0 0 4px;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements a {
+    font-weight: 600;
+}
+
+#oscampus.osc-container .osc-dashboard-announcements .osc-dashboard-block-featured {
+    background: #fcece1;
+    color: #cc5e12;
+}
+
 /* Dashboard Tabs
  ========================================================================== */
 #oscampus.osc-container .osc-dashboard-tabs .osc-section.osc-course-tabs > div:first-child {
@@ -600,6 +682,7 @@
 
 #oscampus.osc-container .osc-dashboard-tabs .osc-dashboard-tabs-left .fa {
     width: 20px;
+    text-align: center;
 }
 
 #oscampus.osc-container .osc-dashboard-tabs .osc-course-tabs-content {
@@ -780,6 +863,25 @@
     #oscampus.osc-container .osc-dashboard-tabs .osc-dashboard-tabs-right {
         width: 65%;
     }
+    /* announcements */
+    #oscampus.osc-container .osc-dashboard-announcements .block2,
+    #oscampus.osc-container .osc-dashboard-announcements .block3,
+    #oscampus.osc-container .osc-dashboard-announcements .block4,
+    #oscampus.osc-container .osc-dashboard-announcements .block5,
+    #oscampus.osc-container .osc-dashboard-announcements .block6 {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 960px) {
+    /* announcements */
+    #oscampus.osc-container .osc-dashboard-announcements .block2,
+    #oscampus.osc-container .osc-dashboard-announcements .block3,
+    #oscampus.osc-container .osc-dashboard-announcements .block4,
+    #oscampus.osc-container .osc-dashboard-announcements .block5,
+    #oscampus.osc-container .osc-dashboard-announcements .block6 {
+        min-height: 220px;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
@@ -878,6 +980,42 @@
         -moz-border-radius: 4px;
         -webkit-border-radius: 4px;
         -o-border-radius: 4px;
+    }
+    /* announcements */
+    #oscampus.osc-container .osc-dashboard-announcements .block2,
+    #oscampus.osc-container .osc-dashboard-announcements .block3,
+    #oscampus.osc-container .osc-dashboard-announcements .block4,
+    #oscampus.osc-container .osc-dashboard-announcements .block5,
+    #oscampus.osc-container .osc-dashboard-announcements .block6 {
+        width: 100%;
+        float: none;
+        min-height: 80px;
+        box-shadow: none;
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        -o-box-shadow: none;
+        border-bottom: 1px solid #cccccc;
+    }
+    #oscampus.osc-container .osc-dashboard-announcements .block2:last-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block3:last-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block4:last-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block5:last-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block6:last-child {
+        border-bottom: none;
+        border-radius: 0 0 4px 4px;
+        -moz-border-radius: 0 0 4px 4px;
+        -webkit-border-radius: 0 0 4px 4px;
+        -o-border-radius: 0 0 4px 4px;
+    }
+    #oscampus.osc-container .osc-dashboard-announcements .block2:first-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block3:first-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block4:first-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block5:first-child,
+    #oscampus.osc-container .osc-dashboard-announcements .block6:first-child {
+        border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        -webkit-border-radius: 4px 4px 0 0;
+        -o-border-radius: 4px 4px 0 0;
     }
 }
 
