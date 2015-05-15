@@ -7,6 +7,8 @@
  */
 
 defined('_JEXEC') or die();
+
+JHtml::_('osc.tabs', '.osc-course-tabs div');
 ?>
 
 <div class="osc-container oscampus-dashboard">
@@ -35,7 +37,7 @@ defined('_JEXEC') or die();
         <div class="block4 osc-dashboard-tabs-left">
             <div class="osc-section osc-course-tabs">
                 <div data-content="#content-my-classes" class="block12">
-                    <i class="fa fa-file-o"></i> My Classes
+                    <i class="fa fa-mortar-board"></i> My Classes
                 </div>
                 <div data-content="#content-my-certificates" class="block12 osc-tab-disabled">
                     <i class="fa fa-certificate"></i> My Certificates
