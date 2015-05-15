@@ -850,6 +850,7 @@ div.osc-alert-notify{
         -moz-box-shadow: 0 1px 0 #f2f2f2 inset;
         -webkit-box-shadow: 0 1px 0 #f2f2f2 inset;
         -o-box-shadow: 0 1px 0 #f2f2f2 inset;
+        padding: 6px 14px;
     }
     .osc-container .osc-dashboard-tabs .osc-section.osc-course-tabs > div.osc-tab-disabled {
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
