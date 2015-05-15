@@ -38,17 +38,17 @@ defined('_JEXEC') or die();
 
     <div class="osc-section osc-course-list">
         <div class="block12">
-            <span class="osc-label osc-label-category">
-                <?php echo $item->tags; ?>
+            <span class="osc-label">
+                <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
             </span>
-            <span class="osc-label osc-label-<?php echo $item->difficulty; ?>">
-                <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
+            <span class="osc-label">
+                <i class="fa fa-bolt"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
             </span>
-            <span class="osc-label osc-label-time">
-                <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
+            <span class="osc-label">
+                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
             </span>
-            <span class="osc-label osc-label-teacher">
-                <?php echo $item->teacher; ?>
+            <span class="osc-label">
+                <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
             </span>
         </div>
     </div>

@@ -719,30 +719,6 @@
     color: #666;
 }
 
-#oscampus.osc-container .osc-label-time {
-    background-image: url(../../images/icon-time.png);
-}
-
-#oscampus.osc-container .osc-label-teacher {
-    background-image: url(../../images/icon-teacher.png);
-}
-
-#oscampus.osc-container .osc-label-easy {
-    background-image: url(../../images/icon-easy.png);
-}
-
-#oscampus.osc-container .osc-label-intermediate {
-    background-image: url(../../images/icon-intermediate.png);
-}
-
-#oscampus.osc-container .osc-label-advanced {
-    background-image: url(../../images/icon-advanced.png);
-}
-
-#oscampus.osc-container .osc-label-category {
-    background-image: url(../../images/icon-category.png);
-}
-
 /* Lesson
  ========================================================================== */
 #oscampus.osc-container #course-navigation {
