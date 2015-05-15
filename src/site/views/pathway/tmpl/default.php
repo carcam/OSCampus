@@ -38,7 +38,7 @@ defined('_JEXEC') or die();
 
     <div class="osc-section osc-course-list">
         <div class="block12">
-            <span class="osc-label osc-label-category" style="background-image: url(/path/to/small-image-here.png);">
+            <span class="osc-label osc-label-category">
                 <?php echo $item->tags; ?>
             </span>
             <span class="osc-label osc-label-<?php echo $item->difficulty; ?>">
