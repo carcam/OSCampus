@@ -11,12 +11,12 @@ defined('_JEXEC') or die();
 abstract class OscTeacher
 {
     protected static $linkIcons = array(
-        'default' => '<i class="fa"></i>',
-        'twitter' => '<i class="fa fa-twitter"></i>',
+        'default'  => '<i class="fa"></i>',
+        'twitter'  => '<i class="fa fa-twitter"></i>',
         'facebook' => '<i class="fa fa-facebook"></i>',
-        'blog' => '<i class="fa fa-pencil"></i>',
-        'email' => '<i class="fa fa-envelope"></i>',
-        'website' => '<i class="fa fa-globe"></i>'
+        'blog'     => '<i class="fa fa-pencil"></i>',
+        'email'    => '<i class="fa fa-envelope"></i>',
+        'website'  => '<i class="fa fa-globe"></i>'
     );
 
     public static function links($teacher, $options = null)
