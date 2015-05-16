@@ -443,6 +443,10 @@
     margin: 5px 20px 10px 0;
 }
 
+#oscampus.osc-container .osc-teacher-links > span {
+    margin-right: 10px;
+}
+
 #oscampus.osc-container .osc-level-icon {
     height: 11px;
     margin-bottom: 4px;
