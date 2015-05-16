@@ -14,10 +14,9 @@ defined('_JEXEC') or die();
     echo JHtml::_('osc.teacher.links', $this->teacher);
     ?>
     <div class="osc-teacher-description">
-        <?php
-        echo JHtml::_('image', $this->teacher->image, $this->teacher->name, 'class="osc-teacher-image"');
-        echo $this->teacher->bio;
-        ?>
+        <?php echo JHtml::_('image', $this->teacher->image, $this->teacher->name, 'class="osc-teacher-image"'); ?>
+        <h4><?php echo $this->teacher->name ?></h4>
+        <?php echo $this->teacher->bio; ?>
     </div>
     <?php
     if ($this->teacher->courses) :
@@ -26,13 +25,13 @@ defined('_JEXEC') or die();
     <div class="osc-table">
         <div class="osc-section osc-row-heading osc-hide-tablet">
             <div class="block6">
-                <?php echo JText::_('COM_OSCAMPUS_TEACHER_NAME'); ?>
+                <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_TEACHER_NAME'); ?>
             </div>
-            <div class="block2">
-                <?php echo JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY'); ?>
+            <div class="block3">
+                <i class="fa fa-bolt"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY'); ?>
             </div>
-            <div class="block4">
-                <?php echo JText::_('COM_OSCAMPUS_COURSE_RELEASE_DATE') ;?>
+            <div class="block3">
+                <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_RELEASE_DATE') ;?>
             </div>
         </div>
         <?php
@@ -44,10 +43,7 @@ defined('_JEXEC') or die();
                     <?php echo JHtml::_('link', $courseLink, $course->title); ?>
                 </div>
                 <div class="block3 osc-hide-tablet">
-                    <?php
-                    echo JHtml::_('image', Juri::base() . '/media/com_oscampus/images/icon-' . $course->difficulty, '', 'class="osc-level-icon"'). ' ';
-                    echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $course->difficulty);
-                    ?>
+                    <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $course->difficulty); ?>
                 </div>
                 <div class="block3 osc-hide-tablet">
                     <?php echo JHtml::_('date', $course->released, 'F j, Y'); ?>
