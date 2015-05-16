@@ -46,6 +46,11 @@
 
 /* Media Queries
  ========================================================================== */
-@media (max-width: 480px){
-
+@media (max-width: 768px){
+    #oscampus.osc-container .osc-hide-tablet {
+        display: none !important;
+    }
+    #oscampus.osc-container .a-left-tablet {
+        text-align: left;
+    }
 }

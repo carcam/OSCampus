@@ -10,13 +10,21 @@ defined('_JEXEC') or die();
 
 ?>
 <div id="content-teacher" class="osc-course-tabs-content" style="display: none">
-    <?php
-    echo JHtml::_('osc.teacher.links', $this->teacher);
-    ?>
+    <div class="osc-table">
+        <div class="osc-section osc-row-heading">
+            <div class="block6">
+                <?php echo $this->teacher->name ?>
+            </div>
+            <div class="block6 a-right a-left-tablet">
+                <?php echo JHtml::_('osc.teacher.links', $this->teacher); ?>
+            </div>
+        </div>
+    </div>
     <div class="osc-teacher-description">
-        <?php echo JHtml::_('image', $this->teacher->image, $this->teacher->name, 'class="osc-teacher-image"'); ?>
-        <h4><?php echo $this->teacher->name ?></h4>
-        <?php echo $this->teacher->bio; ?>
+        <?php
+        echo JHtml::_('image', $this->teacher->image, $this->teacher->name, 'class="osc-teacher-image"');
+        echo $this->teacher->bio;
+        ?>
     </div>
     <?php
     if ($this->teacher->courses) :

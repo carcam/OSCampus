@@ -449,6 +449,7 @@
 
 #oscampus.osc-container .osc-teacher-description {
     display: table;
+    margin-top: 20px;
 }
 
 /* Pathways
@@ -903,9 +904,6 @@
     }
     #oscampus.osc-container .osc-section.osc-course-tabs > div:first-child {
         margin-left: 0;
-    }
-    #oscampus.osc-container .osc-hide-tablet {
-        display: none !important;
     }
     #oscampus.osc-container .osc-course-tabs-content {
         margin-top: 0;
