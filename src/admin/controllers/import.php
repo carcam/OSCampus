@@ -16,6 +16,8 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $images       = array();
     protected $tags         = array();
     protected $viewCount    = 0;
+    protected $mediaCount   = 0;
+    protected $mediaSkipped = 0;
     protected $log          = array();
     protected $imagePath    = null;
     protected $filePath     = null;
@@ -24,6 +26,10 @@ class OscampusControllerImport extends OscampusControllerBase
         2         => 2, // Non-member == Registered VL
         14        => 3, // Video Member == Video, Personal, Pro, Admin VL
         'default' => 3 // Use use most restrictive VL if something goes wrong
+    );
+
+    protected $mediaTextScrub = array(
+        '<!-- Start of Brightcove Player -->'
     );
 
     protected $courses   = array();
@@ -140,7 +146,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'metadesc'        => null,
         'time'            => null,
         'ordering'        => 'ordering',
-        'step_access'     => 'access',
+        'step_access'     => null,
         'final_lesson'    => null
     );
 
@@ -191,7 +197,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->log['Load Viewed'] = microtime(true);
 
         $this->images['Teacher Images']  = $this->copyImages('#__oscampus_teachers', 'teachers');
-        $this->log['Load Teacher Image'] = microtime(true);
+        $this->log['Load Teacher Images'] = microtime(true);
 
         $this->images['Course Images']   = $this->copyImages('#__oscampus_courses', 'courses');
         $this->log['Load Course Images'] = microtime(true);
@@ -268,7 +274,8 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
-     * Temporary method while we work out media storage
+     * Load media into lessons
+     * MUST run after ::loadLessons()
      */
     protected function loadLessonMedia()
     {
@@ -277,20 +284,18 @@ class OscampusControllerImport extends OscampusControllerBase
         $query = $dbGuru->getQuery(true)
             ->select(
                 array(
+                    'm.id',
                     't.id lessons_id',
                     'mr.layout',
-                    't.name task',
-                    'm.id media_id',
-                    'm.name media_name',
-                    'm.type media_type',
-                    'm.code media_content',
-                    'm.auto_play media_autoplay',
+                    'm.type type',
+                    'm.code content',
+                    'm.auto_play autoplay',
                     'q.id quiz_id',
-                    'q.name quiz_name',
+                    'q.name quiz_title',
                     'q.max_score quiz_passing_score',
-                    'q.nb_quiz_select_up quiz_num_questions',
-                    'q.limit_time quiz_time_limit',
-                    'q.limit_time_f quiz_finish_alert',
+                    'q.nb_quiz_select_up quiz_question_count',
+                    'q.limit_time quiz_timelimit',
+                    'q.limit_time_f quiz_alert_end',
                     'q.startpublish quiz_created'
                 )
             )
@@ -305,12 +310,113 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $mediaList = $dbGuru->setQuery($query)->loadObjectList();
 
-        echo count($mediaList);
+        $this->mediaCount = 0;
+        $updateList       = array();
+        foreach ($mediaList as $mediaItem) {
+            if (isset($this->lessons[$mediaItem->lessons_id])) {
+                $this->mediaCount++;
+
+                $lessonId = $this->lessons[$mediaItem->lessons_id]->id;
+                if (isset($updateList[$lessonId])) {
+                    $lesson = $updateList[$lessonId];
+
+                } else {
+                    $lesson = (object)array(
+                        'id'      => $lessonId,
+                        'type'    => null,
+                        'header'  => null,
+                        'content' => null,
+                        'footer'  => null
+                    );
+                }
+
+                $mediaItem->content = str_replace($this->mediaTextScrub, '', $mediaItem->content);
+
+                switch ($mediaItem->layout) {
+                    case 1:
+                    case 3:
+                    case 6:
+                        $lesson->type = 'oswistia';
+
+                        switch ($mediaItem->type) {
+                            case 'video':
+                                $content = array(
+                                    'original' => $mediaItem->content,
+                                    'id' => null
+                                );
+                                if (preg_match('#{wistia}(.*?){/wistia}#', $mediaItem->content, $matches)) {
+                                    $content['id'] = $matches[1];
+                                }
+                                $lesson->content = json_encode($content);
+                                break;
+
+                            case 'text':
+                                if ($lesson->footer) {
+                                    $lesson->footer .= "\n<br/>\n";
+                                }
+                                $lesson->footer .= $mediaItem->content;
+                                break;
+
+                            default:
+                                $lesson->header .= "Guru Import Warning: Layout {$mediaItem->layout}, Unknown media type '{$mediaItem->type}'\n";
+                                break;
+                        }
+                        break;
+
+                    case 5:
+                        $lesson->type    = 'text';
+                        $lesson->content = $mediaItem->content;
+
+                        break;
+
+                    case 12:
+                        $lesson->type = 'quiz';
+
+                        $content = array(
+                            'old_id'         => $mediaItem->quiz_id,
+                            'title'          => $mediaItem->quiz_title,
+                            'passing_score'  => $mediaItem->quiz_passing_score,
+                            'question_count' => $mediaItem->quiz_question_count,
+                            'timelimit'      => $mediaItem->quiz_timelimit,
+                            'alert_end'      => $mediaItem->quiz_alert_end,
+                            'created'        => $mediaItem->quiz_created
+                        );
+
+                        $lesson->type    = 'quiz';
+                        $lesson->content = json_encode($content);
+                        break;
+
+                    default:
+                        $lesson->header .= "Unknown Layout {$menuItem->layout}\n";
+                        break;
+                }
+
+                $updateList[$lessonId] = $lesson;
+            }
+        }
+
+        $dbCampus = JFactory::getDbo();
+        foreach ($updateList as $lessonId => $lesson) {
+            if ($lesson->type == 'oswistia' && $lesson->content == '') {
+                // Some classes were set for the incorrect layout
+                $lesson->type    = 'text';
+                $lesson->content = $lesson->footer;
+                $lesson->footer  = '';
+            }
+
+            $dbCampus->updateObject('#__oscampus_lessons', $lesson, 'id');
+            if ($error = $dbCampus->getErrorMsg()) {
+                echo $error;
+                return;
+            }
+        }
+
+        $this->mediaSkipped = count($mediaList) - $this->mediaCount;
     }
 
     /**
      * Import Viewed lessons
-     * MUST be run after all pathways, courses, modules and lessons
+     * MUST run after ::loadCourses(), ::loadModules() and ::loadLessons()
      */
     protected function loadViewed()
     {
@@ -372,7 +478,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     /**
      * Import Guru tasks as lessons
-     * MUST be run after modules import
+     * MUST run after ::loadModules()
      */
     protected function loadLessons()
     {
@@ -394,16 +500,13 @@ class OscampusControllerImport extends OscampusControllerBase
                 $oldKey = $converted->modules_id;
                 if (isset($modules[$oldKey])) {
                     $converted->modules_id = $modules[$oldKey]->id;
-                    $converted->access     =
-                        isset($this->groupToView[$converted->access]) ?
-                            $this->groupToView[$converted->access] :
-                            $this->groupToView['default'];
                     return true;
                 }
                 return false;
             }
         );
 
+        $this->loadLessonMedia();
     }
 
     /**
@@ -455,7 +558,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     /**
      * Load course modules
-     * MUST be run after courses/pathway import
+     * MUST run after ::loadCourses()
      */
     protected function loadModules()
     {
@@ -479,7 +582,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     /**
      * Load certificates earned by users
-     * MUST be run after courses and teachers are loaded
+     * MUST run after ::loadCourses() and ::loadTeachers()
      */
     protected function loadCertificates()
     {
@@ -518,7 +621,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     /**
      * Import Teachers
-     * Must be called after courses are loaded
+     * MUST run after ::loadCourse()
      */
     protected function loadTeachers()
     {
@@ -779,6 +882,8 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->teachers)) . ' Teachers</li>';
         echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
         echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
+        echo '<li>' . number_format($this->mediaCount) . ' Media processed</li>';
+        echo '<li>' . number_format($this->mediaSkipped) . ' Media Skipped</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
