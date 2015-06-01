@@ -201,7 +201,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadExerciseFiles();
         $this->log['Load Files'] = microtime(true);
 
-        //$this->loadCertificates();
+        $this->loadCertificates();
         $this->log['Load Certificates'] = microtime(true);
 
         $this->loadViewed();
@@ -255,7 +255,11 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
-     * Temporary method while we work out lesson management structure
+     * Load and attach Exercise Files. We also look for references to these files
+     * within what has been imported into lesson footers to determine if a file
+     * should be attached to specific lessons
+     *
+     * MUST be called after ::loadLessons()
      */
     protected function loadExerciseFiles()
     {
@@ -279,6 +283,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->innerJoin('#__guru_program as p ON p.id = mr.type_id')
             ->where('mr.type=' . $dbGuru->quote('pmed'));
 
+        // First load all the known files
         $files = $dbGuru->setQuery($queryFiles)->loadObjectList();
         foreach ($files as $file) {
             $path = $this->filePath . '/' . $file->file;
@@ -287,13 +292,44 @@ class OscampusControllerImport extends OscampusControllerBase
                 curl_close($fp);
 
                 if (isset($this->courses[$file->courses_id])) {
-                    $file->courses_id = $this->courses[$file->courses_id]->id;
+                    $coursesId = $this->courses[$file->courses_id]->id;
+                    unset($file->courses_id);
                     $dbCampus->insertObject('#__oscampus_files', $file);
-                    $this->files[$dbCampus->insertid()] = $file;
+                    $file->id = $dbCampus->insertid();
+                    $file->courses_id = $coursesId;
+                    $this->files[] = $file;
                 } else {
                     $this->filesSkipped++;
                 }
             }
+        }
+
+        // Then attach them to courses or lessons as needed
+        foreach ($this->files as $file) {
+            $coursesId   = $file->courses_id;
+            $lessonQuery = $dbCampus->getQuery(true)
+                ->select('l.id, m.courses_id')
+                ->from('#__oscampus_courses c')
+                ->innerJoin('#__oscampus_modules m ON m.courses_id = c.id')
+                ->innerJoin('#__oscampus_lessons l ON l.modules_id = m.id')
+                ->where(
+                    array(
+                        'c.id = ' . $coursesId,
+                        'l.footer like ' . $dbCampus->quote('%' . $file->file . '%')
+                    )
+                );
+            $lesson      = $dbCampus->setQuery($lessonQuery)->loadObjectList();
+            if (count($lesson) > 0) {
+                foreach ($lesson as $row) {
+                    $new = (object)array('files_id' => $file->id, 'lessons_id' => $row->id);
+                    $dbCampus->insertObject('#__oscampus_files_lessons', $new);
+                }
+
+            } else {
+                $new = (object)array('files_id' => $file->id, 'courses_id' => $coursesId);
+                $dbCampus->insertObject('#__oscampus_files_courses', $new);
+            }
+
         }
     }
 
