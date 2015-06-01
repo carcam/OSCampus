@@ -10,27 +10,34 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
-    protected $users        = null;
-    protected $errors       = array();
-    protected $certificates = array();
-    protected $images       = array();
-    protected $tags         = array();
-    protected $viewCount    = 0;
-    protected $mediaCount   = 0;
-    protected $mediaSkipped = 0;
-    protected $log          = array();
-    protected $imagePath    = null;
-    protected $filePath     = null;
-    protected $groupToView  = array(
+    protected $imagePath = 'https://www.ostraining.com';
+    protected $filePath  = 'https://www.ostraining.com/media/files';
+
+    protected $mediaTextScrub = array(
+        '#<!-- Start of Brightcove Player -->#',
+        '#^\s*<br[\s/]*>\s*$#ims'
+    );
+
+    protected $groupToView = array(
         1         => 1, // Public group == Public View Level
         2         => 2, // Non-member == Registered VL
         14        => 3, // Video Member == Video, Personal, Pro, Admin VL
         'default' => 3 // Use use most restrictive VL if something goes wrong
     );
 
-    protected $mediaTextScrub = array(
-        '<!-- Start of Brightcove Player -->'
-    );
+    protected $certificates = array();
+    protected $errors       = array();
+    protected $files        = array();
+    protected $images       = array();
+    protected $tags         = array();
+    protected $users        = null;
+
+    protected $filesSkipped = 0;
+    protected $mediaCount   = 0;
+    protected $mediaSkipped = 0;
+    protected $viewCount    = 0;
+
+    protected $log = array();
 
     protected $courses   = array();
     protected $courseMap = array(
@@ -158,14 +165,15 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
         echo '<p><a href="index.php?option=com_oscampus&task=import.setteacher">Set a demo teacher</a> (when referenced users are not available)</p>';
 
-        $this->imagePath = 'https://www.ostraining.com';
-        $this->filePath  = 'https://www.ostraining.com/media/files';
-
         $this->log['Start'] = microtime(true);
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
+        $this->clearTable('#__oscampus_files_courses', false);
+        $this->clearTable('#__oscampus_files_lessons', false);
         $this->clearTable('#__oscampus_users_lessons');
+
+        $this->clearTable('#__oscampus_files');
         $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_lessons');
         $this->clearTable('#__oscampus_modules');
@@ -190,7 +198,10 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadLessons();
         $this->log['Load Lessons'] = microtime(true);
 
-        $this->loadCertificates();
+        $this->loadExerciseFiles();
+        $this->log['Load Files'] = microtime(true);
+
+        //$this->loadCertificates();
         $this->log['Load Certificates'] = microtime(true);
 
         $this->loadViewed();
@@ -248,29 +259,42 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function loadExerciseFiles()
     {
-        $dbGuru = $this->getGuruDbo();
+        $dbGuru   = $this->getGuruDbo();
+        $dbCampus = JFactory::getDbo();
 
-        $query = $dbGuru->getQuery(true)
-            ->select('mr.type_id courses_id, m.name title, instructions notes, local filename')
+        $queryFiles = $dbGuru->getQuery(true)
+            ->select(
+                array(
+                    'mr.type_id courses_id',
+                    'local file',
+                    'm.name title',
+                    'instructions description',
+                    'p.startpublish created',
+                    '1 published',
+                    $dbCampus->quote('Guru Imported') . ' created_by_alias'
+                )
+            )
             ->from('#__guru_media as m')
             ->innerJoin('#__guru_mediarel as mr ON m.id=mr.media_id')
+            ->innerJoin('#__guru_program as p ON p.id = mr.type_id')
             ->where('mr.type=' . $dbGuru->quote('pmed'));
 
-        $files = $dbGuru->setQuery($query)->loadObjectList();
+        $files = $dbGuru->setQuery($queryFiles)->loadObjectList();
         foreach ($files as $file) {
-            $path = $this->filePath . '/' . $file->filename;
+            $path = $this->filePath . '/' . $file->file;
             $fp   = curl_init($path);
             if ($fp) {
-                $file->filename = JHtml::_('link', $path, $file->filename) . ' [OK]';
                 curl_close($fp);
-            } else {
-                $file->filename .= ' [FAIL]';
+
+                if (isset($this->courses[$file->courses_id])) {
+                    $file->courses_id = $this->courses[$file->courses_id]->id;
+                    $dbCampus->insertObject('#__oscampus_files', $file);
+                    $this->files[$dbCampus->insertid()] = $file;
+                } else {
+                    $this->filesSkipped++;
+                }
             }
         }
-
-        echo '<pre>';
-        print_r($files);
-        echo '</pre>';
     }
 
     /**
@@ -330,7 +354,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     );
                 }
 
-                $mediaItem->content = str_replace($this->mediaTextScrub, '', $mediaItem->content);
+                $mediaItem->content = preg_replace($this->mediaTextScrub, '', $mediaItem->content);
 
                 switch ($mediaItem->layout) {
                     case 1:
@@ -342,7 +366,7 @@ class OscampusControllerImport extends OscampusControllerBase
                             case 'video':
                                 $content = array(
                                     'original' => $mediaItem->content,
-                                    'id' => null
+                                    'id'       => null
                                 );
                                 if (preg_match('#{wistia}(.*?){/wistia}#', $mediaItem->content, $matches)) {
                                     $content['id'] = $matches[1];
@@ -387,7 +411,7 @@ class OscampusControllerImport extends OscampusControllerBase
                         break;
 
                     default:
-                        $lesson->header .= "Unknown Layout {$menuItem->layout}\n";
+                        $lesson->header .= "Unknown Layout {$mediaItem->layout}\n";
                         break;
                 }
 
@@ -540,7 +564,6 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $courses = $dbGuru->setQuery($queryCourses)->loadObjectList();
         foreach ($courses as $course) {
-            $tagTitle = trim($course->cms_type);
             if (isset($this->courses[$course->id]) && isset($this->tags[$course->cms_type])) {
                 $newRow = (object)array(
                     'courses_id' => $this->courses[$course->id]->id,
@@ -790,10 +813,11 @@ class OscampusControllerImport extends OscampusControllerBase
             return array();
         }
 
-        $campusData = array();
+        $campusData   = array();
+        $creationDate = JFactory::getDate()->toSql();
         foreach ($guruData as $row) {
             $converted = (object)array(
-                'created'          => JFactory::getDate()->toSql(),
+                'created'          => $creationDate,
                 'created_by_alias' => 'Guru Import'
             );
             foreach ($fields as $guruField => $campusField) {
@@ -884,6 +908,8 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
         echo '<li>' . number_format($this->mediaCount) . ' Media processed</li>';
         echo '<li>' . number_format($this->mediaSkipped) . ' Media Skipped</li>';
+        echo '<li>' . number_format(count($this->files)) . ' Files</li>';
+        echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
