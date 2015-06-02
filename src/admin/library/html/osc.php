@@ -24,7 +24,7 @@ abstract class JHtmlOsc
     {
         $params = OscampusComponentHelper::getParams();
 
-        $load = $params->get('advanced.jquery', 1);
+        $load = $params->get('advanced.jquery', 0);
         $client = JFactory::getApplication()->getName();
         if ($load == $client || $load == 1) {
             // Only load once
