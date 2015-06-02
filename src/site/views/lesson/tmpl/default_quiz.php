@@ -7,13 +7,15 @@
  */
 
 defined('_JEXEC') or die();
+
+$content = json_decode($this->lesson->content);
+echo '<pre>';
+print_r($content);
+echo '</pre>';
+
 ?>
 
 <div class="osc-container oscampus-quiz" id="oscampus">
-
-    <div class="page-header">
-        <h1>Quiz name</h1>
-    </div>
 
     <div class="osc-section osc-quiz-details">
         <div class="block4">

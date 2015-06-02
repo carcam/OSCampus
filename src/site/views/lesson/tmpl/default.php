@@ -6,45 +6,31 @@
  * @license
  */
 
+/**
+ * @var OscampusViewLesson $this
+ */
 defined('_JEXEC') or die();
+
 ?>
 
 <div class="osc-container oscampus-lesson" id="oscampus">
-
     <div class="page-header">
-        <h1>Lesson name</h1>
+        <h1><?php echo $this->lesson->title; ?></h1>
     </div>
 
-    <div class="osc-lesson-links">
-        <div class="osc-btn-group wistia_buttons_container" id="wistia_NaN_buttons_container">
-            <a href="#" class="osc-btn wistia_button download hidden" id="wistia_NaN_download_button">
-                <i class="fa fa-cloud-download"></i>
-                <span class="osc-hide-tablet"> Download</span>
-            </a><a href="#" class="osc-btn wistia_button autoplay hidden" id="wistia_NaN_autoplay_button">
-                <i class="fa fa-check"></i>
-                <span class="osc-hide-tablet">Autoplay</span>
-            </a><a href="#" class="osc-btn osc-btn-active wistia_button focus hidden" id="wistia_NaN_focus_button">
-                <i class="fa fa-times"></i>
-                <span class="osc-hide-tablet">Focus</span>
-            </a>
-        </div>
-        <div class="osc-btn-group hidden" id="course-navigation">
-            <a href="#" class="osc-btn">
-                <i class="fa fa-bars"></i>
-                <span class="osc-hide-tablet">Home</span>
-            </a><a href="#" class="osc-btn" id="prevbut">
-                <i class="fa fa-chevron-left"></i>
-                <span class="osc-hide-tablet">Prev</span>
-            </a><a href="#" class="osc-btn" id="nextbut">
-                <span class="osc-hide-tablet">Next</span>
-                <i class="fa fa-chevron-right"></i>
-            </a>
-        </div>
+    <?php if ($this->lesson->header) : ?>
+    <div>
+        <?php echo $this->lesson->header; ?>
     </div>
-    <!-- .osc-lesson-links -->
+    <?php endif; ?>
 
-    <div class="osc-lesson-embed">
-        <?php echo JHTML::_('content.prepare', '{wistia}bbql2oyrgi{/wistia}'); ?>
+    <?php
+    echo $this->loadTemplate($this->lesson->type);
+    ?>
+
+    <?php if ($this->lesson->footer) : ?>
+    <div>
+        <?php echo $this->lesson->footer; ?>
     </div>
-
+    <?php endif; ?>
 </div>

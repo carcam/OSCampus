@@ -21,12 +21,11 @@ defined('_JEXEC') or die();
             </div>
             <?php
             foreach ($module->lessons as $i => $lesson) :
+                $link  = JRoute::_(OscampusRoute::get('pathways') . '&view=lesson&lid=' . $lesson->id);
                 ?>
                 <div class="<?php echo 'osc-section ' . ($i%2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                     <div class="block9 p-left-xx">
-                        <a href="javascript:alert('Under Construction');">
-                            <?php echo $lesson->title; ?>
-                        </a>
+                        <?php echo JHtml::_('link', $link, $lesson->title); ?>
                     </div>
                     <?php if (isset($this->viewed[$lesson->id])) : ?>
                     <div class="block3 osc-check-viewed osc-hide-tablet">
