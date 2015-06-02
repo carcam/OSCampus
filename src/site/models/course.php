@@ -82,9 +82,7 @@ class OscampusModelCourse extends OscampusModelSite
                     array(
                         'f.*',
                         'fc.courses_id',
-                        '0 lessons_id',
-                        'fc.ordering',
-                        '0 lesson_ordering'
+                        'fc.ordering'
                     )
                 )
                 ->from('#__oscampus_files f')
@@ -97,9 +95,7 @@ class OscampusModelCourse extends OscampusModelSite
                     array(
                         'f.*',
                         'm.courses_id',
-                        'fl.lessons_id',
-                        'fl.ordering',
-                        'l.ordering lesson_ordering'
+                        'fl.ordering'
                     )
                 )
                 ->from('#__oscampus_files f')
@@ -109,7 +105,7 @@ class OscampusModelCourse extends OscampusModelSite
                 ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
                 ->where('m.courses_id = ' . $cid);
 
-            $query = "({$query1}) UNION ({$query2}) ORDER BY ordering, lesson_ordering";
+            $query = "({$query1}) UNION ({$query2}) ORDER BY ordering ASC";
             $files = $db->setQuery($query)->loadObjectList();
         }
         return $files;
