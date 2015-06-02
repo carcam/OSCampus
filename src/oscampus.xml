@@ -12,13 +12,12 @@
 
     <scriptfile>script.install.php</scriptfile>
 
-<!--
     <install>
         <sql>
             <file driver="mysql" charset="utf8">sql/install/mysql/install.sql</file>
         </sql>
     </install>
--->
+
     <uninstall>
         <sql>
             <file driver="mysql" charset="utf8">sql/install/mysql/uninstall.sql</file>
