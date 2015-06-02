@@ -162,6 +162,8 @@ class OscampusControllerImport extends OscampusControllerBase
         error_reporting(-1);
         ini_set('display_errors', 1);
 
+        ini_set('memory_limit', '256M');
+
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
         echo '<p><a href="index.php?option=com_oscampus&task=import.setteacher">Set a demo teacher</a> (when referenced users are not available)</p>';
 
