@@ -263,6 +263,12 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function loadExerciseFiles()
     {
+        $targetRoot = 'images/stories/oscampus/files';
+        if (is_dir(JPATH_SITE . '/' . $targetRoot)) {
+            JFolder::delete(JPATH_SITE . '/' . $targetRoot);
+        }
+        JFolder::create(JPATH_SITE . '/' . $targetRoot);
+
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
@@ -270,7 +276,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->select(
                 array(
                     'mr.type_id courses_id',
-                    'local file',
+                    'local path',
                     'm.name title',
                     'instructions description',
                     'p.startpublish created',
@@ -286,18 +292,25 @@ class OscampusControllerImport extends OscampusControllerBase
         // First load all the known files
         $files = $dbGuru->setQuery($queryFiles)->loadObjectList();
         foreach ($files as $file) {
-            $path = $this->filePath . '/' . $file->file;
+            $path = $this->filePath . '/' . $file->path;
             $fp   = curl_init($path);
             if ($fp) {
                 curl_close($fp);
 
                 if (isset($this->courses[$file->courses_id])) {
+                    $file->path = $targetRoot . '/' . $file->path;
+
+                    if (!is_file(JPATH_SITE . '/' . $file->path)) {
+                        $fileData = file_get_contents($path);
+                        JFile::write(JPATH_SITE . '/' . $file->path, $fileData);
+                    }
+
                     $coursesId = $this->courses[$file->courses_id]->id;
                     unset($file->courses_id);
                     $dbCampus->insertObject('#__oscampus_files', $file);
-                    $file->id = $dbCampus->insertid();
+                    $file->id         = $dbCampus->insertid();
                     $file->courses_id = $coursesId;
-                    $this->files[] = $file;
+                    $this->files[]    = $file;
                 } else {
                     $this->filesSkipped++;
                 }
@@ -315,7 +328,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 ->where(
                     array(
                         'c.id = ' . $coursesId,
-                        'l.footer like ' . $dbCampus->quote('%' . $file->file . '%')
+                        'l.footer like ' . $dbCampus->quote('%' . basename($file->path) . '%')
                     )
                 );
             $lesson      = $dbCampus->setQuery($lessonQuery)->loadObjectList();
