@@ -34,6 +34,7 @@
     <media destination="com_oscampus" folder="media">
         <folder>css</folder>
         <folder>images</folder>
+        <folder>js</folder>
     </media>
 
     <files folder="site">
@@ -52,6 +53,7 @@
             <folder>language</folder>
             <folder>library</folder>
             <folder>sql</folder>
+            <folder>views</folder>
             <filename>access.xml</filename>
             <filename>controller.php</filename>
             <filename>include.php</filename>
