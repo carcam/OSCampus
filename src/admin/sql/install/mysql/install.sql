@@ -12,11 +12,11 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_pathways`
+-- Table `hfps_oscampus_pathways`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_pathways` ;
+DROP TABLE IF EXISTS `hfps_oscampus_pathways` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_pathways` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_pathways` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `users_id` INT NULL COMMENT 'User FK of this pathway owner (optional)',
   `title` VARCHAR(255) NOT NULL COMMENT 'Pathway name',
@@ -37,11 +37,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_teachers`
+-- Table `hfps_oscampus_teachers`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_teachers` ;
+DROP TABLE IF EXISTS `hfps_oscampus_teachers` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_teachers` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_teachers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `users_id` INT NOT NULL COMMENT 'User FK',
   `image` VARCHAR(255) NOT NULL COMMENT 'Head shot image for teacher',
@@ -60,11 +60,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_courses`
+-- Table `hfps_oscampus_courses`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_courses` ;
+DROP TABLE IF EXISTS `hfps_oscampus_courses` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_courses` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_courses` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `teachers_id` INT NULL DEFAULT NULL COMMENT 'Teachers FK',
   `difficulty` CHAR(12) NOT NULL COMMENT 'Difficulty/Level higher = harder',
@@ -88,18 +88,18 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_courses` (
   INDEX `idx_teachers_id` (`teachers_id` ASC),
   CONSTRAINT `courses_teachers`
     FOREIGN KEY (`teachers_id`)
-    REFERENCES `ext53_oscampus_teachers` (`id`)
+    REFERENCES `hfps_oscampus_teachers` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_modules`
+-- Table `hfps_oscampus_modules`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_modules` ;
+DROP TABLE IF EXISTS `hfps_oscampus_modules` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_modules` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_modules` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `courses_id` INT NOT NULL COMMENT 'Course FK',
   `title` VARCHAR(255) NOT NULL COMMENT 'Module Name',
@@ -117,18 +117,18 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_modules` (
   INDEX `idx_courses_id` (`courses_id` ASC),
   CONSTRAINT `modules_courses`
     FOREIGN KEY (`courses_id`)
-    REFERENCES `ext53_oscampus_courses` (`id`)
+    REFERENCES `hfps_oscampus_courses` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_lessons`
+-- Table `hfps_oscampus_lessons`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_lessons` ;
+DROP TABLE IF EXISTS `hfps_oscampus_lessons` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_lessons` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_lessons` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `modules_id` INT NOT NULL COMMENT 'Module FK',
   `title` VARCHAR(255) NOT NULL,
@@ -150,18 +150,18 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_lessons` (
   INDEX `idx_modules_id` (`modules_id` ASC),
   CONSTRAINT `lessons_modules`
     FOREIGN KEY (`modules_id`)
-    REFERENCES `ext53_oscampus_modules` (`id`)
+    REFERENCES `hfps_oscampus_modules` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_certificates`
+-- Table `hfps_oscampus_certificates`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_certificates` ;
+DROP TABLE IF EXISTS `hfps_oscampus_certificates` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_certificates` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_certificates` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `users_id` INT NOT NULL COMMENT 'User FK',
   `courses_id` INT NOT NULL COMMENT 'Course FK',
@@ -171,18 +171,18 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_certificates` (
   INDEX `idx_courses_id` (`courses_id` ASC),
   CONSTRAINT `certificates_courses`
     FOREIGN KEY (`courses_id`)
-    REFERENCES `ext53_oscampus_courses` (`id`)
+    REFERENCES `hfps_oscampus_courses` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_courses_pathways`
+-- Table `hfps_oscampus_courses_pathways`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_courses_pathways` ;
+DROP TABLE IF EXISTS `hfps_oscampus_courses_pathways` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_courses_pathways` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_courses_pathways` (
   `courses_id` INT NOT NULL COMMENT 'Course FK',
   `pathways_id` INT NOT NULL COMMENT 'Pathway FK',
   `ordering` INT NOT NULL COMMENT 'Ordering for this pathway',
@@ -190,23 +190,23 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_courses_pathways` (
   INDEX `idx_pathways_id` (`pathways_id` ASC),
   CONSTRAINT `pathways_courses`
     FOREIGN KEY (`courses_id`)
-    REFERENCES `ext53_oscampus_courses` (`id`)
+    REFERENCES `hfps_oscampus_courses` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `courses_pathways`
     FOREIGN KEY (`pathways_id`)
-    REFERENCES `ext53_oscampus_pathways` (`id`)
+    REFERENCES `hfps_oscampus_pathways` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_users_lessons`
+-- Table `hfps_oscampus_users_lessons`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_users_lessons` ;
+DROP TABLE IF EXISTS `hfps_oscampus_users_lessons` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_users_lessons` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_users_lessons` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `users_id` INT NOT NULL COMMENT 'User FK',
   `lessons_id` INT NOT NULL COMMENT 'Lesson FK',
@@ -217,18 +217,18 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_users_lessons` (
   INDEX `idx_lessons_id` (`lessons_id` ASC),
   CONSTRAINT `users_lessons`
     FOREIGN KEY (`lessons_id`)
-    REFERENCES `ext53_oscampus_lessons` (`id`)
+    REFERENCES `hfps_oscampus_lessons` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_tags`
+-- Table `hfps_oscampus_tags`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_tags` ;
+DROP TABLE IF EXISTS `hfps_oscampus_tags` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_tags` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_tags` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL COMMENT 'Tag name',
   `alias` VARCHAR(255) NOT NULL COMMENT 'URL safe tag name',
@@ -237,34 +237,34 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_courses_tags`
+-- Table `hfps_oscampus_courses_tags`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_courses_tags` ;
+DROP TABLE IF EXISTS `hfps_oscampus_courses_tags` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_courses_tags` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_courses_tags` (
   `courses_id` INT NOT NULL,
   `tags_id` INT NOT NULL,
   PRIMARY KEY (`courses_id`, `tags_id`),
   INDEX `idx_tags_id` (`tags_id` ASC),
   CONSTRAINT `courses_tags`
     FOREIGN KEY (`courses_id`)
-    REFERENCES `ext53_oscampus_courses` (`id`)
+    REFERENCES `hfps_oscampus_courses` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `tags_courses`
     FOREIGN KEY (`tags_id`)
-    REFERENCES `ext53_oscampus_tags` (`id`)
+    REFERENCES `hfps_oscampus_tags` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_files`
+-- Table `hfps_oscampus_files`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_files` ;
+DROP TABLE IF EXISTS `hfps_oscampus_files` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_files` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_files` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(255) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
@@ -278,11 +278,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_files_courses`
+-- Table `hfps_oscampus_files_courses`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_files_courses` ;
+DROP TABLE IF EXISTS `hfps_oscampus_files_courses` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_files_courses` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_files_courses` (
   `files_id` INT NOT NULL,
   `courses_id` INT NOT NULL,
   `ordering` INT NOT NULL,
@@ -290,23 +290,23 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_files_courses` (
   INDEX `files_courses_idx` (`courses_id` ASC),
   CONSTRAINT `files_courses`
     FOREIGN KEY (`courses_id`)
-    REFERENCES `ext53_oscampus_courses` (`id`)
+    REFERENCES `hfps_oscampus_courses` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `courses_files`
     FOREIGN KEY (`files_id`)
-    REFERENCES `ext53_oscampus_files` (`id`)
+    REFERENCES `hfps_oscampus_files` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ext53_oscampus_files_lessons`
+-- Table `hfps_oscampus_files_lessons`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ext53_oscampus_files_lessons` ;
+DROP TABLE IF EXISTS `hfps_oscampus_files_lessons` ;
 
-CREATE TABLE IF NOT EXISTS `ext53_oscampus_files_lessons` (
+CREATE TABLE IF NOT EXISTS `hfps_oscampus_files_lessons` (
   `files_id` INT NOT NULL,
   `lessons_id` INT NOT NULL,
   `ordering` INT NOT NULL,
@@ -314,12 +314,12 @@ CREATE TABLE IF NOT EXISTS `ext53_oscampus_files_lessons` (
   INDEX `lessons_files_idx` (`lessons_id` ASC),
   CONSTRAINT `files_lessons`
     FOREIGN KEY (`files_id`)
-    REFERENCES `ext53_oscampus_files` (`id`)
+    REFERENCES `hfps_oscampus_files` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `lessons_files`
     FOREIGN KEY (`lessons_id`)
-    REFERENCES `ext53_oscampus_lessons` (`id`)
+    REFERENCES `hfps_oscampus_lessons` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -10,9 +10,6 @@ defined('_JEXEC') or die();
 
 class OscampusControllerImport extends OscampusControllerBase
 {
-    protected $imagePath = 'https://www.ostraining.com';
-    protected $filePath  = 'https://www.ostraining.com/media/files';
-
     protected $mediaTextScrub = array(
         '#<!-- Start of Brightcove Player -->#',
         '#^\s*<br[\s/]*>\s*$#ims'
@@ -294,17 +291,13 @@ class OscampusControllerImport extends OscampusControllerBase
         // First load all the known files
         $files = $dbGuru->setQuery($queryFiles)->loadObjectList();
         foreach ($files as $file) {
-            $path = $this->filePath . '/' . $file->path;
-            $fp   = curl_init($path);
-            if ($fp) {
-                curl_close($fp);
-
+            $path = JPATH_SITE . '/media/files/' . $file->path;
+            if (file_exists($path)) {
                 if (isset($this->courses[$file->courses_id])) {
                     $file->path = $targetRoot . '/' . $file->path;
 
                     if (!is_file(JPATH_SITE . '/' . $file->path)) {
-                        $fileData = file_get_contents($path);
-                        JFile::write(JPATH_SITE . '/' . $file->path, $fileData);
+                        copy($path, JPATH_SITE . '/' . $file->path);
                     }
 
                     $coursesId = $this->courses[$file->courses_id]->id;
@@ -905,6 +898,8 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function getGuruDbo()
     {
+        return JFactory::getDbo();
+        /*
         $conf = JFactory::getConfig();
 
         $options = array(
@@ -918,6 +913,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $dbo = JDatabase::getInstance($options);
         return $dbo;
+        */
     }
 
     /**
@@ -1131,12 +1127,11 @@ class OscampusControllerImport extends OscampusControllerBase
         $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
         foreach ($images as $image) {
             if ($image->image) {
-                $path     = $this->imagePath . '/' . str_replace(' ', '%20', trim($image->image, '\\/'));
+                $path     = '/' . trim($image->image, '\\/');
                 $fileName = basename($image->image);
                 $newPath  = $targetRoot . '/' . $fileName;
                 if (!is_file(JPATH_SITE . $newPath)) {
-                    $fileData = file_get_contents($path);
-                    JFile::write(JPATH_SITE . $newPath, $fileData);
+                    copy(JPATH_SITE . $path, JPATH_SITE . $newPath);
                 }
                 $image->image = substr($newPath, 1);
                 $db->updateObject($table, $image, 'id');
