@@ -10,6 +10,10 @@ defined('_JEXEC') or die();
 
 ?>
 <div id="content-files" class="osc-course-tabs-content" style="display: none">
-    <p>Exercise file goes here.</p>
+    <?php
+    foreach ($this->files as $file) {
+        echo '<p>' . JHtml::_('link', $file->path, $file->title) . '</p>';
+    }
+    ?>
 </div>
 <!-- #content-files -->

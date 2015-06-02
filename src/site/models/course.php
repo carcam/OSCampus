@@ -65,6 +65,57 @@ class OscampusModelCourse extends OscampusModelSite
     }
 
     /**
+     * Get all additional file downloads for this course
+     *
+     * @return array
+     */
+    public function getFiles()
+    {
+        $files = array();
+
+        $cid = $this->getState('course.id');
+        if ($cid > 0) {
+            $db = JFactory::getDbo();
+
+            $query1 = $db->getQuery(true)
+                ->select(
+                    array(
+                        'f.*',
+                        'fc.courses_id',
+                        '0 lessons_id',
+                        'fc.ordering',
+                        '0 lesson_ordering'
+                    )
+                )
+                ->from('#__oscampus_files f')
+                ->innerJoin('#__oscampus_files_courses fc ON fc.files_id = f.id')
+                ->innerJoin('#__oscampus_courses c ON c.id = fc.courses_id')
+                ->where('fc.courses_id = ' . $cid);
+
+            $query2 = $db->getQuery(true)
+                ->select(
+                    array(
+                        'f.*',
+                        'm.courses_id',
+                        'fl.lessons_id',
+                        'fl.ordering',
+                        'l.ordering lesson_ordering'
+                    )
+                )
+                ->from('#__oscampus_files f')
+                ->innerJoin('#__oscampus_files_lessons fl ON fl.files_id = f.id')
+                ->innerJoin('#__oscampus_lessons l ON l.id = fl.lessons_id')
+                ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
+                ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
+                ->where('m.courses_id = ' . $cid);
+
+            $query = "({$query1}) UNION ({$query2}) ORDER BY ordering, lesson_ordering";
+            $files = $db->setQuery($query)->loadObjectList();
+        }
+        return $files;
+    }
+
+    /**
      * Get lessons for the currently selected course
      *
      * @return array
