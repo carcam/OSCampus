@@ -19,9 +19,9 @@ defined('_JEXEC') or die();
     </div>
 
     <?php if ($this->lesson->header) : ?>
-    <div>
-        <?php echo $this->lesson->header; ?>
-    </div>
+        <div>
+            <?php echo $this->lesson->header; ?>
+        </div>
     <?php endif; ?>
 
     <?php
@@ -29,8 +29,21 @@ defined('_JEXEC') or die();
     ?>
 
     <?php if ($this->lesson->footer) : ?>
-    <div>
-        <?php echo $this->lesson->footer; ?>
-    </div>
+        <div>
+            <?php echo $this->lesson->footer; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->files) : ?>
+        <div>
+            <h1>Files</h1>
+            <ul>
+                <?php
+                foreach ($this->files as $file) {
+                    echo '<li>' . JHtml::_('link', $file->path, $file->title, 'target="_blank"') . '</li>';
+                }
+                ?>
+            </ul>
+        </div>
     <?php endif; ?>
 </div>

@@ -6,11 +6,13 @@
  * @license
  */
 
+/**
+ * @var OscampusViewLesson $this
+ */
 defined('_JEXEC') or die();
 
-$content = json_decode($this->lesson->content);
 echo '<pre>';
-print_r($content);
+print_r($this->lesson->content);
 echo '</pre>';
 
 ?>

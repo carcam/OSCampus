@@ -6,10 +6,12 @@
  * @license
  */
 
+/**
+ * @var OscampusViewLesson $this
+ */
 defined('_JEXEC') or die();
 
-$content = json_decode($this->lesson->content);
-if (!empty($content->id)) :
+if (!empty($this->lesson->content->id)) :
 ?>
 <div class="osc-lesson-links">
     <div class="osc-btn-group wistia_buttons_container" id="wistia_NaN_buttons_container">
@@ -40,7 +42,7 @@ if (!empty($content->id)) :
 <!-- .osc-lesson-links -->
 
 <div class="osc-lesson-embed">
-    <?php echo JHTML::_('content.prepare', '{wistia}' . $content->id . '{/wistia}'); ?>
+    <?php echo JHTML::_('content.prepare', '{wistia}' . $this->lesson->content->id . '{/wistia}'); ?>
 </div>
 <?php
 endif;

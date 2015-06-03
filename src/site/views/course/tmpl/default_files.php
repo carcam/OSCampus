@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 <div id="content-files" class="osc-course-tabs-content" style="display: none">
     <?php
     foreach ($this->files as $file) {
-        echo '<p>' . JHtml::_('link', $file->path, $file->title) . '</p>';
+        echo '<p>' . JHtml::_('link', $file->path, $file->title, 'target="_blank"') . '</p>';
     }
     ?>
 </div>

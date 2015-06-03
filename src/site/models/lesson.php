@@ -20,9 +20,25 @@ class OscampusModelLesson extends OscampusModelSite
             ->from('#__oscampus_lessons')
             ->where('id = ' . $lid);
 
-        $lesson = $db->setQuery($query)->loadObject();
+        $data = $db->setQuery($query)->loadObject();
 
-        return $lesson;
+        return new \Oscampus\Lesson($data);
+    }
+
+    public function getFiles()
+    {
+        $lid = (int)$this->getState('lesson.id');
+        $db = $this->getDbo();
+
+        $query = $db->getQuery(true)
+            ->select('f.*')
+            ->from('#__oscampus_files f')
+            ->innerJoin('#__oscampus_files_lessons fl ON fl.files_id = f.id')
+            ->where('fl.lessons_id = ' . $lid);
+
+        $files = $db->setQuery($query)->loadObjectList();
+
+        return $files;
     }
 
     protected function populateState()
