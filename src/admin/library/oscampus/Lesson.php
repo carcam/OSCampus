@@ -36,7 +36,7 @@ class Lesson
         }
 
         switch ($this->type) {
-            case 'oswistia':
+            case 'wistia':
             case 'quiz':
                 $this->content = json_decode($this->content);
                 break;

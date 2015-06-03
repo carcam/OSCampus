@@ -371,7 +371,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     case 1:
                     case 3:
                     case 6:
-                        $lesson->type = 'oswistia';
+                        $lesson->type = 'wistia';
 
                         switch ($mediaItem->type) {
                             case 'video':
