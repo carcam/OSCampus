@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Factory;
+
 defined('_JEXEC') or die();
 
 class OscampusModelLesson extends OscampusModelSite
@@ -22,7 +24,7 @@ class OscampusModelLesson extends OscampusModelSite
 
         $data = $db->setQuery($query)->loadObject();
 
-        return new \Oscampus\Lesson($data);
+        return Factory::getLesson($data);
     }
 
     public function getFiles()
