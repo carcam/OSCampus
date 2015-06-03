@@ -162,7 +162,6 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('memory_limit', '256M');
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
-        echo '<p><a href="index.php?option=com_oscampus&task=import.setteacher">Set a demo teacher</a> (when referenced users are not available)</p>';
 
         $this->log['Start'] = microtime(true);
 
@@ -219,38 +218,6 @@ class OscampusControllerImport extends OscampusControllerBase
 
         error_reporting(0);
         ini_set('display_errors', 0);
-    }
-
-    /**
-     * Set all teachers to one available user.
-     * This will help a little while we are still in testing
-     * and none of the users referenced in the db are on this system
-     *
-     */
-    public function setteacher()
-    {
-        $db = JFactory::getDbo();
-
-        $db->setQuery(
-            'ALTER TABLE ' . $db->quoteName('#__oscampus_teachers')
-            . ' DROP INDEX ' . $db->quoteName('idx_users_id')
-            . ', ADD INDEX ' . $db->quoteName('idx_users_id')
-            . ' (' . $db->quoteName('users_id') . ')'
-        )
-            ->execute();
-
-        $user = JFactory::getUser(747);
-        $db->setQuery(
-            'UPDATE ' . $db->quoteName('#__oscampus_teachers')
-            . ' SET users_id = ' . $user->id . ' where users_id > 0'
-        )
-            ->execute();
-
-
-        $this->setRedirect(
-            'index.php?option=com_oscampus',
-            sprintf('Set testing/demo teacher to %s &lt;%s&gt;', $user->name, $user->username)
-        );
     }
 
     /**
