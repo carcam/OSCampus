@@ -205,7 +205,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadViewed();
         $this->log['Load Viewed'] = microtime(true);
 
-        $this->images['Teacher Images']  = $this->copyImages('#__oscampus_teachers', 'teachers');
+        $this->images['Teacher Images']   = $this->copyImages('#__oscampus_teachers', 'teachers');
         $this->log['Load Teacher Images'] = microtime(true);
 
         $this->images['Course Images']   = $this->copyImages('#__oscampus_courses', 'courses');
@@ -238,7 +238,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $queryFiles = $dbGuru->getQuery(true)
+        $filesQuery = $dbGuru->getQuery(true)
             ->select(
                 array(
                     'mr.type_id courses_id',
@@ -256,7 +256,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->where('mr.type=' . $dbGuru->quote('pmed'));
 
         // First load all the known files
-        $files = $dbGuru->setQuery($queryFiles)->loadObjectList();
+        $files = $dbGuru->setQuery($filesQuery)->loadObjectList();
         foreach ($files as $file) {
             $path = JPATH_SITE . '/media/files/' . $file->path;
             if (file_exists($path)) {
@@ -316,7 +316,7 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $dbGuru = $this->getGuruDbo();
 
-        $query = $dbGuru->getQuery(true)
+        $mediaQuery = $dbGuru->getQuery(true)
             ->select(
                 array(
                     'm.id',
@@ -343,7 +343,9 @@ class OscampusControllerImport extends OscampusControllerBase
             ->leftJoin('#__guru_media m ON m.id = mr.media_id And mr.layout != 12')
             ->leftJoin('#__guru_quiz q ON q.id = mr.media_id AND mr.layout = 12');
 
-        $mediaList = $dbGuru->setQuery($query)->loadObjectList();
+        $mediaList = $dbGuru->setQuery($mediaQuery)->loadObjectList();
+
+        $questions = $this->getGuruQuestions();
 
         $this->mediaCount = 0;
         $updateList       = array();
@@ -407,13 +409,16 @@ class OscampusControllerImport extends OscampusControllerBase
                     case 12:
                         $lesson->type = 'quiz';
 
+                        $quizQuestions = isset($questions[$mediaItem->quiz_id])
+                            ? $questions[$mediaItem->quiz_id] : array();
+
                         $content = array(
-                            'old_id'         => $mediaItem->quiz_id,
                             'title'          => $mediaItem->quiz_title,
                             'passing_score'  => $mediaItem->quiz_passing_score,
                             'question_count' => $mediaItem->quiz_question_count,
                             'timelimit'      => $mediaItem->quiz_timelimit,
                             'alert_end'      => $mediaItem->quiz_alert_end,
+                            'questions'      => $quizQuestions,
                             'created'        => $mediaItem->quiz_created
                         );
 
@@ -447,6 +452,45 @@ class OscampusControllerImport extends OscampusControllerBase
         }
 
         $this->mediaSkipped = count($mediaList) - $this->mediaCount;
+    }
+
+    /**
+     * Retrieve all quiz questions from guru
+     */
+    protected function getGuruQuestions()
+    {
+        $dbGuru = $this->getGuruDbo();
+
+        $questionsQuery = $dbGuru->getQuery(true)
+            ->select('*')
+            ->from('#__guru_questions');
+        $list           = $dbGuru->setQuery($questionsQuery)->loadObjectList();
+        $questions      = array();
+        foreach ($list as $question) {
+            $answers = array();
+            $correct = array_filter(explode('|', $question->answers));
+            $correct = array_map('intval', $correct);
+            for ($a = 1; $a <= 10; $a++) {
+                $f = "a{$a}";
+                if (!empty($question->$f)) {
+                    $answer    = array(
+                        'correct' => (int)in_array($a, $correct),
+                        'text'    => stripslashes($question->$f)
+                    );
+                    $answers[] = $answer;
+                }
+            }
+
+            if (!isset($questions[$question->qid])) {
+                $questions[$question->qid] = array();
+            }
+            $questions[$question->qid][] = array(
+                'text'    => stripslashes($question->text),
+                'answers' => $answers
+            );
+        }
+
+        return $questions;
     }
 
     /**
@@ -518,7 +562,7 @@ class OscampusControllerImport extends OscampusControllerBase
     protected function loadLessons()
     {
         $dbGuru       = $this->getGuruDbo();
-        $queryLessons = $dbGuru->getQuery(true)
+        $lessonsQuery = $dbGuru->getQuery(true)
             ->select('d.id modules_id, t.*')
             ->from('#__guru_task t')
             ->innerJoin('#__guru_mediarel mr ON mr.media_id = t.id')
@@ -527,7 +571,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $modules       = $this->modules;
         $this->lessons = $this->copyTable(
-            $queryLessons,
+            $lessonsQuery,
             '#__oscampus_lessons',
             $this->lessonsMap,
             'id',
@@ -550,14 +594,14 @@ class OscampusControllerImport extends OscampusControllerBase
     protected function loadTags()
     {
         $dbGuru    = $this->getGuruDbo();
-        $queryTags = $dbGuru->getQuery(true)
+        $tagsQuery = $dbGuru->getQuery(true)
             ->select('trim(cms_type) title')
             ->from('#__guru_program')
             ->where('cms_type != ' . $dbGuru->quote(''))
             ->order('id asc')
             ->group('1');
 
-        $tags = $dbGuru->setQuery($queryTags)->loadObjectList();
+        $tags = $dbGuru->setQuery($tagsQuery)->loadObjectList();
 
         $db         = JFactory::getDbo();
         $this->tags = array();
@@ -568,12 +612,12 @@ class OscampusControllerImport extends OscampusControllerBase
             $this->tags[$tag->title] = $tag;
         }
 
-        $queryCourses = $dbGuru->getQuery(true)
+        $coursesQuery = $dbGuru->getQuery(true)
             ->select('id, trim(cms_type) cms_type')
             ->from('#__guru_program')
             ->where('cms_type != ' . $dbGuru->quote(''));
 
-        $courses = $dbGuru->setQuery($queryCourses)->loadObjectList();
+        $courses = $dbGuru->setQuery($coursesQuery)->loadObjectList();
         foreach ($courses as $course) {
             if (isset($this->courses[$course->id]) && isset($this->tags[$course->cms_type])) {
                 $newRow = (object)array(
