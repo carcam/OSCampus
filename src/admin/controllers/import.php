@@ -150,7 +150,7 @@ class OscampusControllerImport extends OscampusControllerBase
         'metadesc'        => null,
         'time'            => null,
         'ordering'        => 'ordering',
-        'step_access'     => null,
+        'step_access'     => 'access',
         'final_lesson'    => null
     );
 
@@ -665,6 +665,10 @@ class OscampusControllerImport extends OscampusControllerBase
                 $oldKey = $converted->modules_id;
                 if (isset($modules[$oldKey])) {
                     $converted->modules_id = $modules[$oldKey]->id;
+                    $converted->access     =
+                        isset($this->groupToView[$converted->access]) ?
+                            $this->groupToView[$converted->access] :
+                            $this->groupToView['default'];
                     return true;
                 }
                 return false;
