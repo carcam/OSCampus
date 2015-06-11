@@ -2,7 +2,25 @@
 <!DOCTYPE access>
 <access component="com_oscampus">
     <section name="component">
-        <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC"/>
-        <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC"/>
+        <action
+            name="core.admin"
+            title="JACTION_ADMIN"
+            description="JACTION_ADMIN_COMPONENT_DESC"/>
+
+        <action
+            name="core.manage"
+            title="JACTION_MANAGE"
+            description="JACTION_MANAGE_COMPONENT_DESC"/>
+
+        <action
+            name="video.download"
+            title="COM_OSWISTIA_ACTION_VIDEO_DOWNLOAD"
+            description="COM_OSWISTIA_ACTION_VIDEO_DOWNLOAD_DESC"/>
+
+        <action
+            name="video.control"
+            title="COM_OSWISTIA_ACTION_VIDEO_CONTROL"
+            description="COM_OSWISTIA_ACTION_VIDEO_CONTROL_DESC"/>
+
     </section>
 </access>
