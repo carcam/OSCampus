@@ -12,5 +12,8 @@
 defined('_JEXEC') or die();
 ?>
 <div class="osc-container oscampus-text">
-    <?php echo $this->lesson->content; ?>
+    <?php
+    echo $this->loadTemplate('navigation');
+    echo $this->lesson->content;
+    ?>
 </div>

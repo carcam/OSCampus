@@ -10,15 +10,10 @@
  * @var OscampusViewLesson $this
  */
 defined('_JEXEC') or die();
-
-echo '<pre>';
-print_r($this->lesson->content);
-echo '</pre>';
-
 ?>
 
 <div class="osc-container oscampus-quiz" id="oscampus">
-
+    <?php echo $this->loadTemplate('navigation'); ?>
     <div class="osc-section osc-quiz-details">
         <div class="block4">
             <div class="osc-quiz-left">

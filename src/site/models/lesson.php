@@ -12,7 +12,15 @@ defined('_JEXEC') or die();
 
 class OscampusModelLesson extends OscampusModelSite
 {
+    /**
+     * @var object
+     */
     protected $lesson = null;
+
+    /**
+     * @var array
+     */
+    protected $files = null;
 
     public function getLesson()
     {
@@ -29,29 +37,16 @@ class OscampusModelLesson extends OscampusModelSite
                 ->where('m.courses_id = ' . $cid)
                 ->order('m.ordering, l.ordering');
 
-            $offset = max(0, $idx - 1);
-            $limit  = $idx ? 3 : 2;
-            $data   = $db->setQuery($query, $offset, $limit)->loadObjectList();
+            $data = $db->setQuery($query, $idx, 2)->loadObjectList();
 
-            foreach ($data as $lesson) {
-                if ($lesson->type != 'text') {
-                    $lesson->content = json_decode($lesson->content);
+            if ($this->lesson = array_shift($data)) {
+                $this->lesson->index = $idx;
+                $this->lesson->next = $data ? $idx+1 : null;
+
+                if ($this->lesson->type != 'text') {
+                    $this->lesson->content = json_decode($this->lesson->content);
                 }
             }
-
-            if (count($data) === 3) {
-                list($previous, $this->lesson, $next) = $data;
-            } elseif ($idx == 0) {
-                $previous = null;
-                list($this->lesson, $next) = $data;
-            } else {
-                list($previous, $this->lesson) = $data;
-                $next = null;
-            }
-
-            $this->lesson->index    = $idx;
-            $this->lesson->previous = $previous;
-            $this->lesson->next     = $next;
         }
 
         return $this->lesson;
@@ -59,19 +54,18 @@ class OscampusModelLesson extends OscampusModelSite
 
     public function getFiles()
     {
-        if ($lesson = $this->getLesson()) {
-            $db  = $this->getDbo();
+        if ($this->files === null && $lesson = $this->getLesson()) {
+            $db    = $this->getDbo();
             $query = $db->getQuery(true)
                 ->select('f.*')
                 ->from('#__oscampus_files f')
                 ->innerJoin('#__oscampus_files_lessons fl ON fl.files_id = f.id')
                 ->where('fl.lessons_id = ' . $lesson->id);
 
-            $files = $db->setQuery($query)->loadObjectList();
-            return $files;
+            $this->files = $db->setQuery($query)->loadObjectList();
         }
 
-        return array();
+        return $this->files;
     }
 
     protected function populateState()

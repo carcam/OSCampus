@@ -11,7 +11,12 @@ defined('_JEXEC') or die();
 class OscampusViewLesson extends OscampusViewSite
 {
     /**
-     * @var \Oscampus\Lesson
+     * @var OscampusModelLesson
+     */
+    protected $model = null;
+
+    /**
+     * @var object
      */
     protected $lesson = null;
 
@@ -25,16 +30,13 @@ class OscampusViewLesson extends OscampusViewSite
         error_reporting(-1);
         ini_set('display_errors', 1);
 
-        /** @var OscampusModelLesson $model */
-        $model = $this->getModel();
-
-        $this->lesson = $model->getLesson();
-        $this->files = $model->getFiles();
+        $this->model  = $this->getModel();
+        $this->lesson = $this->model->getLesson();
+        $this->files  = $this->model->getFiles();
 
         parent::display($tmpl);
 
         error_reporting(0);
         ini_set('display_errors', 0);
-
     }
 }

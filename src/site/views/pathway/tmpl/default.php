@@ -20,7 +20,9 @@ defined('_JEXEC') or die();
     <?php
     foreach ($this->items as $item) :
         $image = JHtml::_('image', $item->image, $item->title);
-        $link  = JRoute::_(OscampusRoute::get('pathways') . '&view=course&cid=' . $item->id);
+        $linkBase = OscampusRoute::get('pathways');
+        $link  = JRoute::_($linkBase . "&view=course&cid={$item->id}");
+        $linkStart = JRoute::_($linkBase . "&view=lesson&cid={$item->id}")
     ?>
     <div class="osc-section osc-course-item">
         <div class="block4 osc-course-image">
@@ -30,7 +32,7 @@ defined('_JEXEC') or die();
             <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
             <?php echo $item->introtext ?: $item->description; ?>
             <div class="osc-course-start">
-                <?php echo JHtml::_('link', "javascript:alert('Under Construction');", JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="osc-btn"'); ?>
+                <?php echo JHtml::_('link', $linkStart, JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="osc-btn"'); ?>
             </div>
         </div>
     </div>

@@ -16,6 +16,7 @@ $linkBase = OscampusRoute::get('pathways') . '&view=lesson&cid=%s&idx=%s';
 <div id="content-content" class="osc-course-tabs-content">
     <div class="osc-table">
         <?php
+        $idx = 0;
         foreach ($this->lessons as $module) :
             ?>
             <div class="osc-section osc-row-heading">
@@ -25,7 +26,7 @@ $linkBase = OscampusRoute::get('pathways') . '&view=lesson&cid=%s&idx=%s';
             </div>
             <?php
             foreach ($module->lessons as $i => $lesson) :
-                $link  = sprintf($linkBase, $this->course->id, $i);
+                $link  = sprintf($linkBase, $this->course->id, $idx++);
                 ?>
                 <div class="<?php echo 'osc-section ' . ($i%2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                     <div class="block9 p-left-xx">
