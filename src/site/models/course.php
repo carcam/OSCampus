@@ -143,7 +143,7 @@ class OscampusModelCourse extends OscampusModelSite
                 'title'   => null,
                 'lessons' => array()
             );
-            foreach ($list as $lesson) {
+            foreach ($list as $index => $lesson) {
                 if ($lesson->modules_id != $module->id) {
                     if ($module->lessons) {
                         $lessons[] = clone $module;
@@ -152,6 +152,8 @@ class OscampusModelCourse extends OscampusModelSite
                     $module->title   = $lesson->module_title;
                     $module->lessons = array();
                 }
+
+                $lesson->index     = $index;
                 $module->lessons[] = $lesson;
             }
             if ($module->lessons) {

@@ -11,7 +11,6 @@ defined('_JEXEC') or die();
  * @var OscampusViewCourse $this
  */
 
-$linkBase = OscampusRoute::get('pathways') . '&view=lesson&cid=%s&idx=%s';
 ?>
 <div id="content-content" class="osc-course-tabs-content">
     <div class="osc-table">
@@ -26,11 +25,14 @@ $linkBase = OscampusRoute::get('pathways') . '&view=lesson&cid=%s&idx=%s';
             </div>
             <?php
             foreach ($module->lessons as $i => $lesson) :
-                $link  = sprintf($linkBase, $this->course->id, $idx++);
                 ?>
                 <div class="<?php echo 'osc-section ' . ($i%2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                     <div class="block9 p-left-xx">
-                        <?php echo JHtml::_('link', $link, $lesson->title); ?>
+                        <?php
+                        echo JHtml::_('osc.lesson.link', $lesson);
+                        echo JHtml::_('osc.lesson.freeflag', $lesson);
+                        ?>
+
                     </div>
                     <?php if (isset($this->viewed[$lesson->id])) : ?>
                     <div class="block3 osc-check-viewed osc-hide-tablet">

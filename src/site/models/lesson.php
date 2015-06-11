@@ -31,22 +31,39 @@ class OscampusModelLesson extends OscampusModelSite
             $db = $this->getDbo();
 
             $query = $db->getQuery(true)
-                ->select('l.*')
+                ->select('l.*, m.courses_id')
                 ->from('#__oscampus_lessons l')
                 ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
                 ->where('m.courses_id = ' . $cid)
                 ->order('m.ordering, l.ordering');
 
-            $data = $db->setQuery($query, $idx, 2)->loadObjectList();
+            $data = $db->setQuery($query, max(0, $idx - 1), 3)->loadObjectList();
 
-            if ($this->lesson = array_shift($data)) {
-                $this->lesson->index = $idx;
-                $this->lesson->next = $data ? $idx+1 : null;
-
-                if ($this->lesson->type != 'text') {
-                    $this->lesson->content = json_decode($this->lesson->content);
+            foreach ($data as $lesson) {
+                if ($lesson->type != 'text') {
+                    $lesson->content = json_decode($lesson->content);
                 }
             }
+
+            $previous = null;
+            $next     = null;
+            if (count($data) == 3) {
+                list($previous, $this->lesson, $next) = $data;
+                $previous->index = $idx - 1;
+                $next->index     = $idx + 1;
+
+            } elseif ($idx == 0) {
+                list($this->lesson, $next) = $data;
+                $next->index = $idx + 1;
+
+            } else {
+                list($previous, $this->lesson) = $data;
+                $previous->index = $idx - 1;
+            }
+
+            $this->lesson->index    = $idx;
+            $this->lesson->previous = $previous;
+            $this->lesson->next     = $next;
         }
 
         return $this->lesson;

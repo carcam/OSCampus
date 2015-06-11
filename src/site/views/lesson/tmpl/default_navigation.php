@@ -12,27 +12,20 @@ defined('_JEXEC') or die();
  * @var OscampusViewLesson $this
  */
 $courseId = $this->model->getState('course.id');
+$previous = $this->lesson->previous;
+$next     = $this->lesson->next;
 
-$linkBase = OscampusRoute::get('pathway');
-$linkHome = "{$linkBase}&view=course&cid={$courseId}";
-if ($this->lesson->index > 0) {
-    $idx          = $this->lesson->index - 1;
-    $linkPrevious = "{$linkBase}&view=lesson&cid={$courseId}&idx={$idx}";
-}
-if ($this->lesson->next) {
-    $linkNext = "{$linkBase}&view=lesson&cid={$courseId}&idx={$this->lesson->next}";
-}
 ?>
 <div class="osc-btn-group hidden" id="course-navigation">
-    <a href="<?php echo $linkHome; ?>" class="osc-btn">
+    <a href="<?php echo JHtml::_('osc.courselink', $courseId, null, null, true); ?>" class="osc-btn">
         <i class="fa fa-bars"></i>
         <span class="osc-hide-tablet">
             <?php echo JText::_('COM_OSCAMPUS_HOME'); ?>
         </span>
     </a>
 
-    <?php if (!empty($linkPrevious)) : ?>
-        <a href="<?php echo $linkPrevious; ?>" class="osc-btn" id="prevbut">
+    <?php if ($previous) : ?>
+        <a href="<?php echo JHtml::_('osc.lesson.link', $previous, null, true); ?>" class="osc-btn" id="prevbut">
             <i class="fa fa-chevron-left"></i>
             <span class="osc-hide-tablet">
                 <?php echo JText::_('COM_OSCAMPUS_PREVIOUS'); ?>
@@ -40,8 +33,8 @@ if ($this->lesson->next) {
         </a>
     <?php endif; ?>
 
-    <?php if (!empty($linkNext)) : ?>
-        <a href="<?php echo $linkNext; ?>" class="osc-btn" id="nextbut">
+    <?php if ($next) : ?>
+        <a href="<?php echo JHtml::_('osc.lesson.link', $next, null, true); ?>" class="osc-btn" id="nextbut">
             <span class="osc-hide-tablet">
                 <?php echo JText::_('COM_OSCAMPUS_NEXT'); ?>
             </span>

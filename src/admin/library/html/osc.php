@@ -138,4 +138,20 @@ abstract class JHtmlOsc
 
         static::onready("$.Oscampus.ajax({$options});");
     }
+
+    public static function courselink($cid, $text, $attribs = null, $uriOnly = false)
+    {
+        if ((int)$cid) {
+            $query = OscampusRoute::getQuery('pathways');
+            $query['view'] = 'course';
+            $query['cid'] = $cid;
+
+            $link = JRoute::_('index.php?' . http_build_query($query));
+            if ($uriOnly) {
+                return $link;
+            }
+            return JHtml::_('link', $link, $text, $attribs);
+        }
+        return '';
+    }
 }
