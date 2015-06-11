@@ -67,11 +67,6 @@ abstract class OscampusRoute
      */
     public static function getQuery($view, $layout = '')
     {
-        if (static::$items === null) {
-            $menu          = OscampusHelper::getApplication('site')->getMenu();
-            static::$items = $menu->getItems(array('component', 'access'), array('com_oscampus', true));
-        }
-
         $query = array(
             'option' => 'com_oscampus',
             'view'   => $view
@@ -80,27 +75,45 @@ abstract class OscampusRoute
             $query['layout'] = $layout;
         }
 
-        $viewLevels = OscampusFactory::getUser()->getAuthorisedViewLevels();
+        // Stay on active menu if it matches what we're looking for
+        if ($activeMenu = OscampusFactory::getApplication()->getMenu()->getActive()) {
+            $activeQuery  = $activeMenu->query;
+            $activeView   = isset($activeQuery['view']) ? $activeQuery['view'] : '';
+            $activeLayout = isset($activeQuery['layout']) ? $activeQuery['layout'] : '';
+            if ($activeView == $view && $activeLayout == $layout) {
+                $query['Itemid'] = $activeMenu->id;
+            }
+        }
 
-        // Look for an existing menu item that matches the requests
-        foreach (static::$items as $item) {
-            $mView   = empty($item->query['view']) ? '' : $item->query['view'];
-            $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
-            $access  = in_array($item->access, $viewLevels);
+        // If not active menu, go find one!
+        if (empty($query['Itemid'])) {
+            if (static::$items === null) {
+                $menu          = OscampusHelper::getApplication('site')->getMenu();
+                static::$items = $menu->getItems(array('component', 'access'), array('com_oscampus', true));
+            }
 
-            if ($access && $mView == $view && $mLayout == $layout) {
-                $query['Itemid'] = $item->id;
-                if (!empty($query['view']) && $query['view'] == $view) {
-                    unset($query['view']);
+            $viewLevels = OscampusFactory::getUser()->getAuthorisedViewLevels();
+
+            // Look for an existing menu item that matches the requests
+            foreach (static::$items as $item) {
+                $mView   = empty($item->query['view']) ? '' : $item->query['view'];
+                $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
+                $access  = in_array($item->access, $viewLevels);
+
+                if ($access && $mView == $view && $mLayout == $layout) {
+                    $query['Itemid'] = $item->id;
+                    if (!empty($query['view']) && $query['view'] == $view) {
+                        unset($query['view']);
+                    }
+                    if (!empty($query['layout']) && $query['layout'] == $layout) {
+                        unset($query['layout']);
+                    }
+                    break;
+
+                } elseif ($access && $mView == 'account' && empty($mLayout)) {
+                    // The account info view can always be used as a base
+                    $query['Itemid'] = $item->id;
                 }
-                if (!empty($query['layout']) && $query['layout'] == $layout) {
-                    unset($query['layout']);
-                }
-                break;
-
-            } elseif ($access && $mView == 'account' && empty($mLayout)) {
-                // The account info view can always be used as a base
-                $query['Itemid'] = $item->id;
             }
         }
 
