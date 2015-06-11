@@ -27,16 +27,10 @@ class OscampusViewLesson extends OscampusViewSite
 
     public function display($tmpl = null)
     {
-        error_reporting(-1);
-        ini_set('display_errors', 1);
-
         $this->model  = $this->getModel();
         $this->lesson = $this->model->getLesson();
         $this->files  = $this->model->getFiles();
 
         parent::display($tmpl);
-
-        error_reporting(0);
-        ini_set('display_errors', 0);
     }
 }
