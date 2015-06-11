@@ -39,7 +39,7 @@ if (!empty($this->lesson->content->id)) :
     <!-- .osc-lesson-links -->
 
     <div class="osc-lesson-embed">
-        <?php echo JHTML::_('content.prepare', '{wistia}' . $this->lesson->content->id . '{/wistia}'); ?>
+        <?php echo JHtml::_('osc.wistia.player', $this->lesson->content->id); ?>
     </div>
 <?php
 endif;
