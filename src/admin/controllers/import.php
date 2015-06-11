@@ -895,7 +895,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 } else {
                     $converted->difficulty = 'unknown';
                 }
-                $converted->access = 0;
+                $converted->access = 1;
 
                 if (preg_match('#(.*?)<hr\s+id="system-readmore"\s*/?>(.*)#ms', $converted->description, $matches)) {
                     $converted->introtext   = trim($matches[1]);

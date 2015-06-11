@@ -12,6 +12,8 @@ class OscampusModelPathway extends OscampusModelList
 {
     protected function getListQuery()
     {
+        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+
         $query = parent::getListQuery()
             ->select('cp.*, p.title pathway, u.name teacher, c.*')
             ->from('#__oscampus_pathways p')
@@ -23,7 +25,8 @@ class OscampusModelPathway extends OscampusModelList
                 array(
                     'p.id = ' . $this->getState('pathway.id'),
                     'p.published = 1',
-                    'p.users_id IS NULL'
+                    'p.users_id IS NULL',
+                    'c.access IN (' . join(',', $viewLevels) . ')'
                 )
             )
             ->order('cp.ordering asc, c.title asc');
