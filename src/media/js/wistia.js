@@ -58,7 +58,7 @@
                     .addClass('wistia_buttons_container');
                 $(wistiaEmbed.grid.top_inside).append(container);
 
-                // Extra-controls - Download
+                /*********** BEGIN DOWNLOAD ***************/
                 var button = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_download_button')
                     .addClass('wistia_button download')
@@ -179,6 +179,7 @@
                     button.addClass('off');
                 }
                 container.append(button);
+                /*********** END DOWNLOAD ***************/
 
                 /*********** BEGIN AUTOPLAY ***************/
                 var button = $('<div>')
