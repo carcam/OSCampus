@@ -37,7 +37,9 @@ class OscampusModelLesson extends OscampusModelSite
                 ->where('m.courses_id = ' . $cid)
                 ->order('m.ordering, l.ordering');
 
-            $data = $db->setQuery($query, max(0, $idx - 1), 3)->loadObjectList();
+            $offset = max(0, $idx - 1);
+            $limit  = $idx ? 3 : 2;
+            $data   = $db->setQuery($query, $offset, $limit)->loadObjectList();
 
             foreach ($data as $lesson) {
                 if ($lesson->type != 'text') {
