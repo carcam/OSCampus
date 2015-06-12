@@ -76,23 +76,15 @@ abstract class OscWistia
                 $options = array(
                     'download' => array(
                         'authorised' => $authoriseDownload,
-                        'formToken'  => JHtml::_('form.token'),
-                        'url'        => 'javascript:alert(\'under construction\');',
-                        'limitUrl'   => ''
+                        'formToken'  => JHtml::_('form.token')
                     )
                 );
-
-                if ($authoriseDownload) {
-                    $options['download']['url']      = 'javascript:alert(\'under construction\');';
-                    $options['download']['limitUrl'] = 'javascript:alert(\'under construction\');';
-                }
 
                 $options = json_encode($options);
                 $js = array(
                     "<script>",
                     "wistiaEmbed.ready(function() {",
-                    "   jQuery.Oscampus.wistia.addExtraControls({$options});",
-                    "   jQuery.Oscampus.wistia.fixVideoSizeProportion();",
+                    "   jQuery.Oscampus.wistia.init({$options});",
                     "});",
                     "</script>"
                 );

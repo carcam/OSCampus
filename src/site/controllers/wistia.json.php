@@ -44,20 +44,6 @@ class OscampusControllerWistia extends OscampusControllerJson
     }
 
     /**
-     * Toggle the closed caption state
-     *
-     * @return string The return status
-     */
-    public function toggleCaptionsState()
-    {
-        $session = JFactory::getSession();
-        $state = !((bool) $session->get('media_captions', true));
-        $session->set('media_captions', $state);
-
-        echo 'wistiaCaptionsState:' . ($state ? 1:0);
-    }
-
-    /**
      * Store the volume level on the session
      *
      * @return string The return status
@@ -71,7 +57,6 @@ class OscampusControllerWistia extends OscampusControllerJson
         $session = JFactory::getSession();
         $session->set('media_volume_level', $level);
 
-        echo 'wistiaVolumeLevel:' . (float)$level;
+        echo json_encode((float)$level);
     }
-
 }

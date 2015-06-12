@@ -1,13 +1,16 @@
 (function($) {
     $.Oscampus = $.extend({}, $.Oscampus, {
         wistia: {
-            controlsOptions: {
+            options: {
                 download: {
                     authorised: false,
-                    url       : null,
                     formToken : null,
-                    limitUrl  : null
                 }
+            },
+
+            init: function(options) {
+                this.addExtraControls(options);
+                this.fixVideoSizeProportion();
             },
 
             fixVideoSizeProportion: function() {
@@ -28,7 +31,7 @@
             },
 
             addExtraControls: function(options) {
-                options = $.extend(this.controlsOptions, options);
+                options = $.extend(this.options, options);
                 var resize;
 
                 // Add the container for the buttons
