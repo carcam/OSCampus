@@ -40,7 +40,7 @@ class OscampusControllerWistia extends OscampusControllerJson
         $state = !((bool) $session->get('media_focus', true));
         $session->set('media_focus', $state);
 
-        echo 'wistiaFocusState:' . ($state ? 1:0);
+        echo json_encode($state);
     }
 
     /**

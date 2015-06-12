@@ -7,12 +7,6 @@
                     url       : null,
                     formToken : null,
                     limitUrl  : null
-                },
-                autoplay: {
-                    url: null // Was: "/index.php?option=com_guru&controller=guruTasks&task=toggleAutoPlayState&format=json"
-                },
-                focus   : {
-                    url: null // Was: "/index.php?option=com_guru&controller=guruTasks&task=toggleFocusState&format=json"
                 }
             },
 
@@ -180,10 +174,10 @@
                                 wistiaEmbed.options.autoPlay = state;
                                 wistiaEmbed.params.autoplay = state;
                                 if (state) {
-                                    event.target.removeClass('off');
+                                    $(event.target).removeClass('off');
                                     $(wistiaEmbed).trigger('autoplayenabled');
                                 } else {
-                                    event.target.addClass('off');
+                                    $(event.target).addClass('off');
                                     $(wistiaEmbed).trigger('autoplaydisabled');
                                 }
                             }
@@ -201,40 +195,24 @@
                     .attr('title', 'Focus')
                     .text('Focus')
                     .on('click', function(event) {
-                        var url = options.focus.url;
-
-                        var ajax = new Request({
-                            method      : 'get',
-                            asynchronous: 'true',
-                            url         : url,
-                            data        : {
-                                'do': '1'
+                        $.Oscampus.ajax({
+                            data   : {
+                                task: 'wistia.toggleFocusState'
                             },
-                            onSuccess   : function(result) {
-                                var patt = /wistiaFocusState:([0-1])/;
-                                var state = patt.exec(result);
-
+                            success: function(state) {
+                                wistiaEmbed.params.focus = state;
                                 if (state) {
-                                    state = state[1];
-
-                                    if (state >= 0) {
-                                        if (state == 1) {
-                                            event.target.removeClass('off');
-                                            wistiaEmbed.plugin['dimthelights'].dim();
-                                            $(wistiaEmbed).trigger('focusenabled');
-                                            wistiaEmbed.params.focus = true;
-                                        } else {
-                                            event.target.addClass('off');
-                                            wistiaEmbed.plugin['dimthelights'].undim();
-                                            $(wistiaEmbed).trigger('focusdisabled');
-                                            wistiaEmbed.params.focus = false;
-                                        }
-                                    }
+                                    $(event.target).removeClass('off');
+                                    wistiaEmbed.plugin['dimthelights'].dim();
+                                    $(wistiaEmbed).trigger('focusenabled');
+                                } else {
+                                    $(event.target).addClass('off');
+                                    wistiaEmbed.plugin['dimthelights'].undim();
+                                    $(wistiaEmbed).trigger('focusdisabled');
                                 }
                             }
-                        }).send();
+                        });
                     });
-
                 if (wistiaEmbed.options.focus === false) {
                     button.addClass('off');
                 }
