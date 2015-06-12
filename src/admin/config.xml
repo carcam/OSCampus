@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <config>
+    <fields name="videos">
+        <fieldset
+            name="videos"
+            label="COM_OSCAMPUS_CONFIGURATION_VIDEOS">
+
+            <field
+                name="downloadLimit"
+                type="text"
+                class="inputbox"
+                label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_DESC"
+                default="20"
+                size="5"/>
+
+            <field
+                name="downloadLimitPeriod"
+                type="text"
+                class="inputbox"
+                label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_PERIOD_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_PERIOD_DESC"
+                default="7"
+                size="5"/>
+
+        </fieldset>
+    </fields>
+
+    <fields name="wistia">
+        <fieldset
+            name="wistia"
+            label="COM_OSCAMPUS_CONFIGURATION_WISTIA">
+            <field
+                name="apikey"
+                type="textarea"
+                class="inputbox"
+                label="COM_OSCAMPUS_CONFIGURATION_WISTIA_APIKEY_LABEL"
+                description="COM_OSWISTIA_CONFIGURATION_WISTIA_APIKEY_DESC"/>
+
+        </fieldset>
+    </fields>
+
     <fieldset
         name="permissions"
         label="JCONFIG_PERMISSIONS_LABEL"
