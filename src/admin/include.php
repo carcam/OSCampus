@@ -20,7 +20,6 @@ if (!defined('OSCAMPUS_LOADED')) {
     // Setup autoload libraries
     require_once OSCAMPUS_LIBRARY . '/oscampus/AutoLoader.php';
     AutoLoader::register('Oscampus', OSCAMPUS_LIBRARY . '/oscampus');
-    AutoLoader::register('Pimple', OSCAMPUS_LIBRARY . '/pimple');
 
     AutoLoader::registerCamelBase('Oscampus', OSCAMPUS_LIBRARY . '/joomla');
 
