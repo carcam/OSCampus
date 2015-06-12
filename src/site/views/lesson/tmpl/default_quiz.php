@@ -12,7 +12,7 @@
 defined('_JEXEC') or die();
 ?>
 
-<div class="osc-container oscampus-quiz" id="oscampus">
+<div class="osc-container oscampus-quiz">
     <?php echo $this->loadTemplate('navigation'); ?>
     <div class="osc-section osc-quiz-details">
         <div class="block4">
