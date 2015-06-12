@@ -55,10 +55,50 @@ abstract class OscWistia
         $content         = '{wistia}' . $id . '{/wistia}';
         $preparedContent = JHtml::_('content.prepare', $content, $config);
 
+        static::addExtraControls();
+
         error_reporting(0);
         ini_set('display_errors', 0);
 
         return $preparedContent;
     }
 
+    protected static function addExtraControls()
+    {
+        $user       = JFactory::getUser();
+        $authorised = $user->authorise('video.control', 'com_oscampus');
+        if ($authorised) {
+            JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+
+            $detect = new MobileDetect();
+            if (!$detect->isMobile()) {
+                $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
+
+                $options = array(
+                    'download' => array(
+                        'authorised' => $authoriseDownload, // $authoriseDownloadStr = ;
+                        'formToken'  => JHtml::_('form.token'),
+                        'url'        => 'javascript:alert(\'under construction\');',
+                        'limitUrl'   => ''
+                    )
+                );
+
+                if ($authoriseDownload) {
+                    $options['download']['url']      = 'javascript:alert(\'under construction\');';
+                    $options['download']['limitUrl'] = 'javascript:alert(\'under construction\');';
+                }
+
+                $options = json_encode($options);
+                $js = array(
+                    "jQuery(function() {",
+                    "   wistiaEmbed.ready(function() {",
+                    "      $.Oscampus.wistia.addExtraControls({$options});",
+                    "      $.Oscampus.wistia.fixVideoSizeProportion();",
+                    "   });",
+                    "});"
+                );
+                JFactory::getDocument()->addScriptDeclaration(join("\n", $js));
+            }
+        }
+    }
 }
