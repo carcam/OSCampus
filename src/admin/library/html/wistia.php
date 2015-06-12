@@ -66,6 +66,7 @@ abstract class OscWistia
         $user       = JFactory::getUser();
         $authorised = $user->authorise('video.control', 'com_oscampus');
         if ($authorised) {
+            JHtml::_('script', 'com_oscampus/utilities.js', false, true);
             JHtml::_('script', 'com_oscampus/wistia.js', false, true);
 
             $detect = new MobileDetect();

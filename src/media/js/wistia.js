@@ -5,13 +5,13 @@
                 download: {
                     authorised: false,
                     url       : null,
-                    formToken     : null,
+                    formToken : null,
                     limitUrl  : null
                 },
                 autoplay: {
                     url: null // Was: "/index.php?option=com_guru&controller=guruTasks&task=toggleAutoPlayState&format=json"
                 },
-                focus: {
+                focus   : {
                     url: null // Was: "/index.php?option=com_guru&controller=guruTasks&task=toggleFocusState&format=json"
                 }
             },
@@ -172,40 +172,23 @@
                     .attr('title', 'Autoplay')
                     .text('Autoplay')
                     .on('click', function(event) {
-                        var url = options.autoplay.url;
-
-                        var ajax = new Request({
-                            method      : 'get',
-                            asynchronous: 'true',
-                            url         : url,
-                            data        : {
-                                'do': '1'
+                        $.Oscampus.ajax({
+                            data   : {
+                                task: 'wistia.toggleAutoPlayState'
                             },
-                            onSuccess   : function(result) {
-                                var patt = /wistiaAutoPlayState:([0-1])/;
-                                var state = patt.exec(result);
-
+                            success: function(state) {
+                                wistiaEmbed.options.autoPlay = state;
+                                wistiaEmbed.params.autoplay = state;
                                 if (state) {
-                                    state = state[1];
-
-                                    if (state >= 0) {
-                                        if (state == 1) {
-                                            event.target.removeClass('off');
-                                            wistiaEmbed.options.autoPlay = true;
-                                            $(wistiaEmbed).trigger('autoplayenabled');
-                                            wistiaEmbed.params.autoplay = true;
-                                        } else {
-                                            event.target.addClass('off');
-                                            wistiaEmbed.options.autoPlay = false;
-                                            $(wistiaEmbed).trigger('autoplaydisabled');
-                                            wistiaEmbed.params.autoplay = false;
-                                        }
-                                    }
+                                    event.target.removeClass('off');
+                                    $(wistiaEmbed).trigger('autoplayenabled');
+                                } else {
+                                    event.target.addClass('off');
+                                    $(wistiaEmbed).trigger('autoplaydisabled');
                                 }
                             }
-                        }).send();
+                        })
                     });
-
                 if (wistiaEmbed.options.autoPlay === false) {
                     button.addClass('off');
                 }

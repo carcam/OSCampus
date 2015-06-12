@@ -181,5 +181,25 @@
         selector: null,
         visible : false
     };
+
+    $.Oscampus.ajax = function(options) {
+        options = $.extend(true, this.ajax.options, options);
+        $.ajax(options);
+    };
+    $.Oscampus.ajax.options = {
+        url     : 'index.php',
+        data    : {
+            option: 'com_oscampus',
+            format: 'json'
+        },
+        dataType: 'json',
+        success : function(result, status, xhr) {
+            alert('RESULT: ' + result);
+        },
+        error   : function(xhr, status, error) {
+            alert(error);
+        }
+    };
+
 })(jQuery);
 
