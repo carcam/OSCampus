@@ -14,13 +14,13 @@
 
         <action
             name="video.download"
-            title="COM_OSWISTIA_ACTION_VIDEO_DOWNLOAD"
-            description="COM_OSWISTIA_ACTION_VIDEO_DOWNLOAD_DESC"/>
+            title="COM_OSCAMPUS_ACTION_VIDEO_DOWNLOAD"
+            description="COM_OSCAMPUS_ACTION_VIDEO_DOWNLOAD_DESC"/>
 
         <action
             name="video.control"
-            title="COM_OSWISTIA_ACTION_VIDEO_CONTROL"
-            description="COM_OSWISTIA_ACTION_VIDEO_CONTROL_DESC"/>
+            title="COM_OSCAMPUS_ACTION_VIDEO_CONTROL"
+            description="COM_OSCAMPUS_ACTION_VIDEO_CONTROL_DESC"/>
 
     </section>
 </access>
