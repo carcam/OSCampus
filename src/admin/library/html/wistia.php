@@ -55,12 +55,10 @@ abstract class OscWistia
         $content         = '{wistia}' . $id . '{/wistia}';
         $preparedContent = JHtml::_('content.prepare', $content, $config);
 
-        static::addExtraControls();
-
         error_reporting(0);
         ini_set('display_errors', 0);
 
-        return $preparedContent;
+        return $preparedContent . static::addExtraControls();
     }
 
     protected static function addExtraControls()
@@ -76,7 +74,7 @@ abstract class OscWistia
 
                 $options = array(
                     'download' => array(
-                        'authorised' => $authoriseDownload, // $authoriseDownloadStr = ;
+                        'authorised' => $authoriseDownload,
                         'formToken'  => JHtml::_('form.token'),
                         'url'        => 'javascript:alert(\'under construction\');',
                         'limitUrl'   => ''
@@ -90,14 +88,14 @@ abstract class OscWistia
 
                 $options = json_encode($options);
                 $js = array(
-                    "jQuery(function() {",
-                    "   wistiaEmbed.ready(function() {",
-                    "      $.Oscampus.wistia.addExtraControls({$options});",
-                    "      $.Oscampus.wistia.fixVideoSizeProportion();",
-                    "   });",
-                    "});"
+                    "<script>",
+                    "wistiaEmbed.ready(function() {",
+                    "   jQuery.Oscampus.wistia.addExtraControls({$options});",
+                    "   jQuery.Oscampus.wistia.fixVideoSizeProportion();",
+                    "});",
+                    "</script>"
                 );
-                JFactory::getDocument()->addScriptDeclaration(join("\n", $js));
+                return join("\n", $js);
             }
         }
     }

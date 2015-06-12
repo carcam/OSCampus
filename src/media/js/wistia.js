@@ -5,7 +5,7 @@
                 download: {
                     authorised: false,
                     url       : null,
-                    token     : null,
+                    formToken     : null,
                     limitUrl  : null
                 },
                 autoplay: {
@@ -36,9 +36,6 @@
             addExtraControls: function(options) {
                 options = $.extend(this.controlsOptions, options);
                 var resize;
-
-                console.log(options);
-                return;
 
                 // Add the container for the buttons
                 var container = $('<div>')
@@ -107,7 +104,7 @@
                                     var formId = 'download_form_' + wistiaEmbed.hashedId();
                                     var form = $("#" + formId);
                                     if (form.length == 0) {
-                                        form = $('<form id="' + formId + '" method="POST" action="' + downloadURL + '">' + token + '</form>');
+                                        form = $('<form id="' + formId + '" method="POST" action="' + downloadURL + '">' + options.formToken + '</form>');
                                         form.css('visible', 'hidden');
                                         $('body').append(form);
                                     }
