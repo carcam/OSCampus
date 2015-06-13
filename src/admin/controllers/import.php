@@ -29,10 +29,11 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $tags         = array();
     protected $users        = null;
 
-    protected $filesSkipped = 0;
-    protected $mediaCount   = 0;
-    protected $mediaSkipped = 0;
-    protected $viewCount    = 0;
+    protected $downloadCount = 0;
+    protected $filesSkipped  = 0;
+    protected $mediaCount    = 0;
+    protected $mediaSkipped  = 0;
+    protected $viewCount     = 0;
 
     protected $log = array();
 
@@ -169,8 +170,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_courses_tags', false);
         $this->clearTable('#__oscampus_files_courses', false);
         $this->clearTable('#__oscampus_files_lessons', false);
-        $this->clearTable('#__oscampus_users_lessons');
 
+        $this->clearTable('#__oscampus_users_lessons');
         $this->clearTable('#__oscampus_files');
         $this->clearTable('#__oscampus_tags');
         $this->clearTable('#__oscampus_lessons');
@@ -179,6 +180,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->clearTable('#__oscampus_courses');
         $this->clearTable('#__oscampus_pathways');
         $this->clearTable('#__oscampus_teachers');
+        $this->clearTable('#__oscampus_wistia_downloads');
+
         $this->log['Clear Tables'] = microtime(true);
 
         $this->loadCourses();
@@ -207,6 +210,9 @@ class OscampusControllerImport extends OscampusControllerBase
 
         //$this->loadViewedQuizzes();
         //$this->log['Load Viewed Quizzes'] = microtime(true);
+
+        $this->loadWistiaDownloadLog();
+        $this->log['Load Wistia Log'] = microtime(true);
 
         $this->images['Teacher Images']   = $this->copyImages('#__oscampus_teachers', 'teachers');
         $this->log['Load Teacher Images'] = microtime(true);
@@ -415,7 +421,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
                         $content = array(
                             'score'     => $mediaItem->quiz_passing_score,
-                            'select'     => $mediaItem->quiz_question_count,
+                            'select'    => $mediaItem->quiz_question_count,
                             'timelimit' => $mediaItem->quiz_timelimit,
                             'alert_end' => $mediaItem->quiz_alert_end,
                             'questions' => $quizQuestions
@@ -924,6 +930,38 @@ class OscampusControllerImport extends OscampusControllerBase
     }
 
     /**
+     * Move com_oswistia download log into oscampus
+     */
+    protected function loadWistiaDownloadLog()
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'downloaded_by users_id',
+                    'downloaded',
+                    'downloaded_from ip',
+                    'media_hashed_id',
+                    'media_project_name',
+                    'media_name'
+                )
+            )
+            ->from('#__oswistia_download_log')
+            ->order('id');
+
+        $list = $db->setQuery($query)->loadObjectList();
+        $this->downloadCount = 0;
+        foreach ($list as $row) {
+            $db->insertObject('#__oscampus_wistia_downloads', $row);
+            if ($error = $db->getErrorMsg()) {
+                $this->errors[] = $error;
+                return;
+            }
+            $this->downloadCount++;
+        }
+    }
+
+    /**
      * Copy data from a Guru table to an OSCampus table using a field map.
      * The Guru table MUST contain a single primary key field. The OSCampus
      * table is assumed to contain the created/created_by_alias fields.
@@ -1059,6 +1097,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->files)) . ' Files</li>';
         echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
+        echo '<li>' . number_format($this->downloadCount) , ' Wistia Download Logs';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }

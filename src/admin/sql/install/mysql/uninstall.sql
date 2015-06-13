@@ -15,3 +15,5 @@ DROP TABLE IF EXISTS `#__oscampus_lessons`;
 DROP TABLE IF EXISTS `#__oscampus_modules`;
 DROP TABLE IF EXISTS `#__oscampus_courses`;
 DROP TABLE IF EXISTS `#__oscampus_teachers`;
+
+DROP TABLE IF EXISTS `#__oscampus_wistia_downloads`;
