@@ -12,7 +12,6 @@
                 this.addExtraControls(options);
                 this.fixVideoSizeProportion();
                 this.fixVolumeBug();
-
             },
 
             fixVideoSizeProportion: function() {
