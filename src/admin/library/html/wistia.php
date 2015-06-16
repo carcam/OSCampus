@@ -12,6 +12,15 @@ defined('_JEXEC') or die();
 
 abstract class OscWistia
 {
+    /**
+     * @param string $id
+     * @param bool   $cacheVideoID
+     * @param bool   $forceAutoplay
+     * @param int    $width
+     * @param int    $height
+     *
+     * @return string
+     */
     public static function player(
         $id,
         $cacheVideoID = false,
@@ -40,7 +49,6 @@ abstract class OscWistia
         if ($height !== null) {
             $config['height'] = $height;
         }
-        $app = JFactory::getApplication();
 
         // Block features for non authorized users
         if (!JFactory::getUser()->authorise('video.control', 'com_oscampus')) {
@@ -55,6 +63,9 @@ abstract class OscWistia
         return $preparedContent . static::addExtraControls();
     }
 
+    /**
+     * @return string
+     */
     protected static function addExtraControls()
     {
         $user       = JFactory::getUser();
@@ -70,12 +81,12 @@ abstract class OscWistia
                 $options = array(
                     'download' => array(
                         'authorised' => $authoriseDownload,
-                        'formToken'  => JHtml::_('form.token')
+                        'formToken'  => JSession::getFormToken()
                     )
                 );
 
                 $options = json_encode($options);
-                $js = array(
+                $js      = array(
                     "<script>",
                     "(function($) {",
                     "   wistiaEmbed.ready(function() {",
@@ -89,5 +100,6 @@ abstract class OscWistia
                 return join("\n", $js);
             }
         }
+        return '';
     }
 }

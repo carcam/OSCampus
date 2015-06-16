@@ -35,6 +35,9 @@ class AutoLoader
      */
     protected static $instance = null;
 
+    /**
+     * @param string $method
+     */
     protected static function registerLoader($method)
     {
         if (static::$instance === null) {

@@ -5,7 +5,9 @@
  * @copyright  2015 Open Source Training, LLC. All rights reserved
  * @license
  */
-namespace oscampus\wistia;
+namespace Oscampus\Wistia;
+
+use JLog;
 
 defined('_JEXEC') or die();
 
@@ -33,6 +35,9 @@ class ApiData
      */
     protected $cache = array();
 
+    /**
+     * @param string $apiKey
+     */
     public function __construct($apiKey = null)
     {
         $this->apiKey = $apiKey;
@@ -57,7 +62,7 @@ class ApiData
      * @param int $id
      *            Wistia identifier for a video can be hashed or not
      *
-     * @return stdClass Video
+     * @return object Video
      */
     public function mediaShow($id = null)
     {
@@ -82,7 +87,7 @@ class ApiData
      * @param array $types
      *              Array of mime types that allow for an asset to be selected
      *
-     * @return stdClass
+     * @return object
      */
     public function selectAsset($id, $minwidth = 0, $minheight = 0, $types = array('video/mp4'))
     {

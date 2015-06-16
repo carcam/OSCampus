@@ -4,7 +4,7 @@
             options: {
                 download: {
                     authorised: false,
-                    formToken : null,
+                    formToken : null
                 }
             },
 
@@ -30,8 +30,8 @@
 
                 wistiaEmbed.bind('volumechange', function(event) {
                     $.Oscampus.ajax({
-                        data: {
-                            task: 'wistia.setVolumeLevel',
+                        data   : {
+                            task : 'wistia.setVolumeLevel',
                             level: wistiaEmbed.volume()
                         },
                         success: function(level) {
@@ -43,7 +43,6 @@
 
             addExtraControls: function(options) {
                 options = $.extend(this.options, options);
-                var resize;
 
                 // Add the container for the buttons
                 var container = $('<div>')
@@ -52,7 +51,7 @@
                 $(wistiaEmbed.grid.top_inside).append(container);
 
                 /*********** BEGIN DOWNLOAD ***************/
-                var button = $('<div>')
+                var buttonDownload = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_download_button')
                     .addClass('wistia_button download')
                     .attr('title', 'Download')
@@ -62,64 +61,76 @@
                             wistiaEmbed.pause();
 
                             // Get the download limit information
-                            $.get(options.download.limitUrl, function(data) {
-                                data = JSON.parse(data);
+                            $.Oscampus.ajax({
+                                data   : {
+                                    task: 'wistia.downloadLimit'
+                                },
+                                success: function(data) {
+                                    if (data.authorised) {
+                                        var formId = 'formDownload-' + wistiaEmbed.hashedId();
+                                        var form = $("#" + formId);
+                                        if (form.length == 0) {
+                                            var query = {
+                                                option: 'com_oscampus',
+                                                task  : 'wistia.download',
+                                                id    : wistiaEmbed.hashedId(),
+                                                format: 'raw'
+                                            };
+                                            if (options.download.formToken) {
+                                                query[1] = options.download.formToken;
+                                            }
 
-                                downloadLimitPeriod = data.downloadLimitPeriod + ' day';
-                                if (parseInt(data.downloadLimitPeriod) > 1) {
-                                    downloadLimitPeriod += 's';
-                                }
+                                            form = $('<form>').attr({
+                                                id    : formId,
+                                                method: 'GET',
+                                                action: 'index.php?' + $.param(query)
+                                            });
 
-                                if (!data.authorised) {
-                                    var overlay = $('<div>')
-                                        .attr('id', wistiaEmbed.uuid + '_overlay')
-                                        .addClass('wistia_overlay');
-                                    container.parent().append(overlay);
+                                            form.css('visible', 'hidden');
+                                            $('body').append(form);
+                                        }
+                                        //form.submit();
+                                        console.log(form);
 
-                                    var wrapper = $('<div>').addClass('wrapper');
-                                    $(overlay).append(wrapper);
+                                    } else {
+                                        var overlay = $('<div>')
+                                            .attr('id', wistiaEmbed.uuid + '_overlay')
+                                            .addClass('wistia_overlay');
+                                        container.parent().append(overlay);
 
-                                    wrapper.html(
-                                        '<div style="padding-left: 25%; padding-right: 25%;">' + data.error + '</div>' +
-                                        '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                                        '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
-                                        '  Skip to where you left off' +
-                                        '</a>'
-                                    );
+                                        var wrapper = $('<div>').addClass('wrapper');
+                                        $(overlay).append(wrapper);
 
-                                    $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                                        overlay.fadeOut(200, function() {
-                                            overlay.remove();
-                                            wistiaEmbed.play();
+                                        wrapper.html(
+                                            '<div style="padding-left: 25%; padding-right: 25%;">' + data.error + '</div>' +
+                                            '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
+                                            '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
+                                            '  Skip to where you left off' +
+                                            '</a>'
+                                        );
+
+                                        $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+                                            overlay.fadeOut(200, function() {
+                                                overlay.remove();
+                                                wistiaEmbed.play();
+                                            });
                                         });
-                                    });
 
-                                    resize = function() {
-                                        overlay.css('height', $(wistiaEmbed.grid.main).height());
-                                        overlay.css('width', $(wistiaEmbed.grid.main).width());
-                                        wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
+                                        var resize = function() {
+                                            overlay.css('height', $(wistiaEmbed.grid.main).height());
+                                            overlay.css('width', $(wistiaEmbed.grid.main).width());
+                                            wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
+                                        };
+
+                                        resize();
+                                        wistiaEmbed.bind('widthchange', resize);
+                                        wistiaEmbed.bind('heightchange', resize);
+
+                                        overlay.addClass('visible');
                                     }
-
-                                    resize();
-                                    wistiaEmbed.bind('widthchange', resize);
-                                    wistiaEmbed.bind('heightchange', resize);
-
-                                    overlay.addClass('visible');
-                                } else {
-                                    // Replace the %s with the video ID
-                                    downloadURL = options.download.url.replace('%s', wistiaEmbed.hashedId());
-
-                                    var formId = 'download_form_' + wistiaEmbed.hashedId();
-                                    var form = $("#" + formId);
-                                    if (form.length == 0) {
-                                        form = $('<form id="' + formId + '" method="POST" action="' + downloadURL + '">' + options.formToken + '</form>');
-                                        form.css('visible', 'hidden');
-                                        $('body').append(form);
-                                    }
-
-                                    form.submit();
                                 }
                             });
+
                         } else {
                             wistiaEmbed.pause();
 
@@ -154,7 +165,7 @@
                                 });
                             });
 
-                            resize = function() {
+                            var resize = function() {
                                 overlay.css('height', $(wistiaEmbed.grid.main).height());
                                 overlay.css('width', $(wistiaEmbed.grid.main).width());
                                 wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
@@ -169,13 +180,13 @@
                     });
 
                 if (!options.download.authorised) {
-                    button.addClass('off');
+                    buttonDownload.addClass('off');
                 }
-                container.append(button);
+                container.append(buttonDownload);
                 /*********** END DOWNLOAD ***************/
 
                 /*********** BEGIN AUTOPLAY ***************/
-                var button = $('<div>')
+                var buttonAutoplay = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_autoplay_button')
                     .addClass('wistia_button autoplay')
                     .attr('title', 'Autoplay')
@@ -201,7 +212,7 @@
                 if (wistiaEmbed.options.autoPlay === false) {
                     button.addClass('off');
                 }
-                container.append(button);
+                container.append(buttonAutoplay);
 
                 // Autoplay move to the next lesson
                 wistiaEmbed.bind('end', function(event) {
@@ -212,7 +223,7 @@
                 /*********** END AUTOPLAY ***************/
 
                 /*********** BEGIN FOCUS ***************/
-                var button = $('<div>')
+               var  buttonFocus = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_focus_button')
                     .addClass('wistia_button focus')
                     .attr('title', 'Focus')
@@ -237,9 +248,9 @@
                         });
                     });
                 if (wistiaEmbed.options.focus === false) {
-                    button.addClass('off');
+                    buttonFocus.addClass('off');
                 }
-                container.append(button);
+                container.append(buttonFocus);
                 /*********** END FOCUS ***************/
             },
 
@@ -254,14 +265,14 @@
 
                     buttons.removeClass('visible');
                     buttons.addClass('hidden');
-                }
+                };
 
                 var showWistiaButtons = function() {
                     var buttons = $('.wistia_button, #course-navigation');
 
                     buttons.addClass('visible');
                     buttons.removeClass('hidden');
-                }
+                };
 
                 gridMain.mouseenter(showWistiaButtons);
                 gridMain.mousemove(showWistiaButtons);

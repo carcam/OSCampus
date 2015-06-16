@@ -7,14 +7,23 @@
  */
 namespace Oscampus\Wistia;
 
+use JComponentHelper;
+use JFactory;
+use JUser;
+
 defined('_JEXEC') or die();
 
 abstract class Download
 {
+    /**
+     * @param id $userId
+     *
+     * @return bool
+     */
     public static function checkUserExceededDownloadLimit($userId)
     {
-        $db     = \JFactory::getDbo();
-        $params = \JComponentHelper::getParams('com_oscampus');
+        $db     = JFactory::getDbo();
+        $params = JComponentHelper::getParams('com_oscampus');
 
         // Check the download limit
         $downloadLimit       = (int)$params->get('videos.downloadLimit', 20);
@@ -33,14 +42,16 @@ abstract class Download
 
     /**
      * @param object $media
+     * @param JUser  $user
      *
      * Add an entry to the download log
      *
      * @return void
      */
-    public static function log($media)
+    public static function log($media, JUser $user = null)
     {
-        $db = JFactory::getDbo();
+        $db   = JFactory::getDbo();
+        $user = $user ?: JFactory::getUser();
 
         $insertRow = (object)array(
             'users_id'           => $user->id,

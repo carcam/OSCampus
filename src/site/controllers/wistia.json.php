@@ -89,10 +89,10 @@ class OscampusControllerWistia extends OscampusControllerJson
         $result['period'] = JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $limitPeriod);
 
         if (Download::checkUserExceededDownloadLimit($user->id)) {
-            $result->authorised = false;
+            $result['authorised'] = false;
 
             $period = JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $limitPeriod);
-            $result->error = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $period);
+            $result['error'] = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
         }
 
         echo json_encode($result);
