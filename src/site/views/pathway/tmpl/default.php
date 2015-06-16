@@ -18,28 +18,34 @@ defined('_JEXEC') or die();
     </div>
 
     <?php
-    $linkBase = OscampusRoute::getInstance()->get('pathways') . '&pid=' . $this->pathway->id;
     foreach ($this->items as $item) :
+        $link  = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
         $image = JHtml::_('image', $item->image, $item->title);
-        $link  = JRoute::_($linkBase . "&view=course&cid={$item->id}");
-        $linkStart = JRoute::_($linkBase . "&view=lesson&cid={$item->id}")
-    ?>
-    <div class="osc-section osc-course-item">
-        <div class="block4 osc-course-image">
-            <?php echo JHtml::_('link', $link, $image); ?>
-        </div>
-        <div class="block8 osc-course-description">
-            <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
-            <?php echo $item->introtext ?: $item->description; ?>
-            <div class="osc-course-start">
-                <?php echo JHtml::_('link', $linkStart, JText::_('COM_OSCAMPUS_START_THIS_CLASS'), 'class="osc-btn"'); ?>
+        ?>
+        <div class="osc-section osc-course-item">
+            <div class="block4 osc-course-image">
+                <?php echo JHtml::_('link', $link, $image); ?>
+            </div>
+            <div class="block8 osc-course-description">
+                <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
+                <?php echo $item->introtext ?: $item->description; ?>
+                <div class="osc-course-start">
+                    <?php
+                    echo JHtml::_(
+                        'osc.lessonlink',
+                        $item->id,
+                        0,
+                        JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                        'class="osc-btn"'
+                    );
+                    ?>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- .osc-section -->
+        <!-- .osc-section -->
 
-    <div class="osc-section osc-course-list">
-        <div class="block12">
+        <div class="osc-section osc-course-list">
+            <div class="block12">
             <span class="osc-label">
                 <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
             </span>
@@ -47,14 +53,15 @@ defined('_JEXEC') or die();
                 <i class="fa fa-bolt"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
             </span>
             <span class="osc-label">
-                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
+                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
+                    $item->length); ?>
             </span>
             <span class="osc-label">
                 <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
             </span>
+            </div>
         </div>
-    </div>
-    <!-- .osc-section -->
+        <!-- .osc-section -->
     <?php
     endforeach;
     ?>

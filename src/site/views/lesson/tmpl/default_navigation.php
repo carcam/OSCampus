@@ -25,7 +25,7 @@ $next     = $this->lesson->next;
     </a>
 
     <?php if ($previous) : ?>
-        <a href="<?php echo JHtml::_('osc.lesson.link', $previous, null, true); ?>" class="osc-btn" id="prevbut">
+        <a href="<?php echo JHtml::_('osc.lesson.link', $previous, null, null, true); ?>" class="osc-btn" id="prevbut">
             <i class="fa fa-chevron-left"></i>
             <span class="osc-hide-tablet">
                 <?php echo JText::_('COM_OSCAMPUS_PREVIOUS'); ?>
@@ -34,7 +34,7 @@ $next     = $this->lesson->next;
     <?php endif; ?>
 
     <?php if ($next) : ?>
-        <a href="<?php echo JHtml::_('osc.lesson.link', $next, null, true); ?>" class="osc-btn" id="nextbut">
+        <a href="<?php echo JHtml::_('osc.lesson.link', $next, null, null, true); ?>" class="osc-btn" id="nextbut">
             <span class="osc-hide-tablet">
                 <?php echo JText::_('COM_OSCAMPUS_NEXT'); ?>
             </span>

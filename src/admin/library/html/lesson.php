@@ -10,6 +10,13 @@ defined('_JEXEC') or die();
 
 abstract class OscLesson
 {
+    /**
+     * Return the free indicator for guest users
+     *
+     * @param object $lesson
+     *
+     * @return string
+     */
     public static function freeflag($lesson)
     {
         $user = JFactory::getUser();
@@ -21,16 +28,29 @@ abstract class OscLesson
         return '';
     }
 
-    public static function link($lesson, $attribs = null, $uriOnly = false)
+    /**
+     * @param object $lesson
+     * @param string $text
+     * @param mixed  $attribs
+     * @param bool   $uriOnly
+     *
+     * @return string
+     */
+    public static function link($lesson, $text = null, $attribs = null, $uriOnly = false)
     {
         $user = JFactory::getUser();
         if (in_array($lesson->access, $user->getAuthorisedViewLevels())) {
-            $query = OscampusRoute::getInstance()->getQuery('pathways');
+            $query         = OscampusRoute::getInstance()->getQuery('pathways');
             $query['view'] = 'lesson';
-            $query['cid'] = $lesson->courses_id;
-            $query['idx'] = $lesson->index;
+            $query['cid']  = $lesson->courses_id;
+            $query['idx']  = $lesson->index;
 
-            $link = JRoute::_('index.php?' . http_build_query($query));
+            if (!empty($lesson->pathways_id)) {
+                $query['pid'] = $lesson->pathways_id;
+            }
+
+            $link = 'index.php?' . http_build_query($query);
+
         } else {
             // @TODO: Determine link for inaccessible lessons
             $link = 'javascript:alert(\'under construction\');';
@@ -40,6 +60,6 @@ abstract class OscLesson
             return $link;
         }
 
-        return JHtml::_('link', $link, $lesson->title, $attribs);
+        return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
     }
 }
