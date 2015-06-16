@@ -19,9 +19,6 @@ abstract class OscWistia
         $width = null,
         $height = null
     ) {
-        error_reporting(-1);
-        ini_set('display_errors', 1);
-
         $session = JFactory::getSession();
 
         $detect      = new MobileDetect();
@@ -29,11 +26,11 @@ abstract class OscWistia
 
         $config = array(
             'cacheVideoID' => $cacheVideoID,
-            'autoplay'     => $session->get('media_autoplay', true) || $forceAutoplay,
-            'focus'        => $session->get('media_focus', true) && $isNotMobile,
+            'autoplay'     => $session->get('oscampus.video.autoplay', true) || $forceAutoplay,
+            'focus'        => $session->get('oscampus.video.focus', true) && $isNotMobile,
             'captions'     => true && $isNotMobile,
             'resumable'    => true,
-            'volume'       => $session->get('media_volume_level', 1)
+            'volume'       => $session->get('oscampus.video.volume', 1)
         );
 
         if ($width !== null) {
@@ -54,9 +51,6 @@ abstract class OscWistia
 
         $content         = '{wistia}' . $id . '{/wistia}';
         $preparedContent = JHtml::_('content.prepare', $content, $config);
-
-        error_reporting(0);
-        ini_set('display_errors', 0);
 
         return $preparedContent . static::addExtraControls();
     }
@@ -83,9 +77,13 @@ abstract class OscWistia
                 $options = json_encode($options);
                 $js = array(
                     "<script>",
-                    "wistiaEmbed.ready(function() {",
-                    "   jQuery.Oscampus.wistia.init({$options});",
-                    "});",
+                    "(function($) {",
+                    "   wistiaEmbed.ready(function() {",
+                    "      $.Oscampus.wistia.addExtraControls({$options});",
+                    "      $.Oscampus.wistia.moveNavigationButtons();",
+                    "      $.Oscampus.wistia.fixVideoSizeProportion();",
+                    "   });",
+                    "})(jQuery);",
                     "</script>"
                 );
                 return join("\n", $js);

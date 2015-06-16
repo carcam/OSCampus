@@ -8,12 +8,6 @@
                 }
             },
 
-            init: function(options) {
-                this.addExtraControls(options);
-                this.fixVideoSizeProportion();
-                this.fixVolumeBug();
-            },
-
             fixVideoSizeProportion: function() {
                 var i = 0;
 
@@ -247,8 +241,9 @@
                 }
                 container.append(button);
                 /*********** END FOCUS ***************/
+            },
 
-                /*********** BEGIN NAV BUTTONS ***************/
+            moveNavigationButtons: function() {
                 $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
 
                 // Events
@@ -275,7 +270,6 @@
 
                 wistiaEmbed.bind('play', hideWistiaButtons);
                 wistiaEmbed.bind('pause', hideWistiaButtons);
-                /*********** END NAV BUTTONS ***************/
             }
         }
     });

@@ -25,8 +25,8 @@ class OscampusControllerWistia extends OscampusControllerJson
     public function toggleAutoPlayState()
     {
         $session = JFactory::getSession();
-        $state   = !((bool)$session->get('media_autoplay', true));
-        $session->set('media_autoplay', $state);
+        $state   = !((bool)$session->get('oscampus.video.autoplay', true));
+        $session->set('oscampus.video.autoplay', $state);
 
         echo json_encode((bool)$state);
     }
@@ -39,8 +39,8 @@ class OscampusControllerWistia extends OscampusControllerJson
     public function toggleFocusState()
     {
         $session = JFactory::getSession();
-        $state   = !((bool)$session->get('media_focus', true));
-        $session->set('media_focus', $state);
+        $state   = !((bool)$session->get('oscampus.video.focus', true));
+        $session->set('oscampus.video.focus', $state);
 
         echo json_encode($state);
     }
@@ -57,7 +57,7 @@ class OscampusControllerWistia extends OscampusControllerJson
         $level = $app->input->get('level', 1);
 
         $session = JFactory::getSession();
-        $session->set('media_volume_level', $level);
+        $session->set('oscampus.video.volume', $level);
 
         echo json_encode((float)$level);
     }
