@@ -8,12 +8,30 @@
 
 defined('_JEXEC') or die();
 
-abstract class OscampusRoute
+class OscampusRoute
 {
+    const SLUG_PATHWAY = 'pathways';
+    const SLUG_COURSE  = 'courses';
+    const SLUG_MODULE  = 'modules';
+    const SLUG_LESSON  = 'lessons';
+
     /**
      * @var array
      */
-    protected static $items = null;
+    protected $items = null;
+
+    /**
+     * @var array
+     */
+    protected $articleItems = null;
+
+    /**
+     * @return static
+     */
+    public static function getInstance()
+    {
+        return new static();
+    }
 
     /**
      * Get a raw url for the selected view,layout
@@ -23,12 +41,59 @@ abstract class OscampusRoute
      *
      * @return string|array
      */
-    public static function get($view, $layout = null)
+    public function get($view, $layout = null)
     {
-        if ($query = static::getQuery($view, $layout)) {
+        if ($query = $this->getQuery($view, $layout)) {
             return 'index.php?' . http_build_query($query);
         }
         return null;
+    }
+
+    /**
+     * Find an OSCampus menu item to use as a base for the selected view/layout
+     *
+     * @param string $view
+     * @param string $layout
+     *
+     * @return object
+     */
+    public function getMenu($view, $layout = null)
+    {
+        // Use active menu if it matches what we're looking for
+        if ($activeMenu = OscampusFactory::getApplication()->getMenu()->getActive()) {
+            $activeQuery = $activeMenu->query;
+            if (isset($activeQuery['option']) && $activeQuery['option'] == 'com_oscampus') {
+                $activeView   = isset($activeQuery['view']) ? $activeQuery['view'] : '';
+                $activeLayout = isset($activeQuery['layout']) ? $activeQuery['layout'] : '';
+                if ($activeView == $view && $activeLayout == $layout) {
+                    return $activeMenu;
+                }
+            }
+        }
+
+        if ($this->items === null) {
+            $menu        = JMenu::getInstance('site');
+            $this->items = $menu->getItems(array('component', 'access'), array('com_oscampus', true));
+        }
+
+        $viewLevels = OscampusFactory::getUser()->getAuthorisedViewLevels();
+
+        $default = null;
+        foreach ($this->items as $item) {
+            $mView   = empty($item->query['view']) ? '' : $item->query['view'];
+            $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
+            $access  = in_array($item->access, $viewLevels);
+
+            if ($access && $mView == $view && $mLayout == $layout) {
+                // Found an exact match
+                return $item;
+
+            } elseif ($access && $mView == 'pathways' && empty($mLayout)) {
+                // The pathways view can always be used as a base
+                $default = $item;
+            }
+        }
+        return $default;
     }
 
     /**
@@ -39,13 +104,15 @@ abstract class OscampusRoute
      * @return string
      * @throws Exception
      */
-    public static function fromArticleId($articleId)
+    public function fromArticleId($articleId)
     {
-        $contentId = OscampusComponentHelper::getComponent('com_content')->id;
-        $menuItems = JFactory::getApplication()->getMenu()->getItems('component_id', $contentId);
+        if ($this->articleItems === null) {
+            $contentId          = OscampusComponentHelper::getComponent('com_content')->id;
+            $this->articleItems = JMenu::getInstance('site')->getItems('component_id', $contentId);
+        }
 
         $link = 'index.php?option=com_content&view=article&id=' . $articleId;
-        foreach ($menuItems as $item) {
+        foreach ($this->articleItems as $item) {
             list(, $query) = explode('?', $item->link);
             parse_str($query, $query);
 
@@ -58,14 +125,14 @@ abstract class OscampusRoute
     }
 
     /**
-     * Get the query array for the selected view,layout
+     * Get the query array for the selected view/layout
      *
      * @param string $view
      * @param string $layout
      *
      * @return array
      */
-    public static function getQuery($view, $layout = '')
+    public function getQuery($view, $layout = '')
     {
         $query = array(
             'option' => 'com_oscampus',
@@ -75,48 +142,62 @@ abstract class OscampusRoute
             $query['layout'] = $layout;
         }
 
-        // Stay on active menu if it matches what we're looking for
-        if ($activeMenu = OscampusFactory::getApplication()->getMenu()->getActive()) {
-            $activeQuery  = $activeMenu->query;
-            $activeView   = isset($activeQuery['view']) ? $activeQuery['view'] : '';
-            $activeLayout = isset($activeQuery['layout']) ? $activeQuery['layout'] : '';
-            if ($activeView == $view && $activeLayout == $layout) {
-                $query['Itemid'] = $activeMenu->id;
-            }
-        }
+        if ($menuItem = static::getMenu($view, $layout)) {
+            $query['Itemid'] = $menuItem->id;
 
-        // If not active menu, go find one!
-        if (empty($query['Itemid'])) {
-            if (static::$items === null) {
-                $menu          = OscampusHelper::getApplication('site')->getMenu();
-                static::$items = $menu->getItems(array('component', 'access'), array('com_oscampus', true));
+            $mView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
+            if ($mView == $view) {
+                unset($query['view']);
             }
 
-            $viewLevels = OscampusFactory::getUser()->getAuthorisedViewLevels();
-
-            // Look for an existing menu item that matches the requests
-            foreach (static::$items as $item) {
-                $mView   = empty($item->query['view']) ? '' : $item->query['view'];
-                $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
-                $access  = in_array($item->access, $viewLevels);
-
-                if ($access && $mView == $view && $mLayout == $layout) {
-                    $query['Itemid'] = $item->id;
-                    if (!empty($query['view']) && $query['view'] == $view) {
-                        unset($query['view']);
-                    }
-                    if (!empty($query['layout']) && $query['layout'] == $layout) {
-                        unset($query['layout']);
-                    }
-                    break;
-
-                } elseif ($access && $mView == 'account' && empty($mLayout)) {
-                    // The account info view can always be used as a base
-                    $query['Itemid'] = $item->id;
-                }
+            $mLayout = empty($menuItem->query['layout']) ? '' : $menuItem->query['layout'];
+            if ($layout && $mLayout == $layout) {
+                unset($query['layout']);
             }
         }
 
         return $query;
+    }
+
+    public function getSlug($type, $id, $index = 0)
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $select = null;
+
+        switch ($type) {
+            case static::SLUG_PATHWAY:
+            case static::SLUG_COURSE:
+                $index = 0;
+                $table = '#__oscampus_' . $type;
+                $query->select('title, alias')
+                    ->from($table)
+                    ->where('id = ' . (int)$id);
+                break;
+
+            /** @noinspection PhpMissingBreakStatementInspection */
+            case static::SLUG_MODULE:
+                $select = 'm.title, m.alias';
+
+            case static::SLUG_LESSON:
+                $select = $select ?: 'l.title, l.alias';
+
+                $query->select($select)
+                    ->from('#__oscampus_lessons l')
+                    ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
+                    ->where('m.courses_id = ' . (int)$id)
+                    ->order('m.ordering, l.ordering');
+
+                break;
+
+            default:
+                throw new Exception(__CLASS__ . ": Unknown routing path - {$type}", 404);
+        }
+
+        if ($item = $db->setQuery($query, $index, 1)->loadObject()) {
+            return $item->alias;
+        }
+
+        throw new Exception(__CLASS__ . ": not found - {$id}/{$index}", 404);
     }
 }

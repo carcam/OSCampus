@@ -25,7 +25,7 @@ abstract class OscLesson
     {
         $user = JFactory::getUser();
         if (in_array($lesson->access, $user->getAuthorisedViewLevels())) {
-            $query = OscampusRoute::getQuery('pathways');
+            $query = OscampusRoute::getInstance()->getQuery('pathways');
             $query['view'] = 'lesson';
             $query['cid'] = $lesson->courses_id;
             $query['idx'] = $lesson->index;

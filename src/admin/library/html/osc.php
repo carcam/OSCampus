@@ -119,7 +119,7 @@ abstract class JHtmlOsc
     public static function courselink($cid, $text, $attribs = null, $uriOnly = false)
     {
         if ((int)$cid) {
-            $query = OscampusRoute::getQuery('pathways');
+            $query = OscampusRoute::getInstance()->getQuery('pathways');
             $query['view'] = 'course';
             $query['cid'] = $cid;
 
