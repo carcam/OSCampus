@@ -16,6 +16,11 @@ class OscampusRoute
     const SLUG_LESSON  = 'lessons';
 
     /**
+     * @var static
+     */
+    protected static $instance = null;
+
+    /**
      * @var array
      */
     protected $items = null;
@@ -30,7 +35,10 @@ class OscampusRoute
      */
     public static function getInstance()
     {
-        return new static();
+        if (static::$instance === null) {
+            static::$instance = new static();
+        }
+        return static::$instance;
     }
 
     /**
@@ -159,10 +167,74 @@ class OscampusRoute
         return $query;
     }
 
+    /**
+     * Wrapper function for static::getSlug()
+     *
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getPathwaySlug($id)
+    {
+        return $this->getSlug(static::SLUG_PATHWAY, $id);
+    }
+
+    /**
+     * Wrapper function for static::getSlug()
+     *
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getCourseSlug($id)
+    {
+        return $this->getSlug(static::SLUG_COURSE, $id);
+    }
+
+    /**
+     * Wrapper function for static::getSlug()
+     *
+     * @param int $id    The course ID
+     * @param int $index The lesson index as ordered within the course
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getModuleSlug($id, $index)
+    {
+        return $this->getSlug(static::SLUG_MODULE, $id, $index);
+    }
+
+    /**
+     * Wrapper function for static::getSlug()
+     *
+     * @param int $id    The course ID
+     * @param int $index The lesson index as ordered within the course
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getLessonSlug($id, $index)
+    {
+        return $this->getSlug(static::SLUG_LESSON, $id, $index);
+    }
+
+    /**
+     * Find the url slug for the selected item type and id
+     *
+     * @param string $type  See static::SLUG_* constants
+     * @param int    $id    The id of the target item. For modules/lessons this is the courses_id
+     * @param int    $index For modules/lessons, the index of the lesson as ordered in the course.
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getSlug($type, $id, $index = 0)
     {
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $db     = JFactory::getDbo();
+        $query  = $db->getQuery(true);
         $select = null;
 
         switch ($type) {
