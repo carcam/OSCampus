@@ -47,6 +47,8 @@ abstract class OscLesson
 
             if (!empty($lesson->pathways_id)) {
                 $query['pid'] = $lesson->pathways_id;
+            } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
+                $query['pid'] = $pid;
             }
 
             $link = 'index.php?' . http_build_query($query);
