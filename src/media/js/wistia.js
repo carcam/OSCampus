@@ -223,7 +223,7 @@
                 /*********** END AUTOPLAY ***************/
 
                 /*********** BEGIN FOCUS ***************/
-               var  buttonFocus = $('<div>')
+                var  buttonFocus = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_focus_button')
                     .addClass('wistia_button focus')
                     .attr('title', 'Focus')
@@ -249,10 +249,14 @@
                     });
                 if (wistiaEmbed.options.focus === false) {
                     buttonFocus.addClass('off');
+                } else {
+                    wistiaEmbed.bind('play', function() {
+                        wistiaEmbed.plugin['dimthelights'].dim();
+                    });
                 }
                 container.append(buttonFocus);
-                /*********** END FOCUS ***************/
             },
+            /*********** END FOCUS ***************/
 
             moveNavigationButtons: function() {
                 $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
