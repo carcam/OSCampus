@@ -21,8 +21,9 @@ defined('_JEXEC') or die();
         <div class="osc-section osc-course-list">
             <div class="block4 osc-course-image">
                 <?php
-                $image  = JHtml::_('image', $item->image, $item->title);
-                echo JHtml::_('osc.pathway.link', $item, $image);
+                $link  = JHtml::_('osc.pathway.link', $item, null, null, true);
+                $image = JHtml::_('image', $item->image, $item->title);
+                echo JHtml::_('link', $link, $image);
                 ?>
             </div>
             <div class="block8 osc-course-description">
