@@ -24,7 +24,7 @@ abstract class JHtmlOsc
     {
         $params = OscampusComponentHelper::getParams();
 
-        $load = $params->get('advanced.jquery', 0);
+        $load   = $params->get('advanced.jquery', 0);
         $client = JFactory::getApplication()->getName();
         if ($load == $client || $load == 1) {
             // Only load once
@@ -116,19 +116,69 @@ abstract class JHtmlOsc
         OscampusFactory::getDocument()->addScriptDeclaration($js);
     }
 
+    /**
+     * Build link to a course from its ID alone
+     *
+     * @param int    $cid
+     * @param string $text
+     * @param mixed  $attribs
+     * @param bool   $uriOnly
+     *
+     * @return string
+     */
     public static function courselink($cid, $text, $attribs = null, $uriOnly = false)
     {
         if ((int)$cid) {
-            $query = OscampusRoute::getQuery('pathways');
-            $query['view'] = 'course';
-            $query['cid'] = $cid;
+            $app   = JFactory::getApplication();
+            $query = OscampusRoute::getInstance()->getQuery('pathways');
 
-            $link = JRoute::_('index.php?' . http_build_query($query));
+            $query['view'] = 'course';
+            $query['cid']  = (int)$cid;
+            if ($pid = $app->input->getInt('pid')) {
+                $query['pid'] = $pid;
+            }
+
+            $link = 'index.php?' . http_build_query($query);
             if ($uriOnly) {
                 return $link;
             }
-            return JHtml::_('link', $link, $text, $attribs);
+            return JHtml::_('link', JRoute::_($link), $text, $attribs);
         }
+        return '';
+    }
+
+    /**
+     * Build link to a lesson on course ID/Index alone
+     *
+     * @param int    $cid
+     * @param int    $index
+     * @param string $text
+     * @param mixed  $attribs
+     * @param bool   $uriOnly
+     *
+     * @return string
+     */
+    public static function lessonlink($cid, $index, $text, $attribs = null, $uriOnly = false)
+    {
+        if ((int)$cid) {
+            $app   = JFactory::getApplication();
+            $query = OscampusRoute::getInstance()->getQuery('course');
+
+            $query['view'] = 'lesson';
+            $query['cid']  = (int)$cid;
+            $query['idx']  = (int)$index;
+            if ($pid = $app->input->getInt('pid')) {
+                $query['pid'] = $pid;
+            }
+
+            $link = 'index.php?' . http_build_query($query);
+            if ($uriOnly) {
+                return $link;
+            }
+
+            return JHtml::_('link', JRoute::_($link), $text, $attribs);
+        }
+
         return '';
     }
 }

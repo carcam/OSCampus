@@ -21,9 +21,8 @@ defined('_JEXEC') or die();
         <div class="osc-section osc-course-list">
             <div class="block4 osc-course-image">
                 <?php
-                $itemId = JFactory::getApplication()->input->getInt('Itemid');
-                $image  = JHtml::_('image', $item->image, $item->title);
-                $link   = JRoute::_('index.php?view=pathway&pid=' . $item->id . '&Itemid=' . $itemId);
+                $link  = JHtml::_('osc.pathway.link', $item, null, null, true);
+                $image = JHtml::_('image', $item->image, $item->title);
                 echo JHtml::_('link', $link, $image);
                 ?>
             </div>

@@ -20,6 +20,7 @@ class OscampusModelCourse extends OscampusModelSite
             ->where('c.id = ' . (int)$this->getState('course.id'));
 
         $course = $db->setQuery($query)->loadObject();
+        $course->pathways_id = $this->getState('pathway.id');
 
         return $course;
     }
@@ -200,6 +201,9 @@ class OscampusModelCourse extends OscampusModelSite
     protected function populateState()
     {
         $app = JFactory::getApplication();
+
+        $pid = $app->input->getInt('pid');
+        $this->setState('pathway.id', $pid);
 
         $cid = $app->input->getInt('cid');
         $this->setState('course.id', $cid);

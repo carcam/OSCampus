@@ -15,7 +15,6 @@ defined('_JEXEC') or die();
 <div id="content-content" class="osc-course-tabs-content">
     <div class="osc-table">
         <?php
-        $idx = 0;
         foreach ($this->lessons as $module) :
             ?>
             <div class="osc-section osc-row-heading">
