@@ -18,9 +18,9 @@ defined('_JEXEC') or die();
     </div>
 
     <?php
+    $linkBase = OscampusRoute::getInstance()->get('pathways') . '&pid=' . $this->pathway->id;
     foreach ($this->items as $item) :
         $image = JHtml::_('image', $item->image, $item->title);
-        $linkBase = OscampusRoute::getInstance()->get('pathways');
         $link  = JRoute::_($linkBase . "&view=course&cid={$item->id}");
         $linkStart = JRoute::_($linkBase . "&view=lesson&cid={$item->id}")
     ?>
