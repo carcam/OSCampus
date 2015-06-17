@@ -40,8 +40,10 @@
         <folder>language</folder>
         <folder>models</folder>
         <folder>views</folder>
+        <folder>controllers</folder>
         <filename>controller.php</filename>
         <filename>oscampus.php</filename>
+        <filename>router.php</filename>
     </files>
 
     <administration>
@@ -54,6 +56,7 @@
             <folder>sql</folder>
             <folder>views</folder>
             <filename>access.xml</filename>
+            <filename>config.xml</filename>
             <filename>controller.php</filename>
             <filename>include.php</filename>
             <filename>oscampus.php</filename>
