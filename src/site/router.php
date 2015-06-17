@@ -137,7 +137,6 @@ class OscampusRouter
 
         if (count($segments) > 4 && !empty($vars['cid'])) {
             $vars['idx'] = $routing->getLessonFromSlug($segments[4], $vars['cid']);
-
         }
 
         return $vars;

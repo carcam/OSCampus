@@ -325,6 +325,9 @@ class OscampusRoute
      */
     public function getLessonFromSlug($slug, $courseId)
     {
+        // Need to revert Joomla's assumption of an id in url slugs
+        $slug = str_replace(':', '-', $slug);
+
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('l.id, l.alias')
