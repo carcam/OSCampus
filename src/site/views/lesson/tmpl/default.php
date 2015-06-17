@@ -36,7 +36,7 @@ defined('_JEXEC') or die();
 
     <?php if ($this->files) : ?>
         <div>
-            <h1>Files</h1>
+            <h1><?php echo JText::_('COM_OSCAMPUS_FILES'); ?></h1>
             <ul>
                 <?php
                 foreach ($this->files as $file) {
