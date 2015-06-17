@@ -25,7 +25,8 @@ defined('_JEXEC') or die();
     <?php endif; ?>
 
     <?php
-    echo $this->loadTemplate($this->lesson->type);
+    $this->setLayout($this->lesson->type);
+    echo $this->loadTemplate();
     ?>
 
     <?php if ($this->lesson->footer) : ?>

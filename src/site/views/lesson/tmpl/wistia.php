@@ -16,7 +16,7 @@ defined('_JEXEC') or die();
     if (!empty($this->lesson->content->id)) :
         ?>
         <div class="osc-lesson-links">
-            <?php echo $this->loadTemplate('navigation'); ?>
+            <?php echo $this->loadNavigation(); ?>
         </div>
         <!-- .osc-lesson-links -->
 

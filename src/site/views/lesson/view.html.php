@@ -46,4 +46,18 @@ class OscampusViewLesson extends OscampusViewSite
         $pathway->addItem($this->lesson->title);
         parent::display($tmpl);
     }
+
+    /**
+     * Get the default navigation controls
+     *
+     * @return string
+     */
+    protected function loadNavigation()
+    {
+        $oldLayout = $this->setLayout('default');
+        $navigation = $this->loadTemplate('navigation');
+        $this->setLayout($oldLayout);
+
+        return $navigation;
+    }
 }
