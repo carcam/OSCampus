@@ -11,13 +11,14 @@ defined('_JEXEC') or die();
 /**
  * @var OscampusViewLesson $this
  */
-$courseId = $this->model->getState('course.id');
-$previous = $this->lesson->previous;
-$next     = $this->lesson->next;
+$pathwayId = $this->model->getState('pathway.id');
+$courseId  = $this->model->getState('course.id');
+$previous  = $this->lesson->previous;
+$next      = $this->lesson->next;
 
 ?>
 <div class="osc-btn-group hidden" id="course-navigation">
-    <a href="<?php echo JHtml::_('osc.courselink', $courseId, null, null, true); ?>" class="osc-btn">
+    <a href="<?php echo JHtml::_('osc.courselink', $pathwayId, $courseId, null, null, true); ?>" class="osc-btn">
         <i class="fa fa-bars"></i>
         <span class="osc-hide-tablet">
             <?php echo JText::_('COM_OSCAMPUS_HOME'); ?>

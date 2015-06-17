@@ -46,6 +46,13 @@ class OscampusViewCourse extends OscampusViewSite
         $this->files   = $model->getFiles();
         $this->viewed  = $model->getViewedLessons();
 
+        $pathway = JFactory::getApplication()->getPathway();
+
+        $link = JHtml::_('osc.pathwaylink', $this->course->pathways_id, null, null, true);
+        $pathway->addItem($this->course->pathway_title, $link);
+
+        $pathway->addItem($this->course->title);
+
         parent::display($tpl);
     }
 }

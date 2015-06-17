@@ -25,16 +25,25 @@ class OscampusModelLesson extends OscampusModelSite
     public function getLesson()
     {
         if ($this->lesson === null) {
+            $pid = (int)$this->getState('pathway.id');
             $cid = (int)$this->getState('course.id');
             $idx = (int)$this->getState('lesson.index');
 
             $db = $this->getDbo();
 
             $query = $db->getQuery(true)
-                ->select('l.*, m.courses_id')
+                ->select('l.*, m.courses_id, m.title module_title, c.title course_title, cp.pathways_id, p.title pathway_title')
                 ->from('#__oscampus_lessons l')
                 ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
-                ->where('m.courses_id = ' . $cid)
+                ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
+                ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
+                ->innerJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+                ->where(
+                    array(
+                        'c.id = ' . $cid,
+                        'p.id = ' . $pid
+                    )
+                )
                 ->order('m.ordering, l.ordering');
 
             $offset = max(0, $idx - 1);
@@ -90,6 +99,9 @@ class OscampusModelLesson extends OscampusModelSite
     protected function populateState()
     {
         $app = JFactory::getApplication();
+
+        $pid = $app->input->getInt('pid');
+        $this->setState('pathway.id', $pid);
 
         $cid = $app->input->getInt('cid');
         $this->setState('course.id', $cid);

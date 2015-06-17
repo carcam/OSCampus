@@ -15,13 +15,18 @@ class OscampusModelCourse extends OscampusModelSite
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select('*')
+            ->select('c.*, cp.pathways_id, p.title pathway_title')
             ->from('#__oscampus_courses c')
-            ->where('c.id = ' . (int)$this->getState('course.id'));
+            ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
+            ->innerJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+            ->where(
+                array(
+                    'c.id = ' . (int)$this->getState('course.id'),
+                    'p.id = ' . (int)$this->getState('pathway.id')
+                )
+            );
 
         $course = $db->setQuery($query)->loadObject();
-        $course->pathways_id = $this->getState('pathway.id');
-
         return $course;
     }
 

@@ -126,15 +126,15 @@ abstract class JHtmlOsc
      *
      * @return string
      */
-    public static function courselink($cid, $text, $attribs = null, $uriOnly = false)
+    public static function courselink($pid, $cid, $text, $attribs = null, $uriOnly = false)
     {
         if ((int)$cid) {
             $app   = JFactory::getApplication();
-            $query = OscampusRoute::getInstance()->getQuery('pathways');
+            $query = OscampusRoute::getInstance()->getQuery('pathway');
 
             $query['view'] = 'course';
             $query['cid']  = (int)$cid;
-            if ($pid = $app->input->getInt('pid')) {
+            if ($pid) {
                 $query['pid'] = $pid;
             }
 
@@ -142,6 +142,35 @@ abstract class JHtmlOsc
             if ($uriOnly) {
                 return $link;
             }
+            return JHtml::_('link', JRoute::_($link), $text, $attribs);
+        }
+        return '';
+    }
+
+    /**
+     * Build link to a pathway from its ID alone
+     *
+     * @param int    $pid
+     * @param string $text
+     * @param null   $attribs
+     * @param bool   $uriOnly
+     *
+     * @return string
+     */
+    public static function pathwaylink($pid, $text, $attribs = null, $uriOnly = false)
+    {
+        if ((int)$pid) {
+            $app   = JFactory::getApplication();
+            $query = OscampusRoute::getInstance()->getQuery('pathways');
+
+            $query['view'] = 'pathway';
+            $query['pid']  = (int)$pid;
+
+            $link = 'index.php?' . http_build_query($query);
+            if ($uriOnly) {
+                return $link;
+            }
+
             return JHtml::_('link', JRoute::_($link), $text, $attribs);
         }
         return '';
@@ -158,7 +187,7 @@ abstract class JHtmlOsc
      *
      * @return string
      */
-    public static function lessonlink($cid, $index, $text, $attribs = null, $uriOnly = false)
+    public static function lessonlink($pid, $cid, $index, $text, $attribs = null, $uriOnly = false)
     {
         if ((int)$cid) {
             $app   = JFactory::getApplication();
@@ -167,9 +196,7 @@ abstract class JHtmlOsc
             $query['view'] = 'lesson';
             $query['cid']  = (int)$cid;
             $query['idx']  = (int)$index;
-            if ($pid = $app->input->getInt('pid')) {
-                $query['pid'] = $pid;
-            }
+            $query['pid'] = $pid;
 
             $link = 'index.php?' . http_build_query($query);
             if ($uriOnly) {
