@@ -7,8 +7,13 @@
  */
 
 use Oscampus\MobileDetect;
+use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
+use Alledia\Framework\Factory as AllediaFactory;
 
 defined('_JEXEC') or die();
+
+require_once JPATH_PLUGINS . '/content/oswistia/include.php';
+
 
 abstract class OscWistia
 {
@@ -33,34 +38,34 @@ abstract class OscWistia
         $detect      = new MobileDetect();
         $isNotMobile = !$detect->isMobile();
 
-        $config = array(
-            'cacheVideoID' => $cacheVideoID,
-            'autoplay'     => $session->get('oscampus.video.autoplay', true) || $forceAutoplay,
-            'focus'        => $session->get('oscampus.video.focus', true) && $isNotMobile,
-            'captions'     => true && $isNotMobile,
-            'resumable'    => true,
-            'volume'       => $session->get('oscampus.video.volume', 1)
-        );
+        $params = new JRegistry;
+        $params->set('cacheVideoID', $cacheVideoID);
+        $params->set('autoplay', $session->get('oscampus.video.autoplay', true) || $forceAutoplay);
+        $params->set('focus', $session->get('oscampus.video.focus', true) && $isNotMobile);
+        $params->set('captions', true && $isNotMobile);
+        $params->set('resumable', true);
+        $params->set('volume', $session->get('oscampus.video.volume', 1));
 
-        if ($width !== null) {
-            $config['width'] = $width;
+        if (! is_null($width)) {
+            $params->set('width', $width);
         }
 
-        if ($height !== null) {
-            $config['height'] = $height;
+        if (! is_null($height)) {
+            $params->set('height', $height);
         }
 
         // Block features for non authorized users
         if (!JFactory::getUser()->authorise('video.control', 'com_oscampus')) {
-            $config['autoplay'] = false;
-            $config['focus']    = false;
-            $config['captions'] = false;
+            $params->set('autoplay', false);
+            $params->set('focus', false);
+            $params->set('captions', false);
         }
 
-        $content         = '{wistia}' . $id . '{/wistia}';
-        $preparedContent = JHtml::_('content.prepare', $content, $config);
+        $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
+        $oswistia->loadLibrary();
+        $embed = new WistiaEmbed($id, $params);
 
-        return $preparedContent . static::addExtraControls();
+        return $embed->toString() . static::addExtraControls();
     }
 
     /**
