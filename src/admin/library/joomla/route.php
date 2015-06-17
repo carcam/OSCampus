@@ -288,7 +288,7 @@ class OscampusRoute
         $query = $db->getQuery(true)
             ->select('id')
             ->from('#__oscampus_pathways')
-            ->where('alias = ' . $db->quote($slug));
+            ->where('alias = ' . $db->quote($this->slugToAlias($slug)));
 
         $id = $db->setQuery($query)->loadResult();
 
@@ -308,7 +308,7 @@ class OscampusRoute
         $query = $db->getQuery(true)
             ->select('id')
             ->from('#__oscampus_courses')
-            ->where('alias = ' . $db->quote($slug));
+            ->where('alias = ' . $db->quote($this->slugToAlias($slug)));
 
         $id = $db->setQuery($query)->loadResult();
 
@@ -325,9 +325,6 @@ class OscampusRoute
      */
     public function getLessonFromSlug($slug, $courseId)
     {
-        // Need to revert Joomla's assumption of an id in url slugs
-        $slug = str_replace(':', '-', $slug);
-
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('l.id, l.alias')
@@ -337,13 +334,28 @@ class OscampusRoute
             ->order('m.ordering, l.ordering');
 
         $lessons = $db->setQuery($query)->loadObjectList();
+        $alias = $this->slugToAlias($slug);
         foreach ($lessons as $index => $lesson) {
-            if ($lesson->alias == $slug) {
+            if ($lesson->alias == $alias) {
                 return (int)$index;
             }
         }
 
         // Default to the first lesson
         return 0;
+    }
+
+    /**
+     * Joomla converts the first dash in a url path segment to a colon, expecting
+     * it to be an id from a database table. We need to reconvert to a dash so we
+     * can find the alias we're using instead
+     *
+     * @param string $slug
+     *
+     * @return string
+     */
+    protected function slugToAlias($slug)
+    {
+        return str_replace(':', '-', $slug);
     }
 }
