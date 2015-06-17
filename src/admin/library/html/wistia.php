@@ -38,12 +38,13 @@ abstract class OscWistia
         $detect      = new MobileDetect();
         $isNotMobile = !$detect->isMobile();
 
-        $params = new JRegistry;
+        $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
+        $oswistia->loadLibrary();
+
+        $params = clone $oswistia->params;
         $params->set('cacheVideoID', $cacheVideoID);
         $params->set('autoplay', $session->get('oscampus.video.autoplay', true) || $forceAutoplay);
         $params->set('focus', $session->get('oscampus.video.focus', true) && $isNotMobile);
-        $params->set('captions', true && $isNotMobile);
-        $params->set('resumable', true);
         $params->set('volume', $session->get('oscampus.video.volume', 1));
 
         if (! is_null($width)) {
@@ -61,8 +62,6 @@ abstract class OscWistia
             $params->set('captions', false);
         }
 
-        $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
-        $oswistia->loadLibrary();
         $embed = new WistiaEmbed($id, $params);
 
         return $embed->toString() . static::addExtraControls();
