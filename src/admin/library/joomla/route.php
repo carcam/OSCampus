@@ -236,6 +236,8 @@ class OscampusRoute
         $db     = JFactory::getDbo();
         $query  = $db->getQuery(true);
         $select = null;
+        $id     = (int)$id;
+        $index  = (int)$index;
 
         switch ($type) {
             case static::SLUG_PATHWAY:
@@ -270,6 +272,75 @@ class OscampusRoute
             return $item->alias;
         }
 
-        throw new Exception(__CLASS__ . ": not found - {$id}/{$index}", 404);
+        throw new Exception(__CLASS__ . ": not found - {$id}/{$index} ({$type})", 404);
+    }
+
+    /**
+     * Get the pathway id from an alias slug
+     *
+     * @param string $slug
+     *
+     * @return int
+     */
+    public function getPathwayFromSlug($slug)
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__oscampus_pathways')
+            ->where('alias = ' . $db->quote($slug));
+
+        $id = $db->setQuery($query)->loadResult();
+
+        return (int)$id;
+    }
+
+    /**
+     * Get course ID from a category alias slug
+     *
+     * @param string $slug
+     *
+     * @return int
+     */
+    public function getCourseFromSlug($slug)
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__oscampus_courses')
+            ->where('alias = ' . $db->quote($slug));
+
+        $id = $db->setQuery($query)->loadResult();
+
+        return (int)$id;
+    }
+
+    /**
+     * Get the lesson index within the requested course
+     *
+     * @param string $slug
+     * @param int    $courseId
+     *
+     * @return int
+     */
+    public function getLessonFromSlug($slug, $courseId)
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('l.id, l.alias')
+            ->from('#__oscampus_lessons l')
+            ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
+            ->where('m.courses_id = ' . (int)$courseId)
+            ->order('m.ordering, l.ordering');
+
+        $lessons = $db->setQuery($query)->loadObjectList();
+        foreach ($lessons as $index => $lesson) {
+            if ($lesson->alias == $slug) {
+                return (int)$index;
+            }
+        }
+
+        // Default to the first lesson
+        return 0;
     }
 }
