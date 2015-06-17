@@ -50,12 +50,31 @@
                     .addClass('wistia_buttons_container');
                 $(wistiaEmbed.grid.top_inside).append(container);
 
+                var updateIcon = function(waiting) {
+                    if (waiting) {
+                        this.icon.removeClass(this.data('icon-disabled'));
+                        this.icon.removeClass(this.data('icon-enabled'));
+                        this.icon.addClass('fa-spinner fa-spin');
+                    } else {
+                        this.icon.removeClass('fa-spinner fa-spin');
+
+                        if (wistiaEmbed.options[this.data('state-option')]) {
+                            this.icon.removeClass(this.data('icon-disabled'));
+                            this.icon.addClass(this.data('icon-enabled'));
+                        } else {
+                            this.icon.addClass(this.data('icon-disabled'));
+                            this.icon.removeClass(this.data('icon-enabled'));
+                        }
+                    }
+                };
+
                 /*********** BEGIN DOWNLOAD ***************/
                 var buttonDownload = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_download_button')
-                    .addClass('wistia_button download')
+                    .addClass('download osc-btn')
                     .attr('title', 'Download')
                     .text('Download')
+                    .prepend($('<i class="fa fa-cloud-download">'))
                     .on('click', function(event) {
                         if (options.download.authorised) {
                             wistiaEmbed.pause();
@@ -186,33 +205,44 @@
                 /*********** END DOWNLOAD ***************/
 
                 /*********** BEGIN AUTOPLAY ***************/
-                var buttonAutoplay = $('<div>')
+                var buttonAutoplay = $('<div>');
+                buttonAutoplay.icon = $('<i class="fa">');
+                buttonAutoplay
                     .attr('id', wistiaEmbed.uuid + '_autoplay_button')
-                    .addClass('wistia_button autoplay')
+                    .addClass('osc-btn autoplay')
                     .attr('title', 'Autoplay')
                     .text('Autoplay')
+                    .prepend(buttonAutoplay.icon)
+                    .data('icon-disabled', 'fa-square')
+                    .data('icon-enabled', 'fa-check-square')
+                    .data('state-option', 'autoPlay')
                     .on('click', function(event) {
                         $.Oscampus.ajax({
                             data   : {
                                 task: 'wistia.toggleAutoPlayState'
                             },
+                            beforeSend: function() {
+                                buttonAutoplay.updateIcon(true);
+                            },
                             success: function(state) {
                                 wistiaEmbed.options.autoPlay = state;
                                 wistiaEmbed.params.autoplay = state;
+
                                 if (state) {
-                                    $(event.target).removeClass('off');
                                     $(wistiaEmbed).trigger('autoplayenabled');
                                 } else {
-                                    $(event.target).addClass('off');
                                     $(wistiaEmbed).trigger('autoplaydisabled');
                                 }
+
+                                buttonAutoplay.updateIcon();
                             }
                         })
                     });
-                if (wistiaEmbed.options.autoPlay === false) {
-                    button.addClass('off');
-                }
+
+                buttonAutoplay.updateIcon = updateIcon;
                 container.append(buttonAutoplay);
+
+                buttonAutoplay.updateIcon();
 
                 // Autoplay move to the next lesson
                 wistiaEmbed.bind('end', function(event) {
@@ -223,38 +253,56 @@
                 /*********** END AUTOPLAY ***************/
 
                 /*********** BEGIN FOCUS ***************/
-                var  buttonFocus = $('<div>')
+                var buttonFocus = $('<div>');
+                buttonFocus.icon = $('<i class="fa">');
+                buttonFocus
                     .attr('id', wistiaEmbed.uuid + '_focus_button')
-                    .addClass('wistia_button focus')
+                    .addClass('osc-btn focus')
                     .attr('title', 'Focus')
                     .text('Focus')
+                    .prepend(buttonFocus.icon)
+                    .data('icon-disabled', 'fa-square')
+                    .data('icon-enabled', 'fa-check-square')
+                    .data('state-option', 'focus')
                     .on('click', function(event) {
                         $.Oscampus.ajax({
                             data   : {
                                 task: 'wistia.toggleFocusState'
                             },
+                            beforeSend: function() {
+                                buttonFocus.updateIcon(true);
+                            },
                             success: function(state) {
+                                wistiaEmbed.options.focus = state;
                                 wistiaEmbed.params.focus = state;
+
                                 if (state) {
-                                    $(event.target).removeClass('off');
                                     wistiaEmbed.plugin['dimthelights'].dim();
                                     $(wistiaEmbed).trigger('focusenabled');
                                 } else {
-                                    $(event.target).addClass('off');
                                     wistiaEmbed.plugin['dimthelights'].undim();
                                     $(wistiaEmbed).trigger('focusdisabled');
                                 }
+
+                                buttonFocus.updateIcon();
                             }
                         });
                     });
-                if (wistiaEmbed.options.focus === false) {
-                    buttonFocus.addClass('off');
-                } else {
-                    wistiaEmbed.bind('play', function() {
-                        wistiaEmbed.plugin['dimthelights'].dim();
-                    });
-                }
+                buttonFocus.updateIcon = updateIcon;
                 container.append(buttonFocus);
+
+                buttonFocus.updateIcon();
+
+                // Fix the focus on play
+                wistiaEmbed.bind('play', function(event) {
+                    if (wistiaEmbed.options.focus) {
+                        wistiaEmbed.plugin['dimthelights'].dim();
+                    }
+                });
+
+                wistiaEmbed.bind('end', function(event) {
+                    wistiaEmbed.plugin['dimthelights'].undim();
+                });
             },
             /*********** END FOCUS ***************/
 
@@ -265,14 +313,14 @@
                 var gridMain = $(wistiaEmbed.grid.main);
 
                 var hideWistiaButtons = function() {
-                    var buttons = $('.wistia_button, #course-navigation');
+                    var buttons = $('.osc-btn, #course-navigation');
 
                     buttons.removeClass('visible');
                     buttons.addClass('hidden');
                 };
 
                 var showWistiaButtons = function() {
-                    var buttons = $('.wistia_button, #course-navigation');
+                    var buttons = $('.osc-btn, #course-navigation');
 
                     buttons.addClass('visible');
                     buttons.removeClass('hidden');
@@ -281,11 +329,13 @@
                 gridMain.mouseenter(showWistiaButtons);
                 gridMain.mousemove(showWistiaButtons);
                 gridMain.mouseleave(hideWistiaButtons);
-                $('.wistia_button').hover(showWistiaButtons);
+                $('.osc-btn').hover(showWistiaButtons);
 
                 wistiaEmbed.bind('play', hideWistiaButtons);
                 wistiaEmbed.bind('pause', hideWistiaButtons);
             }
         }
+
+
     });
 })(jQuery);
