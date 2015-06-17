@@ -44,7 +44,7 @@ abstract class OscWistia
         $params = clone $oswistia->params;
         $params->set('cacheVideoID', $cacheVideoID);
         $params->set('autoplay', $session->get('oscampus.video.autoplay', true) || $forceAutoplay);
-        $params->set('focus', $session->get('oscampus.video.focus', true) && $isNotMobile);
+        $params->set('plugin-focus', $session->get('oscampus.video.focus', true) && $isNotMobile);
         $params->set('volume', $session->get('oscampus.video.volume', 1));
 
         if (! is_null($width)) {
