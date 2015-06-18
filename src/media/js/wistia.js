@@ -109,7 +109,7 @@
                                                 form.append(tokenField);
                                             }
 
-                                            form.css('visible', 'hidden');
+                                            form.css('osc-visible', 'osc-hidden');
                                             $('body').append(form);
                                         }
                                         form.submit();
@@ -323,15 +323,15 @@
                 var hideWistiaButtons = function() {
                     var buttons = $('.osc-btn, #course-navigation');
 
-                    buttons.removeClass('visible');
-                    buttons.addClass('hidden');
+                    buttons.removeClass('osc-visible');
+                    buttons.addClass('osc-hidden');
                 };
 
                 var showWistiaButtons = function() {
                     var buttons = $('.osc-btn, #course-navigation');
 
-                    buttons.addClass('visible');
-                    buttons.removeClass('hidden');
+                    buttons.addClass('osc-visible');
+                    buttons.removeClass('osc-hidden');
                 };
 
                 gridMain.mouseenter(showWistiaButtons);
