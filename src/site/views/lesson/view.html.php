@@ -42,7 +42,6 @@ class OscampusViewLesson extends OscampusViewSite
         $link = JHtml::_('osc.courselink', $pid, $cid, null, null, true);
         $pathway->addItem($this->lesson->course_title, $link);
 
-        $pathway->addItem($this->lesson->module_title);
         $pathway->addItem($this->lesson->title);
         parent::display($tmpl);
     }
