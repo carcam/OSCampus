@@ -30,7 +30,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
                 <div class="osc-course-info">
                     <strong>Teacher:</strong> <?php echo $this->teacher->name; ?>
                     <br/>
-                    <strong>Released:</strong> <?php echo JHtml::_('date', $this->course->released, 'F j, Y'); ?>
+                    <strong>Released:</strong> <?php echo date('F j, Y', strtotime($this->course->released)); ?>
                     <br/>
                     <strong>Level:</strong>
                     <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $this->course->difficulty); ?>
