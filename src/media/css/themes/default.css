@@ -11,16 +11,13 @@
     color: #555555;
 }
 
-#oscampus.osc-container div{
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 400;
+#oscampus.osc-container p{
+    margin: 0 0 20px;
 }
-
+#oscampus.osc-container div,
 #oscampus.osc-container p{
     font-size: 14px;
     line-height: 24px;
-    margin: 0 0 20px;
     font-weight: 400;
 }
 
@@ -373,6 +370,11 @@
     border-top: 1px solid #f2f2f2;
 }
 
+#oscampus.osc-container #content-teacher .osc-table div {
+    font-size: 13px;
+    line-height: 20px;
+}
+
 #oscampus.osc-container .osc-row-one{
     background: #ffffff;
     border-bottom: 1px solid #f2f2f2;
@@ -385,7 +387,7 @@
 
 #oscampus.osc-container .osc-row-one [class*="block"],
 #oscampus.osc-container .osc-row-two [class*="block"]{
-    padding: 7px 10px;
+    padding: 4px 10px;
 }
 
 #oscampus.osc-container .osc-row-heading [class*="block"] {
