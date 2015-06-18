@@ -117,7 +117,7 @@
                                     } else {
                                         var overlay = $('<div>')
                                             .attr('id', wistiaEmbed.uuid + '_overlay')
-                                            .addClass('wistia_overlay');
+                                            .addClass('osc-wistia-overlay');
                                         container.parent().append(overlay);
 
                                         var wrapper = $('<div>').addClass('wrapper');
@@ -159,7 +159,7 @@
                             // TODO: create a method to easy show custom overlays
                             var overlay = $('<div>')
                                 .attr('id', wistiaEmbed.uuid + '_overlay')
-                                .addClass('wistia_overlay');
+                                .addClass('osc-wistia-overlay');
                             container.append(overlay);
 
                             var wrapper = $('<div>').addClass('wrapper');
