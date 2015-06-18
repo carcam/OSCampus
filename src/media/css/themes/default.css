@@ -424,9 +424,8 @@
 #oscampus.osc-container .osc-row-two a:focus,
 #oscampus.osc-container .osc-row-one a:active,
 #oscampus.osc-container .osc-row-two a:active {
-    background: #41a1d6;
     text-decoration: none;
-    color: #fff;
+    color: #41a1d6;
 }
 
 #oscampus.osc-container .osc-row-one a i:before,
