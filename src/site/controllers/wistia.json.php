@@ -76,7 +76,7 @@ class OscampusControllerWistia extends OscampusControllerJson
         );
 
         // Only usable by authorised users
-        if (!$user->authorise('video.downloadLimit', 'com_oscampus')) {
+        if (!$user->authorise('video.download', 'com_oscampus')) {
             $result['authorised'] = false;
             $result['error']      = JText::_('JERROR_ALERTNOAUTHOR');
         }
