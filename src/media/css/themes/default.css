@@ -728,7 +728,6 @@
 
 #oscampus.osc-container .osc-lesson-navigation,
 #oscampus.osc-container .osc-lesson-options {
-    position: absolute;
     z-index: 2;
 }
 
@@ -743,11 +742,13 @@
 #oscampus.osc-container .osc-lesson-navigation {
     right: 10px;
     top: 10px;
+    float: right;
 }
 
 #oscampus.osc-container .osc-lesson-options {
     left: 10px;
     top: 10px;
+    float: left;
 }
 
 
