@@ -756,7 +756,7 @@
 
 #oscampus.osc-container .osc-lesson-options .osc-btn.osc-visible,
 #oscampus.osc-container .osc-lesson-navigation .osc-btn.osc-visible {
-    opacity: 1;
+    opacity: 0.8;
 }
 
 #oscampus.osc-container .osc-lesson-options .osc-btn.osc-hidden,
