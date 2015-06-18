@@ -41,5 +41,7 @@ $next      = $this->lesson->next;
             </span>
             <i class="fa fa-chevron-right"></i>
         </a>
-    <?php endif; ?>
+    <?php
+    endif;
+    ?>
 </div>
