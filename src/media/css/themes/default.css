@@ -720,8 +720,26 @@
 
 /* Lesson
  ========================================================================== */
-#oscampus.osc-container #course-navigation {
+#oscampus.osc-container .osc-lesson-navigation {
     float: right;
+    right: 10px;
+    position: absolute;
+    top: 10px;
+}
+
+#oscampus.osc-container .osc-lesson-options {
+    float: left;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+}
+
+#oscampus.osc-container .osc-lesson-options .fa {
+    margin-right: 5px;
+}
+
+#oscampus.osc-container .osc-lesson-options .osc-btn {
+    cursor: pointer;
 }
 
 /* Quiz

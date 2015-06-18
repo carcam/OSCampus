@@ -17,7 +17,7 @@ $previous  = $this->lesson->previous;
 $next      = $this->lesson->next;
 
 ?>
-<div class="osc-btn-group hidden" id="course-navigation">
+<div class="osc-btn-group hidden osc-lesson-navigation" id="course-navigation">
     <a href="<?php echo JHtml::_('osc.courselink', $pathwayId, $courseId, null, null, true); ?>" class="osc-btn">
         <i class="fa fa-bars"></i>
         <span class="osc-hide-tablet">

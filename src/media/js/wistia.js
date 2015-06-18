@@ -47,7 +47,7 @@
                 // Add the container for the buttons
                 var container = $('<div>')
                     .attr('id', wistiaEmbed.uuid + '_buttons_container')
-                    .addClass('wistia_buttons_container');
+                    .addClass('osc-lesson-options osc-btn-group');
                 $(wistiaEmbed.grid.top_inside).append(container);
 
                 var updateIcon = function(waiting) {
@@ -216,7 +216,7 @@
                     .attr('title', 'Autoplay')
                     .text('Autoplay')
                     .prepend(buttonAutoplay.icon)
-                    .data('icon-disabled', 'fa-square')
+                    .data('icon-disabled', 'fa-square-o')
                     .data('icon-enabled', 'fa-check-square')
                     .data('state-option', 'autoPlay')
                     .on('click', function(event) {
@@ -257,7 +257,7 @@
                     .attr('title', 'Focus')
                     .text('Focus')
                     .prepend(buttonFocus.icon)
-                    .data('icon-disabled', 'fa-square')
+                    .data('icon-disabled', 'fa-square-o')
                     .data('icon-enabled', 'fa-check-square')
                     .data('state-option', 'focus')
                     .on('click', function(event) {
