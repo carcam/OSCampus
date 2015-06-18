@@ -218,7 +218,8 @@
 
 #oscampus.osc-container .osc-btn:hover,
 #oscampus.osc-container .osc-btn:focus,
-#oscampus.osc-container .osc-btn.osc-btn-active {
+#oscampus.osc-container .osc-btn.osc-btn-active,
+#oscampus.osc-container .osc-btn.osc-off {
     background: #7ebce0;
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
     -moz-box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
@@ -723,6 +724,7 @@
 #oscampus.osc-container .osc-lesson-navigation,
 #oscampus.osc-container .osc-lesson-options {
     position: absolute;
+    z-index: 99;
 }
 
 #oscampus.osc-container .osc-lesson-navigation .osc-btn,
@@ -754,7 +756,7 @@
 
 #oscampus.osc-container .osc-lesson-options .osc-btn.osc-visible,
 #oscampus.osc-container .osc-lesson-navigation .osc-btn.osc-visible {
-    opacity: 0.9;
+    opacity: 1;
 }
 
 #oscampus.osc-container .osc-lesson-options .osc-btn.osc-hidden,
@@ -1026,6 +1028,11 @@
         -moz-border-radius: 4px 4px 0 0;
         -webkit-border-radius: 4px 4px 0 0;
         -o-border-radius: 4px 4px 0 0;
+    }
+    /* lesson */
+    #oscampus.osc-container .osc-lesson-navigation,
+    #oscampus.osc-container .osc-lesson-options {
+        display: none !important;
     }
 }
 

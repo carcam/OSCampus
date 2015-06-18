@@ -148,7 +148,7 @@
                                         wistiaEmbed.bind('widthchange', resize);
                                         wistiaEmbed.bind('heightchange', resize);
 
-                                        overlay.addClass('visible');
+                                        overlay.addClass('osc-visible');
                                     }
                                 }
                             });
@@ -197,12 +197,12 @@
                             wistiaEmbed.bind('widthchange', resize);
                             wistiaEmbed.bind('heightchange', resize);
 
-                            overlay.addClass('visible');
+                            overlay.addClass('osc-visible');
                         }
                     });
 
                 if (!options.download.authorised) {
-                    buttonDownload.addClass('off');
+                    buttonDownload.addClass('osc-off');
                 }
                 container.append(buttonDownload);
                 /*********** END DOWNLOAD ***************/
