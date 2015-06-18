@@ -31,8 +31,8 @@ abstract class Download
 
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
-            ->from('#__oscampus_wistia_download_log')
-            ->where("downloaded_by = {$userId}")
+            ->from('#__oscampus_wistia_downloads')
+            ->where("users_id = {$userId}")
             ->where("downloaded BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL {$downloadLimitPeriod} day)) AND NOW()");
 
         $total = $db->setQuery($query)->loadResult();

@@ -15,11 +15,6 @@ class OscampusControllerWistia extends OscampusControllerBase
 {
     public function download()
     {
-        header('Content-Type: application/text');
-        header('Content-Disposition: attachment; filename=test.txt');
-        echo 'Yo Ho!';
-        return;
-
         $user = JFactory::getUser();
 
         // Only usable by authorised users
@@ -28,7 +23,7 @@ class OscampusControllerWistia extends OscampusControllerBase
         }
 
         if (!JSession::checkToken()) {
-            //throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 401);
+            throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 401);
         }
 
         $app = JFactory::getApplication();

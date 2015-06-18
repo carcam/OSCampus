@@ -95,21 +95,24 @@
                                                 id    : wistiaEmbed.hashedId(),
                                                 format: 'raw'
                                             };
-                                            if (options.download.formToken) {
-                                                query[1] = options.download.formToken;
-                                            }
 
                                             form = $('<form>').attr({
                                                 id    : formId,
-                                                method: 'GET',
+                                                method: 'POST',
                                                 action: 'index.php?' + $.param(query)
                                             });
+
+                                            if (options.download.formToken) {
+                                                var tokenField = $('<input type="hidden">')
+                                                    .attr('name', options.download.formToken)
+                                                    .val(1);
+                                                form.append(tokenField);
+                                            }
 
                                             form.css('visible', 'hidden');
                                             $('body').append(form);
                                         }
-                                        //form.submit();
-                                        console.log(form);
+                                        form.submit();
 
                                     } else {
                                         var overlay = $('<div>')
