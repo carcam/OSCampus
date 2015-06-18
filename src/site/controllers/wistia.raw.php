@@ -33,34 +33,26 @@ class OscampusControllerWistia extends OscampusControllerBase
         $id = $app->input->getAlnum('id', null);
 
         if (empty($id)) {
-            echo 'no id';
-            return;
-            //throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOARGS'), 500);
+            throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOARGS'), 500);
         }
 
         $params = JComponentHelper::getParams('com_oscampus');
 
         if (Download::checkUserExceededDownloadLimit($user->id)) {
-            echo 'exceeded  limit';
-            return;
-            //throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_DOWNLOAD_LIMIT', $downloadLimitPeriod), 401);
+            throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_DOWNLOAD_LIMIT', $downloadLimitPeriod), 401);
         }
 
         // Load the Data API
         $apikey = $params->get('wistia.apikey');
         if (empty($apikey)) {
-            echo 'no apikey';
-            return;
-            //throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOAPIKEY'), 500);
+            throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOAPIKEY'), 500);
         }
         $wistia = new ApiData($apikey);
 
         // Load the selected Media resource
         $media = $wistia->selectAsset($id);
         if (empty($media) || empty($media->selected)) {
-            echo 'no media';
-            return;
-            //throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_MEDIANOTFOUND', $id), 500);
+            throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_MEDIANOTFOUND', $id), 500);
         }
 
         Download::log($media, $user);
