@@ -885,7 +885,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbCampus = JFactory::getDbo();
 
         $levels = array(
-            0 => 'easy',
+            0 => 'beginner',
             1 => 'intermediate',
             2 => 'advanced'
         );
