@@ -8,23 +8,6 @@
                 }
             },
 
-            fixVideoSizeProportion: function() {
-                var i = 0;
-
-                var interval = setInterval(function() {
-                    var width = wistiaEmbed.videoWidth();
-                    var height = wistiaEmbed.videoHeight();
-
-                    var rate = height / width * 100;
-                    $('#wistia_' + wistiaEmbed.hashedId()).parent().css('padding-bottom', rate + '%');
-
-                    if ((i++) >= 30) {
-                        clearInterval(interval);
-                        interval = null;
-                    }
-                }, 500);
-            },
-
             fixVolumeBug: function() {
                 wistiaEmbed.volume(parseFloat(wistiaEmbed.options.volume));
 

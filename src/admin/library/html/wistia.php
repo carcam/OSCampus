@@ -96,7 +96,6 @@ abstract class OscWistia
                     "   wistiaEmbed.ready(function() {",
                     "      $.Oscampus.wistia.addExtraControls({$options});",
                     "      $.Oscampus.wistia.moveNavigationButtons();",
-                    "      $.Oscampus.wistia.fixVideoSizeProportion();",
                     "      $.Oscampus.wistia.fixVolumeBug();",
                     "   });",
                     "})(jQuery);",
