@@ -721,6 +721,10 @@
 
 /* Lesson
  ========================================================================== */
+#oscampus.osc-container .osc-lesson-embed {
+    padding-bottom: 0 !important;
+}
+
 #oscampus.osc-container .osc-lesson-navigation,
 #oscampus.osc-container .osc-lesson-options {
     position: absolute;
