@@ -296,7 +296,14 @@
                 // Fix the focus on play
                 wistiaEmbed.bind('play', function(event) {
                     if (wistiaEmbed.options.focus) {
-                        wistiaEmbed.plugin['dimthelights'].dim();
+                        // Uses interval to make sure the plugin is loaded before call it
+                        var interval = setInterval(function() {
+                            if (typeof wistiaEmbed.plugin['dimthelights'] != 'undefined') {
+                                wistiaEmbed.plugin['dimthelights'].dim();
+                                clearInterval(interval);
+                                interval = null;
+                            }
+                        }, 500);
                     }
                 });
 
