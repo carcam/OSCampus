@@ -67,7 +67,7 @@
 #oscampus.osc-container .page-header h1 {
     font-size: 40px;
     line-height: 50px;
-    margin: 0 0 40px 0;
+    margin: 10px 0 40px 0;
 }
 
 #oscampus.osc-container a {
@@ -387,7 +387,7 @@
 
 #oscampus.osc-container .osc-row-one [class*="block"],
 #oscampus.osc-container .osc-row-two [class*="block"]{
-    padding: 4px 10px;
+    padding: 6px 10px;
 }
 
 #oscampus.osc-container .osc-row-heading [class*="block"] {
