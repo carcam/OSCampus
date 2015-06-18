@@ -243,13 +243,6 @@
                 container.append(buttonAutoplay);
 
                 buttonAutoplay.updateIcon();
-
-                // Autoplay move to the next lesson
-                wistiaEmbed.bind('end', function(event) {
-                    if (wistiaEmbed.options.autoPlay) {
-                        $('#nextbut').click();
-                    }
-                });
                 /*********** END AUTOPLAY ***************/
 
                 /*********** BEGIN FOCUS ***************/
@@ -306,12 +299,17 @@
                         }, 500);
                     }
                 });
+                /*********** END FOCUS ***************/
 
+                // Autoplay move to the next lesson and turn focus off
                 wistiaEmbed.bind('end', function(event) {
+                    if (wistiaEmbed.options.autoPlay) {
+                        $('#nextbut')[0].click();
+                    }
+
                     wistiaEmbed.plugin['dimthelights'].undim();
                 });
             },
-            /*********** END FOCUS ***************/
 
             moveNavigationButtons: function() {
                 $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
