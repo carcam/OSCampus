@@ -570,6 +570,10 @@
     -o-border-radius: 4px;
 }
 
+#oscampus.osc-container .osc-dashboard-announcements div {
+    line-height: 20px;
+}
+
 #oscampus.osc-container .osc-dashboard-announcements .block2,
 #oscampus.osc-container .osc-dashboard-announcements .block3,
 #oscampus.osc-container .osc-dashboard-announcements .block4,
@@ -579,7 +583,7 @@
     -moz-box-shadow: -1px 0 0 #ccc inset;
     -webkit-box-shadow: -1px 0 0 #ccc inset;
     -o-box-shadow: -1px 0 0 #ccc inset;
-    min-height: 162px;
+    min-height: 182px;
     padding: 30px;
     color: #2d7091;
     margin-left: 0;
@@ -691,7 +695,7 @@
     -moz-border-radius: 0 4px 4px 4px;
     -webkit-border-radius: 0 4px 4px 4px;
     -o-border-radius: 0 4px 4px 4px;
-    min-height: 240px;
+    min-height: 270px;
     box-shadow: 0 1px 0 #f2f2f2 inset;
     -moz-box-shadow: 0 1px 0 #f2f2f2 inset;
     -webkit-box-shadow: 0 1px 0 #f2f2f2 inset;
