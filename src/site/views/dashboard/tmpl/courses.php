@@ -7,3 +7,5 @@
  */
 
 defined('_JEXEC') or die();
+?>
+<h1>This will be the full list of my classes</h1>

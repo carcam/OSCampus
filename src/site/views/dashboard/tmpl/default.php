@@ -14,7 +14,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
 <div class="osc-container oscampus-dashboard" id="oscampus">
 
     <div class="page-header">
-        <h1>Dashboard</h1>
+        <h1><?php echo JText::_('COM_OSCAMPUS_DASHBOARD'); ?></h1>
     </div>
 
     <?php echo $this->loadTemplate('announcements'); ?>
@@ -24,27 +24,27 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             <div class="osc-section osc-course-tabs">
                 <div data-content="#content-my-classes" class="block12">
                     <i class="fa fa-mortar-board"></i>
-                    My Classes
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_COURSES'); ?>
                 </div>
                 <div data-content="#content-my-certificates" class="block12 osc-tab-disabled">
                     <i class="fa fa-certificate"></i>
-                    My Certificates
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_CERTIFICATES'); ?>
                 </div>
                 <div data-content="#content-my-forum" class="block12 osc-tab-disabled">
                     <i class="fa fa-life-ring"></i>
-                    My Forum Topics
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_KUNENA'); ?>
                 </div>
                 <div data-content="#content-my-stats" class="block12 osc-tab-disabled">
                     <i class="fa fa-line-chart"></i>
-                    My Stats
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_STATS'); ?>
                 </div>
                 <div data-content="#content-new-classes" class="block12 osc-tab-disabled">
                     <i class="fa fa-plus-circle"></i>
-                    New Classes
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_LATEST_COURSES'); ?>
                 </div>
                 <div data-content="#content-new-blog" class="block12 osc-tab-disabled">
                     <i class="fa fa-pencil-square-o"></i>
-                    New on the Blog
+                    <?php echo JText::_('COM_OSCAMPUS_DASHBOARD_NEW_BLOG'); ?>
                 </div>
             </div>
             <!-- .osc-section -->
