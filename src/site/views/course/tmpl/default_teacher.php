@@ -40,7 +40,7 @@ $routing = OscampusRoute::getInstance();
                 <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_TEACHER_NAME'); ?>
             </div>
             <div class="block3">
-                <i class="fa fa-bolt"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY'); ?>
+                <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY'); ?>
             </div>
             <div class="block3">
                 <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_RELEASE_DATE') ;?>
