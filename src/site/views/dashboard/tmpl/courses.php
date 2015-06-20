@@ -8,4 +8,10 @@
 
 defined('_JEXEC') or die();
 ?>
-<h1>This will be the full list of my classes</h1>
+<div id="content-my-classes" class="osc-course-tabs-content">
+    <ul>
+        <?php foreach ($this->courses as $course) : ?>
+            <li><?php echo JHtml::_('link', 'javascript:void(0)', $course->title); ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</div>

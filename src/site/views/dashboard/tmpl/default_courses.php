@@ -10,14 +10,17 @@ defined('_JEXEC') or die();
 /**
  * @var OscampusViewDashboard $this
  */
-$total = $this->model->getState('list.size');
-$max   = min(count($this->courses), $total);
+
+$total = count($this->courses);
+$max   = min($total, $this->model->getState('list.size'));
 ?>
 <div id="content-my-classes" class="osc-course-tabs-content">
     <ul>
         <?php for ($i = 0; $i < $max; $i++) : ?>
             <li><?php echo JHtml::_('link', 'javascript:void(0)', $this->courses[$i]->title); ?></a></li>
         <?php endfor; ?>
+        <?php if ($total > $max) : ?>
         <li><?php echo JHtml::_('link', JURI::current() . '?layout=courses', 'See all the available classes'); ?></li>
+        <?php endif; ?>
     </ul>
 </div>
