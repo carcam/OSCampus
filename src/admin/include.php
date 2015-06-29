@@ -17,10 +17,12 @@ if (!defined('OSCAMPUS_LOADED')) {
     define('OSCAMPUS_MEDIA', JPATH_SITE . '/media/com_oscampus');
     define('OSCAMPUS_LIBRARY', OSCAMPUS_ADMIN . '/library');
 
+    // Include vendor dependencies
+    require_once OSCAMPUS_ADMIN . '/vendor/autoload.php';
+
     // Setup autoload libraries
     require_once OSCAMPUS_LIBRARY . '/oscampus/AutoLoader.php';
     AutoLoader::register('Oscampus', OSCAMPUS_LIBRARY . '/oscampus');
-
     AutoLoader::registerCamelBase('Oscampus', OSCAMPUS_LIBRARY . '/joomla');
 
     // Any additional helper paths

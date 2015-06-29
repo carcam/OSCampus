@@ -21,9 +21,12 @@
             "email": "bill@ostraining.com"
         }
     ],
+    "config" : {
+        "vendor-dir" : "src/admin/vendor"
+    },
     "require"          : {
-        "php"          : ">= 5.3",
-        "ext-curl"     : "*",
-        "pimple/pimple": "v3.0.0"
+        "php"                         : ">= 5.3",
+        "ext-curl"                    : "*",
+        "mobiledetect/mobiledetectlib": "~2.8"
     }
 }

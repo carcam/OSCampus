@@ -6,7 +6,6 @@
  * @license
  */
 
-use Oscampus\MobileDetect;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use Alledia\Framework\Factory as AllediaFactory;
 
@@ -35,7 +34,7 @@ abstract class OscWistia
     ) {
         $session = JFactory::getSession();
 
-        $detect      = new MobileDetect();
+        $detect      = new Mobile_Detect();
         $isNotMobile = !$detect->isMobile();
 
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
@@ -78,7 +77,7 @@ abstract class OscWistia
             JHtml::_('script', 'com_oscampus/utilities.js', false, true);
             JHtml::_('script', 'com_oscampus/wistia.js', false, true);
 
-            $detect = new MobileDetect();
+            $detect = new Mobile_Detect();
             if (!$detect->isMobile()) {
                 $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 

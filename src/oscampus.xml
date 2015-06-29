@@ -54,6 +54,7 @@
             <folder>language</folder>
             <folder>library</folder>
             <folder>sql</folder>
+            <folder>vendor</folder>
             <folder>views</folder>
             <filename>access.xml</filename>
             <filename>config.xml</filename>

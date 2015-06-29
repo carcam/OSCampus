@@ -45,11 +45,6 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
-# Composer downloads
-####################
-vendor/
-composer.lock
-
 # Phing #
 #########
 packages/*
