@@ -150,7 +150,7 @@ class OscampusRoute
             $query['layout'] = $layout;
         }
 
-        if ($menuItem = static::getMenu($view, $layout)) {
+        if ($menuItem = $this->getMenu($view, $layout)) {
             $query['Itemid'] = $menuItem->id;
 
             $mView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
