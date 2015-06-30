@@ -12,16 +12,17 @@ build.properties
 Icon
 
 
+# Don't include unneeded composer files
+#######################################
+src/admin/vendor/mobiledetect/mobiledetectlib/**
+!src/admin/vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php
+
 # Windows Files #
 #################
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
-
-# Folder config file
 Desktop.ini
-
-# Recycle Bin used on file shares
 $RECYCLE.BIN/
 
 # Eclipse #
@@ -54,7 +55,5 @@ packages/*
 ####################
 _notes/
 error_log
-
 config.codekit
-
 tests/_output/*
