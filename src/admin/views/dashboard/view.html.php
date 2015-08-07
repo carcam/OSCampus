@@ -8,11 +8,12 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewOscampus extends OscampusViewAdmin
+class OscampusViewDashboard extends OscampusViewAdmin
 {
     public function display($tpl = null)
     {
         $this->setToolBar(false);
+
         parent::display($tpl);
     }
 }
