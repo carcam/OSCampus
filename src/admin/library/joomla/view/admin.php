@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-abstract class OscampusViewAdmin extends OscampusView
+abstract class OscampusViewAdmin extends OscampusViewTwig
 {
     /**
      * @var JObject
@@ -25,7 +25,28 @@ abstract class OscampusViewAdmin extends OscampusView
     public function display($tpl = null)
     {
         $this->setTitle();
+
+        $this->displayHeader();
+
+        $hide    = OscampusFactory::getApplication()->input->getBool('hidemainmenu', false);
+        $sidebar = count(JHtmlSidebar::getEntries()) + count(JHtmlSidebar::getFilters());
+        if (!$hide && $sidebar > 0) {
+            $start = array(
+                '<div id="j-sidebar-container" class="span2">',
+                JHtmlSidebar::render(),
+                '</div>',
+                '<div id="j-main-container" class="span10">'
+            );
+
+        } else {
+            $start = array('<div id="j-main-container">');
+        }
+
+        echo join("\n", $start) . "\n";
         parent::display($tpl);
+        echo "\n</div>";
+
+        $this->displayFooter();
     }
 
     /**
