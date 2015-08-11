@@ -58,10 +58,7 @@ class OscampusViewTwig extends OscampusView
         $this->templatesEngine = new Twig_Environment($loader, $options);
 
         // Set the default template variables
-        $this->variables = array(
-            'request_uri' => @$_SERVER['REQUEST_URI'],
-            'ip'          => @$_SERVER['REMOTE_ADDR']
-        );
+        $this->variables = array();
     }
 
     /**
