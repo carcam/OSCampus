@@ -59,8 +59,14 @@ class OscampusViewTwig extends OscampusView
 
         $this->templatesEngine = new Twig_Environment($loader, $options);
 
+        $option = OscampusFactory::getApplication()->input->get('option');
+
         // Set the default template variables
-        $this->variables = array();
+        $this->variables = array(
+            'joomla_version' => JVERSION,
+            'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
+            'media_base_url' => JURI::root() . '/media/' . $option
+        );
     }
 
     /**
