@@ -15,6 +15,11 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      */
     protected $state = null;
 
+    /**
+     * Constructor
+     *
+     * @param array $config Optional configuration
+     */
     public function __construct($config = array())
     {
         parent::__construct($config);
@@ -22,6 +27,11 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
         $this->state = $this->get('State');
     }
 
+    /**
+     * Render the view
+     *
+     * @param  string $tpl
+     */
     public function display($tpl = null)
     {
         $this->setTitle();
