@@ -84,7 +84,7 @@ class OscampusViewTwig extends OscampusView
         // Clear prior output
         $this->_output = null;
 
-        $template = JFactory::getApplication()->getTemplate();
+        $template = OscampusFactory::getApplication()->getTemplate();
         $layout = $this->getLayout();
         $layoutTemplate = $this->getLayoutTemplate();
 
@@ -96,7 +96,7 @@ class OscampusViewTwig extends OscampusView
         $tpl = isset($tpl) ? preg_replace('/[^A-Z0-9_\.-]/i', '', $tpl) : $tpl;
 
         // Load the language file for the template
-        $lang = JFactory::getLanguage();
+        $lang = OscampusFactory::getLanguage();
         $lang->load('tpl_' . $template, JPATH_BASE, null, false, true)
             || $lang->load('tpl_' . $template, JPATH_THEMES . "/$template", null, false, true);
 
