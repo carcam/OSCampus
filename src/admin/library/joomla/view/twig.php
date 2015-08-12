@@ -54,7 +54,7 @@ class OscampusViewTwig extends OscampusView
         $loader  = new Twig_Loader_Filesystem($this->_path['template']);
 
         $options = array(
-            'cache' => JPATH_CACHE
+            // 'cache' => JPATH_CACHE
         );
 
         $this->templatesEngine = new Twig_Environment($loader, $options);
