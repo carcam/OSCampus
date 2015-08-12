@@ -1,0 +1,21 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-nav">
+        {% if submenu_items %}
+            <ul id="submenu" class="nav nav-list">
+                {% for item in submenu_items %}
+                    <li class="{{ item.class }}">
+                        <a href="{{ item.link }}">{{ item.label }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+

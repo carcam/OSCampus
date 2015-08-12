@@ -52,6 +52,7 @@
         <files folder="admin">
             <folder>controllers</folder>
             <folder>language</folder>
+            <folder>layouts</folder>
             <folder>library</folder>
             <folder>sql</folder>
             <folder>vendor</folder>

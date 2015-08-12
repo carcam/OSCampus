@@ -49,6 +49,8 @@ class OscampusViewTwig extends OscampusView
             }
         }
 
+        $this->_addPath('template', JPATH_COMPONENT . '/layouts');
+
         $loader  = new Twig_Loader_Filesystem($this->_path['template']);
 
         $options = array(
