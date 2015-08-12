@@ -10,10 +10,16 @@ defined('_JEXEC') or die();
 
 class OscampusViewDashboard extends OscampusViewAdmin
 {
-    public function display($tpl = null)
+    /**
+     * Default admin screen title
+     *
+     * @param string $sub
+     * @param string $icon
+     *
+     * @return void
+     */
+    protected function setTitle($sub = null, $icon = 'oscampus')
     {
-        $this->setToolBar(false);
-
-        parent::display($tpl);
+        parent::setTitle('COM_OSCAMPUS_SUBMENU_DASHBOARD', $icon);
     }
 }

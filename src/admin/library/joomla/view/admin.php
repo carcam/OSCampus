@@ -8,6 +8,7 @@
 
 defined('_JEXEC') or die();
 
+
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
     /**
@@ -35,27 +36,11 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     public function display($tpl = null)
     {
         $this->setTitle();
+        $this->setToolBar();
+        $this->setSubmenu();
 
         $this->displayHeader();
-
-        $hide    = OscampusFactory::getApplication()->input->getBool('hidemainmenu', false);
-        $sidebar = count(JHtmlSidebar::getEntries()) + count(JHtmlSidebar::getFilters());
-        if (!$hide && $sidebar > 0) {
-            $start = array(
-                '<div id="j-sidebar-container" class="span2">',
-                JHtmlSidebar::render(),
-                '</div>',
-                '<div id="j-main-container" class="span10">'
-            );
-
-        } else {
-            $start = array('<div id="j-main-container">');
-        }
-
-        echo join("\n", $start) . "\n";
         parent::display($tpl);
-        echo "\n</div>";
-
         $this->displayFooter();
     }
 
@@ -84,19 +69,20 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     }
 
     /**
-     * Render the admin screen toolbar buttons
-     *
-     * @param bool $addDivider
+     * Set the admin screen toolbar buttons
      *
      * @return void
      */
-    protected function setToolBar($addDivider = true)
+    protected function setToolbar()
     {
         $user = OscampusFactory::getUser();
         if ($user->authorise('core.admin', 'com_oscampus')) {
-            if ($addDivider) {
+            $items = JToolbar::getInstance('toolbar')->getItems();
+
+            if (!empty($items)) {
                 JToolBarHelper::divider();
             }
+
             JToolBarHelper::preferences('com_oscampus');
         }
     }
@@ -119,5 +105,38 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     protected function displayFooter()
     {
         // To be set in subclassess
+    }
+
+    /**
+     * Add a new submenu
+     *
+     * @param string  $text   The submenu's text
+     * @param string  $view   The submenu's view
+     */
+    protected function addSubmenuItem($label, $view)
+    {
+        if (!isset($this->variables['submenu_items'])) {
+            $this->setVariable('submenu_items', array());
+        }
+
+        $currentView = OscampusFactory::getApplication()->input->get('view', 'dashboard');
+        $link        = 'index.php?option=com_oscampus&view=' . $view;
+        $active      = $currentView === $view;
+
+        $item = new stdClass;
+        $item->label  = JText::_($label);
+        $item->link   = $link;
+        $item->active = (bool)$active;
+        $item->class  = $active ? 'active' : '';
+
+        $this->variables['submenu_items'][] = $item;
+    }
+
+    /**
+     * Set the submenu items
+     */
+    protected function setSubmenu()
+    {
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard');
     }
 }
