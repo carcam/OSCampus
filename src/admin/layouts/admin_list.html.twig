@@ -1,0 +1,74 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% extends "base.html.twig" %}
+
+{% import "admin_list_macros.html.twig" as list %}
+
+{% block main_content %}
+    {{ html('bootstrap.tooltip')|raw }}
+    {{ html('behavior.multiselect')|raw }}
+    {{ html('formbehavior.chosen', 'select')|raw }}
+
+    <script type="text/javascript">
+        Joomla.orderTable = function () {
+            var dirn;
+
+            var table = document.getElementById("sortTable");
+            var direction = document.getElementById("directionTable");
+            var order = table.options[table.selectedIndex].value;
+            if (order != '<?php echo $listOrder; ?>') {
+                dirn = 'asc';
+            }
+            else {
+                dirn = direction.options[direction.selectedIndex].value;
+            }
+            Joomla.tableOrdering(order, dirn, '');
+        }
+    </script>
+
+    <form
+        action="index.php?option={{ option }}&view={{ view }}"
+        method="post"
+        name="adminForm"
+        id="adminForm">
+
+        {% if not items %}
+            <div class="alert alert-no-items">
+                {{ 'COM_OSCAMPUS_NO_MATCHING_RESULTS'|lang }}
+            </div>
+        {% else %}
+            <table class="table table-striped" id="adminList">
+                <thead>
+                    <tr>
+                        {% block list_head %}<th></th>{% endblock %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in items %}
+                        <tr class="row{{ loop.index0 % 2 }}">
+                            {% block list_item %}<td></td>{% endblock %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if pagination %}
+                {{ pagination|raw }}
+            {% endif %}
+
+            {% block list_hidden %}
+                <input type="hidden" name="task" value="{{ task }}"/>
+                <input type="hidden" name="boxchecked" value="0"/>
+                <input type="hidden" name="filter_order" value="{{ list_order }}" />
+                <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}" />
+                {{ html('form.token')|raw }}
+            {% endblock %}
+        {% endif %}
+    </form>
+{% endblock  %}
