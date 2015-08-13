@@ -14,23 +14,6 @@
     {{ html('behavior.multiselect')|raw }}
     {{ html('formbehavior.chosen', 'select')|raw }}
 
-    <script type="text/javascript">
-        Joomla.orderTable = function () {
-            var dirn;
-
-            var table = document.getElementById("sortTable");
-            var direction = document.getElementById("directionTable");
-            var order = table.options[table.selectedIndex].value;
-            if (order != '<?php echo $listOrder; ?>') {
-                dirn = 'asc';
-            }
-            else {
-                dirn = direction.options[direction.selectedIndex].value;
-            }
-            Joomla.tableOrdering(order, dirn, '');
-        }
-    </script>
-
     <form
         action="index.php?option={{ option }}&view={{ view }}"
         method="post"
