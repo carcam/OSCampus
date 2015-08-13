@@ -73,6 +73,24 @@ class OscampusViewTwig extends OscampusView
             'view'           => $view,
             'option'         => $option
         );
+
+        // Set JHtml template functions
+        $function = new Twig_SimpleFunction('html', function() {
+            $args = func_get_args();
+
+            return call_user_func_array('JHtml::_', $args);
+        });
+        $this->templatesEngine->addFunction($function);
+        // Set the JRoute filter
+        $filter = new Twig_SimpleFilter('route', function($string) {
+            return JRoute::_($string);
+        });
+        $this->templatesEngine->addFilter($filter);
+        // Set the JText filter
+        $filter = new Twig_SimpleFilter('lang', function($string) {
+            return JText::_($string);
+        });
+        $this->templatesEngine->addFilter($filter);
     }
 
     /**
