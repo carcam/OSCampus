@@ -182,7 +182,7 @@ class OscampusViewTwig extends OscampusView
                 break;
 
             default:
-                $filename = strtolower($parts['name']) . '.html';
+                $filename = strtolower($parts['name']) . '.html.twig';
                 break;
         }
 
