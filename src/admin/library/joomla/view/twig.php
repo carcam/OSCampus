@@ -72,7 +72,7 @@ class OscampusViewTwig extends OscampusView
             'media_base_url' => JURI::root() . '/media/' . $option,
             'view'           => $view,
             'option'         => $option,
-            'uri'            => htmlspecialchars(JUri::getInstance()->toString())
+            'uri'            => JUri::getInstance()->toString()
         );
 
         // Set JHtml template functions
