@@ -71,7 +71,8 @@ class OscampusViewTwig extends OscampusView
             'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
             'media_base_url' => JURI::root() . '/media/' . $option,
             'view'           => $view,
-            'option'         => $option
+            'option'         => $option,
+            'uri'            => htmlspecialchars(JUri::getInstance()->toString())
         );
 
         // Set JHtml template functions
