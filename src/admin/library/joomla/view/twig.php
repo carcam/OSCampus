@@ -92,6 +92,14 @@ class OscampusViewTwig extends OscampusView
             return JText::_($string);
         });
         $this->templatesEngine->addFilter($filter);
+        // Set the Input function
+        $function = new Twig_SimpleFunction('input', function($type, $key, $default = null) {
+            $input  = OscampusFactory::getApplication()->input;
+            $method = 'get' . ucfirst($type);
+
+            return $input->$method($key, $default);
+        });
+        $this->templatesEngine->addFunction($function);
     }
 
     /**
