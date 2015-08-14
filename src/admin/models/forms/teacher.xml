@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="main" label="COM_OSCAMPUS_TEACHER_PAGE_MAIN">
+        <field
+            name="id"
+            type="hidden"
+            class="readonly"
+            label="COM_OSCAMPUS_ID_LABEL"
+            description="COM_OSCAMPUS_ID_DESC"
+            size="10"
+            default="0"
+            readonly="true"/>
+
+        <field
+            name="user"
+            type="users"
+            label="COM_OSCAMPUS_TEACHER_USER_LABEL"
+            description="COM_OSCAMPUS_TEACHER_USER_DESC"
+            required="true"/>
+
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
+
+    <fieldset name="bio">
+        <field
+            name="bio"
+            type="editor"
+            label="COM_OSCAMPUS_TEACHER_BIO_LABEL"
+            description="COM_OSCAMPUS_TEACHER_BIO_DESC"
+            filter="safehtml"/>
+    </fieldset>
+</form>

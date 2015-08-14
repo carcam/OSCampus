@@ -1,0 +1,40 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% extends "base.html.twig" %}
+
+{% import "admin_form_macros.html.twig" as form_macros %}
+
+{% block sidebar %}{% endblock %}
+
+{% block main_content %}
+    {{ html('behavior.formvalidation')|raw }}
+    {{ html('behavior.keepalive')|raw }}
+    {{ html('formbehavior.chosen', 'select')|raw }}
+
+    <script type="text/javascript">
+        Joomla.submitbutton = function (task) {
+            if (task == 'teacher.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+                Joomla.submitform(task, document.getElementById('item-form'));
+            }
+        }
+    </script>
+
+    <form
+        action="{{ uri }}"
+        method="post"
+        name="adminForm"
+        id="item-form"
+        class="form-validate">
+
+        {% block form_body %}{% endblock %}
+
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="return" value="{{ input('cmd', 'return') }}"/>
+        {{ html('form.token')|raw }}
+    </form>
+{% endblock  %}
