@@ -8,15 +8,5 @@
 <link rel="stylesheet" type="text/css" href="{{ media_base_url }}/css/admin.css">
 
 <div class="osc-container row-fluid">
-    {% block sidebar %}
-        {% if submenu_items or filter_items %}
-            <div id="j-sidebar-container" class="span2">
-                {% include "sidebar.html.twig" %}
-            </div>
-        {% endif %}
-    {% endblock %}
-
-    <div id="j-main-container" {% if submenu_items or filter_items %}class="span10"{% endif %}>
-        {% block main_content %}{% endblock  %}
-    </div>
+    {% block main_content %}{% endblock  %}
 </div>
