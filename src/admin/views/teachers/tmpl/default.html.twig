@@ -8,13 +8,13 @@
 {% extends "admin_list.html.twig" %}
 
 {% block list_head %}
-    {{ list.th_checkall() }}
-    {{ list.th_sort('user.name', 'COM_OSCAMPUS_NAME', list_dir, list_order) }}
-    {{ list.th_sort('teacher.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
+    {{ list_macros.th_checkall() }}
+    {{ list_macros.th_sort('user.name', 'COM_OSCAMPUS_NAME', list_dir, list_order) }}
+    {{ list_macros.th_sort('teacher.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
 {% endblock %}
 
 {% block list_item %}
-    {{ list.td_check(loop.index0, item.id) }}
-    {{ list.td_edit_link('teacher', item.name, edit_link, item.id, loop.index0, item.checkedout, item.modified_by, item.checked_out_time, 'teacher.') }}
-    {{ list.td_text(item.id, 'center') }}
+    {{ list_macros.td_check(loop.index0, item.id) }}
+    {{ list_macros.td_edit_link('teacher', item.name, edit_link, item.id, loop.index0, item.checkedout, item.modified_by, item.checked_out_time, 'teacher.') }}
+    {{ list_macros.td_text(item.id, 'center') }}
 {% endblock %}

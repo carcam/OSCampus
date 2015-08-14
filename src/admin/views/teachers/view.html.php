@@ -22,9 +22,9 @@ class OscampusViewTeachers extends OscampusViewAdmin
         // $this->filterForm    = $this->get('FilterForm');
         // $this->activeFilters = $this->get('ActiveFilters');
 
-        // if (count($errors = $this->get('Errors'))) {
-        //     throw new Exception(implode("\n", $errors));
-        // }
+        if (count($errors = $this->get('Errors'))) {
+            throw new Exception(implode("\n", $errors));
+        }
 
         // $notices = OscampusHelper::getNotices();
         // OscampusHelper::enqueueMessages($notices);

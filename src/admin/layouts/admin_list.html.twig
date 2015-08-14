@@ -7,7 +7,7 @@
 
 {% extends "base.html.twig" %}
 
-{% import "admin_list_macros.html.twig" as list %}
+{% import "admin_list_macros.html.twig" as list_macros %}
 
 {% block main_content %}
     {{ html('bootstrap.tooltip')|raw }}
@@ -15,10 +15,12 @@
     {{ html('formbehavior.chosen', 'select')|raw }}
 
     <form
-        action="index.php?option={{ option }}&view={{ view }}"
+        action="{{ uri }}"
         method="post"
         name="adminForm"
         id="adminForm">
+
+        {% block list_filters %}{% endblock %}
 
         {% if not items %}
             <div class="alert alert-no-items">
