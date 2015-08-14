@@ -8,6 +8,9 @@
 
 defined('_JEXEC') or die();
 
+use Oscampus\Twig\Extension\Joomla as JoomlaTwig;
+
+
 class OscampusViewTwig extends OscampusView
 {
     /**
@@ -60,46 +63,10 @@ class OscampusViewTwig extends OscampusView
 
         $this->templatesEngine = new Twig_Environment($loader, $options);
         $this->templatesEngine->addExtension(new Twig_Extension_Debug);
-
-        $app    = OscampusFactory::getApplication();
-        $option = $app->input->get('option');
-        $view   = $app->input->get('view', 'dashboard');
+        $this->templatesEngine->addExtension(new JoomlaTwig);
 
         // Set the default template variables
-        $this->variables = array(
-            'joomla_version' => JVERSION,
-            'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
-            'media_base_url' => JURI::root() . '/media/' . $option,
-            'view'           => $view,
-            'option'         => $option,
-            'uri'            => JUri::getInstance()->toString()
-        );
-
-        // Set JHtml template functions
-        $function = new Twig_SimpleFunction('html', function() {
-            $args = func_get_args();
-
-            return call_user_func_array('JHtml::_', $args);
-        });
-        $this->templatesEngine->addFunction($function);
-        // Set the JRoute filter
-        $filter = new Twig_SimpleFilter('route', function($string) {
-            return JRoute::_($string);
-        });
-        $this->templatesEngine->addFilter($filter);
-        // Set the JText filter
-        $filter = new Twig_SimpleFilter('lang', function($string) {
-            return JText::_($string);
-        });
-        $this->templatesEngine->addFilter($filter);
-        // Set the Input function
-        $function = new Twig_SimpleFunction('input', function($type, $key, $default = null) {
-            $input  = OscampusFactory::getApplication()->input;
-            $method = 'get' . ucfirst($type);
-
-            return $input->$method($key, $default);
-        });
-        $this->templatesEngine->addFunction($function);
+        $this->variables = array();
     }
 
     /**

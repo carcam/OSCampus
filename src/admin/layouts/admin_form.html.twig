@@ -33,7 +33,7 @@
             {% block form_body %}{% endblock %}
 
             <input type="hidden" name="task" value=""/>
-            <input type="hidden" name="return" value="{{ input('cmd', 'return') }}"/>
+            <input type="hidden" name="return" value="{{ get_input('cmd', 'return') }}"/>
             {{ html('form.token')|raw }}
         </div>
     </form>
