@@ -26,17 +26,13 @@ class Joomla extends Twig_Extension
 
     public function getGlobals()
     {
-        $app    = OscampusFactory::getApplication();
-
-        $option = $app->input->get('option');
-        $view   = $app->input->get('view', 'dashboard');
+        $app = OscampusFactory::getApplication();
 
         return array(
             'joomla_version' => JVERSION,
             'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
-            'media_base_url' => JURI::root() . '/media/' . $option,
-            'view'           => $view,
-            'option'         => $option,
+            'media_base_url' => JURI::root() . '/media/' . $app->input->getCmd('option'),
+            'input'          => $app->input,
             'uri'            => JUri::getInstance()->toString()
         );
     }
