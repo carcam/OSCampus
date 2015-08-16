@@ -37,7 +37,6 @@ class OscampusModelTeacher extends OscampusModelAdmin
         return $data;
     }
 
-
     /**
      * @param JTable $table
      *

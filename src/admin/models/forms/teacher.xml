@@ -12,22 +12,44 @@
             readonly="true"/>
 
         <field
-            name="user"
-            type="users"
+            name="users_id"
+            type="user"
             label="COM_OSCAMPUS_TEACHER_USER_LABEL"
             description="COM_OSCAMPUS_TEACHER_USER_DESC"
+            class="input-xxlarge input-large-text"
             required="true"/>
 
-        <field name="checked_out" type="hidden" filter="unset"/>
-        <field name="checked_out_time" type="hidden" filter="unset"/>
-    </fieldset>
-
-    <fieldset name="bio">
         <field
             name="bio"
             type="editor"
             label="COM_OSCAMPUS_TEACHER_BIO_LABEL"
             description="COM_OSCAMPUS_TEACHER_BIO_DESC"
-            filter="safehtml"/>
+            required="true"
+            filter="safehtml"
+            buttons="true"
+            hide="readmore,pagebreak"
+            labelclass="hidden"/>
+
+        <field
+            name="image"
+            type="media"
+            label="COM_OSCAMPUS_TEACHER_IMAGE_LABEL"
+            description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"
+            required="true"/>
+
+        <field
+            name="created_by"
+            type="user"
+            label="COM_OSCAMPUS_TEACHER_CREATED_BY_LABEL"
+            description="COM_OSCAMPUS_TEACHER_CREATED_BY_DESC"/>
+
+        <field
+            name="created_by_alias"
+            type="text"
+            label="COM_OSCAMPUS_TEACHER_CREATED_BY_ALIAS_LABEL"
+            description="COM_OSCAMPUS_TEACHER_CREATED_BY_ALIAS_DESC"/>
+
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
 </form>
