@@ -57,24 +57,20 @@ class Joomla extends Twig_Extension
         );
     }
 
-    public static function function_html() {
+    public static function function_html()
+    {
         $args = func_get_args();
 
         return call_user_func_array('JHtml::_', $args);
     }
 
-    public static function function_get_input($type, $key, $default = null) {
-        $input  = OscampusFactory::getApplication()->input;
-        $method = 'get' . ucfirst($type);
-
-        return $input->$method($key, $default);
-    }
-
-    public static function filter_route($string) {
+    public static function filter_route($string)
+    {
         return JRoute::_($string);
     }
 
-    public static function filter_lang($string) {
+    public static function filter_lang($string)
+    {
         return JText::_($string);
     }
 }
