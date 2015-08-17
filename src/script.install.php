@@ -40,6 +40,7 @@ class com_oscampusInstallerScript extends AbstractScript
         $this->installRelated();
         $this->clearObsolete();
         $this->fixMenus();
+        $this->fixDatabase();
 
         $this->showMessages();
 
@@ -129,6 +130,25 @@ class com_oscampusInstallerScript extends AbstractScript
                     }
                 }
             }
+        }
+    }
+
+    protected function fixDatabase()
+    {
+        $db = JFactory::getDbo();
+
+        // Fix the checked_out column. It needs should have default value = 0 and not allow null.
+        $tables = array(
+            '#__oscampus_pathways',
+            '#__oscampus_teachers',
+            '#__oscampus_courses',
+            '#__oscampus_modules',
+            '#__oscampus_lessons'
+        );
+
+        foreach ($tables as $table) {
+            $query = "ALTER TABLE `{$table}` CHANGE `checked_out` `checked_out` INT(11)  NOT NULL  DEFAULT '0';";
+            $db->setQuery($query)->execute();
         }
     }
 }

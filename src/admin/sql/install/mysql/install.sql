@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `#__oscampus_pathways` (
   `created_by_alias` VARCHAR(255) NULL DEFAULT NULL,
   `modified` DATETIME NULL DEFAULT NULL,
   `modified_by` INT NULL DEFAULT NULL,
-  `checked_out` INT NULL DEFAULT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_users_id` (`users_id` ASC))
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `#__oscampus_teachers` (
   `created_by_alias` VARCHAR(255) NULL DEFAULT NULL,
   `modified` DATETIME NULL DEFAULT NULL,
   `modified_by` INT NULL DEFAULT NULL,
-  `checked_out` INT NULL DEFAULT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `idx_users_id` (`users_id` ASC))
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `#__oscampus_courses` (
   `created_by_alias` VARCHAR(255) NULL DEFAULT NULL,
   `modified` DATETIME NULL DEFAULT NULL,
   `modified_by` INT NULL DEFAULT NULL,
-  `checked_out` INT NULL DEFAULT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_teachers_id` (`teachers_id` ASC))
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `#__oscampus_modules` (
   `created_by_alias` VARCHAR(255) NULL DEFAULT NULL,
   `modified` DATETIME NULL DEFAULT NULL,
   `modified_by` INT NULL DEFAULT NULL,
-  `checked_out` INT NULL DEFAULT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_courses_id` (`courses_id` ASC))
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `#__oscampus_lessons` (
   `created_by_alias` VARCHAR(255) NULL DEFAULT NULL,
   `modified` DATETIME NULL DEFAULT NULL,
   `modified_by` INT NULL DEFAULT NULL,
-  `checked_out` INT NULL DEFAULT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_modules_id` (`modules_id` ASC))
