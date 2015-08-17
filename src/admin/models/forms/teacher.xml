@@ -38,6 +38,47 @@
             required="true"/>
 
         <field
+            name="links"
+            type="repeatable"
+            label="COM_OSCAMPUS_TEACHER_LINKS_LABEL"
+            description="COM_OSCAMPUS_TEACHER_LINKS_DESC"
+            icon="list">
+
+            <fieldset hidden="true" name="links_modal" repeat="true">
+                <field
+                    name="type"
+                    type="list"
+                    label="COM_OSCAMPUS_TEACHER_TYPE_LABEL"
+                    description="COM_OSCAMPUS_TEACHER_TYPE_DESC">
+                    <option value="website">COM_OSCAMPUS_TEACHER_WEBSITE</option>
+                    <option value="email">COM_OSCAMPUS_TEACHER_EMAIL</option>
+                    <option value="blog">COM_OSCAMPUS_TEACHER_BLOG</option>
+                    <option value="facebook">COM_OSCAMPUS_TEACHER_FACEBOOK</option>
+                    <option value="twitter">COM_OSCAMPUS_TEACHER_TWITTER</option>
+                    <option value="googleplus">COM_OSCAMPUS_TEACHER_GOOGLEPLUS</option>
+                </field>
+
+                <field
+                    name="link"
+                    type="text"
+                    label="COM_OSCAMPUS_TEACHER_LINK_LABEL"
+                    description="COM_OSCAMPUS_TEACHER_LINK_DESC"/>
+
+                <field
+                    name="show"
+                    type="radio"
+                    class="btn-group"
+                    label="COM_OSCAMPUS_TEACHER_SHOW_LABEL"
+                    description="COM_OSCAMPUS_TEACHER_SHOW_DESC"
+                    filter="integer"
+                    default="1">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </field>
+
+        <field
             name="created_by"
             type="user"
             label="COM_OSCAMPUS_TEACHER_CREATED_BY_LABEL"
