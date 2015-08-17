@@ -11,32 +11,6 @@ defined('_JEXEC') or die();
 
 class OscampusModelTag extends OscampusModelAdmin
 {
-    public function getTable($type = 'Tags', $prefix = 'OscampusTable', $config = array())
-    {
-        return OscampusTable::getInstance($type, $prefix, $config);
-    }
-
-    public function getForm($data = array(), $loadData = true)
-    {
-        $form = $this->loadForm('com_oscampus.tag', 'tag', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
-
-        return $form;
-    }
-
-    protected function loadFormData()
-    {
-        $data = OscampusFactory::getApplication()->getUserState('com_oscampus.edit.tag.data', array());
-
-        if (empty($data)) {
-            $data = $this->getItem();
-        }
-
-        return $data;
-    }
-
     /**
      * @param JTable $table
      *

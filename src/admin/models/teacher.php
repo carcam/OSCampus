@@ -11,28 +11,9 @@ defined('_JEXEC') or die();
 
 class OscampusModelTeacher extends OscampusModelAdmin
 {
-    public function getTable($type = 'Teachers', $prefix = 'OscampusTable', $config = array())
-    {
-        return OscampusTable::getInstance($type, $prefix, $config);
-    }
-
-    public function getForm($data = array(), $loadData = true)
-    {
-        $form = $this->loadForm('com_oscampus.teacher', 'teacher', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
-
-        return $form;
-    }
-
     protected function loadFormData()
     {
-        $data = OscampusFactory::getApplication()->getUserState('com_oscampus.edit.teacher.data', array());
-
-        if (empty($data)) {
-            $data = $this->getItem();
-        }
+        $data = parent::loadFormData();
 
         // Convert the value of links to the JRepeatable field
         $links = json_decode($data->links);
