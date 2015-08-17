@@ -51,33 +51,26 @@ class OscampusModelTag extends OscampusModelAdmin
         $table->alias = strtolower(preg_replace('/[^a-z0-9\-]*/i', '', $table->alias));
 
         // Check if the alias and title already exists
-        $data = $this->generateNewTitle(null, $table->alias, $table->title);
-
-        $table->title = $data['0'];
-        $table->alias = $data['1'];
+        $table->alias = $this->generateNewAlias($table->id, $table->alias);
     }
 
     /**
-     * Method to change the title & alias.
+     * Method to change the title & alias
      *
-     * @param   integer  $category_id  The id of the category.
-     * @param   string   $alias        The alias.
-     * @param   string   $title        The title.
+     * @param   integer  $id           The id
+     * @param   string   $alias        The alias
      *
-     * @return  array  Contains the modified title and alias.
-     *
-     * @since   12.2
+     * @return  string  The modified alias
      */
-    protected function generateNewTitle($category_id, $alias, $title)
+    protected function generateNewAlias($id, $alias)
     {
         // Alter the title & alias
         $table = $this->getTable();
 
-        while ($table->load(array('alias' => $alias))) {
-            $title = JString::increment($title);
+        while ($table->load(array('alias' => $alias)) && (@$table->id != $id)) {
             $alias = JString::increment($alias, 'dash');
         }
 
-        return array($title, $alias);
+        return $alias;
     }
 }
