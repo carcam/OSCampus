@@ -63,7 +63,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
     protected function setToolbar()
     {
         $controller = $this->getName();
-        $controllerPlural = JStringInflector::getInstance(true)->toPlural($name);
+        $controllerPlural = JStringInflector::getInstance(true)->toPlural($controller);
 
         OscampusToolbarHelper::addNew($controller . '.add');
         OscampusToolbarHelper::editList($controller . '.edit');
