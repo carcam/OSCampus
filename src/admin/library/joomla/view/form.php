@@ -11,6 +11,8 @@ defined('_JEXEC') or die();
 
 abstract class OscampusViewForm extends OscampusViewAdmin
 {
+    protected $item;
+
     /**
      * Default admin screen title
      *
@@ -26,5 +28,17 @@ abstract class OscampusViewForm extends OscampusViewAdmin
         $title = "COM_OSCAMPUS_PAGE_VIEW_{$name}_" . ($isNew ? 'ADD' : 'EDIT');
 
         parent::setTitle($title, $icon);
+    }
+
+    public function display($tpl = null)
+    {
+        $state = $this->get('State');
+
+        $this->item = $this->get('Item');
+
+        $this->setVariable('form', $this->get('Form'));
+        $this->setVariable('item', $this->item);
+
+        parent::display($tpl);
     }
 }

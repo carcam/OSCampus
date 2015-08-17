@@ -10,20 +10,6 @@ defined('_JEXEC') or die();
 
 class OscampusViewTag extends OscampusViewForm
 {
-    protected $item;
-
-    public function display($tpl = null)
-    {
-        $state = $this->get('State');
-
-        $this->item = $this->get('Item');
-
-        $this->setVariable('form', $this->get('Form'));
-        $this->setVariable('item', $this->item);
-
-        parent::display($tpl);
-    }
-
     protected function setToolbar()
     {
         $isNew = ($this->item->id == 0);
