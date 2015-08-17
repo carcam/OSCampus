@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewTag extends OscampusViewAdmin
+class OscampusViewTag extends OscampusViewForm
 {
     protected $item;
 
@@ -22,22 +22,6 @@ class OscampusViewTag extends OscampusViewAdmin
         $this->setVariable('item', $this->item);
 
         parent::display($tpl);
-    }
-
-    /**
-     * Default admin screen title
-     *
-     * @param string $sub
-     * @param string $icon
-     *
-     * @return void
-     */
-    protected function setTitle($sub = null, $icon = 'oscampus')
-    {
-        $isNew = ($this->item->id == 0);
-        $title = 'COM_OSCAMPUS_PAGE_VIEW_TAG_' . ($isNew ? 'ADD' : 'EDIT');
-
-        parent::setTitle($title, $icon);
     }
 
     protected function setToolbar()

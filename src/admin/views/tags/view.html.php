@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewTags extends OscampusViewAdmin
+class OscampusViewTags extends OscampusViewList
 {
     public function display($tpl = null)
     {
@@ -30,19 +30,6 @@ class OscampusViewTags extends OscampusViewAdmin
         // OscampusHelper::enqueueMessages($notices);
 
         parent::display($tpl);
-    }
-
-    /**
-     * Default admin screen title
-     *
-     * @param string $sub
-     * @param string $icon
-     *
-     * @return void
-     */
-    protected function setTitle($sub = null, $icon = 'oscampus')
-    {
-        parent::setTitle('COM_OSCAMPUS_SUBMENU_TAGS', $icon);
     }
 
     protected function setToolbar()
