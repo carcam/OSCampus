@@ -41,4 +41,20 @@ abstract class OscampusViewForm extends OscampusViewAdmin
 
         parent::display($tpl);
     }
+
+    protected function setToolbar()
+    {
+        OscampusFactory::getApplication()->input->set('hidemainmenu', true);
+
+        $controller = $this->getName();
+
+        OscampusToolbarHelper::apply($controller . '.apply');
+        OscampusToolbarHelper::save($controller . '.save');
+
+        $isNew = ($this->item->id == 0);
+        $alt   = $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
+        OscampusToolbarHelper::cancel($controller . '.cancel', $alt);
+
+        parent::setToolbar();
+    }
 }

@@ -10,17 +10,5 @@ defined('_JEXEC') or die();
 
 class OscampusViewTeacher extends OscampusViewForm
 {
-    protected function setToolbar()
-    {
-        $isNew = ($this->item->id == 0);
-        OscampusFactory::getApplication()->input->set('hidemainmenu', true);
 
-        OscampusToolbarHelper::apply('teacher.apply');
-        OscampusToolbarHelper::save('teacher.save');
-
-        $alt = $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
-        OscampusToolbarHelper::cancel('teacher.cancel', $alt);
-
-        parent::setToolbar();
-    }
 }

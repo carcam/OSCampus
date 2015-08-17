@@ -10,12 +10,5 @@ defined('_JEXEC') or die();
 
 class OscampusViewTeachers extends OscampusViewList
 {
-    protected function setToolbar()
-    {
-        OscampusToolbarHelper::addNew('teacher.add');
-        OscampusToolbarHelper::editList('teacher.edit');
-        OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', 'teachers.delete');
 
-        parent::setToolbar();
-    }
 }

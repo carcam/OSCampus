@@ -47,4 +47,16 @@ abstract class OscampusViewList extends OscampusViewAdmin
 
         parent::display($tpl);
     }
+
+    protected function setToolbar()
+    {
+        $controller = $this->getName();
+        $controllerPlural = JStringInflector::getInstance(true)->toPlural($name);
+
+        OscampusToolbarHelper::addNew($controller . '.add');
+        OscampusToolbarHelper::editList($controller . '.edit');
+        OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $controllerPlural . '.delete');
+
+        parent::setToolbar();
+    }
 }
