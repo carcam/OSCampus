@@ -12,6 +12,7 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
 use OscampusFactory;
+use OscampusTable;
 use JUri;
 use JRoute;
 use JText;
@@ -41,7 +42,8 @@ class Joomla extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction('html', 'Oscampus\Twig\Extension\Joomla::function_html'),
-            new Twig_SimpleFunction('get_input', 'Oscampus\Twig\Extension\Joomla::function_get_input')
+            new Twig_SimpleFunction('get_input', 'Oscampus\Twig\Extension\Joomla::function_get_input'),
+            new Twig_SimpleFunction('get_table_instance', 'Oscampus\Twig\Extension\Joomla::function_get_table_instance')
         );
     }
 
@@ -68,5 +70,17 @@ class Joomla extends Twig_Extension
     public static function filter_lang($string)
     {
         return JText::_($string);
+    }
+
+    public static function function_get_table_instance($tableName, $id)
+    {
+        if (!class_exists('OscampusTable')) {
+            require_once JPATH_ADMINISTRATOR . '/components/com_oscampus/library/joomla/table.php';
+        }
+
+        $table = OscampusTable::getInstance($tableName);
+        $table->load($id);
+
+        return $table;
     }
 }

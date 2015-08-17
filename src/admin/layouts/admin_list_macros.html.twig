@@ -23,38 +23,34 @@
     </th>
 {% endmacro %}
 
-{% macro td_check(index, id) %}
+{% macro td_check(index, row, identifier = 'id') %}
     <td class="center hidden-phone">
-        {{ html('grid.id', index, id)|raw }}
+        {{ html('grid.checkedout', row, index, identifier)|raw }}
     </td>
 {% endmacro %}
 
 {% macro td_published(published, index, prefix) %}
     <td class="center">
         <div class="btn-group">
-            {{ html('jgrid.published', published, index, prefix)|raw }}
+            {{ html('grid.published', published, index, prefix)|raw }}
         </div>
     </td>
 {% endmacro %}
 
-{% macro td_link(title, link, id, index, checkedout = false, editor_id = 0, checked_out_time = '', prefix = '') %}
+{% macro td_link(title, link) %}
     <td class="has-context">
-        {% if checkedout %}
-            {{ html('jgrid.checkedout', index, editor_id, checked_out_time, prefix, true)|raw }}
-        {% endif %}
-
         <a href="{{ link }}">
             {{ title }}
         </a>
     </td>
 {% endmacro %}
 
-{% macro td_edit_link(controller, title, link, id, index, checkedout = false, editor_id = 0, checked_out_time = '', prefix = '') %}
+{% macro td_edit_link(controller, title, id) %}
     {% import _self as list %}
 
     {% set edit_link = 'index.php?option=com_oscampus&task=' ~ controller ~ '.edit&id=' ~ id %}
 
-    {{ list.td_link(title, edit_link, id, index, checkedout, editor_id, checked_out_time, prefix) }}
+    {{ list.td_link(title, edit_link) }}
 {% endmacro %}
 
 {% macro td_text(text, class = '') %}

@@ -10,6 +10,11 @@ defined('_JEXEC') or die();
 
 abstract class OscampusTable extends JTable
 {
+    /*
+     * Alias for checked_out
+     */
+    public $editor;
+
     /**
      * @param string $type
      * @param string $prefix

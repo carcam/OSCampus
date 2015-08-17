@@ -30,7 +30,8 @@ class OscampusModelTeachers extends OscampusModelList
         $query->select(
             array(
                 'teacher.*',
-                'user.name'
+                'user.name',
+                'teacher.checked_out as editor'
             )
         );
         $query->from('#__oscampus_teachers teacher');

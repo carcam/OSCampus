@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block list_item %}
-    {{ list_macros.td_check(loop.index0, item.id) }}
-    {{ list_macros.td_edit_link('teacher', item.name, edit_link, item.id, loop.index0, item.checkedout, item.modified_by, item.checked_out_time, 'teacher.') }}
+    {{ list_macros.td_check(loop.index0, get_table_instance('teachers', item.id)) }}
+    {{ list_macros.td_edit_link('teacher', item.name, item.id) }}
     {{ list_macros.td_text(item.id, 'center') }}
 {% endblock %}
