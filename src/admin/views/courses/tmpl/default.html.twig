@@ -9,12 +9,20 @@
 
 {% block list_head %}
     {{ list_macros.th_checkall() }}
+    {{ list_macros.th_sort('course.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
     {{ list_macros.th_sort('course.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
+    {{ list_macros.th_sort('course.difficulty', 'COM_OSCAMPUS_DIFFICULTY', list_dir, list_order) }}
+    {{ list_macros.th_sort('teachers_name', 'COM_OSCAMPUS_TEACHER', list_dir, list_order) }}
+    {{ list_macros.th_sort('access_level', 'COM_OSCAMPUS_ACCESS_LEVEL', list_dir, list_order) }}
     {{ list_macros.th_sort('course.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
 {% endblock %}
 
 {% block list_item %}
     {{ list_macros.td_check(loop.index0, get_table_instance('courses', item.id)) }}
+    {{ list_macros.td_published(item.published, loop.index0, 'courses.') }}
     {{ list_macros.td_edit_link('course', item.title, item.id, item.alias) }}
+    {{ list_macros.td_text(('OSCAMPUS_COURSE_DIFFICULTY_' ~ item.difficulty|upper)|lang) }}
+    {{ list_macros.td_text(item.teachers_name) }}
+    {{ list_macros.td_text(item.access_level) }}
     {{ list_macros.td_text(item.id, 'center') }}
 {% endblock %}

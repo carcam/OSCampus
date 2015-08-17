@@ -16,7 +16,10 @@ class OscampusModelCourses extends OscampusModelList
         $config['filter_fields'] = array(
             'id', 'course.id',
             'title', 'course.title',
-            'published', 'course.published'
+            'difficulty', 'course.difficulty',
+            'published', 'course.published',
+            'access_level', 'course.access',
+            'teachers_name', 'user.name'
         );
 
         parent::__construct($config);
@@ -30,10 +33,15 @@ class OscampusModelCourses extends OscampusModelList
         $query->select(
             array(
                 'course.*',
-                'course.checked_out as editor'
+                'course.checked_out as editor',
+                'user.name as teachers_name',
+                'viewlevel.title as access_level'
             )
         );
         $query->from('#__oscampus_courses course');
+        $query->leftJoin('#__oscampus_teachers teacher ON course.teachers_id = teacher.id');
+        $query->leftJoin('#__users user ON teacher.users_id = user.id');
+        $query->leftJoin('#__viewlevels viewlevel ON course.access = viewlevel.id');
 
         if ($search = $this->getState('filter.search')) {
             $search = $db->q('%' . $search . '%');
@@ -46,6 +54,7 @@ class OscampusModelCourses extends OscampusModelList
 
         $listOrder = $this->getState('list.ordering', 'course.id');
         $listDir   = $this->getState('list.direction', 'ASC');
+
         $query->order($listOrder . ' ' . $listDir);
 
         return $query;
