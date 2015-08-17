@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="main" label="COM_OSCAMPUS_COURSE_PAGE_MAIN">
+        <field
+            name="id"
+            type="hidden"
+            class="readonly"
+            label="COM_OSCAMPUS_ID_LABEL"
+            description="COM_OSCAMPUS_ID_DESC"
+            size="10"
+            default="0"
+            readonly="true"/>
+
+        <field
+            name="title"
+            type="text"
+            label="COM_OSCAMPUS_COURSE_TITLE_LABEL"
+            description="COM_OSCAMPUS_COURSE_TITLE_DESC"
+            class="input-xxlarge input-large-text"
+            required="true"/>
+
+        <field
+            name="alias"
+            type="text"
+            label="COM_OSCAMPUS_COURSE_ALIAS_LABEL"
+            description="COM_OSCAMPUS_COURSE_ALIAS_DESC"/>
+    </fieldset>
+</form>
