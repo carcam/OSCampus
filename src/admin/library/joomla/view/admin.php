@@ -139,5 +139,6 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     {
         $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard');
         $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers');
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags');
     }
 }

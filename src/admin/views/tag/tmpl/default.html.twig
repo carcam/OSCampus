@@ -1,0 +1,14 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% extends "admin_form.html.twig" %}
+
+{% block form_inline_header %}
+    {{ form.getInput('id')|raw }}
+    {{ form.renderField('title')|raw }}
+    {{ form.renderField('alias')|raw }}
+{% endblock %}
