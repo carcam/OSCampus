@@ -15,6 +15,6 @@
 
 {% block list_item %}
     {{ list_macros.td_check(loop.index0, get_table_instance('tags', item.id)) }}
-    {{ list_macros.td_edit_link('tag', item.title, item.id) }}
+    {{ list_macros.td_edit_link('tag', item.title, item.id, item.alias) }}
     {{ list_macros.td_text(item.id, 'center') }}
 {% endblock %}
