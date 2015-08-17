@@ -67,6 +67,13 @@ abstract class OscampusViewList extends OscampusViewAdmin
 
         OscampusToolbarHelper::addNew($controller . '.add');
         OscampusToolbarHelper::editList($controller . '.edit');
+
+        $table = $this->getModel()->getTable();
+        if (array_key_exists('published', get_object_vars($table))) {
+            OscampusToolbarHelper::publish($controllerPlural . '.publish', 'JTOOLBAR_PUBLISH', true);
+            OscampusToolbarHelper::unpublish($controllerPlural . '.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+        }
+
         OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $controllerPlural . '.delete');
 
         parent::setToolbar();
