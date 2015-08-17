@@ -35,13 +35,16 @@ class OscampusModelCourses extends OscampusModelList
                 'course.*',
                 'course.checked_out as editor',
                 'user.name as teachers_name',
-                'viewlevel.title as access_level'
+                'viewlevel.title as access_level',
+                'GROUP_CONCAT(tag.title) AS tags'
             )
         );
         $query->from('#__oscampus_courses course');
-        $query->leftJoin('#__oscampus_teachers teacher ON course.teachers_id = teacher.id');
-        $query->leftJoin('#__users user ON teacher.users_id = user.id');
-        $query->leftJoin('#__viewlevels viewlevel ON course.access = viewlevel.id');
+        $query->leftJoin('#__oscampus_teachers `teacher` ON course.teachers_id = teacher.id');
+        $query->leftJoin('#__users `user` ON teacher.users_id = user.id');
+        $query->leftJoin('#__viewlevels `viewlevel` ON course.access = viewlevel.id');
+        $query->leftJoin('#__oscampus_courses_tags `course_tags` ON course.id = course_tags.courses_id');
+        $query->leftJoin('#__oscampus_tags `tag` ON course_tags.tags_id = tag.id');
 
         if ($search = $this->getState('filter.search')) {
             $search = $db->q('%' . $search . '%');
@@ -55,6 +58,7 @@ class OscampusModelCourses extends OscampusModelList
         $listOrder = $this->getState('list.ordering', 'course.id');
         $listDir   = $this->getState('list.direction', 'ASC');
 
+        $query->group('course.id');
         $query->order($listOrder . ' ' . $listDir);
 
         return $query;
