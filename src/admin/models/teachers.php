@@ -15,8 +15,7 @@ class OscampusModelTeachers extends OscampusModelList
     {
         $config['filter_fields'] = array(
             'id', 'teacher.id',
-            'name', 'user.name',
-            'published', 'teacher.published'
+            'name', 'user.name'
         );
 
         parent::__construct($config);
