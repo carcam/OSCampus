@@ -18,8 +18,6 @@ class OscampusViewTeacher extends OscampusViewAdmin
 
         $this->item = $this->get('Item');
 
-        $this->setVariable('list_order', $this->escape($state->get('list.ordering')));
-        $this->setVariable('list_dir', $this->escape($state->get('list.direction')));
         $this->setVariable('form', $this->get('Form'));
         $this->setVariable('item', $this->item);
 

@@ -46,11 +46,6 @@ class OscampusModelTeachers extends OscampusModelList
             $query->where('(' . join(' OR ', $ors) . ')');
         }
 
-        $published = $this->getState('filter.published');
-        if ($published != '') {
-            $query->where('teacher.published = ' . $db->quote($published));
-        }
-
         $listOrder = $this->getState('list.ordering', 'teacher.id');
         $listDir   = $this->getState('list.direction', 'ASC');
         $query->order($listOrder . ' ' . $listDir);
@@ -62,9 +57,6 @@ class OscampusModelTeachers extends OscampusModelList
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
-
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
-        $this->setState('filter.published', $published);
 
         parent::populateState('teacher.id', 'ASC');
     }
