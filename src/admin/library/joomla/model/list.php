@@ -12,5 +12,13 @@ jimport('joomla.application.component.modellist');
 
 abstract class OscampusModelList extends JModelList
 {
+    public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
+    {
+        if (empty($type)) {
+            $inflector = JStringInflector::getInstance(true);
+            $type = $inflector->toPlural($this->name);
+        }
 
+        return OscampusTable::getInstance($type, $prefix, $config);
+    }
 }
