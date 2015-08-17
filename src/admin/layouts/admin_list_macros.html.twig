@@ -37,7 +37,7 @@
     </td>
 {% endmacro %}
 
-{% macro td_link(title, link, alias = '') %}
+{% macro td_link(title, link, alias = '', details = '', details_title = '') %}
     <td class="has-context">
         <div class="pull-left break-word">
             <a href="{{ link }}">
@@ -49,16 +49,22 @@
                     ({{ 'COM_OSCAMPUS_ALIAS'|lang }}: {{ alias }})
                 </span>
             {% endif %}
+
+            {% if details %}
+                <div class="small">
+                    {{ details_title|lang }}: {{ details }}
+                </div>
+            {% endif %}
         </div>
     </td>
 {% endmacro %}
 
-{% macro td_edit_link(controller, title, id, alias = '') %}
+{% macro td_edit_link(controller, title, id, alias = '', details = '', details_title = '') %}
     {% import _self as list %}
 
     {% set edit_link = 'index.php?option=com_oscampus&task=' ~ controller ~ '.edit&id=' ~ id %}
 
-    {{ list.td_link(title, edit_link, alias) }}
+    {{ list.td_link(title, edit_link, alias, details, details_title) }}
 {% endmacro %}
 
 {% macro td_text(text, class = '') %}
