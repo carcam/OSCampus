@@ -171,7 +171,7 @@ class OscampusViewTwig extends OscampusView
      * @param  string|array  $name
      * @param  mixed         $value
      *
-     * @return     <type>
+     * @return void
      */
     protected function setVariable($name, $value = null)
     {

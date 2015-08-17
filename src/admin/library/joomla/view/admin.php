@@ -32,6 +32,8 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      * Render the view
      *
      * @param  string $tpl
+     *
+     * @return void|Exception
      */
     public function display($tpl = null)
     {
@@ -110,7 +112,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     /**
      * Add a new submenu
      *
-     * @param string  $text   The submenu's text
+     * @param string  $label  The submenu's text
      * @param string  $view   The submenu's view
      */
     protected function addSubmenuItem($label, $view)
