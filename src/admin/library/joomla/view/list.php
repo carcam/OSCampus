@@ -26,6 +26,13 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::setTitle('COM_OSCAMPUS_SUBMENU_' . $name, $icon);
     }
 
+    /**
+     * Method to display the view
+     *
+     * @param  string $tpl The name of the template file to parse
+     *
+     * @return void
+     */
     public function display($tpl = null)
     {
         $state = $this->get('State');
@@ -48,6 +55,11 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::display($tpl);
     }
 
+    /**
+     * Method to set default buttons to the toolbar
+     *
+     * @return  void
+     */
     protected function setToolbar()
     {
         $controller = $this->getName();

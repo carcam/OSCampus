@@ -11,6 +11,11 @@ defined('_JEXEC') or die();
 
 abstract class OscampusViewForm extends OscampusViewAdmin
 {
+    /**
+     * Instance of the item with to fill the form
+     *
+     * @var stdClass
+     */
     protected $item;
 
     /**
@@ -30,6 +35,13 @@ abstract class OscampusViewForm extends OscampusViewAdmin
         parent::setTitle($title, $icon);
     }
 
+    /**
+     * Method to display the view
+     *
+     * @param  string $tpl The name of the template file to parse
+     *
+     * @return void
+     */
     public function display($tpl = null)
     {
         $state = $this->get('State');
@@ -42,6 +54,11 @@ abstract class OscampusViewForm extends OscampusViewAdmin
         parent::display($tpl);
     }
 
+    /**
+     * Method to set default buttons to the toolbar
+     *
+     * @return  void
+     */
     protected function setToolbar()
     {
         OscampusFactory::getApplication()->input->set('hidemainmenu', true);
