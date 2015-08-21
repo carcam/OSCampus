@@ -23,6 +23,7 @@ function OscampusBuildRoute(&$query)
 {
     $router   = new OscampusRouter();
     $segments = $router->build($query);
+
     return $segments;
 }
 
@@ -37,6 +38,7 @@ function OscampusParseRoute($segments)
 {
     $router = new OscampusRouter();
     $vars   = $router->parse($segments);
+
     return $vars;
 }
 
@@ -49,13 +51,9 @@ function OscampusParseRoute($segments)
 class OscampusRouter
 {
     /**
-     * @var array Converts view names into segment names for b/c with guru sef
+     * @var array Sequence of segments mapped to corresponding view
      */
-    protected $viewMap = array(
-        'pathway' => 'categories',
-        'course'  => 'class',
-        'lesson'  => 'session'
-    );
+    protected $viewMap = array('pathway', 'course', 'lesson');
 
     /**
      * @param $query
@@ -74,7 +72,7 @@ class OscampusRouter
             }
         }
 
-        $view = '';
+        $view = 'pathways';
         if (!empty($query['view'])) {
             $view = $query['view'];
             unset($query['view']);
@@ -87,25 +85,19 @@ class OscampusRouter
         $pathwayId = empty($query['pid']) ? null : $query['pid'];
         $courseId  = empty($query['cid']) ? null : $query['cid'];
 
-        if ($view && !empty($this->viewMap[$view])) {
-            if ($pathwayId && ($pathway = $routing->getPathwaySlug($pathwayId))) {
-                $segments[] = $this->viewMap[$view];
-                $segments[] = $pathway;
-                unset($query['pid']);
+        if ($pathwayId && ($pathway = $routing->getPathwaySlug($pathwayId))) {
+            $segments[] = $pathway;
+            unset($query['pid']);
 
-                if ($courseId && ($course = $routing->getCourseSlug($courseId))) {
-                    $segments[] = $course;
-                    unset($query['cid']);
+            if ($courseId && ($course = $routing->getCourseSlug($courseId))) {
+                $segments[] = $course;
+                unset($query['cid']);
 
-                    if ($view == 'lesson' && $courseId && isset($query['idx'])) {
-                        $lessonIndex = (int)$query['idx'];
-                        $module      = $routing->getModuleSlug($courseId, $lessonIndex);
-                        $segments[]  = $module;
-
-                        $lesson     = $routing->getLessonSlug($courseId, $lessonIndex);
-                        $segments[] = $lesson;
-                        unset($query['idx']);
-                    }
+                if ($view == 'lesson' && $courseId && isset($query['idx'])) {
+                    $lessonIndex = (int)$query['idx'];
+                    $lesson      = $routing->getLessonSlug($courseId, $lessonIndex);
+                    $segments[]  = $lesson;
+                    unset($query['idx']);
                 }
             }
         }
@@ -123,22 +115,20 @@ class OscampusRouter
         $routing = OscampusRoute::getInstance();
         $vars    = array();
 
-        if (count($segments) > 0) {
-            $vars['view'] = array_search($segments[0], $this->viewMap);
-        }
+        if (!empty($segments[0])) {
+            $viewIndex    = min(2, count($segments) - 1);
+            $vars['view'] = $this->viewMap[$viewIndex];
 
-        if (count($segments) > 1) {
-            $vars['pid'] = $routing->getPathwayFromSlug($segments[1]);
-        }
+            $vars['pid'] = $routing->getPathwayFromSlug($segments[0]);
 
-        if (count($segments) > 2) {
-            $vars['cid'] = $routing->getCourseFromSlug($segments[2]);
-        }
+            if (!empty($segments[1])) {
+                $vars['cid'] = $routing->getCourseFromSlug($segments[1]);
 
-        if (count($segments) > 4 && !empty($vars['cid'])) {
-            $vars['idx'] = $routing->getLessonFromSlug($segments[4], $vars['cid']);
+                if (!empty($segments[2])) {
+                    $vars['idx'] = $routing->getLessonFromSlug($segments[2], $vars['cid']);
+                }
+            }
         }
-
         return $vars;
     }
 }
