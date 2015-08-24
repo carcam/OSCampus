@@ -27,6 +27,7 @@
     "require"          : {
         "php"                         : ">= 5.3",
         "ext-curl"                    : "*",
-        "mobiledetect/mobiledetectlib": "^2.8"
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "pimple/pimple": "v3.0.1"
     }
 }
