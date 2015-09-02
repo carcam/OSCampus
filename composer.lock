@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e157a736b30799bf501913617c7c312d",
+    "hash": "35600e34c88d565e4525d97a7b6af422",
     "packages": [
         {
             "name": "mobiledetect/mobiledetectlib",

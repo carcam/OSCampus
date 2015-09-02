@@ -14,13 +14,15 @@ Icon
 
 # Don't include unneeded composer files
 #######################################
-!src/admin/vendor/mobiledetect/mobiledetectlib/**
-!src/admin/vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php
 
-src/admin/vendor/pimple/pimple/**
-!src/admin/vendor/pimple/pimple/src/
-!src/admin/vendor/pimple/pimple/src/Pimple/
-!src/admin/vendor/pimple/pimple/src/Pimple/*
+src/admin/vendor/mobiledetect/mobiledetectlib/*
+!src/admin/vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php
+!src/admin/vendor/mobiledetect/mobiledetectlib/LICENSE.txt
+
+src/admin/vendor/pimple/pimple/*
+!src/admin/vendor/pimple/pimple/LICENSE
+!src/admin/vendor/pimple/pimple/src
+src/admin/vendor/pimple/pimple/src/Pimple/Tests
 
 # Windows Files #
 #################
