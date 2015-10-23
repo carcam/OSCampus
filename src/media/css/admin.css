@@ -1,30 +1,36 @@
 /* Admin
  ========================================================================== */
-.osc-container .osc-steps{
+.osc-container .osc-steps {
     text-align: center;
 }
-.osc-container .osc-connector{
-    display:table-cell;
-    height:90px;
+
+.osc-container .osc-connector {
+    display: table-cell;
+    height: 90px;
 }
-.osc-container .osc-step{
-    margin-top:15px;
+
+.osc-container .osc-step {
+    margin-top: 15px;
 }
-.osc-container .osc-steps img{
+
+.osc-container .osc-steps img {
     position: relative;
     top: 50%;
 }
-.osc-container .osc-steps .btn{
+
+.osc-container .osc-steps .btn {
     margin-top: 6px;
 }
-.osc-container .osc-error{
+
+.osc-container .osc-error {
     color: #b94a48;
 }
-.osc-container .osc-ok{
+
+.osc-container .osc-ok {
     color: #468847;
 }
-.osc-container-welcome,
-.osc-container-dashboard{
+
+.osc-container-welcome {
     margin: 25px 0;
 }
 
