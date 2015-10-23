@@ -69,6 +69,9 @@
         <namespace>Oscampus</namespace>
         <license>free</license>
 
-        <obsolete/>
+        <obsolete>
+            <folder>/components/com_oscampus/views/dashboard</folder>
+            <filename>/components/com_oscampus/model/dashboard.php</filename>
+        </obsolete>
     </alledia>
 </extension>
