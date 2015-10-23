@@ -7,10 +7,18 @@
 !composer/
 !composer/*
 
-# Expose Pimple files for repo
+# Pimple
 !pimple/
 pimple/pimple/*
 !pimple/pimple/LICENSE
 !pimple/pimple/src/
 pimple/pimple/src/Pimple/**
 !pimple/pimple/src/Pimple/*
+
+# Mobile_Detect
+!mobiledetect/
+mobiledetect/*
+!mobiledetect/mobiledetectlib/
+mobiledetect/mobiledetectlib/*
+!mobiledetect/mobiledetectlib/LICENSE.txt
+!mobiledetect/mobiledetectlib/Mobile_Detect.php
