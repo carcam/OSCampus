@@ -7,4 +7,10 @@
 !composer/
 !composer/*
 
-
+# Expose Pimple files for repo
+!pimple/
+pimple/pimple/*
+!pimple/pimple/LICENSE
+!pimple/pimple/src/
+pimple/pimple/src/Pimple/**
+!pimple/pimple/src/Pimple/*
