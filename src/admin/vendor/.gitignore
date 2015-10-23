@@ -1,0 +1,10 @@
+# Keep unneeded composer files out of repo
+##########################################
+*
+
+# Need the autoloaders
+!autoload.php
+!composer/
+!composer/*
+
+
