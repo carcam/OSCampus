@@ -12,10 +12,18 @@ class OscampusModelPathways extends OscampusModelList
 {
     protected function getListQuery()
     {
+        $user = JFactory::getUser();
+        $levels  = join(',', $user->getAuthorisedViewLevels());
+
         $query = parent::getListQuery()
             ->select('*')
             ->from('#__oscampus_pathways')
-            ->where('published = 1')
+            ->where(
+                array(
+                    'published = 1',
+                    'access IN (' . $levels . ')'
+                )
+            )
             ->order('ordering asc');
 
         return $query;
