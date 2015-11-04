@@ -235,7 +235,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->images['Course Images']   = $this->copyImages('#__oscampus_courses', 'courses');
         $this->log['Load Course Images'] = microtime(true);
 
-        $this->images['Pathway Images']   = $this->copyImages('#__oscampus_pathways', 'pathways');
+        $this->images['Pathway Images']   = $this->copyImages('#__oscampus_pathways', 'pathways', false);
         $this->log['Load Pathway Images'] = microtime(true);
 
         $this->displayResults();
@@ -1275,16 +1275,19 @@ class OscampusControllerImport extends OscampusControllerBase
      *
      * @param string $table
      * @param string $folder
+     * @param bool   $reset
      *
      * @return array
      */
-    protected function copyImages($table, $folder)
+    protected function copyImages($table, $folder, $reset = true)
     {
         $targetRoot = '/images/stories/oscampus/' . trim($folder, '\\/');
-        if (is_dir(JPATH_SITE . $targetRoot)) {
-            JFolder::delete(JPATH_SITE . $targetRoot);
+        if ($reset) {
+            if (is_dir(JPATH_SITE . $targetRoot)) {
+                JFolder::delete(JPATH_SITE . $targetRoot);
+            }
+            JFolder::create(JPATH_SITE . $targetRoot);
         }
-        JFolder::create(JPATH_SITE . $targetRoot);
 
         $db     = JFactory::getDbo();
         $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
