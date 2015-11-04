@@ -155,16 +155,28 @@ class OscampusControllerImport extends OscampusControllerBase
         'final_lesson'    => null
     );
 
+    protected $customBackup    = '/logs/oscampus.custom.backup';
+    protected $customPathways  = array();
+    protected $customJunctions = array();
+
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+
+        $this->customBackup = JPATH_SITE . $this->customBackup;
+    }
+
     public function import()
     {
         error_reporting(-1);
         ini_set('display_errors', 1);
-
         ini_set('memory_limit', '256M');
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
         $this->log['Start'] = microtime(true);
+
+        $this->saveCustomPaths();
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
@@ -186,6 +198,9 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->loadCourses();
         $this->log['Load Courses'] = microtime(true);
+
+        $this->restoreCustomPaths();
+        $this->log['Restore additional pathways'] = microtime(true);
 
         $this->loadTags();
         $this->log['Load Tags'] = microtime(true);
@@ -911,7 +926,15 @@ class OscampusControllerImport extends OscampusControllerBase
                 return true;
             }
         );
-        $this->pathways = $this->copyTable('#__guru_category', '#__oscampus_pathways', $this->pathwayMap);
+        $this->pathways = $this->copyTable(
+            '#__guru_category',
+            '#__oscampus_pathways',
+            $this->pathwayMap,
+            'id',
+            function ($guruData, $converted) {
+                $converted->access = 1;
+                return true;
+            });
 
         $categoryQuery = $dbGuru->getQuery(true)
             ->select('id AS courses_id, catid AS pathways_id, ordering')
@@ -1097,7 +1120,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->files)) . ' Files</li>';
         echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
-        echo '<li>' . number_format($this->downloadCount) , ' Wistia Download Logs';
+        echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }
@@ -1270,13 +1293,156 @@ class OscampusControllerImport extends OscampusControllerBase
                 $path     = '/' . trim($image->image, '\\/');
                 $fileName = basename($image->image);
                 $newPath  = $targetRoot . '/' . $fileName;
+
                 if (!is_file(JPATH_SITE . $newPath)) {
-                    copy(JPATH_SITE . $path, JPATH_SITE . $newPath);
+                    if (is_file(JPATH_SITE . $path)) {
+                        copy(JPATH_SITE . $path, JPATH_SITE . $newPath);
+                    } else {
+                        $this->errors[] = 'Image Missing: ' . JPATH_SITE . $path;
+                    }
                 }
                 $image->image = substr($newPath, 1);
                 $db->updateObject($table, $image, 'id');
             }
         }
         return $images;
+    }
+
+    /**
+     * Save any custom pathways that may have been created since guru imports
+     */
+    protected function saveCustomPaths()
+    {
+        if (is_file($this->customBackup)) {
+            $backup = json_decode(file_get_contents($this->customBackup));
+
+            $this->customPathways  = get_object_vars($backup->pathways);
+            $this->customJunctions = get_object_vars($backup->junctions);
+
+        } else {
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('pathway.*, id AS oldId')
+                ->from('#__oscampus_pathways pathway')
+                ->order('id');
+
+            $this->customPathways = $db->setQuery($query)->loadObjectList('id');
+
+            $query = $db->getQuery(true)
+                ->select('cp.*, course.title, course.alias')
+                ->from('#__oscampus_courses_pathways cp')
+                ->innerJoin('#__oscampus_courses course ON course.id = cp.courses_id')
+                ->where('cp.pathways_id IN (SELECT pathways_id FROM #__osteammate_leaders_pathways)');
+
+            $junctions = $db->setQuery($query)->loadObjectList();
+
+            $this->customJunctions = array();
+            foreach ($junctions as $junction) {
+                if (!isset($customJunctions[$junction->courses_id])) {
+                    $this->customJunctions[$junction->courses_id] = (object)array(
+                        'title' => $junction->title,
+                        'alias' => $junction->alias,
+                        'links' => array()
+                    );
+                }
+                $this->customJunctions[$junction->courses_id]->links[] = (object)array(
+                    'courses_id'  => $junction->courses_id,
+                    'pathways_id' => $junction->pathways_id,
+                    'ordering'    => $junction->ordering
+                );
+            }
+
+            $backup = array(
+                'pathways'  => $this->customPathways,
+                'junctions' => $this->customJunctions
+            );
+
+            file_put_contents($this->customBackup, json_encode($backup));
+        }
+    }
+
+    /**
+     * Restore the saved custom pathways
+     */
+    protected function restoreCustomPaths()
+    {
+        $search = function ($title, $alias, array $array) {
+            foreach ($array as $key => $row) {
+                if ($row->alias == $alias) {
+                    return $row->id;
+                }
+            }
+            return false;
+        };
+
+        // Make sure we have all the pathways we started out with
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from('#__oscampus_pathways')
+            ->where('id < 10');
+
+        $currentPathways = $db->setQuery($query)->loadObjectList('id');
+
+        foreach ($this->customPathways as $oldId => $pathway) {
+            if ($id = $search($pathway->title, $pathway->alias, $currentPathways)) {
+                $pathway->id = $id;
+
+            } else {
+                $insert = clone $pathway;
+                unset($insert->oldId, $insert->id);
+                $insert->created_by_alias = JFactory::getUser($insert->created_by)->name;
+
+                $db->insertObject('#__oscampus_pathways', $insert, 'id');
+                if ($error = $db->getErrorMsg()) {
+                    $this->errors[] = $error;
+                }
+                $pathway->id = $db->insertId();
+            }
+        }
+
+        // Make sure the OSTeammate leader configs match the new pathway ids
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from('#__osteammate_leaders_pathways');
+
+        $leaderPathways = $db->setQuery($query)->loadObjectList();
+        if ($error = $db->getErrorMsg()) {
+            $this->errors[] = $error;
+        } else {
+            $db->setQuery('Delete From #__osteammate_leaders_pathways')->execute();
+            foreach ($leaderPathways as $lp) {
+                $lp->pathways_id = $this->customPathways[$lp->pathways_id]->id;
+                $db->insertObject('#__osteammate_leaders_pathways', $lp);
+                if ($error = $db->getErrorMsg()) {
+                    $this->errors[] = $error;
+                }
+            }
+        }
+
+        // Re-insert the courses for the custom pathways
+        $query = $db->getQuery(true)
+            ->select('id, title, alias')
+            ->from('#__oscampus_courses')
+            ->where('id IN (' . join(',', array_keys($this->customJunctions)) . ')');
+
+        $courses = $db->setQuery($query)->loadObjectList();
+
+        foreach ($this->customJunctions as $oldId => $junctions) {
+            $id = $search($junctions->title, $junctions->alias, $courses);
+
+            foreach ($junctions->links as $junction) {
+                $junction->courses_id  = $id;
+                $junction->pathways_id = $this->customPathways[(int)$junction->pathways_id]->id;
+                $db->insertObject('#__oscampus_courses_pathways', $junction);
+                if ($error = $db->getErrorMsg()) {
+                    $this->errors[] = $error;
+                }
+            }
+        }
+
+        if (is_file($this->customBackup)) {
+            unlink($this->customBackup);
+        }
     }
 }
