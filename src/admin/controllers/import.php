@@ -1275,22 +1275,19 @@ class OscampusControllerImport extends OscampusControllerBase
      *
      * @param string $table
      * @param string $folder
-     * @param bool   $reset
      *
      * @return array
      */
-    protected function copyImages($table, $folder, $reset = true)
+    protected function copyImages($table, $folder)
     {
         $targetRoot = '/images/stories/oscampus/' . trim($folder, '\\/');
-        if ($reset) {
-            if (is_dir(JPATH_SITE . $targetRoot)) {
-                JFolder::delete(JPATH_SITE . $targetRoot);
-            }
+        if (!is_dir(JPATH_SITE . $targetRoot)) {
             JFolder::create(JPATH_SITE . $targetRoot);
         }
 
         $db     = JFactory::getDbo();
         $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
+        $usedFiles = array();
         foreach ($images as $image) {
             if ($image->image) {
                 $path     = '/' . trim($image->image, '\\/');
@@ -1306,8 +1303,18 @@ class OscampusControllerImport extends OscampusControllerBase
                 }
                 $image->image = substr($newPath, 1);
                 $db->updateObject($table, $image, 'id');
+                $usedFiles[] = $fileName;
             }
         }
+
+        $files = JFolder::files(JPATH_SITE . $targetRoot);
+        $unusedFiles = array_diff($files, $usedFiles);
+        foreach ($unusedFiles as $file) {
+            $path = JPATH_SITE . $targetRoot . '/' . $file;
+            unlink($path);
+            $this->errors[] = 'Removed unused image file ' . $path;
+        }
+        
         return $images;
     }
 
