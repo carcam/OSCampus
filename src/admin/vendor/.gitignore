@@ -1,0 +1,25 @@
+# Keep unneeded composer files out of repo
+##########################################
+*
+!.gitignore
+
+# Need the autoloaders
+!autoload.php
+!composer/
+!composer/*
+
+# Pimple
+!pimple/
+pimple/pimple/*
+!pimple/pimple/LICENSE
+!pimple/pimple/src/
+pimple/pimple/src/Pimple/**
+!pimple/pimple/src/Pimple/*
+
+# Mobile_Detect
+!mobiledetect/
+mobiledetect/*
+!mobiledetect/mobiledetectlib/
+mobiledetect/mobiledetectlib/*
+!mobiledetect/mobiledetectlib/LICENSE.txt
+!mobiledetect/mobiledetectlib/Mobile_Detect.php

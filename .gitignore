@@ -12,11 +12,6 @@ build.properties
 Icon
 
 
-# Don't include unneeded composer files
-#######################################
-src/admin/vendor/mobiledetect/mobiledetectlib/**
-!src/admin/vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php
-
 # Windows Files #
 #################
 # Windows image file caches

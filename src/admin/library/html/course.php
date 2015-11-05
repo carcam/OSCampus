@@ -16,7 +16,8 @@ abstract class OscCourse
      * @param mixed  $attribs
      * @param bool   $uriOnly
      *
-     * @return mixed|string
+     * @return string
+     * @throws Exception
      */
     public static function link($course, $text = null, $attribs = null, $uriOnly = false)
     {
@@ -27,6 +28,8 @@ abstract class OscCourse
             $query['pid'] = $course->pathways_id;
         } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
             $query['pid'] = $pid;
+        } else {
+            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_PATHWAY_REQUIRED', __METHOD__), 500);
         }
 
         $link = 'index.php?' . http_build_query($query);
