@@ -1,6 +1,7 @@
 # Keep unneeded composer files out of repo
 ##########################################
 *
+!.gitignore
 
 # Need the autoloaders
 !autoload.php
