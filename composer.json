@@ -28,6 +28,7 @@
         "php"                         : ">= 5.3",
         "ext-curl"                    : "*",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "pimple/pimple"               : "^3.0.1"
+        "pimple/pimple"               : "^3.0.1",
+        "twig/twig"                   : "~1.0"
     }
 }
