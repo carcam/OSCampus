@@ -239,8 +239,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->log['Load Pathway Images'] = microtime(true);
 
         $this->fixOrdering('#__oscampus_pathways');
-        $this->fixOrdering('#__oscampus_modules');
-        $this->fixOrdering('#__oscampus_lessons');
         $this->log['Fix Ordering Fields'] = microtime(true);
 
         $this->displayResults();
