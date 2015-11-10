@@ -8,6 +8,7 @@
 
 namespace Oscampus;
 
+use Oscampus\Lesson;
 use Pimple\Container AS Pimple;
 use Pimple\ServiceProviderInterface;
 
@@ -31,8 +32,13 @@ class Services implements ServiceProviderInterface
      */
     public function register(Pimple $pimple)
     {
+        $pimple['dbo'] = function(Container $c) {
+            return \OscampusFactory::getDbo();
+        };
+
         $pimple['lesson'] = $pimple->factory(function (Container $c) {
-            return new Lesson();
+            $properties = new Lesson\Properties();
+            return new Lesson($properties, $c['dbo']);
         });
     }
 }

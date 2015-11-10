@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Lesson;
+
 defined('_JEXEC') or die();
 
 class OscampusViewLesson extends OscampusViewSite
@@ -16,20 +18,14 @@ class OscampusViewLesson extends OscampusViewSite
     protected $model = null;
 
     /**
-     * @var object
+     * @var Lesson
      */
     protected $lesson = null;
-
-    /**
-     * @var array
-     */
-    protected $files = array();
 
     public function display($tmpl = null)
     {
         $this->model  = $this->getModel();
         $this->lesson = $this->model->getLesson();
-        $this->files  = $this->model->getFiles();
 
         $pathway = JFactory::getApplication()->getPathway();
 
