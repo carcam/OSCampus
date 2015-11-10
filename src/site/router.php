@@ -72,14 +72,15 @@ class OscampusRouter
             }
         }
 
-        $view = 'pathways';
         if (!empty($query['view'])) {
             $view = $query['view'];
             unset($query['view']);
-        }
 
-        if (empty($view) && !empty($menuQuery['view'])) {
+        } elseif (!empty($menuQuery['view'])) {
             $view = $menuQuery['view'];
+
+        } else {
+            $view = 'pathways';
         }
 
         $pathwayId = empty($query['pid']) ? null : $query['pid'];
