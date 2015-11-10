@@ -238,6 +238,11 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->images['Pathway Images']   = $this->copyImages('#__oscampus_pathways', 'pathways', false);
         $this->log['Load Pathway Images'] = microtime(true);
 
+        $this->fixOrdering('#__oscampus_pathways');
+        $this->fixOrdering('#__oscampus_modules');
+        $this->fixOrdering('#__oscampus_lessons');
+        $this->log['Fix Ordering Fields'] = microtime(true);
+
         $this->displayResults();
 
         error_reporting(0);
@@ -1314,7 +1319,7 @@ class OscampusControllerImport extends OscampusControllerBase
             unlink($path);
             $this->errors[] = 'Removed unused image file ' . $path;
         }
-        
+
         return $images;
     }
 
@@ -1453,6 +1458,29 @@ class OscampusControllerImport extends OscampusControllerBase
 
         if (is_file($this->customBackup)) {
             unlink($this->customBackup);
+        }
+    }
+
+    /**
+     * Standardize ordering fields for table with ID field
+     *
+     * @param string $table
+     *
+     * @return void
+     */
+    protected function fixOrdering($table)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('id, ordering')
+            ->from($table)
+            ->order('ordering');
+
+        if ($rows = $db->setQuery($query)->loadObjectList()) {
+            foreach ($rows as $order => $row) {
+                $row->ordering = $order+1;
+                $db->updateObject($table, $row, 'id');
+            }
         }
     }
 }
