@@ -8,6 +8,8 @@
 
 namespace Oscampus;
 
+use JDatabaseInterface;
+
 defined('_JEXEC') or die();
 
 /**
@@ -15,7 +17,8 @@ defined('_JEXEC') or die();
  *
  * @package OSCampus
  *
- * @property Lesson $lesson
+ * @property JDatabaseInterface $dbo
+ * @property Lesson             $lesson
  */
 class Container extends \Pimple\Container
 {
