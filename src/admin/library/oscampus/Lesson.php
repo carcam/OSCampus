@@ -8,7 +8,6 @@
 
 namespace Oscampus;
 
-use JDatabaseInterface;
 use Oscampus\Lesson\Properties;
 
 defined('_JEXEC') or die();
@@ -17,6 +16,8 @@ defined('_JEXEC') or die();
  * Class Lesson
  *
  * @package Oscampus
+ *
+ * @TODO: \JDatabase changes to \JDatabaseDriver in J!3
  *
  * These properties are returned from the current Properties object
  *
@@ -65,15 +66,15 @@ class Lesson extends Object
     protected $next = null;
 
     /**
-     * @var JDatabaseInterface
+     * @var \JDatabase
      */
     protected $dbo = null;
 
     /**
-     * @param Properties         $properties
-     * @param JDatabaseInterface $dbo
+     * @param Properties $properties
+     * @param \JDatabase $dbo
      */
-    public function __construct(Properties $properties, JDatabaseInterface $dbo = null)
+    public function __construct(Properties $properties, $dbo = null)
     {
         $this->previous = clone $properties;
         $this->current  = clone $properties;
