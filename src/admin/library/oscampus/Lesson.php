@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
  *
  * @package Oscampus
  *
- * @TODO: \JDatabase changes to \JDatabaseDriver in J!3
+ * @TODO    : \JDatabase changes to \JDatabaseDriver in J!3
  *
  * These properties are returned from the current Properties object
  *
@@ -66,13 +66,13 @@ class Lesson extends Object
     protected $next = null;
 
     /**
-     * @var \JDatabase
+     * @var \JDatabase|\JDatabaseDriver
      */
     protected $dbo = null;
 
     /**
-     * @param Properties $properties
-     * @param \JDatabase $dbo
+     * @param Properties                  $properties
+     * @param \JDatabase|\JDatabaseDriver $dbo
      */
     public function __construct(Properties $properties, $dbo = null)
     {
