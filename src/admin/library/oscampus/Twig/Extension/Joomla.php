@@ -74,10 +74,6 @@ class Joomla extends Twig_Extension
 
     public static function function_get_table_instance($tableName, $id)
     {
-        if (!class_exists('OscampusTable')) {
-            require_once JPATH_ADMINISTRATOR . '/components/com_oscampus/library/joomla/table.php';
-        }
-
         $table = OscampusTable::getInstance($tableName);
         $table->load($id);
 
