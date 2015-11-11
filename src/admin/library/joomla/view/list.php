@@ -32,6 +32,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
      * @param  string $tpl The name of the template file to parse
      *
      * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -62,7 +63,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setToolbar()
     {
-        $controller = $this->getName();
+        $controller       = $this->getName();
         $controllerPlural = JStringInflector::getInstance(true)->toPlural($controller);
 
         OscampusToolbarHelper::addNew($controller . '.add');
