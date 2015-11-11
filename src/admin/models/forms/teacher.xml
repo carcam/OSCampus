@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="main" label="COM_OSCAMPUS_TEACHER_PAGE_MAIN">
+        <field
+            name="id"
+            type="hidden"
+            class="readonly"
+            label="COM_OSCAMPUS_ID_LABEL"
+            description="COM_OSCAMPUS_ID_DESC"
+            size="10"
+            default="0"
+            readonly="true"/>
+
+        <field
+            name="users_id"
+            type="user"
+            label="COM_OSCAMPUS_TEACHER_USER_LABEL"
+            description="COM_OSCAMPUS_TEACHER_USER_DESC"
+            class="input-xxlarge input-large-text"
+            required="true"/>
+
+        <field
+            name="bio"
+            type="editor"
+            label="COM_OSCAMPUS_TEACHER_BIO_LABEL"
+            description="COM_OSCAMPUS_TEACHER_BIO_DESC"
+            required="true"
+            filter="safehtml"
+            buttons="true"
+            hide="readmore,pagebreak"
+            labelclass="hidden"/>
+
+        <field
+            name="image"
+            type="media"
+            label="COM_OSCAMPUS_TEACHER_IMAGE_LABEL"
+            description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"
+            required="true"/>
+
+        <field
+            name="links"
+            type="repeatable"
+            label="COM_OSCAMPUS_TEACHER_LINKS_LABEL"
+            description="COM_OSCAMPUS_TEACHER_LINKS_DESC"
+            icon="list">
+
+            <fieldset hidden="true" name="links_modal" repeat="true">
+                <field
+                    name="type"
+                    type="list"
+                    label="COM_OSCAMPUS_TEACHER_TYPE_LABEL"
+                    description="COM_OSCAMPUS_TEACHER_TYPE_DESC">
+                    <option value="website">COM_OSCAMPUS_TEACHER_WEBSITE</option>
+                    <option value="email">COM_OSCAMPUS_TEACHER_EMAIL</option>
+                    <option value="blog">COM_OSCAMPUS_TEACHER_BLOG</option>
+                    <option value="facebook">COM_OSCAMPUS_TEACHER_FACEBOOK</option>
+                    <option value="twitter">COM_OSCAMPUS_TEACHER_TWITTER</option>
+                    <option value="googleplus">COM_OSCAMPUS_TEACHER_GOOGLEPLUS</option>
+                </field>
+
+                <field
+                    name="link"
+                    type="text"
+                    label="COM_OSCAMPUS_TEACHER_LINK_LABEL"
+                    description="COM_OSCAMPUS_TEACHER_LINK_DESC"/>
+            </fieldset>
+        </field>
+
+        <field
+            name="created_by"
+            type="user"
+            label="COM_OSCAMPUS_TEACHER_CREATED_BY_LABEL"
+            description="COM_OSCAMPUS_TEACHER_CREATED_BY_DESC"/>
+
+        <field
+            name="created_by_alias"
+            type="text"
+            label="COM_OSCAMPUS_TEACHER_CREATED_BY_ALIAS_LABEL"
+            description="COM_OSCAMPUS_TEACHER_CREATED_BY_ALIAS_DESC"/>
+
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
+</form>

@@ -1,0 +1,69 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% extends "base.html.twig" %}
+
+{% import "admin_form_macros.html.twig" as form_macros %}
+
+{% block main_content %}
+    {{ html('behavior.formvalidation')|raw }}
+    {{ html('behavior.keepalive')|raw }}
+    {{ html('formbehavior.chosen', 'select')|raw }}
+
+    <script type="text/javascript">
+        Joomla.submitbutton = function (task) {
+            if (task == 'teacher.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+                Joomla.submitform(task, document.getElementById('item-form'));
+            }
+        }
+    </script>
+
+    <form
+        action="{{ uri }}"
+        method="post"
+        name="adminForm"
+        id="item-form"
+        class="form-validate">
+
+        {% set form_inline_content = block('form_inline_header') %}
+        {% set form_body_content = block('form_body') %}
+        {% set form_right_content = block('form_right') %}
+
+        {# Form Inline Header #}
+        {% if form_inline_content is not empty %}
+            <div class="form-inline form-inline-header">
+                {{ form_inline_content|raw }}
+            </div>
+        {% endif %}
+
+        <div class="form-horizontal">
+            <div class="row-fluid">
+                {# Form Body #}
+                {% if form_body_content is not empty %}
+                    <div class="span{{ form_right_content is not empty ? 9 : 12 }}">
+                        <fieldset class="adminform">
+                            {{ form_body_content|raw }}
+                        </fieldset>
+                    </div>
+                {% endif %}
+
+                {# Form Right Column #}
+                {% if form_right_content is not empty %}
+                    <div class="span3">
+                        <div class="form-vertical">
+                            {{ form_right_content|raw }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="return" value="{{ input.getCmd('return') }}"/>
+        {{ html('form.token')|raw }}
+    </form>
+{% endblock  %}

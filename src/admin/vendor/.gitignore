@@ -23,3 +23,19 @@ mobiledetect/*
 mobiledetect/mobiledetectlib/*
 !mobiledetect/mobiledetectlib/LICENSE.txt
 !mobiledetect/mobiledetectlib/Mobile_Detect.php
+
+# Twig
+!twig/
+!twig/**/*
+twig/twig/*
+!twig/twig/lib/
+
+# Allow Joomla dependencies
+!joomla/
+!joomla/**/*
+
+# JString (For support in j2.5)
+joomla/string/*
+!joomla/string/LICENSE
+!joomla/string/src/
+

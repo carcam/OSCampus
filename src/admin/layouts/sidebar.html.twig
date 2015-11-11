@@ -1,0 +1,32 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+<div id="j-sidebar-container" class="span2">
+    <div id="j-toggle-sidebar-wrapper">
+        <div id="j-toggle-button-wrapper" class="j-toggle-button-wrapper j-toggle-visible">
+            <div id="j-toggle-sidebar-button" class="j-toggle-sidebar-button hidden-phone hasTooltip" title="" type="button" onclick="toggleSidebar(false); return false;" data-original-title="Hide the sidebar">
+                <span id="j-toggle-sidebar-icon" class="icon-arrow-left-2 j-toggle-visible"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-nav">
+            {% if submenu_items %}
+                <ul id="submenu" class="nav nav-list">
+                    {% for item in submenu_items %}
+                        <li class="{{ item.class }}">
+                            <a href="{{ item.link }}">{{ item.label }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="j-toggle-sidebar"></div>
+</div>

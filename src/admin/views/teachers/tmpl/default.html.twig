@@ -1,0 +1,20 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% extends "admin_list.html.twig" %}
+
+{% block list_head %}
+    {{ list_macros.th_checkall() }}
+    {{ list_macros.th_sort('user.name', 'COM_OSCAMPUS_NAME', list_dir, list_order) }}
+    {{ list_macros.th_sort('teacher.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
+{% endblock %}
+
+{% block list_item %}
+    {{ list_macros.td_check(loop.index0, get_table_instance('teachers', item.id)) }}
+    {{ list_macros.td_edit_link('teacher', item.name, item.id) }}
+    {{ list_macros.td_text(item.id, 'center') }}
+{% endblock %}

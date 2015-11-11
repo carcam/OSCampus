@@ -8,13 +8,19 @@
 
 defined('_JEXEC') or die();
 
-abstract class OscampusViewAdmin extends OscampusView
+
+abstract class OscampusViewAdmin extends OscampusViewTwig
 {
     /**
      * @var JObject
      */
     protected $state = null;
 
+    /**
+     * Constructor
+     *
+     * @param array $config Optional configuration
+     */
     public function __construct($config = array())
     {
         parent::__construct($config);
@@ -22,10 +28,22 @@ abstract class OscampusViewAdmin extends OscampusView
         $this->state = $this->get('State');
     }
 
+    /**
+     * Render the view
+     *
+     * @param  string $tpl
+     *
+     * @return void|Exception
+     */
     public function display($tpl = null)
     {
         $this->setTitle();
+        $this->setToolBar();
+        $this->setSubmenu();
+
+        $this->displayHeader();
         parent::display($tpl);
+        $this->displayFooter();
     }
 
     /**
@@ -53,19 +71,20 @@ abstract class OscampusViewAdmin extends OscampusView
     }
 
     /**
-     * Render the admin screen toolbar buttons
-     *
-     * @param bool $addDivider
+     * Set the admin screen toolbar buttons
      *
      * @return void
      */
-    protected function setToolBar($addDivider = true)
+    protected function setToolbar()
     {
         $user = OscampusFactory::getUser();
         if ($user->authorise('core.admin', 'com_oscampus')) {
-            if ($addDivider) {
+            $items = JToolbar::getInstance('toolbar')->getItems();
+
+            if (!empty($items)) {
                 JToolBarHelper::divider();
             }
+
             JToolBarHelper::preferences('com_oscampus');
         }
     }
@@ -88,5 +107,41 @@ abstract class OscampusViewAdmin extends OscampusView
     protected function displayFooter()
     {
         // To be set in subclassess
+    }
+
+    /**
+     * Add a new submenu
+     *
+     * @param string  $label  The submenu's text
+     * @param string  $view   The submenu's view
+     */
+    protected function addSubmenuItem($label, $view)
+    {
+        if (!isset($this->variables['submenu_items'])) {
+            $this->setVariable('submenu_items', array());
+        }
+
+        $currentView = OscampusFactory::getApplication()->input->get('view', 'dashboard');
+        $link        = 'index.php?option=com_oscampus&view=' . $view;
+        $active      = $currentView === $view;
+
+        $item = new stdClass;
+        $item->label  = JText::_($label);
+        $item->link   = $link;
+        $item->active = (bool)$active;
+        $item->class  = $active ? 'active' : '';
+
+        $this->variables['submenu_items'][] = $item;
+    }
+
+    /**
+     * Set the submenu items
+     */
+    protected function setSubmenu()
+    {
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard');
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers');
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags');
+        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses');
     }
 }
