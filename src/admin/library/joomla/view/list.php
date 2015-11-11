@@ -6,6 +6,8 @@
  * @license
  */
 
+use Joomla\String;
+
 defined('_JEXEC') or die();
 
 
@@ -64,7 +66,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
     protected function setToolbar()
     {
         $controller       = $this->getName();
-        $controllerPlural = JStringInflector::getInstance(true)->toPlural($controller);
+        $controllerPlural = String\Inflector::getInstance(true)->toPlural($controller);
 
         OscampusToolbarHelper::addNew($controller . '.add');
         OscampusToolbarHelper::editList($controller . '.edit');

@@ -7,25 +7,25 @@
 
 {% macro th_checkall() %}
     <th width="1%">
-        {{ html('grid.checkall')|raw }}
+        {{ html('osc.grid.checkall')|raw }}
     </th>
 {% endmacro %}
 
 {% macro th_published(field, list_dir, list_order) %}
     <th width="1%" style="min-width:55px" class="nowrap center">
-        {{ html('grid.sort', 'COM_OSCAMPUS_PUBLISHED', field, list_dir, list_order)|raw }}
+        {{ html('osc.grid.sort', 'COM_OSCAMPUS_PUBLISHED', field, list_dir, list_order)|raw }}
     </th>
 {% endmacro %}
 
 {% macro th_sort(order_field, title, list_dir, list_order, width = '') %}
     <th class="nowrap" {% if width %}width="{{ width }}"{% endif %}>
-        {{ html('grid.sort', title, order_field, list_dir, list_order)|raw }}
+        {{ html('osc.grid.sort', title, order_field, list_dir, list_order)|raw }}
     </th>
 {% endmacro %}
 
 {% macro td_check(index, row, identifier = 'id') %}
     <td class="center hidden-phone">
-        {{ html('grid.checkedout', row, index, identifier)|raw }}
+        {{ html('osc.grid.checkedout', row, index, identifier)|raw }}
     </td>
 {% endmacro %}
 

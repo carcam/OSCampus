@@ -10,7 +10,6 @@ defined('_JEXEC') or die();
 
 use Oscampus\Twig\Extension\Joomla as JoomlaTwig;
 
-
 class OscampusViewTwig extends OscampusView
 {
     /**

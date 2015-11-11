@@ -6,6 +6,8 @@
  * @license
  */
 
+use Joomla\String;
+
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
@@ -15,7 +17,7 @@ abstract class OscampusModelList extends JModelList
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {
         if (empty($type)) {
-            $inflector = JStringInflector::getInstance(true);
+            $inflector = String\Inflector::getInstance(true);
             $type = $inflector->toPlural($this->name);
         }
 

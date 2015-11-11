@@ -10,9 +10,10 @@
 {% import "admin_list_macros.html.twig" as list_macros %}
 
 {% block main_content %}
-    {{ html('bootstrap.tooltip')|raw }}
-    {{ html('behavior.multiselect')|raw }}
-    {{ html('formbehavior.chosen', 'select')|raw }}
+    {{ html('osc.behavior.tooltip')|raw }}
+    {{ html('osc.behavior.keepalive')|raw }}
+    {{ html('osc.behavior.multiselect')|raw }}
+    {{ html('osc.formbehavior.chosen', 'select')|raw }}
 
     <form
         action="{{ uri }}"
