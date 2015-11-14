@@ -18,9 +18,9 @@
 {% endblock %}
 
 {% block list_item %}
-    {{ list_macros.td_check(loop.index0, get_table_instance('courses', item.id)) }}
+    {{ list_macros.td_check(loop.index0, item.id) }}
     {{ list_macros.td_published(item.published, loop.index0, 'courses.') }}
-    {{ list_macros.td_edit_link('course', item.title, item.id, item.alias, item.tags, 'COM_OSCAMPUS_TAGS') }}
+    {{ list_macros.td_edit_link(item, loop.index0, 'course', 'courses.', item.tags, 'COM_OSCAMPUS_TAGS') }}
     {{ list_macros.td_text(('COM_OSCAMPUS_COURSE_DIFFICULTY_' ~ item.difficulty|upper)|lang) }}
     {{ list_macros.td_text(item.teachers_name) }}
     {{ list_macros.td_text(item.access_level) }}

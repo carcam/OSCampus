@@ -14,8 +14,10 @@ class OscampusModelTeachers extends OscampusModelList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id', 'teacher.id',
-            'name', 'user.name'
+            'id',
+            'teacher.id',
+            'name',
+            'user.name'
         );
 
         parent::__construct($config);
@@ -25,16 +27,17 @@ class OscampusModelTeachers extends OscampusModelList
     {
         $db = $this->getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select(
-            array(
-                'teacher.*',
-                'user.name',
-                'teacher.checked_out as editor'
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'teacher.*',
+                    'user.name',
+                    'editor_user.name editor'
+                )
             )
-        );
-        $query->from('#__oscampus_teachers teacher');
-        $query->leftJoin('#__users user ON teacher.users_id = user.id');
+            ->from('#__oscampus_teachers teacher')
+            ->leftJoin('#__users user ON teacher.users_id = user.id')
+            ->leftJoin('#__users editor_user ON editor_user.id = teacher.checked_out');
 
         if ($search = $this->getState('filter.search')) {
             $search = $db->q('%' . $search . '%');

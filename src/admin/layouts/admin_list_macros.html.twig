@@ -23,9 +23,9 @@
     </th>
 {% endmacro %}
 
-{% macro td_check(index, row, identifier = 'id') %}
+{% macro td_check(index, id) %}
     <td class="center hidden-phone">
-        {{ html('osc.grid.checkedout', row, index, identifier)|raw }}
+        {{ html('grid.id', index, id)|raw }}
     </td>
 {% endmacro %}
 
@@ -37,16 +37,22 @@
     </td>
 {% endmacro %}
 
-{% macro td_link(title, link, alias = '', details = '', details_title = '') %}
+{% macro td_edit_link(row, index, controller, prefix = '', title = '', alias = '', details = '', details_title = '') %}
+    {% set link = 'index.php?option=com_oscampus&task=' ~ controller ~ '.edit&id=' ~ row.id %}
+
     <td class="has-context">
         <div class="pull-left break-word">
+            {% if row.checked_out and prefix %}
+                {{ html('jgrid.checkedout', index, row.editor, row.checked_out_time, prefix, true)|raw }}
+            {% endif %}
+
             <a href="{{ link }}">
-                {{ title }}
+                {{ title ?: row.title }}
             </a>
 
-            {% if alias %}
+            {% if alias or row.alias %}
                 <span class="small break-word">
-                    ({{ 'COM_OSCAMPUS_ALIAS'|lang }}: {{ alias }})
+                    ({{ 'COM_OSCAMPUS_ALIAS'|lang }}: {{ alias ?: row.alias }})
                 </span>
             {% endif %}
 
@@ -57,14 +63,6 @@
             {% endif %}
         </div>
     </td>
-{% endmacro %}
-
-{% macro td_edit_link(controller, title, id, alias = '', details = '', details_title = '') %}
-    {% import _self as list %}
-
-    {% set edit_link = 'index.php?option=com_oscampus&task=' ~ controller ~ '.edit&id=' ~ id %}
-
-    {{ list.td_link(title, edit_link, alias, details, details_title) }}
 {% endmacro %}
 
 {% macro td_text(text, class = '') %}
