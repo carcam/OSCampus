@@ -5,7 +5,7 @@
  # @license
  #}
 
-<link rel="stylesheet" type="text/css" href="{{ media_base_url }}/css/admin.css">
+{{ html('stylesheet', 'com_oscampus/admin.css', null, true) }}
 
 <div class="osc-container row-fluid">
     {% block main_content %}{% endblock  %}
