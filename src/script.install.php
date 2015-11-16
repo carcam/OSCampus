@@ -15,7 +15,7 @@ if (!is_dir($includePath)) {
     $includePath = __DIR__ . '/library';
 }
 
-if (file_exists($includePath . '/Installer/include.php')) {
+if (is_file($includePath . '/Installer/include.php')) {
     require_once $includePath . '/Installer/include.php';
 } else {
     throw new Exception('[OSCampus] Alledia Installer not found');
@@ -47,7 +47,7 @@ class com_oscampusInstallerScript extends AbstractScript
         // Show additional installation messages
         $file = strpos($type, 'install') === false ? $type : 'install';
         $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/views/welcome/tmpl/' . $file . '.php';
-        if (file_exists($path)) {
+        if (is_file($path)) {
             require_once JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
             JFactory::getLanguage()->load('com_oscampus', JPATH_ADMINISTRATOR . '/components/com_oscampus');
             require_once $path;

@@ -19,7 +19,7 @@ abstract class OscampusHelper
     {
         $info = new jRegistry();
         $path = OSCAMPUS_ADMIN . '/oscampus.xml';
-        if (file_exists($path)) {
+        if (is_file($path)) {
             $xml = JFactory::getXML($path);
 
             foreach ($xml->children() as $e) {

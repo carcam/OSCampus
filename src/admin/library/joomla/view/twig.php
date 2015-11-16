@@ -46,7 +46,7 @@ class OscampusViewTwig extends OscampusView
 
         // Removes not existent directories to avoid break Twig
         foreach ($this->_path['template'] as $index => $path) {
-            if (!file_exists($path)) {
+            if (!is_dir($path)) {
                 unset($this->_path['template'][$index]);
             }
         }

@@ -286,7 +286,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $files = $dbGuru->setQuery($filesQuery)->loadObjectList();
         foreach ($files as $file) {
             $path = JPATH_SITE . '/media/files/' . $file->path;
-            if (file_exists($path)) {
+            if (is_file($path)) {
                 if (isset($this->courses[$file->courses_id])) {
                     $file->path = $targetRoot . '/' . $file->path;
 
