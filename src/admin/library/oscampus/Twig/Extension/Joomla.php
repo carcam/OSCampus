@@ -41,9 +41,9 @@ class Joomla extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('html', 'Oscampus\Twig\Extension\Joomla::function_html'),
-            new Twig_SimpleFunction('get_input', 'Oscampus\Twig\Extension\Joomla::function_get_input'),
-            new Twig_SimpleFunction('get_table_instance', 'Oscampus\Twig\Extension\Joomla::function_get_table_instance')
+            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html'),
+            new Twig_SimpleFunction('get_input', '\Oscampus\Twig\Extension\Joomla::function_get_input'),
+            new Twig_SimpleFunction('get_table_instance', '\Oscampus\Twig\Extension\Joomla::function_get_table_instance')
         );
     }
 
