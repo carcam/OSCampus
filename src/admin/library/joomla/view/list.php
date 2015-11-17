@@ -62,9 +62,8 @@ abstract class OscampusViewList extends OscampusViewAdmin
     {
         $inflector = String\Inflector::getInstance();
 
-        $controller = $this->getname();
-        $singular   = $inflector->toSingular($controller);
-        $plural     = $inflector->toPlural($controller);
+        $plural   = $this->getname();
+        $singular = $inflector->toSingular($plural);
 
         OscampusToolbarHelper::addNew($singular . '.add');
         OscampusToolbarHelper::editList($singular . '.edit');
