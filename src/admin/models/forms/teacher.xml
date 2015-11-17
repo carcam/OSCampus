@@ -39,7 +39,7 @@
 
         <field
             name="links"
-            type="repeatable"
+            type="oscampus.repeatable"
             label="COM_OSCAMPUS_TEACHER_LINKS_LABEL"
             description="COM_OSCAMPUS_TEACHER_LINKS_DESC"
             icon="list">
