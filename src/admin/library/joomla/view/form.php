@@ -67,11 +67,11 @@ abstract class OscampusViewForm extends OscampusViewAdmin
 
         OscampusToolbarHelper::apply($controller . '.apply');
         OscampusToolbarHelper::save($controller . '.save');
+        OscampusToolbarHelper::save2new($controller . '.save2new');
+        OscampusToolbarHelper::save2copy($controller . '.save2copy');
 
         $isNew = ($this->item->id == 0);
         $alt   = $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
         OscampusToolbarHelper::cancel($controller . '.cancel', $alt);
-
-        parent::setToolbar();
     }
 }
