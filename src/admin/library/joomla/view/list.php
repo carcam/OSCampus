@@ -60,19 +60,22 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setToolbar()
     {
-        $controller       = $this->getName();
-        $controllerPlural = String\Inflector::getInstance(true)->toPlural($controller);
+        $inflector = String\Inflector::getInstance();
 
-        OscampusToolbarHelper::addNew($controller . '.add');
-        OscampusToolbarHelper::editList($controller . '.edit');
+        $controller = $this->getname();
+        $singular   = $inflector->toSingular($controller);
+        $plural     = $inflector->toPlural($controller);
+
+        OscampusToolbarHelper::addNew($singular . '.add');
+        OscampusToolbarHelper::editList($singular . '.edit');
 
         $table = $this->getModel()->getTable();
         if (array_key_exists('published', get_object_vars($table))) {
-            OscampusToolbarHelper::publish($controllerPlural . '.publish', 'JTOOLBAR_PUBLISH', true);
-            OscampusToolbarHelper::unpublish($controllerPlural . '.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+            OscampusToolbarHelper::publish($plural . '.publish', 'JTOOLBAR_PUBLISH', true);
+            OscampusToolbarHelper::unpublish($plural . '.unpublish', 'JTOOLBAR_UNPUBLISH', true);
         }
 
-        OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $controllerPlural . '.delete');
+        OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $plural . '.delete');
 
         parent::setToolbar();
     }
