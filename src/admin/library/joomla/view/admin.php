@@ -12,23 +12,6 @@ defined('_JEXEC') or die();
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
     /**
-     * @var JObject
-     */
-    protected $state = null;
-
-    /**
-     * Constructor
-     *
-     * @param array $config Optional configuration
-     */
-    public function __construct($config = array())
-    {
-        parent::__construct($config);
-
-        $this->state = $this->get('State');
-    }
-
-    /**
      * Render the view
      *
      * @param  string $tpl
@@ -112,26 +95,19 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     /**
      * Add a new submenu
      *
-     * @param string  $label  The submenu's text
-     * @param string  $view   The submenu's view
+     * @param string $name The submenu's text
+     * @param string $view The submenu's view
      */
-    protected function addSubmenuItem($label, $view)
+    protected function addSubmenuItem($name, $view, $active)
     {
-        if (!isset($this->variables['submenu_items'])) {
-            $this->setVariable('submenu_items', array());
+        $link = 'index.php?option=com_oscampus&view=' . $view;
+
+        if (method_exists('JHtmlSidebar', 'addEntry')) {
+            JHtmlSidebar::addEntry(JText::_($name), $link, $active);
+        } else {
+            // Deprecated after J2.5
+            JSubMenuHelper::addEntry(JText::_($name), $link, $active);
         }
-
-        $currentView = OscampusFactory::getApplication()->input->get('view', 'dashboard');
-        $link        = 'index.php?option=com_oscampus&view=' . $view;
-        $active      = $currentView === $view;
-
-        $item = new stdClass;
-        $item->label  = JText::_($label);
-        $item->link   = $link;
-        $item->active = (bool)$active;
-        $item->class  = $active ? 'active' : '';
-
-        $this->variables['submenu_items'][] = $item;
     }
 
     /**
@@ -139,9 +115,17 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      */
     protected function setSubmenu()
     {
-        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard');
-        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers');
-        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags');
-        $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses');
+        $app = OscampusFactory::getApplication();
+
+        $hide = $app->input->getBool('hidemainmenu', false);
+        if (!$hide) {
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags', $this->_name == 'tags');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses', $this->_name == 'courses');
+        }
+
+        $this->setVariable('show_sidebar', !$hide && version_compare(JVERSION, '3', 'ge'));
+
     }
 }

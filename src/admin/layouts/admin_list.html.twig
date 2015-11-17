@@ -10,60 +10,46 @@
 {% import 'admin_list_macros.html.twig' as list_macros %}
 
 {% block main_content %}
-    {{ html('osc.behavior.tooltip')|raw }}
-    {{ html('osc.behavior.keepalive')|raw }}
-    {{ html('osc.behavior.multiselect')|raw }}
-    {{ html('osc.formbehavior.chosen', 'select')|raw }}
-
     <form
         action="{{ uri }}"
         method="post"
         name="adminForm"
         id="adminForm">
 
-        {% block sidebar %}
-            {% if submenu_items or filter_items %}
-                {% include 'admin_sidebar.html.twig' %}
-            {% endif %}
-        {% endblock %}
+        {{ search_tools|raw }}
 
-        <div id="j-main-container" {% if submenu_items or filter_items %}class="span10"{% endif %}>
+        {% if not items %}
+            <div class="alert alert-no-items">
+                {{ 'COM_OSCAMPUS_NO_MATCHING_RESULTS'|lang }}
+            </div>
+        {% else %}
+            <table class="table table-striped adminlist">
+                <thead>
+                    <tr>
+                        {% block list_head %}<th></th>{% endblock %}
+                    </tr>
+                </thead>
 
-            {% block list_filters %}{% endblock %}
-
-            {% if not items %}
-                <div class="alert alert-no-items">
-                    {{ 'COM_OSCAMPUS_NO_MATCHING_RESULTS'|lang }}
-                </div>
-            {% else %}
-                <table class="table table-striped" id="adminList">
-                    <thead>
-                        <tr>
-                            {% block list_head %}<th></th>{% endblock %}
+                <tbody>
+                    {% for item in items %}
+                        <tr class="row{{ loop.index0 % 2 }}">
+                            {% block list_item %}<td></td>{% endblock %}
                         </tr>
-                    </thead>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-                    <tbody>
-                        {% for item in items %}
-                            <tr class="row{{ loop.index0 % 2 }}">
-                                {% block list_item %}<td></td>{% endblock %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-                {% if pagination %}
-                    {{ pagination|raw }}
-                {% endif %}
-
-                {% block list_hidden %}
-                    <input type="hidden" name="task" value="{{ task }}"/>
-                    <input type="hidden" name="boxchecked" value="0"/>
-                    <input type="hidden" name="filter_order" value="{{ list_order }}" />
-                    <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}" />
-                    {{ html('form.token')|raw }}
-                {% endblock %}
+            {% if pagination %}
+                {{ pagination|raw }}
             {% endif %}
-        </div>
+
+            {% block list_hidden %}
+                <input type="hidden" name="task" value="{{ task }}"/>
+                <input type="hidden" name="boxchecked" value="0"/>
+                <input type="hidden" name="filter_order" value="{{ list_order }}" />
+                <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}" />
+                {{ html('form.token')|raw }}
+            {% endblock %}
+        {% endif %}
     </form>
 {% endblock  %}
