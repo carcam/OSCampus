@@ -11,10 +11,10 @@
 
 {% block main_content %}
     <form
-        action="{{ uri }}"
-        method="post"
-        name="adminForm"
-        id="adminForm">
+            action="{{ uri }}"
+            method="post"
+            name="adminForm"
+            id="adminForm">
 
         {{ search_tools|raw }}
 
@@ -25,17 +25,21 @@
         {% else %}
             <table class="table table-striped adminlist">
                 <thead>
-                    <tr>
-                        {% block list_head %}<th></th>{% endblock %}
-                    </tr>
+                <tr>
+                    {% block list_head %}
+                        <th></th>
+                    {% endblock %}
+                </tr>
                 </thead>
 
                 <tbody>
-                    {% for item in items %}
-                        <tr class="row{{ loop.index0 % 2 }}">
-                            {% block list_item %}<td></td>{% endblock %}
-                        </tr>
-                    {% endfor %}
+                {% for item in items %}
+                    <tr class="row{{ loop.index0 % 2 }}">
+                        {% block list_item %}
+                            <td></td>
+                        {% endblock %}
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
 
@@ -46,10 +50,10 @@
             {% block list_hidden %}
                 <input type="hidden" name="task" value="{{ task }}"/>
                 <input type="hidden" name="boxchecked" value="0"/>
-                <input type="hidden" name="filter_order" value="{{ list_order }}" />
-                <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}" />
+                <input type="hidden" name="filter_order" value="{{ list_order }}"/>
+                <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}"/>
                 {{ html('form.token')|raw }}
             {% endblock %}
         {% endif %}
     </form>
-{% endblock  %}
+{% endblock %}
