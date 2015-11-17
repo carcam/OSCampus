@@ -12,7 +12,7 @@
 {% block main_content %}
     {{ html('osc.behavior.formvalidation') }}
     <script type="text/javascript">
-        Joomla.submitbutton = function (task) {
+        Joomla.submitbutton = function(task) {
             if (task.match(/\.cancel$/) || document.formvalidator.isValid(document.id('item-form'))) {
                 Joomla.submitform(task, document.getElementById('item-form'));
             }
@@ -20,14 +20,18 @@
     </script>
 
     <form
-        action="{{ uri }}"
-        method="post"
-        name="adminForm"
-        id="item-form"
-        class="form-validate">
+            action="{{ uri }}"
+            method="post"
+            name="adminForm"
+            id="item-form"
+            class="form-validate">
+
+        {% block form_body %}
+            {{ html('osc.render.adminfields', form, 'main')|raw }}
+        {% endblock %}
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="{{ input.getCmd('return') }}"/>
         {{ html('form.token')|raw }}
     </form>
-{% endblock  %}
+{% endblock %}
