@@ -38,22 +38,17 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     public function display($tpl = null)
     {
-        $state = $this->get('State');
+        $model = $this->getModel();
+        $state = $model->getState();
 
         $this->setVariable('list_order', $this->escape($state->get('list.ordering')));
         $this->setVariable('list_dir', $this->escape($state->get('list.direction')));
-        $this->setVariable('items', $this->get('Items'));
-        $this->setVariable('pagination', $this->get('Pagination')->getListFooter());
-
-        // $this->filterForm    = $this->get('FilterForm');
-        // $this->activeFilters = $this->get('ActiveFilters');
+        $this->setVariable('items', $model->getItems());
+        $this->setVariable('pagination', $model->getPagination()->getListFooter());
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
-
-        // $notices = OscampusHelper::getNotices();
-        // OscampusHelper::enqueueMessages($notices);
 
         parent::display($tpl);
     }
