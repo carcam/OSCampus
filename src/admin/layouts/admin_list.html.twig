@@ -47,13 +47,14 @@
                 {{ pagination|raw }}
             {% endif %}
 
-            {% block list_hidden %}
-                <input type="hidden" name="task" value="{{ task }}"/>
-                <input type="hidden" name="boxchecked" value="0"/>
-                <input type="hidden" name="filter_order" value="{{ list_order }}"/>
-                <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}"/>
-                {{ html('form.token')|raw }}
-            {% endblock %}
         {% endif %}
+
+        {% block list_hidden %}
+            <input type="hidden" name="task" value="{{ task }}"/>
+            <input type="hidden" name="boxchecked" value="0"/>
+            <input type="hidden" name="filter_order" value="{{ list_order }}"/>
+            <input type="hidden" name="filter_order_Dir" value="{{ list_dir }}"/>
+            {{ html('form.token')|raw }}
+        {% endblock %}
     </form>
 {% endblock %}
