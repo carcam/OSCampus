@@ -14,10 +14,10 @@ class OscampusModelTeachers extends OscampusModelList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',
-            'teacher.id',
-            'name',
-            'user.name'
+            'id', 'teacher.id',
+            'name', 'user.name',
+            'username', 'user.username',
+            'email', 'user.email'
         );
 
         parent::__construct($config);
@@ -62,6 +62,6 @@ class OscampusModelTeachers extends OscampusModelList
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('teacher.id', 'ASC');
+        parent::populateState('user.name', 'ASC');
     }
 }

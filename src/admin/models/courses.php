@@ -71,6 +71,6 @@ class OscampusModelCourses extends OscampusModelList
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('course.id', 'ASC');
+        parent::populateState('course.title', 'ASC');
     }
 }

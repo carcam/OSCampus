@@ -52,6 +52,6 @@ class OscampusModelTags extends OscampusModelList
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('tag.id', 'ASC');
+        parent::populateState('tag.title', 'ASC');
     }
 }
