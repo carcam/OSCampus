@@ -32,7 +32,6 @@ class Joomla extends Twig_Extension
         return array(
             'joomla_version' => JVERSION,
             'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
-            'media_base_url' => JURI::root() . '/media/' . $app->input->getCmd('option'),
             'input'          => $app->input,
             'uri'            => JUri::getInstance()->toString()
         );
@@ -41,9 +40,7 @@ class Joomla extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html'),
-            new Twig_SimpleFunction('get_input', '\Oscampus\Twig\Extension\Joomla::function_get_input'),
-            new Twig_SimpleFunction('get_table_instance', '\Oscampus\Twig\Extension\Joomla::function_get_table_instance')
+            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html')
         );
     }
 
@@ -70,13 +67,5 @@ class Joomla extends Twig_Extension
     public static function filter_lang($string)
     {
         return JText::_($string);
-    }
-
-    public static function function_get_table_instance($tableName, $id)
-    {
-        $table = OscampusTable::getInstance($tableName);
-        $table->load($id);
-
-        return $table;
     }
 }
