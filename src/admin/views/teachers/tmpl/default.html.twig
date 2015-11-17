@@ -10,11 +10,15 @@
 {% block list_head %}
     {{ list_macro.th_checkall() }}
     {{ list_macro.th_sort('user.name', 'COM_OSCAMPUS_NAME', list_dir, list_order) }}
+    {{ list_macro.th_sort('user.username', 'COM_OSCAMPUS_USERNAME', list_dir, list_order) }}
+    {{ list_macro.th_sort('user.email', 'COM_OSCAMPUS_EMAIL', list_dir, list_order) }}
     {{ list_macro.th_sort('teacher.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
 {% endblock %}
 
 {% block list_item %}
     {{ list_macro.td_check(loop.index0, item.id) }}
     {{ list_macro.td_edit_link(item, loop.index0, 'teacher', 'teachers.', item.name) }}
+    {{ list_macro.td_text(item.username) }}
+    {{ list_macro.td_text(item.email) }}
     {{ list_macro.td_text(item.id, 'center') }}
 {% endblock %}

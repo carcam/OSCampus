@@ -32,6 +32,8 @@ class OscampusModelTeachers extends OscampusModelList
                 array(
                     'teacher.*',
                     'user.name',
+                    'user.username',
+                    'user.email',
                     'editor_user.name editor'
                 )
             )
