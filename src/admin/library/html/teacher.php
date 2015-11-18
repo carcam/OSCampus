@@ -19,25 +19,33 @@ abstract class OscTeacher
         'website'  => '<i class="fa fa-globe"></i>'
     );
 
-    public static function links($teacher, $options = null)
+    /**
+     * Generate links to known urls for a teacher
+     *
+     * @param object $teacher
+     *
+     * @return string
+     */
+    public static function links($teacher)
     {
         $html = array();
 
         if (!empty($teacher->links)) {
-            foreach ($teacher->links as $data) {
-                if ($data->type == 'email' && !$data->link && !empty($teacher->email)) {
-                    $data->link = $teacher->email;
+            foreach ($teacher->links as $type => $value) {
+                if ($type == 'email' && !$value->link && !empty($teacher->email)) {
+                    $value->link = $teacher->email;
                 }
-                if ($link = static::createLink($data)) {
-                    $type = isset(static::$linkIcons[$data->type]) ? $data->type : 'default';
+                if ($link = static::createLink($type, $value->link, $value->show)) {
+                    $type = isset(static::$linkIcons[$type]) ? $type : 'default';
+                    $attribs = preg_match('#^https?://#', $link) ? 'target="_blank"' : '';
 
-                    $html[] = '<span class="osc-teacher-' . $data->type . '">';
+                    $html[] = '<span class="osc-teacher-' . $type . '">';
                     $html[] = static::$linkIcons[$type];
                     $html[] = JHtml::_(
                         'link',
                         $link,
-                        JText::_('COM_OSCAMPUS_TEACHER_LINK_' . $data->type),
-                        'target="_blank"'
+                        JText::_('COM_OSCAMPUS_TEACHER_LINK_' . $type),
+                        $attribs
                     );
                     $html[] = '</span>';
                 }
@@ -52,10 +60,19 @@ abstract class OscTeacher
         return join("\n", $html);
     }
 
-    protected static function createLink($data)
+    /**
+     * Normalize links based on type
+     *
+     * @param string $type
+     * @param string $link
+     * @param string $show
+     *
+     * @return null|string
+     */
+    protected static function createLink($type, $link, $show)
     {
-        if ($link = $data->link) {
-            switch ($data->type) {
+        if ($link && $show) {
+            switch ($type) {
                 case 'twitter':
                     $link = 'https://www.twitter.com/' . $link;
                     break;
@@ -68,9 +85,7 @@ abstract class OscTeacher
                     $link = 'mailto:' . $link;
                     break;
             }
-        }
 
-        if ($link && $data->show) {
             return $link;
         }
 
