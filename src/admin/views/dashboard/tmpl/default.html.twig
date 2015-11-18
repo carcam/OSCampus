@@ -8,16 +8,9 @@
 {% extends "admin_list.html.twig" %}
 
 {% block main_content %}
+    <h1>Import Guru Data</h1>
 
-    {% block sidebar %}
-        {{ parent() }}
-    {% endblock %}
-
-    <div id="j-main-container" {% if submenu_items or filter_items %}class="span10"{% endif %}>
-        <h1>Under Construction</h1>
-
-        <p>Run the <a href="index.php?option=com_oscampus&task=import.import">current import</a></p>
-        <p>(Don't worry - it's safe to run whenever you want!</p>
-        <p>Be patient while it runs, it currently takes 2-3 minutes to complete</p>
-    </div>
+    <p>Run the <a href="index.php?option=com_oscampus&task=import.import">current import</a></p>
+    <p>(Don't worry - it's safe to run whenever you want!</p>
+    <p>Be patient while it runs, it currently takes one or two minutes to complete</p>
 {% endblock %}
