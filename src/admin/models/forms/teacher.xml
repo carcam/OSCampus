@@ -37,34 +37,33 @@
             description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"
             required="true"/>
 
-        <field
-            name="links"
-            type="oscampus.repeatable"
-            label="COM_OSCAMPUS_TEACHER_LINKS_LABEL"
-            description="COM_OSCAMPUS_TEACHER_LINKS_DESC"
-            icon="list">
+        <fields name="links">
+            <field
+                name="website"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_WEBSITE"/>
 
-            <fieldset hidden="true" name="links_modal" repeat="true">
-                <field
-                    name="type"
-                    type="list"
-                    label="COM_OSCAMPUS_TEACHER_TYPE_LABEL"
-                    description="COM_OSCAMPUS_TEACHER_TYPE_DESC">
-                    <option value="website">COM_OSCAMPUS_TEACHER_WEBSITE</option>
-                    <option value="email">COM_OSCAMPUS_TEACHER_EMAIL</option>
-                    <option value="blog">COM_OSCAMPUS_TEACHER_BLOG</option>
-                    <option value="facebook">COM_OSCAMPUS_TEACHER_FACEBOOK</option>
-                    <option value="twitter">COM_OSCAMPUS_TEACHER_TWITTER</option>
-                    <option value="googleplus">COM_OSCAMPUS_TEACHER_GOOGLEPLUS</option>
-                </field>
+            <field
+                name="email"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_EMAIL"/>
 
-                <field
-                    name="link"
-                    type="text"
-                    label="COM_OSCAMPUS_TEACHER_LINK_LABEL"
-                    description="COM_OSCAMPUS_TEACHER_LINK_DESC"/>
-            </fieldset>
-        </field>
+            <field
+                name="blog"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_BLOG"/>
+
+            <field
+                name="facebook"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_FACEBOOK"/>
+
+            <field
+                name="twitter"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_TWITTER"/>
+
+        </fields>
 
         <field
             name="created_by"

@@ -15,22 +15,7 @@ class OscampusModelTeacher extends OscampusModelAdmin
     {
         $data = parent::loadFormData();
 
-        // Convert the value of links to the JRepeatable field
-        $links = json_decode($data->links);
-        if (is_array($links)) {
-            $newValue = new stdClass;
-            $newValue->type = array();
-            $newValue->link = array();
-            $newValue->show = array();
-
-            foreach ($links as $item) {
-                $newValue->type[] = $item->type;
-                $newValue->link[] = $item->link;
-                $newValue->show[] = $item->show;
-            }
-
-            $data->links = json_encode($newValue);
-        }
+        $data->links = json_decode($data->links);
 
         return $data;
     }
@@ -40,26 +25,24 @@ class OscampusModelTeacher extends OscampusModelAdmin
      *
      * @return void
      */
-    protected function prepareTable($table)
+    protected function prepareTable(&$table)
     {
-        // Convert the value of links to the OSCampus format
-        $links = json_decode($table->links);
-
-
-        if (is_object($links) && isset($links->type)) {
-            $newValue = array();
-
-            $totalLinks = count($links->type);
-            for ($i = 0; $i < $totalLinks; $i++) {
-                $item = new stdClass;
-                $item->type = $links->type[$i];
-                $item->link = $links->link[$i];
-                $item->show = (int)$links->show[$i];
-
-                $newValue[] = $item;
-            }
-
-            $table->links = json_encode($newValue);
+        if (!empty($table->links) && !is_string($table->links)) {
+            $table->links = json_encode($table->links);
         }
+    }
+
+    public function validate($form, $data, $group = null)
+    {
+        $fixedData = $data;
+        if (isset($fixedData['links'])) {
+            foreach ($fixedData['links'] as $type => $value) {
+                $fixedData['links'][$type] = isset($value['link']) ? $value['link'] : '';
+            }
+        }
+        if (parent::validate($form, $fixedData, $group)) {
+            return $data;
+        }
+        return false;
     }
 }

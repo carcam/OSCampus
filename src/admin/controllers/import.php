@@ -826,39 +826,34 @@ class OscampusControllerImport extends OscampusControllerBase
             'id',
             function ($guruData, $convertedData) use ($users) {
                 if (isset($users[$convertedData->users_id])) {
-                    $links                = array(
-                        array(
-                            'type' => 'website',
-                            'link' => $guruData['website'],
-                            'show' => (bool)$guruData['show_website'],
+                    $links = array(
+                        'website' => array(
+                            'link' => preg_match('#^https?://.+#', trim($guruData['website'])) ? trim($guruData['website']) : '',
+                            'show' => (int)(bool)$guruData['show_website'],
                         ),
-                        array(
-                            'type' => 'email',
+                        'email' => array(
                             'link' => null,
-                            'show' => (bool)$guruData['show_email']
+                            'show' => (int)(bool)$guruData['show_email']
                         ),
-                        array(
-                            'type' => 'blog',
-                            'link' => $guruData['blog'],
-                            'show' => (bool)$guruData['show_blog'],
+                        'blog' => array(
+                            'link' => preg_match('#^https?://.+#', trim($guruData['blog'])) ? trim($guruData['blog']) : '',
+                            'show' => (int)(bool)$guruData['show_blog'],
                         ),
-                        array(
-                            'type' => 'facebook',
-                            'link' => (string)preg_replace(
+                        'facebook' => array(
+                            'link' => trim(preg_replace(
                                 '#^https?://(www\.)?(facebook\.com/)?#',
                                 '',
-                                $guruData['facebook']
-                            ),
-                            'show' => (string)(int)$guruData['show_facebook'],
+                                trim($guruData['facebook'])
+                            )),
+                            'show' => (int)$guruData['show_facebook'],
                         ),
-                        array(
-                            'type' => 'twitter',
-                            'link' => (string)preg_replace(
+                        'twitter' => array(
+                            'link' => trim(preg_replace(
                                 '#^https?://(www\.)?(twitter\.com/)?#',
                                 '',
-                                $guruData['twitter']
-                            ),
-                            'show' => (string)(int)$guruData['show_twitter']
+                                trim($guruData['twitter'])
+                            )),
+                            'show' => (int)$guruData['show_twitter']
                         )
                     );
                     $convertedData->links = json_encode($links);
@@ -975,7 +970,7 @@ class OscampusControllerImport extends OscampusControllerBase
             ->from('#__oswistia_download_log')
             ->order('id');
 
-        $list = $db->setQuery($query)->loadObjectList();
+        $list                = $db->setQuery($query)->loadObjectList();
         $this->downloadCount = 0;
         foreach ($list as $row) {
             $db->insertObject('#__oscampus_wistia_downloads', $row);
@@ -1288,8 +1283,8 @@ class OscampusControllerImport extends OscampusControllerBase
             JFolder::create(JPATH_SITE . $targetRoot);
         }
 
-        $db     = JFactory::getDbo();
-        $images = $db->setQuery("Select id,image From {$table}")->loadObjectList();
+        $db        = JFactory::getDbo();
+        $images    = $db->setQuery("Select id,image From {$table}")->loadObjectList();
         $usedFiles = array();
         foreach ($images as $image) {
             if ($image->image) {
@@ -1310,7 +1305,7 @@ class OscampusControllerImport extends OscampusControllerBase
             }
         }
 
-        $files = JFolder::files(JPATH_SITE . $targetRoot);
+        $files       = JFolder::files(JPATH_SITE . $targetRoot);
         $unusedFiles = array_diff($files, $usedFiles);
         foreach ($unusedFiles as $file) {
             $path = JPATH_SITE . $targetRoot . '/' . $file;
@@ -1468,7 +1463,7 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function fixOrdering($table)
     {
-        $db = JFactory::getDbo();
+        $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('id, ordering')
             ->from($table)
@@ -1476,7 +1471,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         if ($rows = $db->setQuery($query)->loadObjectList()) {
             foreach ($rows as $order => $row) {
-                $row->ordering = $order+1;
+                $row->ordering = $order + 1;
                 $db->updateObject($table, $row, 'id');
             }
         }
