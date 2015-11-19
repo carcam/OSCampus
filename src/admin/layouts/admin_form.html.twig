@@ -27,7 +27,7 @@
             class="form-validate">
 
         {% block form_body %}
-            {{ html('osc.render.adminfields', form, 'main')|raw }}
+            {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
         {% endblock %}
 
         <input type="hidden" name="task" value=""/>

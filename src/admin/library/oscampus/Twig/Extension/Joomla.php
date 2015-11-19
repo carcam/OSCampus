@@ -40,15 +40,16 @@ class Joomla extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html')
+            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html'),
+            new Twig_SimpleFunction('sprintf', '\JText::sprintf')
         );
     }
 
     public function getFilters()
     {
         return array(
-            new Twig_SimpleFilter('route', 'Oscampus\Twig\Extension\Joomla::filter_route'),
-            new Twig_SimpleFilter('lang', 'Oscampus\Twig\Extension\Joomla::filter_lang')
+            new Twig_SimpleFilter('route', '\Oscampus\Twig\Extension\Joomla::filter_route'),
+            new Twig_SimpleFilter('lang', '\Oscampus\Twig\Extension\Joomla::filter_lang')
         );
     }
 
@@ -56,7 +57,7 @@ class Joomla extends Twig_Extension
     {
         $args = func_get_args();
 
-        return call_user_func_array('JHtml::_', $args);
+        return call_user_func_array('\JHtml::_', $args);
     }
 
     public static function filter_route($string)

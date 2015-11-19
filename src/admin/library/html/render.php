@@ -25,24 +25,31 @@ abstract class OscRender
      *
      * @param JForm  $form
      * @param string $fieldSet
+     * @param string $legend
      * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return string
      */
-    public static function adminfields(JForm $form, $fieldSet, $tabbed = false, array $sameLine = array())
-    {
+    public static function adminfields(
+        JForm $form,
+        $fieldSet,
+        $legend = null,
+        $tabbed = false,
+        array $sameLine = array()
+    ) {
         $html      = array();
         $fieldSets = $form->getFieldsets();
 
         if (!empty($fieldSets[$fieldSet])) {
-            $name  = $fieldSets[$fieldSet]->name;
-            $label = $fieldSets[$fieldSet]->label;
+            $name   = $fieldSets[$fieldSet]->name;
+            $label  = $fieldSets[$fieldSet]->label;
+            $legend = (!$tabbed && !$legend) ? $label : $legend;
 
             if (version_compare(JVERSION, '3.0', 'lt')) {
-                $html = static::adminFieldsetJ2($form, $name, $label, $tabbed, $sameLine);
+                $html = static::adminFieldsetJ2($form, $name, $label, $legend, $tabbed, $sameLine);
             } else {
-                $html = static::adminFieldsetJ3($form, $name, $label, $tabbed, $sameLine);
+                $html = static::adminFieldsetJ3($form, $name, $label, $legend, $tabbed, $sameLine);
             }
         }
         return join("\n", $html);
@@ -54,12 +61,13 @@ abstract class OscRender
      * @param JForm  $form
      * @param string $name
      * @param string $label
+     * @param string $legend
      * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return array
      */
-    protected static function adminFieldsetJ3(JForm $form, $name, $label, $tabbed, array $sameLine)
+    protected static function adminFieldsetJ3(JForm $form, $name, $label, $legend, $tabbed, array $sameLine)
     {
         $html = array();
         if ($tabbed) {
@@ -67,8 +75,8 @@ abstract class OscRender
         }
         $html[] = '<div class="row-fluid">';
         $html[] = '<fieldset class="adminform">';
-        if (!$tabbed && $label) {
-            $html[] = '<legend>' . JText::_($label) . '</legend>';
+        if ($legend) {
+            $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
 
         foreach ($form->getFieldset($name) as $field) {
@@ -108,12 +116,13 @@ abstract class OscRender
      * @param JForm  $form
      * @param string $name
      * @param string $label
+     * @param string $legend
      * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return array
      */
-    protected static function adminFieldsetJ2(JForm $form, $name, $label, $tabbed, array $sameLine)
+    protected static function adminFieldsetJ2(JForm $form, $name, $label, $legend, $tabbed, array $sameLine)
     {
         $html = array();
         if ($tabbed) {
@@ -122,8 +131,8 @@ abstract class OscRender
         $html[] = '<div class="width-100">';
         $html[] = '<fieldset class="adminform">';
 
-        if (!$tabbed && $label) {
-            $html[] = '<legend>' . JText::_($label) . '</legend>';
+        if ($legend) {
+            $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
 
         $html[] = '<ul class="adminformlist">';
