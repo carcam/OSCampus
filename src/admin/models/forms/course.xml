@@ -5,9 +5,6 @@
             name="id"
             type="hidden"
             class="readonly"
-            label="COM_OSCAMPUS_ID_LABEL"
-            description="COM_OSCAMPUS_ID_DESC"
-            size="10"
             default="0"
             readonly="true"/>
 
@@ -15,14 +12,55 @@
             name="title"
             type="text"
             label="COM_OSCAMPUS_COURSE_TITLE_LABEL"
-            description="COM_OSCAMPUS_COURSE_TITLE_DESC"
             class="input-xxlarge input-large-text"
             required="true"/>
 
         <field
             name="alias"
             type="text"
-            label="COM_OSCAMPUS_COURSE_ALIAS_LABEL"
-            description="COM_OSCAMPUS_COURSE_ALIAS_DESC"/>
+            label="COM_OSCAMPUS_COURSE_ALIAS_LABEL"/>
+
+        <field
+            name="image"
+            type="media"
+            label="COM_OSCAMPUS_COURSE_IMAGE_LABEL"
+            class="readonly"/>
+
+        <field
+            name="length"
+            type="text"
+            label="COM_OSCAMPUS_COURSE_LENGTH_LABEL"/>
+
+        <field
+            name="difficulty"
+            type="oscampus.difficulty"
+            label="COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL"/>
+
+        <field
+            name="introtext"
+            type="editor"
+            label="COM_OSCAMPUS_COURSE_INTROTEXT_LABEL"
+            filter="safehtml"
+            buttons="true"
+            hide="readmore,pagebreak"/>
+
+        <field
+            name="description"
+            type="editor"
+            label="COM_OSCAMPUS_COURSE_DESCRIPTION_LABEL"
+            required="true"
+            filter="safehtml"
+            buttons="true"
+            hide="readmore,pagebreak"/>
+
+        <!--
+         @TODO
+         teacher
+         access
+         published
+         released
+         pathways
+         lessons
+        -->
     </fieldset>
 </form>
