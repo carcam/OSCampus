@@ -7,11 +7,13 @@
 
 {% extends 'admin_form.html.twig' %}
 
-    {% block form_body %}
-        <div class="fltlft width-60">
-            {{ html('osc.render.adminfields', form, 'main')|raw }}
-        </div>
-        <div class="fltlft width-40">
-            {{ html('osc.render.adminfields', form, 'links')|raw }}
-        </div>
-    {% endblock %}
+{% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_TEACHER_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
+
+{% block form_body %}
+    <div class="fltlft width-60">
+        {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
+    </div>
+    <div class="fltlft width-40">
+        {{ html('osc.render.adminfields', form, 'links')|raw }}
+    </div>
+{% endblock %}

@@ -6,3 +6,5 @@
  #}
 
 {% extends 'admin_form.html.twig' %}
+
+{% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_TAG_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
