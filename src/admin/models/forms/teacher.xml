@@ -37,34 +37,6 @@
             description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"
             required="true"/>
 
-        <fields name="links">
-            <field
-                name="website"
-                type="oscampus.links"
-                label="COM_OSCAMPUS_TEACHER_WEBSITE"/>
-
-            <field
-                name="email"
-                type="oscampus.links"
-                label="COM_OSCAMPUS_TEACHER_EMAIL"/>
-
-            <field
-                name="blog"
-                type="oscampus.links"
-                label="COM_OSCAMPUS_TEACHER_BLOG"/>
-
-            <field
-                name="facebook"
-                type="oscampus.links"
-                label="COM_OSCAMPUS_TEACHER_FACEBOOK"/>
-
-            <field
-                name="twitter"
-                type="oscampus.links"
-                label="COM_OSCAMPUS_TEACHER_TWITTER"/>
-
-        </fields>
-
         <field
             name="created_by"
             type="user"
@@ -79,5 +51,58 @@
 
         <field name="checked_out" type="hidden" filter="unset"/>
         <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
+
+    <fieldset name="links" label="COM_OSCAMPUS_TEACHER_PAGE_LINKS">
+        <fields name="links">
+            <field
+                name="website"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_WEBSITE_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"
+                size="35"
+            />
+
+            <field
+                name="email"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_DESC"
+                size="35"
+            />
+
+            <field
+                name="blog"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_BLOG_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"
+                size="35"
+            />
+
+            <field
+                name="facebook"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_DESC"
+                size="35"
+            />
+
+            <field
+                name="twitter"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_DESC"
+                size="35"
+            />
+
+            <field
+                name="googleplus"
+                type="oscampus.links"
+                label="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_LABEL"
+                description="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_DESC"
+                size="35"
+            />
+
+        </fields>
     </fieldset>
 </form>

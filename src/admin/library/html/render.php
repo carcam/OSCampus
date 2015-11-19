@@ -67,6 +67,9 @@ abstract class OscRender
         }
         $html[] = '<div class="row-fluid">';
         $html[] = '<fieldset class="adminform">';
+        if (!$tabbed && $label) {
+            $html[] = '<legend>' . JText::_($label) . '</legend>';
+        }
 
         foreach ($form->getFieldset($name) as $field) {
             if (in_array($field->fieldname, $sameLine)) {
@@ -118,6 +121,11 @@ abstract class OscRender
         }
         $html[] = '<div class="width-100">';
         $html[] = '<fieldset class="adminform">';
+
+        if (!$tabbed && $label) {
+            $html[] = '<legend>' . JText::_($label) . '</legend>';
+        }
+
         $html[] = '<ul class="adminformlist">';
 
         foreach ($form->getFieldset($name) as $field) {
