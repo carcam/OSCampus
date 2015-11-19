@@ -6,7 +6,7 @@
  * @license
  */
 
-use Joomla\String;
+use Oscampus\String;
 
 defined('_JEXEC') or die();
 
@@ -62,7 +62,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
     {
         $inflector = String\Inflector::getInstance();
 
-        $plural   = $this->getname();
+        $plural   = $this->getName();
         $singular = $inflector->toSingular($plural);
 
         OscampusToolbarHelper::addNew($singular . '.add');
