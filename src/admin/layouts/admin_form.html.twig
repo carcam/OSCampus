@@ -30,6 +30,7 @@
             {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
         {% endblock %}
 
+        {{ html('osc.render.hiddenfields', form)|raw }}
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="{{ input.getCmd('return') }}"/>
         {{ html('form.token')|raw }}
