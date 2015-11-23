@@ -170,4 +170,26 @@ abstract class OscRender
 
         return $html;
     }
+
+    /**
+     * Output all hidden fields in a fieldset
+     *
+     * @param JForm  $form
+     * @param string $fieldSet
+     *
+     * @return string
+     */
+    public static function hiddenfields(JForm $form, $fieldSet = 'hidden')
+    {
+        $html = array();
+        if ($fields = $form->getFieldset($fieldSet)) {
+            foreach ($fields as $field) {
+                if (!strcasecmp($field->type, 'hidden')) {
+                    $html[] = $field->input;
+                }
+            }
+        }
+
+        return join("\n", $html);
+    }
 }
