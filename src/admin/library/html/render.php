@@ -79,21 +79,13 @@ abstract class OscRender
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
 
+        /** @var JFormField $field */
         foreach ($form->getFieldset($name) as $field) {
             if (in_array($field->fieldname, $sameLine)) {
                 continue;
             }
 
-            $fieldHtml = array(
-                '<div class="control-group">',
-                '<div class="control-label">',
-                $field->label,
-                '</div>',
-                '<div class="controls">',
-                $field->input
-            );
-            $html      = array_merge($html, $fieldHtml);
-
+            $html[] = $field->renderField();
             if (isset($sameLine[$field->fieldname])) {
                 $html[] = ' ' . $form->getField($sameLine[$field->fieldname])->input;
             }
@@ -137,28 +129,45 @@ abstract class OscRender
 
         $html[] = '<ul class="adminformlist">';
 
-        foreach ($form->getFieldset($name) as $field) {
+        $fieldSet  = $form->getFieldset($name);
+        $remaining = count($fieldSet);
+        foreach ($fieldSet as $field) {
+            $remaining--;
             if (in_array($field->fieldname, $sameLine)) {
                 continue;
             }
 
-            $fieldHtml = array(
-                '<li>' . $field->label . $field->input . '</li>'
-            );
-            $html      = array_merge($html, $fieldHtml);
+            if (strcasecmp($field->type, 'editor')) {
+                $html[] = '<li>' . $field->label . $field->input . '</li>';
+                if (isset($sameLine[$field->fieldname])) {
+                    $html[] = ' ' . $form->getField($sameLine[$field->fieldname])->input;
+                }
 
-            if (isset($sameLine[$field->fieldname])) {
-                $html[] = ' ' . $form->getField($sameLine[$field->fieldname])->input;
+            } else {
+                // Editor fields require special handling in J2
+                $html[] = '</ul>';
+                $html[] = '<div class="clr"></div>';
+                if ($field->label) {
+                    $html[] = $field->label;
+                    $html[] = '<div class="clr"></div>';
+                }
+                $html[] = $field->input;
+                if ($remaining) {
+                    $html[] = '<div class="clr"></div>';
+                    $html[] = '<ul>';
+                }
             }
 
         }
-        $endHtml = array(
-            '</ul>',
-            '</fieldset>',
-            '</div>',
-            '<div class="clr"></div>'
-        );
 
-        return array_merge($html, $endHtml);
+        if (substr(end($html), -5) == '</li>') {
+            // Close off the list if last thing is a list item
+            $html[] = '</ul>';
+        }
+        $html[] = '</fieldset>';
+        $html[] = '</div>';
+        $html[] = '<div class="clr"></div>';
+
+        return $html;
     }
 }
