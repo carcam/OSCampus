@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="main" label="COM_OSCAMPUS_TEACHER_PAGE_MAIN">
-        <field
-            name="id"
-            type="hidden"
-            class="readonly"
-            default="0"
-            readonly="true"/>
+    <fieldset name="hidden">
+        <field name="id" type="hidden"/>
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
 
+    <fieldset name="main" label="COM_OSCAMPUS_TEACHER_PAGE_MAIN">
         <field
             name="users_id"
             type="user"
@@ -15,6 +14,12 @@
             description="COM_OSCAMPUS_TEACHER_USER_DESC"
             class="input-xxlarge input-large-text"
             required="true"/>
+
+        <field
+            name="image"
+            type="media"
+            label="COM_OSCAMPUS_TEACHER_IMAGE_LABEL"
+            description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"/>
 
         <field
             name="bio"
@@ -27,14 +32,6 @@
             hide="readmore,pagebreak"
             labelclass="hidden"/>
 
-        <field
-            name="image"
-            type="media"
-            label="COM_OSCAMPUS_TEACHER_IMAGE_LABEL"
-            description="COM_OSCAMPUS_TEACHER_IMAGE_DESC"/>
-
-        <field name="checked_out" type="hidden" filter="unset"/>
-        <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
 
     <fieldset name="links" label="COM_OSCAMPUS_TEACHER_PAGE_LINKS">
