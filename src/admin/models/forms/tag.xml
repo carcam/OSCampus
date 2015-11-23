@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="main">
-        <field
-            name="id"
-            type="hidden"
-            class="readonly"
-            label="COM_OSCAMPUS_ID_LABEL"
-            description="COM_OSCAMPUS_ID_DESC"
-            size="10"
-            default="0"
-            readonly="true"/>
+    <fieldset name="hidden">
+        <field name="id" type="hidden"/>
+    </fieldset>
 
+    <fieldset name="main">
         <field
             name="title"
             type="text"
