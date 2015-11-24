@@ -12,13 +12,6 @@ defined('_JEXEC') or die();
 abstract class OscampusViewForm extends OscampusViewAdmin
 {
     /**
-     * Instance of the item with to fill the form
-     *
-     * @var stdClass
-     */
-    protected $item;
-
-    /**
      * Default admin screen title
      *
      * @param string $sub
