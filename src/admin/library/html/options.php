@@ -17,7 +17,7 @@ abstract class OscOptions
      *
      * @return object[]
      */
-    public static function difficulty()
+    public static function difficulties()
     {
         $options = array(
             JHtml::_(

@@ -14,6 +14,6 @@ class OscampusFormFieldDifficulty extends JFormFieldList
 {
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), JHtml::_('osc.options.difficulty'));
+        return array_merge(parent::getOptions(), JHtml::_('osc.options.difficulties'));
     }
 }
