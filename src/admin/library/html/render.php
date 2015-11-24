@@ -26,7 +26,6 @@ abstract class OscRender
      * @param JForm  $form
      * @param string $fieldSet
      * @param string $legend
-     * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return string
@@ -35,7 +34,6 @@ abstract class OscRender
         JForm $form,
         $fieldSet,
         $legend = null,
-        $tabbed = false,
         array $sameLine = array()
     ) {
         $html      = array();
@@ -43,16 +41,50 @@ abstract class OscRender
 
         if (!empty($fieldSets[$fieldSet])) {
             $name   = $fieldSets[$fieldSet]->name;
-            $label  = $fieldSets[$fieldSet]->label;
-            $legend = (!$tabbed && !$legend) ? $label : $legend;
+            $legend = $legend ?: $fieldSets[$fieldSet]->label;
 
             if (version_compare(JVERSION, '3.0', 'lt')) {
-                $html = static::adminFieldsetJ2($form, $name, $label, $legend, $tabbed, $sameLine);
+                $html = static::adminFieldsetJ2($form, $name, $legend, $sameLine);
             } else {
-                $html = static::adminFieldsetJ3($form, $name, $label, $legend, $tabbed, $sameLine);
+                $html = static::adminFieldsetJ3($form, $name, $legend, $sameLine);
             }
         }
         return join("\n", $html);
+    }
+
+    /**
+     * Display selected fieldsets as tabbed areas in standard admin UI form
+     *
+     * @param JForm    $form
+     * @param string[] $chosen
+     *
+     * @return string
+     */
+    public function admintabs(JForm $form, array $chosen = array())
+    {
+
+        $html = array();
+
+        $html[] = JHtml::_('tabs.start', str_replace('.', '-', $form->getName()));
+
+        $fieldSets = $form->getFieldsets();
+        $chosen    = array_map('strtolower', $chosen);
+        foreach ($fieldSets as $name => $fieldSet) {
+            if (!$chosen || in_array(strtolower($name), $chosen)) {
+                $html[] = JHtml::_('tabs.panel', JText::_($fieldSet->label), $name . '-panel');
+
+                if (version_compare(JVERSION, '3', 'lt')) {
+                    $html = array_merge($html, static::adminFieldsetJ2($form, $name));
+                } else {
+                    $html = array_merge($html, static::adminFieldsetJ3($form, $name));
+                }
+
+            }
+        }
+
+        $html[] = JHtml::_('tabs.end');
+
+        return join('', $html);
     }
 
     /**
@@ -60,19 +92,14 @@ abstract class OscRender
      *
      * @param JForm  $form
      * @param string $name
-     * @param string $label
      * @param string $legend
-     * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return array
      */
-    protected static function adminFieldsetJ3(JForm $form, $name, $label, $legend, $tabbed, array $sameLine)
+    protected static function adminFieldsetJ3(JForm $form, $name, $legend = null, array $sameLine = array())
     {
-        $html = array();
-        if ($tabbed) {
-            $html[] = JHtml::_('bootstrap.addTab', 'myTab', $name, JText::_($label));
-        }
+        $html   = array();
         $html[] = '<div class="row-fluid">';
         $html[] = '<fieldset class="adminform">';
         if ($legend) {
@@ -95,9 +122,6 @@ abstract class OscRender
         }
         $html[] = '</fieldset>';
         $html[] = '</div>';
-        if ($tabbed) {
-            $html[] = JHtml::_('bootstrap.endTab');
-        }
 
         return $html;
     }
@@ -107,19 +131,14 @@ abstract class OscRender
      *
      * @param JForm  $form
      * @param string $name
-     * @param string $label
      * @param string $legend
-     * @param bool   $tabbed
      * @param array  $sameLine
      *
      * @return array
      */
-    protected static function adminFieldsetJ2(JForm $form, $name, $label, $legend, $tabbed, array $sameLine)
+    protected static function adminFieldsetJ2(JForm $form, $name, $legend = null, array $sameLine = array())
     {
-        $html = array();
-        if ($tabbed) {
-            $html[] = JHtml::_('tabs.panel', JText::_($label), $name . '-page');
-        }
+        $html   = array();
         $html[] = '<div class="width-100">';
         $html[] = '<fieldset class="adminform">';
 
@@ -157,7 +176,6 @@ abstract class OscRender
                     $html[] = '<ul>';
                 }
             }
-
         }
 
         if (substr(end($html), -5) == '</li>') {
