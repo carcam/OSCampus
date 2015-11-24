@@ -48,7 +48,9 @@
             name="difficulty"
             type="oscampus.difficulty"
             label="COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL"
-            required="true"/>
+            required="true">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY</option>
+        </field>
 
         <field
             name="released"
