@@ -190,6 +190,18 @@ abstract class OscRender
     }
 
     /**
+     * Simple form field rendering for use in twig
+     *
+     * @param JFormField $field
+     *
+     * @return string
+     */
+    public static function formfield(JFormField $field)
+    {
+        return $field->label . ' ' . $field->input;
+    }
+
+    /**
      * Output all hidden fields in a fieldset
      *
      * @param JForm  $form

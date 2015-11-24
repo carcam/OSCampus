@@ -7,6 +7,12 @@
 
 {% extends "admin_form.html.twig" %}
 
+{% block form_top %}
+    {{ html('osc.render.formfield', form.getField('title'))|raw }}
+    {{ html('osc.render.formfield', form.getField('alias'))|raw }}
+    <div class="clr"></div>
+{% endblock %}
+
 {% block form_body %}
     {{ html('osc.render.admintabs', form, ['main', 'descriptions'], null, true)|raw }}
 {% endblock %}
