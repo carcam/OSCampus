@@ -20,6 +20,9 @@ class OscampusModelCourse extends OscampusModelAdmin
             $item->access = 1;
             $item->published = 1;
             $item->difficulty = \Oscampus\Course::BEGINNER;
+
+            $defaultImage = JHtml::_('image', 'com_oscampus/default-course.jpg', null, null, true, true);
+            $item->image = ltrim($defaultImage, '/');
         }
 
         return $item;
