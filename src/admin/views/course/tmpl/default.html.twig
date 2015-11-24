@@ -7,4 +7,7 @@
 
 {% extends "admin_form.html.twig" %}
 
-{% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_COURSE_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
+{% block form_body %}
+    {{ html('osc.render.admintabs', form, ['main', 'descriptions'], null, true)|raw }}
+{% endblock %}
+
