@@ -22,6 +22,16 @@ class OscampusModelCourse extends OscampusModelAdmin
 
             $defaultImage = JHtml::_('image', 'com_oscampus/default-course.jpg', null, null, true, true);
             $item->image = ltrim($defaultImage, '/');
+            $item->pathways = array();
+
+        } else {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('pathways_id')
+                ->from('#__oscampus_courses_pathways')
+                ->where('courses_id = ' . $item->id);
+
+            $item->pathways = $db->setQuery($query)->loadColumn();
         }
 
         return $item;
