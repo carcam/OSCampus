@@ -72,7 +72,14 @@ abstract class OscOptions
         return $teachers;
     }
 
-    public static function pathways()
+    /**
+     * Create options list of available pathways
+     *
+     * @param bool $coreOnly
+     *
+     * @return object[]
+     */
+    public static function pathways($coreOnly = true)
     {
         $db    = OscampusFactory::getDbo();
         $query = $db->getQuery(true)
@@ -80,6 +87,10 @@ abstract class OscOptions
             ->from('#__oscampus_pathways pathway')
             ->innerJoin('#__viewlevels access ON access.id = pathway.access')
             ->order('pathway.title');
+
+        if ($coreOnly) {
+            $query->where('IFNULL(pathway.users_id, 0) = 0');
+        }
 
         $pathways = array_map(function ($row) {
             return (object)array(
