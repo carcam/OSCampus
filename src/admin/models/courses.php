@@ -14,11 +14,13 @@ class OscampusModelCourses extends OscampusModelList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id', 'course.id',
-            'title', 'course.title',
-            'difficulty', 'course.difficulty',
-            'published', 'course.published',
-            'access_level', 'course.access',
+            'id',            'course.id',
+            'title',         'course.title',
+            'tags',          'tag.title',
+            'pathways',      'pathway.title',
+            'difficulty',    'course.difficulty',
+            'published',     'course.published',
+            'access_level',  'course.access',
             'teachers_name', 'user.name'
         );
 
@@ -36,17 +38,20 @@ class OscampusModelCourses extends OscampusModelList
                 'course.checked_out as editor',
                 'user.name as teachers_name',
                 'viewlevel.title as access_level',
-                'GROUP_CONCAT(tag.title) AS tags',
+                'GROUP_CONCAT(DISTINCT tag.title) AS tags',
+                'GROUP_CONCAT(DISTINCT pathway.title) AS pathways',
                 'editor_user.name editor'
             )
-        );
-        $query->from('#__oscampus_courses course');
-        $query->leftJoin('#__oscampus_teachers teacher ON course.teachers_id = teacher.id');
-        $query->leftJoin('#__users user ON teacher.users_id = user.id');
-        $query->leftJoin('#__viewlevels viewlevel ON course.access = viewlevel.id');
-        $query->leftJoin('#__oscampus_courses_tags course_tags ON course.id = course_tags.courses_id');
-        $query->leftJoin('#__oscampus_tags tag ON course_tags.tags_id = tag.id');
-        $query->leftJoin('#__users editor_user ON editor_user.id = course.checked_out');
+        )
+            ->from('#__oscampus_courses course')
+            ->leftJoin('#__oscampus_teachers teacher ON course.teachers_id = teacher.id')
+            ->leftJoin('#__users user ON teacher.users_id = user.id')
+            ->leftJoin('#__viewlevels viewlevel ON course.access = viewlevel.id')
+            ->leftJoin('#__oscampus_courses_tags course_tags ON course.id = course_tags.courses_id')
+            ->leftJoin('#__oscampus_tags tag ON course_tags.tags_id = tag.id')
+            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = course.id')
+            ->leftJoin('#__oscampus_pathways pathway ON pathway.id = cp.pathways_id')
+            ->leftJoin('#__users editor_user ON editor_user.id = course.checked_out');
 
         if ($search = $this->getState('filter.search')) {
             $search = $db->q('%' . $search . '%');
@@ -57,11 +62,16 @@ class OscampusModelCourses extends OscampusModelList
             $query->where('(' . join(' OR ', $ors) . ')');
         }
 
-        $listOrder = $this->getState('list.ordering', 'course.id');
-        $listDir   = $this->getState('list.direction', 'ASC');
-
         $query->group('course.id');
-        $query->order($listOrder . ' ' . $listDir);
+
+        $direction = $this->getState('list.direction', 'ASC');
+        $ordering = array(
+            $this->getState('list.ordering', 'course.id') . ' ' . $direction,
+            'tag.title ' . $direction,
+            'pathway.title ' . $direction
+        );
+        $query->order($ordering);
+
 
         return $query;
     }

@@ -18,8 +18,14 @@
 {% endmacro %}
 
 {% macro th_sort(order_field, title, list_dir, list_order, width = '') %}
-    <th class="nowrap" {% if width %}width="{{ width }}"{% endif %}>
+    <th class="nowrap"{{ width ? ' width="{{ width }}"' : '' }}>
         {{ html('osc.grid.sort', title, order_field, list_dir, list_order)|raw }}
+    </th>
+{% endmacro %}
+
+{% macro th_text(text, width = '') %}
+    <th class="nowrap"{{ width ? ' width="{{ width }}"' : '' }}>
+        {{ text|lang }}
     </th>
 {% endmacro %}
 
