@@ -36,4 +36,40 @@ class OscampusModelCourse extends OscampusModelAdmin
 
         return $item;
     }
+
+    public function save($data)
+    {
+        if (parent::save($data)) {
+            // Handle related table updates
+            if ($id = $this->getState($this->getName() . '.id', 0)) {
+                $db = $this->getDbo();
+                $db->setQuery('DELETE FROM #__oscampus_courses_pathways WHERE courses_id = ' . $id)->execute();
+                if ($error = $db->getErrorMsg()) {
+                    $this->setError($error);
+                    return false;
+                }
+
+                $pathways = array_map(
+                    function ($row) use ($id) {
+                        return sprintf('%s, %s', $id, $row);
+                    },
+                    (array)$data['pathways']
+                );
+
+                $query = $db->getQuery(true)
+                    ->insert('#__oscampus_courses_pathways')
+                    ->columns('courses_id, pathways_id')
+                    ->values($pathways);
+                $db->setQuery($query)->execute();
+                if ($error = $db->getErrorMsg()) {
+                    $this->setError($error);
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
