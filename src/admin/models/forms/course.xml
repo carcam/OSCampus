@@ -21,6 +21,13 @@
 
     <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
+            name="teachers_id"
+            type="oscampus.teacher"
+            label="COM_OSCAMPUS_COURSE_TEACHER_LABEL">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_TEACHER</option>
+        </field>
+
+        <field
             name="image"
             type="media"
             label="COM_OSCAMPUS_COURSE_IMAGE_LABEL"
