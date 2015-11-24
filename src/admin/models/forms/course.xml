@@ -21,6 +21,11 @@
 
     <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
+            name="pathways"
+            type="oscampus.pathways"
+            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"/>
+
+        <field
             name="teachers_id"
             type="oscampus.teacher"
             label="COM_OSCAMPUS_COURSE_TEACHER_LABEL">
@@ -68,7 +73,6 @@
             required="true"/>
         <!--
          @TODO
-         teacher
          pathways
          lessons
         -->

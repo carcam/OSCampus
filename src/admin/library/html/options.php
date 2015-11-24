@@ -63,12 +63,33 @@ abstract class OscOptions
             ->order('user.username');
 
         $teachers = array_map(
-            function($row) {
+            function ($row) {
                 return JHtml::_('select.option', $row->id, sprintf('%s (%s)', $row->username, $row->name));
             },
             $db->setQuery($query)->loadObjectList()
         );
 
         return $teachers;
+    }
+
+    public static function pathways()
+    {
+        $db    = OscampusFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('pathway.id, pathway.title, access.title level')
+            ->from('#__oscampus_pathways pathway')
+            ->innerJoin('#__viewlevels access ON access.id = pathway.access')
+            ->order('pathway.title');
+
+        $pathways = array_map(function ($row) {
+            return (object)array(
+                'value' => $row->id,
+                'text' => sprintf('%s (%s)', $row->title, $row->level)
+            );
+        },
+            $db->setQuery($query)->loadObjectList()
+        );
+
+        return $pathways;
     }
 }
