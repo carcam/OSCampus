@@ -11,13 +11,16 @@
 
 {% block main_content %}
     {{ html('osc.behavior.formvalidation') }}
-    <script type="text/javascript">
-        Joomla.submitbutton = function(task) {
-            if (task.match(/\.cancel$/) || document.formvalidator.isValid(document.id('item-form'))) {
-                Joomla.submitform(task, document.getElementById('item-form'));
+
+    {% block scripts %}
+        <script type="text/javascript">
+            Joomla.submitbutton = function(task) {
+                if (task.match(/\.cancel$/) || document.formvalidator.isValid(document.id('item-form'))) {
+                    Joomla.submitform(task, document.getElementById('item-form'));
+                }
             }
-        }
-    </script>
+        </script>
+    {% endblock %}
 
     <form
             action="{{ uri }}"
@@ -26,9 +29,13 @@
             id="item-form"
             class="form-validate">
 
+        {% block form_top %}{% endblock %}
+
         {% block form_body %}
             {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
         {% endblock %}
+
+        {% block form_bottom %}{% endblock %}
 
         {{ html('osc.render.hiddenfields', form)|raw }}
         <input type="hidden" name="task" value=""/>
