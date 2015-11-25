@@ -8,7 +8,11 @@
 {{ html('stylesheet', 'com_oscampus/admin.css', null, true) }}
 
 {% block page_setup %}
-    {{ joomla2 ? html('behavior.tooltip') : html('bootstrap.tooltip') }}
+    {% if joomla2 %}
+        {{ html('behavior.tooltip') }}
+    {% else %}
+        {{ html('bootstrap.tooltip') }}
+    {% endif %}
 {% endblock %}
 
 {% if show_sidebar %}

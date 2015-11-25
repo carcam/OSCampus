@@ -29,9 +29,13 @@ class Joomla extends Twig_Extension
     {
         $app = OscampusFactory::getApplication();
 
+        $joomla2 = version_compare(JVERSION, '3', 'lt') && version_compare(JVERSION, '2', 'ge');
+        $joomla3 = version_compare(JVERSION, '4', 'lt') && version_compare(JVERSION, '3', 'ge');
+
         return array(
             'joomla_version' => JVERSION,
-            'joomla_25'      => version_compare(JVERSION, '3.0', 'lt'),
+            'joomla2'        => $joomla2,
+            'joomla3'        => $joomla3,
             'input'          => $app->input,
             'uri'            => JUri::getInstance()->toString()
         );

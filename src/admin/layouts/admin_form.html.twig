@@ -12,7 +12,11 @@
 {% block page_setup %}
     {{ parent() }}
     {{ html('behavior.keepalive') }}
-    {{ joomla2 ? html('behavior.formvalidation') : html('behavior.formvalidator') }}
+    {% if joomla2 %}
+        {{ html('behavior.formvalidation') }}
+    {% else %}
+        {{ html('behavior.formvalidator') }}
+    {% endif %}
 {% endblock %}
 
 {% block main_content %}
