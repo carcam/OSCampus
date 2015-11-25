@@ -12,6 +12,8 @@ use Oscampus\Twig\Extension\Joomla as JoomlaTwig;
 
 class OscampusViewTwig extends OscampusView
 {
+    protected $_layoutExt = 'html.twig';
+
     /**
      * Variables used in the templates
      *
@@ -133,31 +135,6 @@ class OscampusViewTwig extends OscampusView
         } else {
             throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_LAYOUTFILE_NOT_FOUND', $file), 500);
         }
-    }
-
-    /**
-     * Create the filename for a resource
-     *
-     * @param   string $type  The resource type to create the filename for
-     * @param   array  $parts An associative array of filename information
-     *
-     * @return  string  The filename
-     *
-     * @since   12.2
-     */
-    protected function _createFileName($type, $parts = array())
-    {
-        switch ($type) {
-            case 'template':
-                $filename = strtolower($parts['name']) . '.' . $this->_layoutExt;
-                break;
-
-            default:
-                $filename = strtolower($parts['name']) . '.html.twig';
-                break;
-        }
-
-        return $filename;
     }
 
     /**
