@@ -6,11 +6,10 @@
  #}
 
 {{ html('stylesheet', 'com_oscampus/admin.css', null, true) }}
-{{ html('osc.behavior.tooltip') }}
-{{ html('osc.behavior.keepalive') }}
-{{ html('osc.behavior.multiselect') }}
-{{ html('osc.formbehavior.chosen', 'select') }}
 
+{% block page_setup %}
+    {{ joomla2 ? html('behavior.tooltip') : html('bootstrap.tooltip') }}
+{% endblock %}
 
 {% if show_sidebar %}
     <div id="j-sidebar-container" class="span2">
@@ -19,5 +18,5 @@
     {% set class = ' class="span10"' %}
 {% endif %}
 <div id="j-main-container"{{ class }}>
-    {% block main_content %}{% endblock  %}
+    {% block main_content %}<p>Under Construction</p>{% endblock %}
 </div>

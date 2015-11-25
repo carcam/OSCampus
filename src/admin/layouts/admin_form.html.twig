@@ -9,9 +9,13 @@
 
 {% import 'admin_form_macros.html.twig' as form_macro %}
 
-{% block main_content %}
-    {{ html('osc.behavior.formvalidation') }}
+{% block page_setup %}
+    {{ parent() }}
+    {{ html('behavior.keepalive') }}
+    {{ joomla2 ? html('behavior.formvalidation') : html('behavior.formvalidator') }}
+{% endblock %}
 
+{% block main_content %}
     {% block scripts %}
         <script type="text/javascript">
             Joomla.submitbutton = function(task) {

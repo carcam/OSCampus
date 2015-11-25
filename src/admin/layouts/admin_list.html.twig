@@ -9,6 +9,11 @@
 
 {% import 'admin_list_macros.html.twig' as list_macro %}
 
+{% block page_setup %}
+    {{ parent() }}
+    {{ html('behavior.multiselect') }}
+{% endblock %}
+
 {% block main_content %}
     <form
             action="{{ uri }}"
@@ -46,7 +51,6 @@
             {% if pagination %}
                 {{ pagination|raw }}
             {% endif %}
-
         {% endif %}
 
         {% block list_hidden %}
