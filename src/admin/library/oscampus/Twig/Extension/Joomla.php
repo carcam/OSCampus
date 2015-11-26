@@ -44,33 +44,16 @@ class Joomla extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('html', '\Oscampus\Twig\Extension\Joomla::function_html'),
-            new Twig_SimpleFunction('sprintf', '\JText::sprintf')
+            new Twig_SimpleFunction('html', '\JHtml::_')
         );
     }
 
     public function getFilters()
     {
         return array(
-            new Twig_SimpleFilter('route', '\Oscampus\Twig\Extension\Joomla::filter_route'),
-            new Twig_SimpleFilter('lang', '\Oscampus\Twig\Extension\Joomla::filter_lang')
+            new Twig_SimpleFilter('route', '\JRoute::_'),
+            new Twig_SimpleFilter('lang', '\JText::_'),
+            new Twig_SimpleFilter('sprintf', '\JText::sprintf')
         );
-    }
-
-    public static function function_html()
-    {
-        $args = func_get_args();
-
-        return call_user_func_array('\JHtml::_', $args);
-    }
-
-    public static function filter_route($string)
-    {
-        return JRoute::_($string);
-    }
-
-    public static function filter_lang($string)
-    {
-        return JText::_($string);
     }
 }
