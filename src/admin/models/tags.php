@@ -26,9 +26,10 @@ class OscampusModelTags extends OscampusModelList
     {
         $db = $this->getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select('tag.*');
-        $query->from('#__oscampus_tags tag');
+        $query = $db->getQuery(true)
+            ->select('tag.*, editor_user.name AS editor')
+            ->from('#__oscampus_tags tag')
+            ->leftJoin('#__users editor_user ON editor_user.id = tag.checked_out');
 
         if ($search = $this->getState('filter.search')) {
             $search = $db->q('%' . $search . '%');
