@@ -14,8 +14,8 @@
     {{ list_macro.th_sort('tags', 'COM_OSCAMPUS_TAGS', list_dir, list_order) }}
     {{ list_macro.th_sort('pathways', 'COM_OSCAMPUS_COURSE_PATHWAYS_LABEL', list_dir, list_order) }}
     {{ list_macro.th_sort('course.difficulty', 'COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL', list_dir, list_order) }}
-    {{ list_macro.th_sort('teachers_name', 'COM_OSCAMPUS_TEACHER', list_dir, list_order) }}
-    {{ list_macro.th_sort('access_level', 'COM_OSCAMPUS_ACCESS_LEVEL', list_dir, list_order) }}
+    {{ list_macro.th_sort('teacher_name', 'COM_OSCAMPUS_TEACHER', list_dir, list_order) }}
+    {{ list_macro.th_sort('viewlevel_title', 'COM_OSCAMPUS_ACCESS_LEVEL', list_dir, list_order) }}
     {{ list_macro.th_sort('course.id', 'COM_OSCAMPUS_ID', list_dir, list_order, '1') }}
 {% endblock %}
 
@@ -26,7 +26,7 @@
     {{ list_macro.td_text(item.tags) }}
     {{ list_macro.td_text(item.pathways) }}
     {{ list_macro.td_text(('COM_OSCAMPUS_COURSE_DIFFICULTY_' ~ item.difficulty|upper)|lang) }}
-    {{ list_macro.td_text(item.teachers_name) }}
-    {{ list_macro.td_text(item.access_level) }}
+    {{ list_macro.td_text(item.teacher_name) }}
+    {{ list_macro.td_text(item.viewlevel_title) }}
     {{ list_macro.td_text(item.id, 'center') }}
 {% endblock %}
