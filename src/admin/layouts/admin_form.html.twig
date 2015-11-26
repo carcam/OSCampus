@@ -36,7 +36,7 @@
         {% block form_top %}{% endblock %}
 
         {% block form_body %}
-            {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
+            {{ html('osc.render.adminfieldset', form, 'main', main_legend)|raw }}
         {% endblock %}
 
         {% block form_bottom %}{% endblock %}

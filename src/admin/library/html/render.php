@@ -20,84 +20,60 @@ abstract class OscRender
     }
 
     /**
-     * Render a form fieldset with the ability to compact two fields
-     * into a single line
+     * Render a form fieldset for the admin UI
      *
      * @param JForm  $form
      * @param string $fieldSet
      * @param string $legend
-     * @param array  $sameLine
+     * @param string $width
      *
      * @return string
      */
-    public static function adminfields(
-        JForm $form,
-        $fieldSet,
-        $legend = null,
-        array $sameLine = array()
-    ) {
+    public static function adminfieldset(JForm $form, $fieldSet, $legend = null, $width = null)
+    {
         $html      = array();
         $fieldSets = $form->getFieldsets();
 
         if (!empty($fieldSets[$fieldSet])) {
-            $name   = $fieldSets[$fieldSet]->name;
             $legend = $legend ?: $fieldSets[$fieldSet]->label;
+            $fields = $form->getFieldset($fieldSet);
 
             if (version_compare(JVERSION, '3.0', 'lt')) {
-                $html = static::adminFieldsetJ2($form, $name, $legend, $sameLine);
+                $html = static::adminFieldsetJ2($fields, $legend);
             } else {
-                $html = static::adminFieldsetJ3($form, $name, $legend, $sameLine);
+                $html = static::adminFieldsetJ3($fields, $legend);
             }
         }
         return join("\n", $html);
     }
 
     /**
-     * Display selected fieldsets as tabbed areas in standard admin UI form
+     * Render an array of fields for Joomla! 3 admin UI
      *
-     * @param JForm    $form
-     * @param string[] $chosen
+     * @param JFormField[] $fields
      *
-     * @return string
+     * @return string[]
      */
-    public function admintabs(JForm $form, array $chosen = array())
+    protected static function adminFieldsJ3(array $fields)
     {
-
         $html = array();
 
-        $html[] = JHtml::_('tabs.start', str_replace('.', '-', $form->getName()));
-
-        $fieldSets = $form->getFieldsets();
-        $chosen    = array_map('strtolower', $chosen);
-        foreach ($fieldSets as $name => $fieldSet) {
-            if (!$chosen || in_array(strtolower($name), $chosen)) {
-                $html[] = JHtml::_('tabs.panel', JText::_($fieldSet->label), $name . '-panel');
-
-                if (version_compare(JVERSION, '3', 'lt')) {
-                    $html = array_merge($html, static::adminFieldsetJ2($form, $name));
-                } else {
-                    $html = array_merge($html, static::adminFieldsetJ3($form, $name));
-                }
-
-            }
+        foreach ($fields as $field) {
+            $html[] = $field->renderField();
         }
 
-        $html[] = JHtml::_('tabs.end');
-
-        return join('', $html);
+        return $html;
     }
 
     /**
-     * Render an admin form for Joomla! 3.x
+     * Render a Joomla! 3 fieldset for admin UI
      *
-     * @param JForm  $form
-     * @param string $name
-     * @param string $legend
-     * @param array  $sameLine
+     * @param JFormFIeld[] $fields
+     * @param string       $legend
      *
      * @return array
      */
-    protected static function adminFieldsetJ3(JForm $form, $name, $legend = null, array $sameLine = array())
+    protected static function adminFieldsetJ3(array $fields, $legend = null)
     {
         $html   = array();
         $html[] = '<div class="row-fluid">';
@@ -107,19 +83,8 @@ abstract class OscRender
         }
 
         /** @var JFormField $field */
-        foreach ($form->getFieldset($name) as $field) {
-            if (in_array($field->fieldname, $sameLine)) {
-                continue;
-            }
+        $html = array_merge($html, static::adminFieldsJ3($fields));
 
-            $html[] = $field->renderField();
-            if (isset($sameLine[$field->fieldname])) {
-                $html[] = ' ' . $form->getField($sameLine[$field->fieldname])->input;
-            }
-
-            $html[] = '</div>';
-            $html[] = '</div>';
-        }
         $html[] = '</fieldset>';
         $html[] = '</div>';
 
@@ -127,53 +92,42 @@ abstract class OscRender
     }
 
     /**
-     * Render an admin form for Joomla! 2.5
+     * Render an array of fields for Joomla! 2 admin UI
      *
-     * @param JForm  $form
-     * @param string $name
-     * @param string $legend
-     * @param array  $sameLine
+     * @param JFormField[] $fields
      *
-     * @return array
+     * @return string[]
      */
-    protected static function adminFieldsetJ2(JForm $form, $name, $legend = null, array $sameLine = array())
+    protected static function adminFieldsJ2(array $fields)
     {
-        $html   = array();
-        $html[] = '<div class="width-100">';
-        $html[] = '<fieldset class="adminform">';
-
-        if ($legend) {
-            $html[] = '<legend>' . JText::_($legend) . '</legend>';
-        }
+        $html = array();
 
         $html[] = '<ul class="adminformlist">';
 
-        $fieldSet  = $form->getFieldset($name);
-        $remaining = count($fieldSet);
-        foreach ($fieldSet as $field) {
-            $remaining--;
-            if (in_array($field->fieldname, $sameLine)) {
-                continue;
-            }
+        reset($fields);
+        $count = 0;
+        foreach ($fields as $name => $field) {
+            $count++;
 
             if (strcasecmp($field->type, 'editor')) {
-                $html[] = '<li>' . $field->label . $field->input . '</li>';
-                if (isset($sameLine[$field->fieldname])) {
-                    $html[] = ' ' . $form->getField($sameLine[$field->fieldname])->input;
+                if ($count == 1 || substr(end($html), -5) != '</li>') {
+                    $html[] = '<ul>';
                 }
+                $html[] = '<li>' . $field->label . $field->input . '</li>';
 
             } else {
                 // Editor fields require special handling in J2
-                $html[] = '</ul>';
+                if (substr(end($html), -5) == '</li>') {
+                    $html[] = '</ul>';
+                }
                 $html[] = '<div class="clr"></div>';
                 if ($field->label) {
                     $html[] = $field->label;
                     $html[] = '<div class="clr"></div>';
                 }
                 $html[] = $field->input;
-                if ($remaining) {
+                if ($count < count($fields)) {
                     $html[] = '<div class="clr"></div>';
-                    $html[] = '<ul>';
                 }
             }
         }
@@ -182,6 +136,33 @@ abstract class OscRender
             // Close off the list if last thing is a list item
             $html[] = '</ul>';
         }
+
+        return $html;
+    }
+
+    /**
+     * Render a fieldset for Joomla! 2 admin UI
+     *
+     * @param JFormField[] $fields
+     * @param string       $legend
+     * @param string       $width
+     *
+     * @return array
+     */
+    protected static function adminFieldsetJ2(array $fields, $legend = null, $width = null)
+    {
+        $width = $width ?: '100';
+
+        $html   = array();
+        $html[] = '<div class="width-' . $width . '">';
+        $html[] = '<fieldset class="adminform">';
+
+        if ($legend) {
+            $html[] = '<legend>' . JText::_($legend) . '</legend>';
+        }
+
+        $html = array_merge($html, static::adminFieldsJ2($fields));
+
         $html[] = '</fieldset>';
         $html[] = '</div>';
         $html[] = '<div class="clr"></div>';

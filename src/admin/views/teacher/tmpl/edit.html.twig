@@ -11,9 +11,9 @@
 
 {% block form_body %}
     <div class="fltlft width-60">
-        {{ html('osc.render.adminfields', form, 'main', main_legend)|raw }}
+        {{ html('osc.render.adminfieldset', form, 'main', main_legend)|raw }}
     </div>
     <div class="fltlft width-40">
-        {{ html('osc.render.adminfields', form, 'links')|raw }}
+        {{ html('osc.render.adminfieldset', form, 'links')|raw }}
     </div>
 {% endblock %}
