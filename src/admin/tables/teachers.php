@@ -6,8 +6,6 @@
  * @license
  */
 
-use Oscampus\Exception\NotFound;
-
 defined('_JEXEC') or die();
 
 class OscampusTableTeachers extends OscampusTable
