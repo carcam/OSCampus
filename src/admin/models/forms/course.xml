@@ -21,14 +21,18 @@
             class="input-xxlarge input-large-text"
             size="50"/>
 
-    </fieldset>
-
-    <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
             name="pathways"
             type="oscampus.pathways"
             label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"/>
 
+        <field
+            name="tags"
+            type="oscampus.tags"
+            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"/>
+    </fieldset>
+
+    <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
             name="teachers_id"
             type="oscampus.teacher"
@@ -79,7 +83,7 @@
             required="true"/>
         <!--
          @TODO
-         pathways
+         tags
          lessons
         -->
     </fieldset>
@@ -101,5 +105,6 @@
             filter="safehtml"
             buttons="true"
             hide="readmore,pagebreak"/>
+
     </fieldset>
 </form>

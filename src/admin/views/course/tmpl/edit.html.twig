@@ -14,6 +14,45 @@
 {% endblock %}
 
 {% block form_body %}
-    {{ html('osc.render.admintabs', form, ['main', 'descriptions'], null, true)|raw }}
+{# {{ html('osc.render.admintabs', form, ['main', 'descriptions'], null, true)|raw }} #}
+    {{ html('tabs.start', form.getName()|replace('.', '-'))|raw }}
+
+    {% set fieldset = attribute(form.getFieldsets(), 'main') %}
+    {{ html('tabs.panel', fieldset.label|lang, fieldset.name ~ '-panel')|raw }}
+    <div class="fltlft width-30 span-3">
+        {{ html('osc.render.adminfieldset', form, 'main')|raw }}
+    </div>
+    <div class="fltlft width-30 span-3">
+        <fieldset class="adminform">
+            <legend>{{ form.getFieldAttribute('pathways', 'label')|lang }}</legend>
+            {{ form.getInput('pathways')|raw }}
+        </fieldset>
+    </div>
+    <div class="fltlft width-30 span-3">
+        <fieldset class="adminform">
+            <legend>{{ form.getFieldAttribute('tags', 'label')|lang }}</legend>
+            {{ form.getInput('tags')|raw }}
+        </fieldset>
+    </div>
+    <div class="clr"></div>
+
+    {% set fieldset = attribute(form.getFieldsets(), 'descriptions') %}
+    {{ html('tabs.panel', fieldset.label|lang, fieldset.name ~ '-panel')|raw }}
+    <div class="fltlft width-50 span-6">
+        <fieldset class="adminform">
+            <legend>{{ form.getFieldAttribute('introtext', 'label')|lang }}</legend>
+            {{ form.getInput('introtext')|raw }}
+        </fieldset>
+    </div>
+
+    <div class="fltlft width-50 span-6">
+        <fieldset class="adminform">
+            <legend>{{ form.getFieldAttribute('description', 'label')|lang }}</legend>
+            {{ form.getInput('description')|raw }}
+        </fieldset>
+    </div>
+    <div class="clr"></div>
+
+    {{ html('tabs.end')|raw }}
 {% endblock %}
 
