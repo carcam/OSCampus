@@ -12,7 +12,6 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
 use OscampusFactory;
-use OscampusTable;
 use JUri;
 use JRoute;
 use JText;
