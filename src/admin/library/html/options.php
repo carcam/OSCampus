@@ -12,6 +12,8 @@ defined('_JEXEC') or die();
 
 abstract class OscOptions
 {
+    protected static $cache = array();
+
     /**
      * Get option list of course difficulty levels
      *
@@ -19,25 +21,27 @@ abstract class OscOptions
      */
     public static function difficulties()
     {
-        $options = array(
-            JHtml::_(
-                'select.option',
-                Course::BEGINNER,
-                JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_BEGINNER')
-            ),
-            JHtml::_(
-                'select.option',
-                Course::INTERMEDIATE,
-                JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_INTERMEDIATE')
-            ),
-            JHtml::_(
-                'select.option',
-                Course::ADVANCED,
-                JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_ADVANCED')
-            )
-        );
+        if (empty(static::$cache['difficulties'])) {
+            static::$cache['difficulties'] = array(
+                JHtml::_(
+                    'select.option',
+                    Course::BEGINNER,
+                    JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_BEGINNER')
+                ),
+                JHtml::_(
+                    'select.option',
+                    Course::INTERMEDIATE,
+                    JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_INTERMEDIATE')
+                ),
+                JHtml::_(
+                    'select.option',
+                    Course::ADVANCED,
+                    JText::_('COM_OSCAMPUS_COURSE_DIFFICULTY_ADVANCED')
+                )
+            );
+        }
 
-        return $options;
+        return static::$cache['difficulties'];
     }
 
     /**
@@ -47,29 +51,31 @@ abstract class OscOptions
      */
     public static function teachers()
     {
-        $db = OscampusFactory::getDbo();
-        $db->escape('');
+        if (empty(static::$cache['teachers'])) {
+            $db = OscampusFactory::getDbo();
+            $db->escape('');
 
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'teacher.id',
-                    'user.username',
-                    'user.name'
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'teacher.id',
+                        'user.username',
+                        'user.name'
+                    )
                 )
-            )
-            ->from('#__oscampus_teachers teacher')
-            ->innerJoin('#__users user ON user.id = teacher.users_id')
-            ->order('user.username');
+                ->from('#__oscampus_teachers teacher')
+                ->innerJoin('#__users user ON user.id = teacher.users_id')
+                ->order('user.username');
 
-        $teachers = array_map(
-            function ($row) {
-                return JHtml::_('select.option', $row->id, sprintf('%s (%s)', $row->username, $row->name));
-            },
-            $db->setQuery($query)->loadObjectList()
-        );
+            static::$cache['teachers'] = array_map(
+                function ($row) {
+                    return JHtml::_('select.option', $row->id, sprintf('%s (%s)', $row->username, $row->name));
+                },
+                $db->setQuery($query)->loadObjectList()
+            );
+        }
 
-        return $teachers;
+        return static::$cache['teachers'];
     }
 
     /**
@@ -81,26 +87,58 @@ abstract class OscOptions
      */
     public static function pathways($coreOnly = true)
     {
-        $db    = OscampusFactory::getDbo();
-        $query = $db->getQuery(true)
-            ->select('pathway.id, pathway.title, access.title level')
-            ->from('#__oscampus_pathways pathway')
-            ->innerJoin('#__viewlevels access ON access.id = pathway.access')
-            ->order('pathway.title');
-
-        if ($coreOnly) {
-            $query->where('IFNULL(pathway.users_id, 0) = 0');
-        }
-
-        $pathways = array_map(function ($row) {
-            return (object)array(
-                'value' => $row->id,
-                'text' => sprintf('%s (%s)', $row->title, $row->level)
-            );
-        },
-            $db->setQuery($query)->loadObjectList()
+        $key = md5(
+            json_encode(
+                array(
+                    'base' => 'pathways',
+                    'core' => $coreOnly
+                )
+            )
         );
 
-        return $pathways;
+        if (empty(static::$cache[$key])) {
+            $db    = OscampusFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('pathway.id, pathway.title, access.title level')
+                ->from('#__oscampus_pathways pathway')
+                ->innerJoin('#__viewlevels access ON access.id = pathway.access')
+                ->order('pathway.title');
+
+            if ($coreOnly) {
+                $query->where('IFNULL(pathway.users_id, 0) = 0');
+            }
+
+            static::$cache[$key] = array_map(function ($row) {
+                return (object)array(
+                    'value' => $row->id,
+                    'text'  => sprintf('%s (%s)', $row->title, $row->level)
+                );
+            },
+                $db->setQuery($query)->loadObjectList()
+            );
+
+        }
+
+        return static::$cache[$key];
+    }
+
+    public static function tags()
+    {
+        if (empty(static::$cache['tags'])) {
+            $db    = OscampusFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'tag.id AS ' . $db->quoteName('value'),
+                        'tag.title AS ' . $db->quoteName('text')
+                    )
+                )
+                ->from('#__oscampus_tags tag')
+                ->order('tag.title ASC');
+
+            static::$cache['tags'] = $db->setQuery($query)->loadObjectList();
+        }
+
+        return static::$cache['tags'];
     }
 }

@@ -18,14 +18,15 @@ abstract class OscampusModelAdmin extends JModelAdmin
     {
         if (empty($type)) {
             $inflector = String\Inflector::getInstance();
-            $type = $inflector->toPlural($this->name);
+            $type      = $inflector->toPlural($this->name);
         }
         return OscampusTable::getInstance($type, $prefix, $config);
     }
 
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_oscampus.' . $this->name, $this->name, array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_oscampus.' . $this->name, $this->name,
+            array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form)) {
             return false;
         }
@@ -42,5 +43,65 @@ abstract class OscampusModelAdmin extends JModelAdmin
         }
 
         return $data;
+    }
+
+    /**
+     * Utility method for updating standard junction tables.
+     *
+     * @param string $baseField     Sting in the form table_name.field_name
+     * @param int    $baseId        The id of the base ID for the junction
+     * @param string $junctionField The field name that is the FK in the target table
+     * @param int[]  $junctionIds   The ids for the target table
+     *
+     * @return bool
+     */
+    protected function updateJunctionTable($baseField, $baseId, $junctionField, array $junctionIds)
+    {
+        if ($baseId > 0) {
+            $atoms     = explode('.', $baseField);
+            $baseField = array_pop($atoms);
+            $table     = array_pop($atoms);
+
+            if (empty($table)) {
+                $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_JUNCTION_UPDATE', __CLASS__, __METHOD__));
+                return false;
+            }
+
+            $db = $this->getDbo();
+
+            $db->setQuery(
+                sprintf(
+                    'DELETE FROM %s WHERE courses_id = %s',
+                    $db->quoteName($table),
+                    $baseId
+                )
+            )
+                ->execute();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+                return false;
+            }
+
+            if ($ids = array_unique(array_filter($junctionIds))) {
+                $inserts = array_map(
+                    function ($row) use ($baseId) {
+                        return sprintf('%s, %s', $baseId, $row);
+                    },
+                    $ids
+                );
+
+                $query = $db->getQuery(true)
+                    ->insert($table)
+                    ->columns(array($baseField, $junctionField))
+                    ->values($inserts);
+
+                $db->setQuery($query)->execute();
+                if ($error = $db->getErrorMsg()) {
+                    $this->setError($error);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

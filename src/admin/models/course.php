@@ -32,6 +32,13 @@ class OscampusModelCourse extends OscampusModelAdmin
                 ->where('courses_id = ' . $item->id);
 
             $item->pathways = $db->setQuery($query)->loadColumn();
+
+            $query = $db->getQuery(true)
+                ->select('tags_id')
+                ->from('#__oscampus_courses_tags')
+                ->where('courses_id = ' . $item->id);
+
+            $item->tags = $db->setQuery($query)->loadColumn();
         }
 
         return $item;
@@ -41,58 +48,24 @@ class OscampusModelCourse extends OscampusModelAdmin
     {
         if (parent::save($data)) {
             // Handle additional update tasks
-            $data['id'] = $this->getState($this->getName() . '.id');
-            return $this->savePathways($data)
-                && $this->saveTags($data);
+            $courseId = (int)$this->getState($this->getName() . '.id');
+            $pathways = empty($data['pathways']) ? array() : $data['pathways'];
+            $tags     = empty($data['tags']) ? array() : $data['tags'];
+
+            return $this->updateJunctionTable(
+                '#__oscampus_courses_pathways.courses_id',
+                $courseId,
+                'pathways_id',
+                $pathways
+            )
+            && $this->updateJunctionTable(
+                '#__oscampus_courses_tags.courses_id',
+                $courseId,
+                'tags_id',
+                $tags
+            );
         }
 
         return false;
-    }
-
-    /**
-     * Save junction rows to pathways table
-     *
-     * @param array $data
-     *
-     * @return bool
-     */
-    protected function savePathways(array $data)
-    {
-        $id       = (int)$data['id'];
-        $pathways = empty($data['pathways']) ? array() : array_unique(array_filter($data['pathways']));
-
-        if ($pathways && $id > 0) {
-            $db = $this->getDbo();
-
-            $db->setQuery('DELETE FROM #__oscampus_courses_pathways WHERE courses_id = ' . $id)->execute();
-            if ($error = $db->getErrorMsg()) {
-                $this->setError($error);
-                return false;
-            }
-
-            $inserts = array_map(
-                function ($row) use ($id) {
-                    return sprintf('%s, %s', $id, $row);
-                },
-                $pathways
-            );
-
-            $query = $db->getQuery(true)
-                ->insert('#__oscampus_courses_pathways')
-                ->columns('courses_id, pathways_id')
-                ->values($inserts);
-
-            $db->setQuery($query)->execute();
-            if ($error = $db->getErrorMsg()) {
-                $this->setError($error);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected function saveTags(array $data)
-    {
-        return true;
     }
 }
