@@ -19,7 +19,7 @@
     {% block scripts %}
         <script type="text/javascript">
             Joomla.submitbutton = function(task) {
-                if (task.match(/\.cancel$/) || document.formvalidator.isValid(document.id('item-form'))) {
+                if (task.match(/\.cancel$/) || document.formvalidator.isValid(document.getElementById('item-form'))) {
                     Joomla.submitform(task, document.getElementById('item-form'));
                 }
             }
