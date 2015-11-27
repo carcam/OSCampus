@@ -17,4 +17,13 @@ class OscampusTablePathways extends OscampusTable
     {
         parent::__construct('#__oscampus_pathways', 'id', $db);
     }
+
+    public function store($updateNulls = false)
+    {
+        if ($this->alias == '') {
+            $this->alias = OscampusApplicationHelper::stringURLSafe($this->title);
+        }
+
+        return parent::store($updateNulls);
+    }
 }

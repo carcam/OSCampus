@@ -17,4 +17,13 @@ class OscampusTableTags extends OscampusTable
     {
         parent::__construct('#__oscampus_tags', 'id', $db);
     }
+
+    public function store($updateNulls = false)
+    {
+        if (!$this->alias == '') {
+            $this->alias = OscampusApplicationHelper::stringURLSafe($this->title);
+
+        }
+        return parent::store($updateNulls);
+    }
 }
