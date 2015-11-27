@@ -120,9 +120,10 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
         $hide = $app->input->getBool('hidemainmenu', false);
         if (!$hide) {
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
-            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
-            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags', $this->_name == 'tags');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses', $this->_name == 'courses');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_PATHWAYS', 'pathways', $this->_name == 'pathways');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TAGS', 'tags', $this->_name == 'tags');
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
         }
 
         $this->setVariable('show_sidebar', !$hide && version_compare(JVERSION, '3', 'ge'));
