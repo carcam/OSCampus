@@ -73,6 +73,6 @@
 
 {% macro td_text(text, class = '') %}
     <td class="{{ class }}">
-        {{ text }}
+        {{ text|lang }}
     </td>
 {% endmacro %}
