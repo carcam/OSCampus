@@ -4,3 +4,24 @@
  # @copyright  2015 Open Source Training, LLC. All rights reserved
  # @license
  #}
+
+{% macro tabs_start(form) %}
+    {{ html('tabs.start', form.getName()|replace('.', '-'))|raw }}
+{% endmacro %}
+
+{% macro tabs_panel(form, name) %}
+    {% set fieldset = attribute(form.getFieldsets(), name) ?: {'label' : name, 'name' : name} %}
+    {{ html('tabs.panel', fieldset.label|lang, fieldset.name ~ '-panel')|raw }}
+{% endmacro %}
+
+{% macro panel_fieldset(form, fieldset_name, legend = true, span = '12') %}
+    {{ html('osc.render.adminfieldset', form, fieldset_name, legend, span)|raw }}
+{% endmacro %}
+
+{% macro panel_field(form, field_name, legend = true, span = '12') %}
+    {{ html('osc.render.adminfield', form.getField(field_name), legend, span)|raw }}
+{% endmacro %}
+
+{% macro tabs_end() %}
+    {{ html('tabs.end')|raw }}
+{% endmacro %}
