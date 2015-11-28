@@ -13,7 +13,6 @@ defined('_JEXEC') or die();
 
 require_once JPATH_PLUGINS . '/content/oswistia/include.php';
 
-
 abstract class OscWistia
 {
     /**
