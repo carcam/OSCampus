@@ -52,7 +52,23 @@ class Joomla extends Twig_Extension
         return array(
             new Twig_SimpleFilter('route', '\JRoute::_'),
             new Twig_SimpleFilter('lang', '\JText::_'),
-            new Twig_SimpleFilter('sprintf', '\JText::sprintf')
+            new Twig_SimpleFilter('sprintf', '\JText::sprintf'),
+            new Twig_SimpleFilter('clean', array($this, 'filter_filter'))
         );
+    }
+
+    /**
+     * Wrapper to string input filter
+     *
+     * @param string $string
+     * @param string $command
+     *
+     * @return mixed
+     */
+    public function filter_filter($string, $command)
+    {
+        $filter = \OscampusFilterInput::getInstance();
+
+        return $filter->clean($string, $command);
     }
 }
