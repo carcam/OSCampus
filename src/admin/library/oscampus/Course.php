@@ -15,4 +15,6 @@ abstract class Course
     const BEGINNER     = 'beginner';
     const INTERMEDIATE = 'intermediate';
     const ADVANCED     = 'advanced';
+
+    const DEFAULT_IMAGE = 'media/com_oscampus/images/default-course.jpg';
 }

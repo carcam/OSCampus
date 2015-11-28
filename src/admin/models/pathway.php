@@ -18,9 +18,7 @@ class OscampusModelPathway extends OscampusModelAdmin
         if (!$item->id) {
             $item->access    = 1;
             $item->published = 1;
-
-            $defaultImage   = JHtml::_('image', 'com_oscampus/default-course.jpg', null, null, true, true);
-            $item->image    = ltrim($defaultImage, '/');
+            $item->image     = \Oscampus\Course::DEFAULT_IMAGE;
 
         }
         return $item;
