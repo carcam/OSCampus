@@ -14,6 +14,16 @@ class OscampusFormFieldTags extends JFormFieldCheckboxes
 {
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), JHtml::_('osc.options.tags'));
+        $options = array_map(
+            function ($row) {
+                $row->selected = false;
+                $row->checked  = false;
+                $row->disable  = false;
+                return $row;
+            },
+            JHtml::_('osc.options.tags')
+        );
+
+        return array_merge(parent::getOptions(), $options);
     }
 }
