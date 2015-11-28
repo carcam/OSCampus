@@ -10,10 +10,6 @@
 {% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_TEACHER_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
 
 {% block form_body %}
-    <div class="fltlft width-60">
-        {{ html('osc.render.adminfieldset', form, 'main', main_legend)|raw }}
-    </div>
-    <div class="fltlft width-40">
-        {{ html('osc.render.adminfieldset', form, 'links')|raw }}
-    </div>
+    {{ html('osc.render.adminfieldset', form, 'main', true, '7')|raw }}
+    {{ html('osc.render.adminfieldset', form, 'links', true, '4')|raw }}
 {% endblock %}

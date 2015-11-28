@@ -97,20 +97,20 @@ abstract class OscRender
                 $legend  = JText::_($element['label']);
 
             } else {
-                $legend = $field->getAttribute('label');
+                $legend = JText::_($field->getAttribute('label'));
             }
         }
 
-        if (version_compare(JVERSION, '3', 'lt')) {
-            $class = array('fltlft', 'width-' . static::spanToWidth($span));
+        $joomla2 = version_compare(JVERSION, '3', 'lt');
+
+        $html = array();
+        if ($joomla2) {
+            $html[] = '<div class="fltlft width-' . static::spanToWidth($span) . '">';
         } else {
-            $class = array('span-' . $span);
+            $html[] = "<div class=\"span{$span}\">";
         }
 
-        $html   = array();
-        $html[] = '<div class="' . join(' ', $class) . '">';
         $html[] = '<fieldset class="adminform">';
-
         if ($legend) {
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
@@ -151,16 +151,18 @@ abstract class OscRender
     protected static function adminFieldsetJ3(array $fields, $legend, $span)
     {
         $html   = array();
-        $html[] = '<div class="row-fluid span-' . $span . '">';
-        $html[] = '<fieldset class="adminform">';
+        $html[] = "<div class=\"span{$span}\">";
         if ($legend) {
+            $html[] = '<fieldset class="adminform">';
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
 
         /** @var JFormField $field */
         $html = array_merge($html, static::adminFieldsJ3($fields));
 
-        $html[] = '</fieldset>';
+        if ($legend) {
+            $html[] = '</fieldset>';
+        }
         $html[] = '</div>';
 
         return $html;

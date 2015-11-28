@@ -5,23 +5,28 @@
  # @license
  #}
 
-{% macro tabs_start(form) %}
-    {{ html('tabs.start', form.getName()|replace('.', '-'))|raw }}
+{% macro tabs_startset(form, params = []) %}
+    {{ html('osc.tabs.startset', form.getName()|clean('alnum'), params)|raw }}
 {% endmacro %}
 
-{% macro tabs_panel(form, name) %}
-    {% set fieldset = attribute(form.getFieldsets(), name) ?: {'label' : name, 'name' : name} %}
-    {{ html('tabs.panel', fieldset.label|lang, fieldset.name ~ '-panel')|raw }}
+{% macro tabs_add(form, fieldset_name, label = '') %}
+    {% set fieldset = attribute(form.getFieldsets(), fieldset_name) ?: {'label' : fieldset_name, 'name' : fieldset_name} %}
+    {% set label = label ?: fieldset.label %}
+    {{ html('osc.tabs.add', form.getName()|clean('alnum'), label|lang, fieldset.name ~ '-panel')|raw }}
 {% endmacro %}
 
-{% macro panel_fieldset(form, fieldset_name, legend = true, span = '12') %}
+{% macro tabs_fieldset(form, fieldset_name, legend = true, span = '12') %}
     {{ html('osc.render.adminfieldset', form, fieldset_name, legend, span)|raw }}
 {% endmacro %}
 
-{% macro panel_field(form, field_name, legend = true, span = '12') %}
+{% macro tabs_field(form, field_name, legend = true, span = '12') %}
     {{ html('osc.render.adminfield', form.getField(field_name), legend, span)|raw }}
 {% endmacro %}
 
 {% macro tabs_end() %}
-    {{ html('tabs.end')|raw }}
+    {{ html('osc.tabs.end')|raw }}
+{% endmacro %}
+
+{% macro tabs_endset() %}
+    {{ html('osc.tabs.endset')|raw }}
 {% endmacro %}

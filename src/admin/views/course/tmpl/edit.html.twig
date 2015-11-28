@@ -10,25 +10,25 @@
 {% block form_top %}
     {{ html('osc.render.formfield', form.getField('title'))|raw }}
     {{ html('osc.render.formfield', form.getField('alias'))|raw }}
-    <div class="clr"></div>
 {% endblock %}
 
 {% block form_body %}
-    {{ form_macro.tabs_start(form) }}
+    {{ form_macro.tabs_startset(form, {'active' : 'main-panel'}) }}
 
-    {{ form_macro.tabs_panel(form, 'main') }}
-    {{ form_macro.panel_fieldset(form, 'main', true, '4') }}
-    {{ form_macro.panel_field(form, 'pathways', true, '3') }}
-    {{ form_macro.panel_field(form, 'tags', true, '2') }}
-    <div class="clr"></div>
+    {{ form_macro.tabs_add(form, 'main') }}
+    {{ form_macro.tabs_fieldset(form, 'main', true, '4') }}
+    {{ form_macro.tabs_field(form, 'pathways', true, '3') }}
+    {{ form_macro.tabs_field(form, 'tags', true, '2') }}
+    {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_panel(form, 'descriptions') }}
-    {{ form_macro.panel_field(form, 'introtext', true, '6') }}
-    {{ form_macro.panel_field(form, 'description', true, '6') }}
-    <div class="clr"></div>
+    {{ form_macro.tabs_add(form, 'descriptions') }}
+    {{ form_macro.tabs_field(form, 'introtext', true, '6') }}
+    {{ form_macro.tabs_field(form, 'description', true, '6') }}
+    {{ form_macro.tabs_end() }}
 
-    {{ html('tabs.panel', 'Lessons', 'lessons-panel')|raw }}
+    {{ form_macro.tabs_add(form, 'lessons', 'Lessons') }}
     <h3>Under Construction</h3>
+    {{ form_macro.tabs_panel_end() }}
 
     {{ form_macro.tabs_end() }}
 {% endblock %}

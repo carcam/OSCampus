@@ -10,13 +10,14 @@
             type="text"
             label="COM_OSCAMPUS_TAG_TITLE_LABEL"
             description="COM_OSCAMPUS_TAG_TITLE_DESC"
-            class="input-xxlarge input-large-text"
+            class="chzn-color"
             required="true"/>
 
         <field
             name="alias"
             type="text"
             label="COM_OSCAMPUS_TAG_ALIAS_LABEL"
-            description="COM_OSCAMPUS_TAG_ALIAS_DESC"/>
+            description="COM_OSCAMPUS_TAG_ALIAS_DESC"
+            class="chzn-color"/>
     </fieldset>
 </form>

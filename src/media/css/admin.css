@@ -34,27 +34,7 @@
     margin: 25px 0;
 }
 
-/* Override of normal input fields
-=============================================================================== */
-#osc-narrative input,
-#osc-narrative select,
-#osc-narrative textarea {
-    width: auto;
-    margin: 0px;
-    padding: 0px;
-}
-
-#osc-narrative input {
-    border-style: none none solid;
-    box-shadow: none;
-    text-align: center;
-}
-
-#osc-narrative .chzn-container {
-    margin-bottom: 6px;
-    width: auto !important;
-}
-
-#osc-narrative label {
-    display: none;
+/* fixes for Joomla issues */
+fieldset.checkboxes input[type=checkbox] {
+    margin-right: 4px;
 }

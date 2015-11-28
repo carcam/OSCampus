@@ -33,13 +33,25 @@
             id="item-form"
             class="form-validate">
 
-        {% block form_top %}{% endblock %}
+        {% set heading = block('form_top') %}
+        {% if heading is not empty %}
+            <div class="form-inline form-inline-header">
+                {{ heading|raw }}
+            </div>
+        {% endif %}
 
-        {% block form_body %}
-            {{ html('osc.render.adminfieldset', form, 'main', main_legend)|raw }}
-        {% endblock %}
+        <div class="form-horizontal">
+            {% block form_body %}
+                {{ html('osc.render.adminfieldset', form, 'main', main_legend)|raw }}
+            {% endblock %}
+        </div>
 
-        {% block form_bottom %}{% endblock %}
+        {% set footer = block('form_bottom') %}
+        {% if footer is not empty %}
+            <div class="form-inline">
+                {% block form_bottom %}{% endblock %}
+            </div>
+        {% endif %}
 
         {{ html('osc.render.hiddenfields', form)|raw }}
         <input type="hidden" name="task" value=""/>

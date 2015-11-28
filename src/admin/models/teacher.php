@@ -25,7 +25,7 @@ class OscampusModelTeacher extends OscampusModelAdmin
      *
      * @return void
      */
-    protected function prepareTable(&$table)
+    protected function prepareTable($table)
     {
         if (!empty($table->links) && !is_string($table->links)) {
             $table->links = json_encode($table->links);

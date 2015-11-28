@@ -25,7 +25,7 @@ class OscampusFormFieldLinks extends JFormFieldText
      *
      * @return bool
      */
-    public function setup(&$element, $value, $group = null)
+    public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (!parent::setup($element, $value, $group)) {
             return false;
