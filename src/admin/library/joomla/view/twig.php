@@ -68,7 +68,9 @@ class OscampusViewTwig extends OscampusView
         $this->templatesEngine->addExtension(new JoomlaTwig);
 
         // Set the default template variables
-        $this->variables = array();
+        $this->variables = array(
+            'view' => $this
+        );
     }
 
     /**
