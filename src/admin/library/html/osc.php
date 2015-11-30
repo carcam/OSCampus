@@ -57,13 +57,19 @@ abstract class JHtmlOsc
         }
     }
 
+    /**
+     * Make a collection of elements sortable by dragging
+     *
+     * @param string $selector
+     *
+     * @return void
+     */
     public static function sortable($selector)
     {
         static::jquery();
         JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
 
         $options = json_encode(array('selector' => $selector));
-
         static::onready("$.Oscampus.sortable({$options})");
     }
 
@@ -206,7 +212,7 @@ abstract class JHtmlOsc
             $query['view'] = 'lesson';
             $query['cid']  = (int)$cid;
             $query['idx']  = (int)$index;
-            $query['pid'] = $pid;
+            $query['pid']  = $pid;
 
             $link = 'index.php?' . http_build_query($query);
             if ($uriOnly) {

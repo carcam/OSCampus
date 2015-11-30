@@ -4,11 +4,11 @@
  # @copyright  2015 Open Source Training, LLC. All rights reserved
  # @license
  #}
-{{ html('osc.sortable', '.sortable')|raw }}
-<ul class="sortable">
+{{ html('osc.sortable', '.oscampus-sortable')|raw }}
+<ul class="oscampus-sortable">
     {% for module in lessons %}
         <li>{{ module.title }}
-            <ul class="sortable">
+            <ul class="oscampus-sortable">
                 {% for lesson in module.lessons %}
                     <li>{{ lesson.title }}</li>
                 {% endfor %}
