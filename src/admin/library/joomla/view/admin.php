@@ -20,6 +20,8 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      */
     public function display($tpl = null)
     {
+        $this->setup();
+
         $this->setTitle();
         $this->setToolBar();
         $this->setSubmenu();

@@ -12,6 +12,37 @@ defined('_JEXEC') or die();
 abstract class OscampusViewForm extends OscampusViewAdmin
 {
     /**
+     * @var OscampusModelAdmin
+     */
+    protected $model = null;
+
+    /**
+     * @var JForm
+     */
+    protected $form = null;
+
+    /**
+     * @var OscampusTable
+     */
+    protected $item = null;
+
+    protected function setup()
+    {
+        parent::setup();
+
+        $this->form  = $this->model->getForm();
+        $this->item  = $this->model->getItem();
+
+
+        $this->setVariable(
+            array(
+                'form' => $this->form,
+                'item' => $this->item
+            )
+        );
+    }
+
+    /**
      * Default admin screen title
      *
      * @param string $sub
@@ -26,25 +57,6 @@ abstract class OscampusViewForm extends OscampusViewAdmin
         $title = "COM_OSCAMPUS_PAGE_VIEW_{$name}_" . ($isNew ? 'ADD' : 'EDIT');
 
         parent::setTitle($title, $icon);
-    }
-
-    /**
-     * Method to display the view
-     *
-     * @param  string $tpl The name of the template file to parse
-     *
-     * @return void
-     */
-    public function display($tpl = null)
-    {
-        $state = $this->get('State');
-
-        $this->item = $this->get('Item');
-
-        $this->setVariable('form', $this->get('Form'));
-        $this->setVariable('item', $this->item);
-
-        parent::display($tpl);
     }
 
     /**
