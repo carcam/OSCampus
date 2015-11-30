@@ -9,15 +9,14 @@
             name="title"
             type="text"
             label="COM_OSCAMPUS_PATHWAY_TITLE_LABEL"
-            class="input-xxlarge input-large-text chzn-color"
+            class="input-xxlarge input-large-text"
             required="true"/>
 
         <field
             name="alias"
             type="text"
             label="COM_OSCAMPUS_PATHWAY_ALIAS_LABEL"
-            description="COM_OSCAMPUS_PATHWAY_ALIAS_DESC"
-            class="chzn-color"/>
+            description="COM_OSCAMPUS_PATHWAY_ALIAS_DESC"/>
 
         <field
             name="image"
@@ -29,8 +28,7 @@
             name="users_id"
             type="user"
             label="COM_OSCAMPUS_PATHWAY_OWNER_LABEL"
-            description="COM_OSCAMPUS_PATHWAY_OWNER_DESC"
-            class="chzn-color"/>
+            description="COM_OSCAMPUS_PATHWAY_OWNER_DESC"/>
 
         <field
             name="description"
@@ -40,8 +38,7 @@
             filter="safehtml"
             buttons="true"
             hide="readmore,pagebreak"
-            labelclass="hidden"
-            class="chzn-color"/>
+            labelclass="hidden"/>
 
         <field
             name="published"
@@ -57,7 +54,6 @@
             name="access"
             type="accesslevel"
             label="COM_OSCAMPUS_ACCESS_LEVEL"
-            class="chzn-color"
             required="true"/>
 
     </fieldset>

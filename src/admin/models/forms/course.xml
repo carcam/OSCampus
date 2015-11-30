@@ -9,7 +9,7 @@
             name="title"
             type="text"
             label="COM_OSCAMPUS_COURSE_TITLE_LABEL"
-            class="input-xxlarge input-large-text chzn-color"
+            class="input-xxlarge input-large-text"
             size="50"
             required="true"/>
 
@@ -18,28 +18,24 @@
             type="text"
             label="COM_OSCAMPUS_COURSE_ALIAS_LABEL"
             hint="JFIELD_ALIAS_PLACEHOLDER"
-            class="chzn-color"
             size="50"/>
 
         <field
             name="pathways"
             type="oscampus.pathways"
-            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"
-            class="chzn-color"/>
+            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"/>
 
         <field
             name="tags"
             type="oscampus.tags"
-            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"
-            class="chzn-color"/>
+            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"/>
     </fieldset>
 
     <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
             name="teachers_id"
             type="oscampus.teacher"
-            label="COM_OSCAMPUS_COURSE_TEACHER_LABEL"
-            class="chzn-color">
+            label="COM_OSCAMPUS_COURSE_TEACHER_LABEL">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_TEACHER</option>
         </field>
 
@@ -53,14 +49,12 @@
             name="length"
             type="text"
             label="COM_OSCAMPUS_COURSE_LENGTH_LABEL"
-            description="COM_OSCAMPUS_COURSE_LENGTH_DESC"
-            class="chzn-color"/>
+            description="COM_OSCAMPUS_COURSE_LENGTH_DESC"/>
 
         <field
             name="difficulty"
             type="oscampus.difficulty"
             label="COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL"
-            class="chzn-color"
             required="true">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY</option>
         </field>
@@ -70,7 +64,6 @@
             type="calendar"
             label="COM_OSCAMPUS_COURSE_RELEASED_LABEL"
             description="COM_OSCAMPUS_COURSE_RELEASED_DESC"
-            class="chzn-color"
             required="true"/>
 
         <field
@@ -87,7 +80,6 @@
             name="access"
             type="accesslevel"
             label="COM_OSCAMPUS_ACCESS_LEVEL"
-            class="chzn-color"
             required="true"/>
         <!--
          @TODO
