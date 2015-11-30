@@ -57,6 +57,16 @@ abstract class JHtmlOsc
         }
     }
 
+    public static function sortable($selector)
+    {
+        static::jquery();
+        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+
+        $options = json_encode(array('selector' => $selector));
+
+        static::onready("$.Oscampus.sortable({$options})");
+    }
+
     /**
      * Setup tabbed areas
      *

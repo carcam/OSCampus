@@ -81,7 +81,7 @@
      *        selector : A jQuery selector for the tab headers
      */
     $.Oscampus.tabs = function(options) {
-        options = $.extend(this.tabs.options, options);
+        options = $.extend({}, this.tabs.options, options);
 
         var headers = $(options.selector);
         headers
@@ -123,7 +123,7 @@
      *        visible  : bool - initial visible state (default: false)
      */
     $.Oscampus.sliders = function(options) {
-        options = $.extend(this.sliders.options, options);
+        options = $.extend({}, this.sliders.options, options);
 
         $(options.selector).each(function() {
             $(this)
@@ -157,6 +157,23 @@
         },
         error   : function(xhr, status, error) {
             alert(error);
+        }
+    };
+
+    $.Oscampus.sortable = function(options) {
+        options = $.extend({}, this.sortable.options, options);
+
+        var selection = $(options.selector);
+
+        selection
+            .sortable()
+            .disableSelection()
+            .children().css(options.css);
+    };
+    $.Oscampus.sortable.options = {
+        selector: '.oscampus-sortable',
+        css     : {
+            cursor: 'move'
         }
     };
 })(jQuery);
