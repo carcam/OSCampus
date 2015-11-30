@@ -42,6 +42,52 @@ class OscampusModelCourse extends OscampusModelAdmin
         return $item;
     }
 
+    public function getLessons($courseId = null)
+    {
+        if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
+            $db = $this->getDbo();
+
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'lesson.*',
+                        'module.title AS module_title',
+                        'module.alias AS module_alias',
+                        'module.published AS module_published',
+                        'module.ordering AS module_ordering'
+                    )
+                )
+                ->from('#__oscampus_lessons AS lesson')
+                ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                ->where('module.courses_id = 71')
+                ->order('module.ordering ASC, lesson.ordering ASC');
+
+            $lessons = $db->setQuery($query)->loadObjectList();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+                return false;
+            }
+
+            $modules = array();
+            foreach ($lessons as $lesson) {
+                if (!isset($modules[$lesson->modules_id])) {
+                    $modules[$lesson->modules_id] = (object)array(
+                        'title'     => $lesson->module_title,
+                        'alias'     => $lesson->module_alias,
+                        'published' => $lesson->module_published,
+                        'ordering'  => $lesson->module_ordering,
+                        'lessons'   => array()
+                    );
+                }
+                $modules[$lesson->modules_id]->lessons[$lesson->id] = $lesson;
+            }
+
+            return $modules;
+        }
+
+        return array();
+    }
+
     public function save($data)
     {
         if (parent::save($data)) {

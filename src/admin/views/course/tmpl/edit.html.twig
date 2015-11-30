@@ -26,10 +26,9 @@
     {{ form_macro.render_field(form, 'description', true, '6') }}
     {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_add(form, 'lessons', 'Lessons') }}
-    <h3>Under Construction</h3>
+    {{ form_macro.tabs_add(form, 'lessons', 'COM_OSCAMPUS_LESSONS'|lang) }}
+    {{ view.loadTemplate('lessons')|raw }}
     {{ form_macro.tabs_panel_end() }}
 
     {{ form_macro.tabs_end() }}
 {% endblock %}
-

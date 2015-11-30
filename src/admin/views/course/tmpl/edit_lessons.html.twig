@@ -1,0 +1,19 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+<h3>Under Construction</h3>
+<ul>
+    {% for module in lessons %}
+        <li>{{ module.title }}
+            <ul>
+                {% for lesson in module.lessons %}
+                    <li>{{ lesson.title }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+

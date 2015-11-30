@@ -10,5 +10,15 @@ defined('_JEXEC') or die();
 
 class OscampusViewCourse extends OscampusViewForm
 {
+    /**
+     * @var OscampusModelCourse
+     */
+    protected $model = null;
 
+    protected function setup()
+    {
+        parent::setup();
+
+        $this->setVariable('lessons', $this->model->getLessons());
+    }
 }
