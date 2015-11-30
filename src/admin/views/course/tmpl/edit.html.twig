@@ -16,14 +16,14 @@
     {{ form_macro.tabs_startset(form, {'active' : 'main-panel'}) }}
 
     {{ form_macro.tabs_add(form, 'main') }}
-    {{ form_macro.tabs_fieldset(form, 'main', true, '4') }}
-    {{ form_macro.tabs_field(form, 'pathways', true, '3') }}
-    {{ form_macro.tabs_field(form, 'tags', true, '2') }}
+    {{ form_macro.render_fieldset(form, 'main', true, '4') }}
+    {{ form_macro.render_field(form, 'pathways', true, '3') }}
+    {{ form_macro.render_field(form, 'tags', true, '2') }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'descriptions') }}
-    {{ form_macro.tabs_field(form, 'introtext', true, '6') }}
-    {{ form_macro.tabs_field(form, 'description', true, '6') }}
+    {{ form_macro.render_field(form, 'introtext', true, '6') }}
+    {{ form_macro.render_field(form, 'description', true, '6') }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'lessons', 'Lessons') }}

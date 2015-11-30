@@ -15,11 +15,11 @@
     {{ html('osc.tabs.add', form.getName()|clean('alnum'), label|lang, fieldset.name ~ '-panel')|raw }}
 {% endmacro %}
 
-{% macro tabs_fieldset(form, fieldset_name, legend = true, span = '12') %}
+{% macro render_fieldset(form, fieldset_name, legend = true, span = '12') %}
     {{ html('osc.render.adminfieldset', form, fieldset_name, legend, span)|raw }}
 {% endmacro %}
 
-{% macro tabs_field(form, field_name, legend = true, span = '12') %}
+{% macro render_field(form, field_name, legend = true, span = '12') %}
     {{ html('osc.render.adminfield', form.getField(field_name), legend, span)|raw }}
 {% endmacro %}
 
