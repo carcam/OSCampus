@@ -45,7 +45,7 @@ class OscampusFormFieldLessons extends JFormField
                         'lesson.title',
                         'lesson.alias',
                         'lesson.published',
-                        'lesson.access',
+                        'viewlevel.title AS viewlevel_title',
                         'module.title AS module_title',
                         'module.alias AS module_alias',
                         'module.published AS module_published'
@@ -53,6 +53,7 @@ class OscampusFormFieldLessons extends JFormField
                 )
                 ->from('#__oscampus_lessons AS lesson')
                 ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                ->innerJoin('#__viewlevels viewlevel ON viewlevel.id = lesson.access')
                 ->where('module.courses_id = ' . $courseId)
                 ->order('module.ordering ASC, lesson.ordering ASC');
 
@@ -84,9 +85,10 @@ class OscampusFormFieldLessons extends JFormField
 
         $html = array(
             '<li>',
-            '<i class="handle fa fa-caret-right"></i>',
+            '<i class="handle fa fa-caret-right"></i> ',
             sprintf($moduleInput, $this->name, $module->id, $moduleLink),
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $module->alias),
+            $this->createActions(),
             '<ul class="oscampus-lesson">'
         );
 
@@ -106,13 +108,27 @@ class OscampusFormFieldLessons extends JFormField
 
         $html = array(
             '<li>',
-            '<i class="handle fa fa-caret-right"></i>',
+            '<i class="handle fa fa-caret-right"></i> ',
             sprintf($lessonInput, $this->name, $lesson->id, $lessonLink),
+            " [{$lesson->viewlevel_title}]",
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $lesson->alias),
+            $this->createActions(),
             '</li>'
         );
 
         return join('', $html);
+    }
+
+    protected function createActions()
+    {
+        $html = array(
+            '<i class="oscampus-publish fa fa-circle" title="Publish/Unpublish"></i>',
+            '<i class="oscampus-delete fa fa-remove" title="Delete"></i>',
+            '<i class="oscampus-new oscampus-before fa fa-arrow-circle-o-up" title="Insert Before"></i>',
+            '<i class="oscampus-new oscampus-down fa fa-arrow-circle-o-down" title="Insert After"></i>'
+        );
+
+        return ' ' . join(' ', $html);
     }
 
     protected function addJavascript()
@@ -126,7 +142,13 @@ class OscampusFormFieldLessons extends JFormField
                 'container' => '#' . $this->id
             )
         );
-        JHtml::_('osc.onready', "$.Oscampus.lesson.ordering({$options});");
+
+        $js = <<<JSCRIPT
+$.Oscampus.lesson.ordering({$options});
+$.Oscampus.lesson.actions('#{$this->id}');
+JSCRIPT;
+
+        JHtml::_('osc.onready', $js);
 
     }
 }
