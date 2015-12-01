@@ -83,7 +83,7 @@
             .find('.oscampus-new')
             .css('cursor', 'pointer')
             .on('click', function(evt) {
-                if ($(this).hasClass('oscampus-up')) {
+                if ($(this).hasClass('oscampus-before')) {
                     alert('Under Construction - will insert new item before this one');
                 } else {
                     alert('Under Construction - will insert new item after this one');

@@ -125,7 +125,7 @@ class OscampusFormFieldLessons extends JFormField
             '<i class="oscampus-publish fa fa-circle" title="Publish/Unpublish"></i>',
             '<i class="oscampus-delete fa fa-remove" title="Delete"></i>',
             '<i class="oscampus-new oscampus-before fa fa-arrow-circle-o-up" title="Insert Before"></i>',
-            '<i class="oscampus-new oscampus-down fa fa-arrow-circle-o-down" title="Insert After"></i>'
+            '<i class="oscampus-new oscampus-after fa fa-arrow-circle-o-down" title="Insert After"></i>'
         );
 
         return ' ' . join(' ', $html);
