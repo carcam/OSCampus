@@ -6,10 +6,10 @@
  #}
 {{ html('osc.lesson.ordering')|raw }}
 <div id="lessons">
-    <ul class="oscampus-sortable oscampus-module">
+    <ul class="oscampus-module">
         {% for module in lessons %}
             <li>{{ module.title }}
-                <ul class="oscampus-sortable oscampus-lesson">
+                <ul class="oscampus-lesson">
                     {% for lesson in module.lessons %}
                         <li>{{ lesson.title }}</li>
                     {% endfor %}
