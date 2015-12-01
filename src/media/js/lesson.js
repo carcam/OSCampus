@@ -12,28 +12,31 @@
      *        reset     : Selector for a reset button
      */
     $.Oscampus.lesson.ordering = function(options) {
-        options = $.extend({}, this.options.ordering, options);
+        options = $.extend(true, {}, this.options.ordering, options);
 
         var container = $(options.container),
             cache     = container.html(),
             reset     = $(options.reset);
 
         var setup = function() {
-            var modules = container.find(options.modules),
-                lessons = container.find(options.lessons);
+            var modules   = container.find(options.modules),
+                lessons   = container.find(options.lessons),
+                targets = modules.add(lessons);
 
-            $.Oscampus.sortable({
-                selector: modules.add(lessons),
-                options: {
+            targets
+                .sortable({
+                    handle: options.handle,
                     update: function() {
                         reset.show();
                     }
-                }
-            });
-            lessons.children('li').draggable({
+                })
+                .disableSelection();
+            lessons.children().draggable({
                 connectToSortable: lessons,
                 refreshPositions : true
             });
+            targets.find(options.handle).css('cursor', options.cursor);
+
             reset.hide();
         };
         setup();
@@ -50,7 +53,9 @@
             container: '#lessons',
             modules  : 'ul.oscampus-module',
             lessons  : 'ul.oscampus-lesson',
-            reset    : '.reset-lesson-order'
+            reset    : '.reset-lesson-order',
+            handle   : '.handle',
+            cursor   : 'grab'
         }
     };
 })(jQuery);

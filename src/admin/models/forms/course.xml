@@ -29,6 +29,11 @@
             name="tags"
             type="oscampus.tags"
             label="COM_OSCAMPUS_COURSE_TAGS_LABEL"/>
+
+        <field
+            name="lessons"
+            type="oscampus.lessons"/>
+
     </fieldset>
 
     <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
