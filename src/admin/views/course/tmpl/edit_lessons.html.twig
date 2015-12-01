@@ -4,16 +4,18 @@
  # @copyright  2015 Open Source Training, LLC. All rights reserved
  # @license
  #}
-{{ html('osc.sortable', '.oscampus-sortable')|raw }}
-<ul class="oscampus-sortable">
-    {% for module in lessons %}
-        <li>{{ module.title }}
-            <ul class="oscampus-sortable">
-                {% for lesson in module.lessons %}
-                    <li>{{ lesson.title }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
-
+{{ html('osc.lesson.ordering')|raw }}
+<div id="lessons">
+    <ul class="oscampus-sortable oscampus-module">
+        {% for module in lessons %}
+            <li>{{ module.title }}
+                <ul class="oscampus-sortable oscampus-lesson">
+                    {% for lesson in module.lessons %}
+                        <li>{{ lesson.title }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<button type="button" class="reset-lesson-order">{{ 'COM_OSCAMPUS_LESSONS_ORDER_RESET'|lang }}</button>

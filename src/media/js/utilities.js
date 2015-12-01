@@ -141,6 +141,11 @@
         visible : false
     };
 
+    /**
+     * Wrapper to the jQuery ajax method with defaults for this application
+     *
+     * @param options Standard ajax options
+     */
     $.Oscampus.ajax = function(options) {
         options = $.extend(true, {}, this.ajax.options, options);
         $.ajax(options);
@@ -160,13 +165,23 @@
         }
     };
 
+    /**
+     * Make a container sortable by dragging
+     *
+     * @param options
+     *        selector : Selector for the parent container
+     *        css      : css that will be applied to the sortable items
+     *        options  : Options to pass to sortable setup
+     *
+     * @return void
+     */
     $.Oscampus.sortable = function(options) {
         options = $.extend({}, this.sortable.options, options);
 
         var selection = $(options.selector);
 
         selection
-            .sortable()
+            .sortable(options.options)
             .disableSelection()
             .children().css(options.css);
     };
@@ -174,7 +189,8 @@
         selector: '.oscampus-sortable',
         css     : {
             cursor: 'move'
-        }
+        },
+        options : null
     };
 })(jQuery);
 

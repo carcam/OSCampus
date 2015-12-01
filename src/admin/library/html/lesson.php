@@ -64,4 +64,32 @@ abstract class OscLesson
 
         return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
     }
+
+    /**
+     * Load supporting js for the lesson ordering panel
+     *
+     * @param string       $container
+     * @param array|string $options
+     *
+     * @return void
+     */
+    public static function ordering($container = null, $options = null)
+    {
+        JHtml::_('osc.jquery');
+        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+        JHtml::_('script', 'com_oscampus/lesson.js', false, true);
+
+        if ($options && is_string($options)) {
+            $options = json_decode($options, true);
+        }
+        if (!is_array($options)) {
+            $options = array();
+        }
+        if ($container) {
+            $options['container'] = $container;
+        }
+
+        $options = json_encode($options);
+        JHtml::_('osc.onready', "$.Oscampus.lesson.ordering({$options});");
+    }
 }
