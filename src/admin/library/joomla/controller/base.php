@@ -10,6 +10,31 @@ defined('_JEXEC') or die();
 
 class OscampusControllerBase extends JControllerLegacy
 {
+    public function display($cachable = false, $urlparams = array())
+    {
+        if (OscampusFactory::getApplication()->isAdmin()) {
+            $inflector = \Oscampus\String\Inflector::getInstance();
+            $view      = JRequest::getCmd('view', $this->default_view);
+            $layout    = JRequest::getCmd('layout', '');
+            $id        = JRequest::getInt('id');
+
+            // Check for edit form.
+            if ($inflector->isSingular($view) && $layout == 'edit' && !$this->checkEditId('com_oscampus.edit.' . $view, $id)) {
+                // Somehow the person just went to the form - we don't allow that.
+                $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
+                $this->setMessage($this->getError(), 'error');
+
+                $listView = $inflector->toPlural($view);
+                $this->setRedirect(JRoute::_('index.php?option=com_oscampus&view=' . $listView, false));
+
+                return false;
+            }
+        }
+
+        parent::display();
+        return $this;
+    }
+
     /**
      * Standard form token check and redirect
      *
