@@ -10,11 +10,6 @@ defined('_JEXEC') or die();
 
 abstract class OscampusTable extends JTable
 {
-    /*
-     * Alias for checked_out
-     */
-    public $editor;
-
     /**
      * @param string $type
      * @param string $prefix
@@ -37,29 +32,45 @@ abstract class OscampusTable extends JTable
      */
     public function store($updateNulls = false)
     {
+        // If a table has both alias and title fields, auto-fill an empty alias from the title
+        if (property_exists($this, 'alias') && property_exists($this, 'title')) {
+            if (empty($this->alias) && !empty($this->title)) {
+                $this->alias = $this->title;
+            }
+            $this->alias = OscampusApplicationHelper::stringURLSafe($this->alias);
+        }
+
         $date = JFactory::getDate()->toSql();
         $user = JFactory::getUser();
 
-        if (empty($this->id) && property_exists($this, 'created')) {
-            if ($this->created instanceof DateTime) {
-                $this->created = $this->created->format('Y-m-d H:i:s');
-            } elseif (!is_string($this->created) || empty($this->created)) {
-                $this->created = $date;
+        // Update standard created fields if they exist
+        $key = $this->_tbl_key;
+        if ($key && empty($this->$key)) {
+            if (property_exists($this, 'created')) {
+                if ($this->created instanceof DateTime) {
+                    $this->created = $this->created->format('Y-m-d H:i:s');
+                } elseif (!is_string($this->created) || empty($this->created)) {
+                    $this->created = $date;
+                }
+            }
+
+            if (!empty($user->id)) {
+                if (property_exists($this, 'created_by')) {
+                    $this->created_by = $this->created_by ?: $user->id;
+                }
+                if (property_exists($this, 'created_by_alias')) {
+                    $this->created_by_alias = $this->created_by_alias ?: $user->name;
+                }
             }
         }
 
-        if (empty($this->id) && !empty($user->id)
-            && property_exists($this, 'created_by')
-            && property_exists($this, 'created_by_alias')
-        ) {
-            $this->created_by       = $this->created_by ? : $user->id;
-            $this->created_by_alias = $this->created_by_alias ? : $user->name;
-        }
-
-        if (property_exists($this, 'modified')) {
-            $this->modified = $date;
-            if (!empty($user->id) && property_exists($this, 'modified_by')) {
-                $this->modified_by = $user->id;
+        // Update modified fields if they exist
+        if (!$key || !empty($this->$key)) {
+            if (property_exists($this, 'modified')) {
+                $this->modified = $date;
+                if (!empty($user->id) && property_exists($this, 'modified_by')) {
+                    $this->modified_by = $user->id;
+                }
             }
         }
 
