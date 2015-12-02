@@ -58,36 +58,4 @@
         handle   : '.handle',
         cursor   : 'grab'
     };
-
-    $.Oscampus.lesson.actions = function(container) {
-        $(container)
-            .find('.oscampus-publish')
-            .css('cursor', 'pointer')
-            .on('click', function(evt) {
-                evt.preventDefault();
-
-                $(this).toggleClass('fa-circle fa-circle-o');
-            });
-
-        $(container)
-            .find('.oscampus-delete')
-            .css('cursor', 'pointer')
-            .on('click', function(evt) {
-                evt.preventDefault();
-                if (confirm('Under construction - confirm deleting')) {
-                    alert('Under construction - will delete later :)');
-                }
-            });
-
-        $(container)
-            .find('.oscampus-new')
-            .css('cursor', 'pointer')
-            .on('click', function(evt) {
-                if ($(this).hasClass('oscampus-before')) {
-                    alert('Under Construction - will insert new item before this one');
-                } else {
-                    alert('Under Construction - will insert new item after this one');
-                }
-            });
-    };
 })(jQuery);

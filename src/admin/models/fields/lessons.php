@@ -88,7 +88,6 @@ class OscampusFormFieldLessons extends JFormField
             '<i class="handle fa fa-caret-right"></i> ',
             sprintf($moduleInput, $this->name, $module->id, $moduleLink),
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $module->alias),
-            $this->createActions(),
             '<ul class="oscampus-lesson">'
         );
 
@@ -110,25 +109,12 @@ class OscampusFormFieldLessons extends JFormField
             '<li>',
             '<i class="handle fa fa-caret-right"></i> ',
             sprintf($lessonInput, $this->name, $lesson->id, $lessonLink),
-            " [{$lesson->viewlevel_title}]",
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $lesson->alias),
-            $this->createActions(),
+            " - {$lesson->viewlevel_title}",
             '</li>'
         );
 
         return join('', $html);
-    }
-
-    protected function createActions()
-    {
-        $html = array(
-            '<i class="oscampus-publish fa fa-circle" title="Publish/Unpublish"></i>',
-            '<i class="oscampus-delete fa fa-remove" title="Delete"></i>',
-            '<i class="oscampus-new oscampus-before fa fa-arrow-circle-o-up" title="Insert Before"></i>',
-            '<i class="oscampus-new oscampus-after fa fa-arrow-circle-o-down" title="Insert After"></i>'
-        );
-
-        return ' ' . join(' ', $html);
     }
 
     protected function addJavascript()
@@ -143,12 +129,6 @@ class OscampusFormFieldLessons extends JFormField
             )
         );
 
-        $js = <<<JSCRIPT
-$.Oscampus.lesson.ordering({$options});
-$.Oscampus.lesson.actions('#{$this->id}');
-JSCRIPT;
-
-        JHtml::_('osc.onready', $js);
-
+        JHtml::_('osc.onready', "$.Oscampus.lesson.ordering({$options});");
     }
 }
