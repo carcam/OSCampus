@@ -7,7 +7,7 @@
 
 {% extends "admin_form.html.twig" %}
 
-{% block form_top %}
+{% block form_header %}
     {{ html('osc.render.formfield', form.getField('title'))|raw }}
     {{ html('osc.render.formfield', form.getField('alias'))|raw }}
 {% endblock %}
