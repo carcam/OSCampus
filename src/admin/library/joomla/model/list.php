@@ -18,4 +18,36 @@ abstract class OscampusModelList extends JModelList
 
         return OscampusTable::getInstance($type, $prefix, $config);
     }
+
+    /**
+     * Provide a generic text search item for a where clause. Takes a variable number
+     * of arguments
+     *
+     * @param JDatabaseQuery $query
+     * @param string         $idField
+     * @param string         $fieldName,...
+     */
+    protected function whereTextSearch(JDatabaseQuery $query, $idField, $fieldName)
+    {
+        $fields  = func_get_args();
+        $query   = array_shift($fields);
+        $idField = array_shift($fields);
+
+        if ($fields && $search = $this->getState('filter.search')) {
+            $db = $this->getDbo();
+
+            if ($idField && stripos(trim($search), 'id:') === 0) {
+                $id = (int)substr($search, stripos($search, 'id:') + 3);
+                $query->where($idField . ' = ' . $id);
+
+            } else {
+                $search = $db->q('%' . $search . '%');
+                $ors    = array();
+                foreach ($fields as $field) {
+                    $ors[] = $db->qn($field) . ' like ' . $search;
+                }
+                $query->where('(' . join(' OR ', $ors) . ')');
+            }
+        }
+    }
 }
