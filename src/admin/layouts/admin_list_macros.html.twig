@@ -76,3 +76,9 @@
         {{ text|lang }}
     </td>
 {% endmacro %}
+
+{% macro filter_tools(filters) %}
+    {% if filters %}
+        {% include (joomla2 ? 'admin_filters_j2' : 'admin_filters_j3') ~'.html.twig' %}
+    {% endif %}
+{% endmacro %}

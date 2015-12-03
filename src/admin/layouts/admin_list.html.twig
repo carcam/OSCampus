@@ -21,7 +21,9 @@
             name="adminForm"
             id="adminForm">
 
-        {{ search_tools|raw }}
+        {% block filter_tools %}
+            {{ list_macro.filter_tools(filters) }}
+        {% endblock %}
 
         {% if not items %}
             <div class="alert alert-no-items">
