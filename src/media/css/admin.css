@@ -1,40 +1,53 @@
-/* Admin
+/* Alledia Installer
  ========================================================================== */
-.osc-container .osc-steps {
+.ost-container .ost-steps {
     text-align: center;
 }
 
-.osc-container .osc-connector {
+.ost-container .ost-connector {
     display: table-cell;
     height: 90px;
 }
 
-.osc-container .osc-step {
+.ost-container .ost-step {
     margin-top: 15px;
 }
 
-.osc-container .osc-steps img {
+.ost-container .ost-steps img {
     position: relative;
     top: 50%;
 }
 
-.osc-container .osc-steps .btn {
+.ost-container .ost-steps .btn {
     margin-top: 6px;
 }
 
-.osc-container .osc-error {
+.ost-container .ost-error {
     color: #b94a48;
 }
 
-.osc-container .osc-ok {
+.ost-container .ost-ok {
     color: #468847;
 }
 
-.osc-container-welcome {
+.ost-container-welcome {
     margin: 25px 0;
 }
 
-/* fixes for Joomla issues */
+/* Joomla admin
+ ========================================================================== */
+
+#j-main-container table tr.head2 th {
+    background-color: #ccc !important;
+    color: #333 !important;
+    text-align: center;
+    border-left: solid 1px #333;
+}
+
+#j-main-container table tr.head2 th:last-child {
+    border-right: solid 1px #333;
+}
+
 fieldset.checkboxes input[type=checkbox] {
     margin-right: 4px;
 }
