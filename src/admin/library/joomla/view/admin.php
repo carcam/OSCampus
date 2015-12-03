@@ -130,6 +130,5 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
         }
 
         $this->setVariable('show_sidebar', !$hide && version_compare(JVERSION, '3', 'ge'));
-
     }
 }
