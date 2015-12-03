@@ -41,27 +41,20 @@ class OscampusModelTeachers extends OscampusModelList
             ->leftJoin('#__users user ON teacher.users_id = user.id')
             ->leftJoin('#__users editor_user ON editor_user.id = teacher.checked_out');
 
-        if ($search = $this->getState('filter.search')) {
-            $search = $db->q('%' . $search . '%');
-            $ors    = array(
-                'user.name like ' . $search,
-                'teacher.id like ' . $search
-            );
-            $query->where('(' . join(' OR ', $ors) . ')');
-        }
+        $this->whereTextSearch($query, 'user.id', 'user.name', 'user.username', 'user.email');
 
-        $listOrder = $this->getState('list.ordering', 'teacher.id');
-        $listDir   = $this->getState('list.direction', 'ASC');
-        $query->order($listOrder . ' ' . $listDir);
+        $primary = $this->getState('list.ordering', 'user.name');
+        $direction = $this->getState('list.direction', 'ASC');
+        $query->order($primary . ' ' . $direction);
 
         return $query;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'user.name', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('user.name', 'ASC');
+        parent::populateState($ordering, $direction);
     }
 }
