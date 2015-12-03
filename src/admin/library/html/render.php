@@ -259,18 +259,27 @@ abstract class OscRender
      * Output all hidden fields in a fieldset
      *
      * @param JForm  $form
-     * @param string $fieldSet
+     * @param string $fieldSetName
      *
      * @return string
      */
-    public static function hiddenfields(JForm $form, $fieldSet = 'hidden')
+    public static function hiddenfields(JForm $form, $fieldSetName = 'hidden')
     {
         $html = array();
-        if ($fields = $form->getFieldset($fieldSet)) {
-            foreach ($fields as $field) {
-                if (!strcasecmp($field->type, 'hidden')) {
-                    $html[] = $field->input;
-                }
+
+        if ($fieldSetName) {
+            $fields = $form->getFieldset($fieldSetName);
+        } else {
+            $fields    = array();
+            $fieldSets = $form->getFieldsets();
+            foreach ($fieldSets as $fieldSetName => $fieldSet) {
+                $fieldSet = $form->getFieldset($fieldSetName);
+                $fields   = array_merge($fields, array_values($fieldSet));
+            }
+        }
+        foreach ($fields as $field) {
+            if (!strcasecmp($field->type, 'hidden')) {
+                $html[] = $field->input;
             }
         }
 
