@@ -16,8 +16,7 @@ class OscampusViewPathways extends OscampusViewList
 
         $filters = array(
             'text'  => array(
-                'value' => $this->state->get('filter.search'),
-                'description' => 'COM_OSCAMPUS_SEARCH_TEXT_DESC'
+                'value' => $this->state->get('filter.search')
             )
         );
 
