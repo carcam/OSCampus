@@ -4,4 +4,42 @@
  # @copyright  2015 Open Source Training, LLC. All rights reserved
  # @license
  #}
-<p>Under Construction</p>
+{% extends 'admin_list.html.twig' %}
+
+{% block list_head_upper %}
+    <tr class="head2">
+        <th colspan="4">{{ 'COM_OSCAMPUS_LESSON'|lang }}</th>
+        <th colspan="2">{{ 'COM_OSCAMPUS_MODULE'|lang }}</th>
+        <th colspan="4">{{ 'COM_OSCAMPUS_COURSE'|lang }}</th>
+        <th></th>
+    </tr>
+{% endblock %}
+
+{% block list_head %}
+    {{ list_macro.th_checkall() }}
+    {{ list_macro.th_sort('lesson.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
+    {{ list_macro.th_sort('lesson.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
+    {{ list_macro.th_sort('lesson.type', 'COM_OSCAMPUS_LESSON_TYPE', list_dir, list_order) }}
+    {{ list_macro.th_sort('module.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
+    {{ list_macro.th_sort('module.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
+    {{ list_macro.th_sort('course.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
+    {{ list_macro.th_sort('course.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
+    {{ list_macro.th_sort('course.released', 'COM_OSCAMPUS_COURSE_RELEASED_LABEL', list_dir, list_order) }}
+    {{ list_macro.th_sort('course.difficulty', 'COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL', list_dir, list_order) }}
+    {{ list_macro.th_sort('lesson.id', 'COM_OSCAMPUS_ID', list_dir, list_order) }}
+{% endblock %}
+
+{% block list_item %}
+    {{ list_macro.td_check(loop.index0, item.id) }}
+    {{ list_macro.td_published(item.published, loop.index0, 'lessons.') }}
+    {{ list_macro.td_edit_link(item, loop.index0, 'lesson', 'lessons.', item.title, item.alias) }}
+    {{ list_macro.td_text(item.type) }}
+    {{ list_macro.td_text(item.module_title) }}
+    {{ list_macro.td_published(item.module_published, loop.index0, 'modules.') }}
+    {{ list_macro.td_text(item.course_title) }}
+    {{ list_macro.td_published(item.course_published, loop.index0, 'courses.') }}
+    {{ list_macro.td_text(item.course_released) }}
+    {{ list_macro.td_text(item.course_difficulty) }}
+    {{ list_macro.td_text(item.id, 'center') }}
+
+{% endblock %}
