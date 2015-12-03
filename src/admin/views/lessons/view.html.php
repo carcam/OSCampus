@@ -6,9 +6,6 @@
  * @license
  */
 
-error_reporting(-1);
-ini_set('display_errors', 1);
-
 defined('_JEXEC') or die();
 
 class OscampusViewLessons extends OscampusViewList
