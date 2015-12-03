@@ -52,15 +52,7 @@ class OscampusModelCourses extends OscampusModelList
             ->leftJoin('#__oscampus_pathways pathway ON pathway.id = cp.pathways_id')
             ->leftJoin('#__users editor_user ON editor_user.id = course.checked_out');
 
-        if ($search = $this->getState('filter.search')) {
-            $search = $db->q('%' . $search . '%');
-            $ors    = array(
-                'course.title like ' . $search,
-                'course.id like ' . $search
-            );
-            $query->where('(' . join(' OR ', $ors) . ')');
-        }
-
+        $this->whereTextSearch($query, 'course.id', 'course.title', 'course.alias');
         $query->group('course.id');
 
         $primary = $this->getState('list.ordering', 'course.title');
