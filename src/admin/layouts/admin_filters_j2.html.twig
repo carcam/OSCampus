@@ -20,7 +20,7 @@
     <div class="filter-search fltlft">
         <label
                 class="filter-search-lbl hasTip"
-                title="{{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}:{{ filters.text.description|lang }}"
+                title="{{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}:{{ (filters.text.description ?: 'COM_OSCAMPUS_SEARCH_TEXT_DESC')|lang }}"
                 for="filter_search">
             {{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}
         </label>
