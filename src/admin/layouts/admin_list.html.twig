@@ -30,6 +30,7 @@
         {% else %}
             <table class="table table-striped adminlist">
                 <thead>
+                {% block list_head_upper %}{% endblock %}
                 <tr>
                     {% block list_head %}
                         <th></th>
