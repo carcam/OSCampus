@@ -16,10 +16,16 @@ class OscampusView extends JViewLegacy
     protected $model = null;
 
     /**
+     * @var JObject
+     */
+    protected $state = null;
+
+    /**
      * @return void
      */
     protected function setup()
     {
         $this->model = $this->getModel();
+        $this->state = $this->model->getState();
     }
 }
