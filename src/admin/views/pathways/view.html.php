@@ -10,5 +10,17 @@ defined('_JEXEC') or die();
 
 class OscampusViewPathways extends OscampusViewList
 {
+    protected function setup()
+    {
+        parent::setup();
 
+        $filters = array(
+            'text'  => array(
+                'value' => $this->state->get('filter.search'),
+                'description' => 'COM_OSCAMPUS_SEARCH_TEXT_DESC'
+            )
+        );
+
+        $this->setVariable('filters', $filters);
+    }
 }

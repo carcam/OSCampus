@@ -43,12 +43,18 @@ class OscampusModelPathways extends OscampusModelList
             ->leftJoin('#__users editor_user ON editor_user.id = pathway.checked_out');
 
         if ($search = $this->getState('filter.search')) {
-            $search = $db->q('%' . $search . '%');
-            $ors    = array(
-                'pathway.title like ' . $search,
-                'pathway.alias like ' . $search
-            );
-            $query->where('(' . join(' OR ', $ors) . ')');
+            if (stripos(trim($search), 'id:') === 0) {
+                $id = (int)substr($search, stripos($search, 'id:') + 3);
+                $query->where('pathway.id = ' . $id);
+
+            } else {
+                $search = $db->q('%' . $search . '%');
+                $ors    = array(
+                    'pathway.title like ' . $search,
+                    'pathway.alias like ' . $search
+                );
+                $query->where('(' . join(' OR ', $ors) . ')');
+            }
         }
 
         $primary   = $this->getState('list.ordering', 'pathway.title');
