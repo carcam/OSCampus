@@ -65,11 +65,11 @@ class OscampusModelCourses extends OscampusModelList
         return $query;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'course.title', $direction = 'ASC')
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('course.title', 'ASC');
+        parent::populateState($ordering, $direction);
     }
 }
