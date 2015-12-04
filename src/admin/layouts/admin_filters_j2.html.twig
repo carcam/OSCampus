@@ -5,16 +5,18 @@
  # @license
  #}
 <script>
-    window.addEvent('domready', function() {
-        $('clear_form').addEvent('click', function(e) {
-            this.form.filter_search.value = '';
-            this.form.submit();
-        });
+    (function($) {
+        $(document).ready(function() {
+            $('#clear_form').on('click', function(e) {
+                this.form.filter_search.value = '';
+                this.form.submit();
+            });
 
-        $$('*[name^=filter_]').addEvent('change', function(e) {
-            this.form.submit();
+            $('*[name^=filter_]').on('change', function(e) {
+                this.form.submit();
+            });
         });
-    });
+    })(jQuery);
 </script>
 <fieldset id="filter-bar">
     {% if filters.text %}

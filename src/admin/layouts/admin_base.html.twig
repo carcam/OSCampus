@@ -8,6 +8,7 @@
 {{ html('stylesheet', 'com_oscampus/admin.css', null, true) }}
 
 {% block page_setup %}
+    {{ html('osc.jquery')|raw }}
     {% if joomla2 %}
         {{ html('behavior.tooltip')|raw }}
     {% else %}
