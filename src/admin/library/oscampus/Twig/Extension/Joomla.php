@@ -43,8 +43,28 @@ class Joomla extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('html', '\JHtml::_')
+            new Twig_SimpleFunction('html', '\JHtml::_'),
+            new Twig_SimpleFunction('linkto', array($this, 'function_linkto'))
         );
+    }
+
+    /**
+     * Link to an oscampus page by specifying urlvars
+     *
+     * @param array $urlvars
+     *
+     * @return string
+     */
+    public function function_linkto(array $urlvars)
+    {
+        if (!isset($urlvars['option'])) {
+            $urlvars = array_merge(
+                array('option' => 'com_oscampus'),
+                $urlvars
+            );
+        }
+
+        return \JRoute::_('index.php?' . http_build_query($urlvars));
     }
 
     public function getFilters()
