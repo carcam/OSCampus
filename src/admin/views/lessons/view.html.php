@@ -26,13 +26,21 @@ class OscampusViewLessons extends OscampusViewList
             $this->state->get('filter.course')
         );
 
+        $published = JHtml::_(
+            'osc.select.published',
+            'filter_published',
+            $this->state->get('filter.published'),
+            'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
                 array(
-                    $courses
+                    $courses,
+                    $published
                 )
             )
         );

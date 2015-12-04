@@ -63,6 +63,11 @@ defined('_JEXEC') or die();
              $query->where('course.id = ' . $course);
          }
 
+         $published = $this->getState('filter.published');
+         if ($published != '') {
+             $query->where('lesson.published = ' . (int)$published);
+         }
+
          $primary = $this->getState('list.ordering', 'course.title');
          $direction = $this->getState('list.direction', 'ASC');
          $query->order($primary . ' ' . $direction);
@@ -80,6 +85,9 @@ defined('_JEXEC') or die();
 
          $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'filter_course', null, 'int');
          $this->setState('filter.course', $course);
+
+         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
+         $this->setState('filter.published', $published);
 
          parent::populateState($ordering, $direction);
      }
