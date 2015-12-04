@@ -103,7 +103,13 @@ class OscampusFormFieldLessons extends JFormField
     protected function createLessonItem($lesson)
     {
         $lessonInput = '<input type="hidden" name="%s[][]" value="%s"/>%s';
-        $lessonLink   = JHtml::_('link', "javascript:alert('under construction');", $lesson->title);
+
+        $link       = 'index.php?option=com_oscampus&task=lesson.edit&tmpl=component&id=' . $lesson->id;
+        $attribs    = array(
+            'class' => 'modal',
+            'rel'   => '{handler: \'iframe\', size: {x: 800, y: 450}}'
+        );
+        $lessonLink = JHtml::_('link', $link, $lesson->title, $attribs);
 
         $html = array(
             '<li>',
@@ -119,6 +125,7 @@ class OscampusFormFieldLessons extends JFormField
 
     protected function addJavascript()
     {
+        JHtml::_('behavior.modal');
         JHtml::_('osc.jquery');
         JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
         JHtml::_('script', 'com_oscampus/lesson.js', false, true);
