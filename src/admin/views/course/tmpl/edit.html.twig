@@ -7,6 +7,12 @@
 
 {% extends "admin_form.html.twig" %}
 
+{% macro lessons_link(course_id, text) %}
+    {% set link = linkto({'view' : 'lessons', 'filter_course' : course_id, 'filter_order' : 'lesson.ordering'}) %}
+    {{ html('link', link, text|lang, 'target="_blank"')|raw }}
+{% endmacro %}
+{% import _self as macro %}
+
 {% block form_header %}
     {{ html('osc.render.formfield', form.getField('title'))|raw }}
     {{ html('osc.render.formfield', form.getField('alias'))|raw }}
@@ -27,6 +33,9 @@
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'lessons', 'COM_OSCAMPUS_LESSONS'|lang) }}
+    {% set link =  macro.lessons_link(item.id, 'COM_OSCAMPUS_LESSONS') %}
+    <p>{{ 'COM_OSCAMPUS_COURSE_LESSON_TAB'|sprintf(link)|raw }}</p>
+
     {{ form_macro.render_field(form, 'lessons', true) }}
     <button type="button" class="reset-lesson-order">{{ 'COM_OSCAMPUS_LESSONS_ORDER_RESET'|lang }}</button>
     {{ form_macro.tabs_panel_end() }}
