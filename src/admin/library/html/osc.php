@@ -10,7 +10,6 @@ defined('_JEXEC') or die();
 
 abstract class JHtmlOsc
 {
-    protected static $jqueryLoaded    = false;
     protected static $utilitiesLoaded = false;
 
     /**
@@ -22,13 +21,15 @@ abstract class JHtmlOsc
      */
     public static function jquery($utilities = true, $noConflict = true, $debug = null)
     {
+        $app    = OscampusFactory::getApplication();
         $params = OscampusComponentHelper::getParams();
 
-        $load   = $params->get('advanced.jquery', 0);
-        $client = JFactory::getApplication()->getName();
+        $load   = $params->get('advanced.jquery', 1);
+        $client = $app->getName();
         if ($load == $client || $load == 1) {
+            $jqueryLoaded = $app->get('jquery', false);
             // Only load once
-            if (!static::$jqueryLoaded) {
+            if (!$jqueryLoaded) {
                 if (version_compare(JVERSION, '3.0', 'lt')) {
                     // pre 3.0 manual loading
 
@@ -48,13 +49,18 @@ abstract class JHtmlOsc
                     JHtml::_('jquery.framework', $noConflict, $debug);
                 }
             }
+            $app->set('jquery', true);
         }
-        static::$jqueryLoaded = true;
 
         if ($utilities && !static::$utilitiesLoaded) {
             JHtml::_('script', 'com_oscampus/utilities.js', false, true);
             static::$utilitiesLoaded = true;
         }
+    }
+
+    public static function jui()
+    {
+        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
     }
 
     /**
@@ -67,7 +73,7 @@ abstract class JHtmlOsc
     public static function sortable($selector)
     {
         static::jquery();
-        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+        static::jui();
 
         $options = json_encode(array('selector' => $selector));
         static::onready("$.Oscampus.sortable({$options})");

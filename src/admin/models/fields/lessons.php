@@ -127,7 +127,7 @@ class OscampusFormFieldLessons extends JFormField
     {
         JHtml::_('behavior.modal');
         JHtml::_('osc.jquery');
-        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+        JHtml::_('osc.jui');
         JHtml::_('script', 'com_oscampus/lesson.js', false, true);
 
         $options = json_encode(

@@ -76,7 +76,7 @@ abstract class OscLesson
     public static function ordering($container = null, $options = null)
     {
         JHtml::_('osc.jquery');
-        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+        JHtml::_('osc.jui');
         JHtml::_('script', 'com_oscampus/lesson.js', false, true);
 
         if ($options && is_string($options)) {
