@@ -17,15 +17,15 @@
     });
 </script>
 <fieldset id="filter-bar">
-    <div class="filter-search fltlft">
-        <label
-                class="filter-search-lbl hasTip"
-                title="{{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}:{{ (filters.text.description ?: 'COM_OSCAMPUS_SEARCH_TEXT_DESC')|lang }}"
-                for="filter_search">
-            {{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}
-        </label>
+    {% if filters.text %}
+        <div class="filter-search fltlft">
+            <label
+                    class="filter-search-lbl hasTip"
+                    title="{{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}:{{ (filters.text.description ?: 'COM_OSCAMPUS_SEARCH_TEXT_DESC')|lang }}"
+                    for="filter_search">
+                {{ 'COM_OSCAMPUS_SEARCH_TEXT_LABEL'|lang }}
+            </label>
 
-        {% if filters.text %}
             <input
                     type="text"
                     name="filter_search"
@@ -38,18 +38,18 @@
             <button type="button" id="clear_form">
                 {{ 'JSEARCH_FILTER_CLEAR'|lang }}
             </button>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% if filters.items %}
-            <div class="filter-select fltrt">
-                {% for row in filters.items %}
-                    {% for item in row %}
-                        {{ item }}
-                    {% endfor %}
-                    <br/>
+    {% if filters.items %}
+        <div class="filter-select fltrt">
+            {% for row in filters.items %}
+                {% for item in row %}
+                    {{ item|raw }}
                 {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+                <br/>
+            {% endfor %}
+        </div>
+    {% endif %}
 </fieldset>
 <div class="clr"></div>
