@@ -21,7 +21,8 @@ defined('_JEXEC') or die();
              'course_title',      'course.title',
              'course_published',  'course.published',
              'course_released',   'course.released',
-             'course_defficulty', 'course.difficulty'
+             'course_defficulty', 'course.difficulty',
+             'lesson_ordering',   'lesson.ordering'
          );
 
          parent::__construct($config);
@@ -70,6 +71,9 @@ defined('_JEXEC') or die();
 
          $primary = $this->getState('list.ordering', 'course.title');
          $direction = $this->getState('list.direction', 'ASC');
+         if ($primary == 'lesson.ordering') {
+             $query->order('module.ordering ' . $direction);
+         }
          $query->order($primary . ' ' . $direction);
          if (!in_array($primary, array('lesson.title', 'lesson.id'))) {
              $query->order('lesson.title ' . $direction);
@@ -80,6 +84,11 @@ defined('_JEXEC') or die();
 
      protected function populateState($ordering = 'lesson.title', $direction = 'ASC')
      {
+         $app = OscampusFactory::getApplication();
+         if ($app->input->getBool('clear', false)) {
+             $app->setUserState($this->context, null);
+         }
+
          $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
          $this->setState('filter.search', $search);
 
