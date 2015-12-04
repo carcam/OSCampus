@@ -14,9 +14,26 @@ class OscampusViewLessons extends OscampusViewList
     {
         parent::setup();
 
+        $courseOptions = JHtml::_('osc.options.courses');
+        array_unshift($courseOptions, JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COURSE')));
+        $courses = JHtml::_(
+            'select.genericlist',
+            $courseOptions,
+            'filter_course',
+            null,
+            'value',
+            'text',
+            $this->state->get('filter.course')
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
+            ),
+            'items' => array(
+                array(
+                    $courses
+                )
             )
         );
 

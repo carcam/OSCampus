@@ -57,6 +57,12 @@ defined('_JEXEC') or die();
              ->leftJoin('#__viewlevels AS lesson_view ON lesson_view.id = lesson.access')
              ->leftJoin('#__viewlevels AS course_view ON course_view.id = course.access');
 
+         $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
+
+         if ($course = (int)$this->getState('filter.course')) {
+             $query->where('course.id = ' . $course);
+         }
+
          $primary = $this->getState('list.ordering', 'course.title');
          $direction = $this->getState('list.direction', 'ASC');
          $query->order($primary . ' ' . $direction);
@@ -64,15 +70,16 @@ defined('_JEXEC') or die();
              $query->order('lesson.title ' . $direction);
          }
 
-         $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
-
          return $query;
      }
 
      protected function populateState($ordering = 'lesson.title', $direction = 'ASC')
      {
-         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
          $this->setState('filter.search', $search);
+
+         $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'filter_course', null, 'int');
+         $this->setState('filter.course', $course);
 
          parent::populateState($ordering, $direction);
      }

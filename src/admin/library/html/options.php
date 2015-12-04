@@ -122,6 +122,11 @@ abstract class OscOptions
         return static::$cache[$key];
     }
 
+    /**
+     * Create option list of available tags
+     *
+     * @return object[]
+     */
     public static function tags()
     {
         if (empty(static::$cache['tags'])) {
@@ -140,5 +145,31 @@ abstract class OscOptions
         }
 
         return static::$cache['tags'];
+    }
+
+    /**
+     * option list of available courses
+     *
+     * @return object[]
+     */
+    public static function courses()
+    {
+        if (empty(static::$cache['courses'])) {
+            $db = OscampusFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'id AS ' . $db->qn('value'),
+                        'title AS ' . $db->qn('text')
+                    )
+                )
+                ->from('#__oscampus_courses')
+                ->order('title ASC');
+
+            static::$cache['courses'] = $db->setQuery($query)->loadObjectList();
+        }
+
+        return static::$cache['courses'];
     }
 }
