@@ -44,7 +44,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
         $this->setVariable('list_order', $this->escape($state->get('list.ordering')));
         $this->setVariable('list_dir', $this->escape($state->get('list.direction')));
         $this->setVariable('items', $model->getItems());
-        $this->setVariable('pagination', $model->getPagination()->getListFooter());
+        $this->setVariable('pagination', $model->getPagination());
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));

@@ -42,17 +42,19 @@
 
                 <tbody>
                 {% for item in items %}
-                    <tr class="row{{ loop.index0 % 2 }}">
-                        {% block list_item %}
-                            <td></td>
-                        {% endblock %}
-                    </tr>
+                    {% block list_item_tr %}
+                        <tr class="row{{ loop.index0 % 2 }}">
+                            {% block list_item %}
+                                <td></td>
+                            {% endblock %}
+                        </tr>
+                    {% endblock %}
                 {% endfor %}
                 </tbody>
             </table>
 
             {% if pagination %}
-                {{ pagination|raw }}
+                {{ pagination.getListFooter()|raw }}
             {% endif %}
         {% endif %}
 
