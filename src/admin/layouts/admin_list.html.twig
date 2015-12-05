@@ -42,13 +42,11 @@
 
                 <tbody>
                 {% for item in items %}
-                    {% block list_item_tr %}
-                        <tr class="row{{ loop.index0 % 2 }}">
-                            {% block list_item %}
-                                <td></td>
-                            {% endblock %}
-                        </tr>
-                    {% endblock %}
+                    <tr class="row{{ loop.index0 % 2 }}">
+                        {% block list_item %}
+                            <td></td>
+                        {% endblock %}
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
