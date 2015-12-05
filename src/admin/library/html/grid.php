@@ -12,6 +12,15 @@ JLoader::register('JHtmlGrid', JPATH_LIBRARIES . '/joomla/html/html/grid.php');
 
 abstract class OscGrid extends JHtmlGrid
 {
+    /**
+     * A J!2 version of something supplied in core J!3
+     *
+     * @param string $name
+     * @param string $tip
+     * @param string $action
+     *
+     * @return string
+     */
     public static function checkall(
         $name = 'checkall-toggle',
         $tip = 'JGLOBAL_CHECK_ALL',
