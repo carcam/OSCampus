@@ -28,12 +28,22 @@ class OscampusViewCourses extends OscampusViewList
             'COM_OSCAMPUS_OPTION_SELECT_PATHWAY'
         );
 
+        $tag = JHtml::_(
+            'osc.select.tag',
+            'filter_tag',
+            $this->state->get('filter.tag'),
+            array(
+                ''     => 'COM_OSCAMPUS_OPTION_SELECT_TAG',
+                'null' => 'COM_OSCAMPUS_OPTION_NOT_TAGGED'
+            )
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
-                array($published, $pathway)
+                array($published, $pathway, $tag)
             )
         );
 

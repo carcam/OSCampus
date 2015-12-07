@@ -68,6 +68,19 @@ class OscampusModelCourses extends OscampusModelList
             $query->where("course.id IN ({$queryPathway})");
         }
 
+        $tag = $this->getState('filter.tag');
+        if (is_numeric($tag) != '') {
+            $queryTag = $db->getQuery(true)
+                ->select('courses_id')
+                ->from('#__oscampus_courses_tags')
+                ->where('tags_id  = ' . (int)$tag);
+
+            $query->where("course.id IN ({$queryTag})");
+            
+        } elseif ($tag == 'null') {
+            $query->where('tag.id IS NULL');
+        }
+
         $query->group('course.id');
 
         $primary   = $this->getState('list.ordering', 'course.title');
@@ -90,6 +103,9 @@ class OscampusModelCourses extends OscampusModelList
 
         $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'filter_pathway');
         $this->setState('filter.pathway', $pathway);
+
+        $tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag');
+        $this->setState('filter.tag', $tag);
 
         parent::populateState($ordering, $direction);
     }

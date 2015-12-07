@@ -57,7 +57,16 @@ abstract class OscSelect
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
 
-    public static function pathway($name, $selected, $blankOption = null, $attribs = null, $id = null)
+    /**
+     * @param string       $name
+     * @param int          $selected
+     * @param string|array $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return string
+     */
+    public static function pathway($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
         if (!isset(static::$cache['pathways'])) {
             $db = OscampusFactory::getDbo();
@@ -69,19 +78,66 @@ abstract class OscSelect
                 ->order('title');
 
             static::$cache['pathways'] = $db->setQuery($query)->loadObjectList();
-            array_walk(static::$cache['pathways'], function(&$row) {
+            array_walk(static::$cache['pathways'], function (&$row) {
                 $row = (object)array(
                     'value' => $row->id,
-                    'text' => sprintf('%s (%s)', $row->title, $row->viewlevel_title)
+                    'text'  => sprintf('%s (%s)', $row->title, $row->viewlevel_title)
                 );
             });
         }
 
-        $options = static::$cache['pathways'];
-        if ($blankOption) {
-            array_unshift($options, JHtml::_('select.option', '', JText::_($blankOption)));
-        }
+        $options = array_merge(static::createAddOptions($addOptions), static::$cache['pathways']);
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
+    /**
+     * @param string       $name
+     * @param int          $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return string
+     */
+    public static function tag($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        if (!isset(static::$cache['tags'])) {
+            $db = OscampusFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'tag.id AS ' . $db->nq('value'),
+                        'tag.title AS ' . $db->nq('text')
+                    )
+                )
+                ->from('#__oscampus_tags AS tag')
+                ->order('title');
+
+            static::$cache['tags'] = $db->setQuery($query)->loadObjectList();
+        }
+
+        $options = array_merge(static::createAddOptions($addOptions), static::$cache['tags']);
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+
+    }
+
+    /**
+     * @param array|string $texts
+     *
+     * @return array
+     */
+    protected static function createAddOptions($texts)
+    {
+        $options = array();
+        if ($texts) {
+            foreach ((array)$texts as $value => $text) {
+                $options[] = JHtml::_('select.option', $value, JText::_($text));
+            }
+        }
+
+        return $options;
     }
 }
