@@ -28,16 +28,10 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::setTitle('COM_OSCAMPUS_SUBMENU_' . $name, $icon);
     }
 
-    /**
-     * Method to display the view
-     *
-     * @param  string $tpl The name of the template file to parse
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function display($tpl = null)
+    protected function setup()
     {
+        parent::setup();
+
         $model = $this->getModel();
         $state = $model->getState();
 
@@ -49,8 +43,6 @@ abstract class OscampusViewList extends OscampusViewAdmin
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
-
-        parent::display($tpl);
     }
 
     /**
