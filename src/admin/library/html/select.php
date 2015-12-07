@@ -25,6 +25,8 @@ foreach ($paths as $path) {
 
 abstract class OscSelect
 {
+    protected static $cache = array();
+
     protected static function joomla_version()
     {
         $version = explode('.', JVERSION);
@@ -48,6 +50,34 @@ abstract class OscSelect
             JHtml::_('select.option', '0', JText::_('JUNPUBLISHED')),
             JHtml::_('select.option', '1', JText::_('JPUBLISHED'))
         );
+        if ($blankOption) {
+            array_unshift($options, JHtml::_('select.option', '', JText::_($blankOption)));
+        }
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
+    public static function pathway($name, $selected, $blankOption = null, $attribs = null, $id = null)
+    {
+        if (!isset(static::$cache['pathways'])) {
+            $db = OscampusFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select('pathway.id, pathway.title, viewlevel.title viewlevel_title')
+                ->from('#__oscampus_pathways AS pathway')
+                ->leftJoin('#__viewlevels AS viewlevel ON viewlevel.id = pathway.access')
+                ->order('title');
+
+            static::$cache['pathways'] = $db->setQuery($query)->loadObjectList();
+            array_walk(static::$cache['pathways'], function(&$row) {
+                $row = (object)array(
+                    'value' => $row->id,
+                    'text' => sprintf('%s (%s)', $row->title, $row->viewlevel_title)
+                );
+            });
+        }
+
+        $options = static::$cache['pathways'];
         if ($blankOption) {
             array_unshift($options, JHtml::_('select.option', '', JText::_($blankOption)));
         }

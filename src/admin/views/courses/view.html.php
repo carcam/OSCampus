@@ -14,9 +14,26 @@ class OscampusViewCourses extends OscampusViewList
     {
         parent::setup();
 
+        $published = JHtml::_(
+            'osc.select.published',
+            'filter_published',
+            $this->state->get('filter.published'),
+            'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
+        );
+
+        $pathway = JHtml::_(
+            'osc.select.pathway',
+            'filter_pathway',
+            $this->state->get('filter.pathway'),
+            'COM_OSCAMPUS_OPTION_SELECT_PATHWAY'
+        );
+
         $filters = array(
-            'text' => array(
+            'text'  => array(
                 'value' => $this->state->get('filter.search')
+            ),
+            'items' => array(
+                array($published, $pathway)
             )
         );
 

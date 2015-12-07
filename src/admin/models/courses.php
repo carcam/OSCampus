@@ -53,9 +53,24 @@ class OscampusModelCourses extends OscampusModelList
             ->leftJoin('#__users editor_user ON editor_user.id = course.checked_out');
 
         $this->whereTextSearch($query, 'course.id', 'course.title', 'course.alias');
+
+        $published = $this->getState('filter.published');
+        if ($published != '') {
+            $query->where('course.published = ' . (int)$published);
+        }
+
+        if ($pathway = (int)$this->getState('filter.pathway')) {
+            $queryPathway = $db->getQuery(true)
+                ->select('courses_id')
+                ->from('#__oscampus_courses_pathways')
+                ->where('pathways_id = ' . $pathway);
+
+            $query->where("course.id IN ({$queryPathway})");
+        }
+
         $query->group('course.id');
 
-        $primary = $this->getState('list.ordering', 'course.title');
+        $primary   = $this->getState('list.ordering', 'course.title');
         $direction = $this->getState('list.direction', 'ASC');
         $query->order($primary . ' ' . $direction);
         if (!in_array($primary, array('course.title', 'course.id'))) {
@@ -69,6 +84,12 @@ class OscampusModelCourses extends OscampusModelList
     {
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
+
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
+        $this->setState('filter.published', $published);
+
+        $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'filter_pathway');
+        $this->setState('filter.pathway', $pathway);
 
         parent::populateState($ordering, $direction);
     }
