@@ -38,12 +38,19 @@ class OscampusViewCourses extends OscampusViewList
             )
         );
 
+        $difficulty = JHtml::_(
+            'osc.select.difficulty',
+            'filter_difficulty',
+            $this->state->get('filter.difficulty'),
+            'COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
-                array($published, $pathway, $tag)
+                array($published, $pathway, $tag, $difficulty)
             )
         );
 

@@ -76,9 +76,13 @@ class OscampusModelCourses extends OscampusModelList
                 ->where('tags_id  = ' . (int)$tag);
 
             $query->where("course.id IN ({$queryTag})");
-            
+
         } elseif ($tag == 'null') {
             $query->where('tag.id IS NULL');
+        }
+
+        if ($difficulty = $this->getState('filter.difficulty')) {
+            $query->where('course.difficulty = ' . $db->q($difficulty));
         }
 
         $query->group('course.id');
@@ -106,6 +110,9 @@ class OscampusModelCourses extends OscampusModelList
 
         $tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag');
         $this->setState('filter.tag', $tag);
+
+        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty');
+        $this->setState('filter.difficulty', $difficulty);
 
         parent::populateState($ordering, $direction);
     }

@@ -68,25 +68,7 @@ abstract class OscSelect
      */
     public static function pathway($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
-        if (!isset(static::$cache['pathways'])) {
-            $db = OscampusFactory::getDbo();
-
-            $query = $db->getQuery(true)
-                ->select('pathway.id, pathway.title, viewlevel.title viewlevel_title')
-                ->from('#__oscampus_pathways AS pathway')
-                ->leftJoin('#__viewlevels AS viewlevel ON viewlevel.id = pathway.access')
-                ->order('title');
-
-            static::$cache['pathways'] = $db->setQuery($query)->loadObjectList();
-            array_walk(static::$cache['pathways'], function (&$row) {
-                $row = (object)array(
-                    'value' => $row->id,
-                    'text'  => sprintf('%s (%s)', $row->title, $row->viewlevel_title)
-                );
-            });
-        }
-
-        $options = array_merge(static::createAddOptions($addOptions), static::$cache['pathways']);
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.pathways'));
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
@@ -102,26 +84,26 @@ abstract class OscSelect
      */
     public static function tag($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
-        if (!isset(static::$cache['tags'])) {
-            $db = OscampusFactory::getDbo();
-
-            $query = $db->getQuery(true)
-                ->select(
-                    array(
-                        'tag.id AS ' . $db->nq('value'),
-                        'tag.title AS ' . $db->nq('text')
-                    )
-                )
-                ->from('#__oscampus_tags AS tag')
-                ->order('title');
-
-            static::$cache['tags'] = $db->setQuery($query)->loadObjectList();
-        }
-
-        $options = array_merge(static::createAddOptions($addOptions), static::$cache['tags']);
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.tags'));
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
 
+    }
+
+    /**
+     * @param string       $name
+     * @param string       $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return mixed
+     */
+    public static function difficulty($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.difficulties'));
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
 
     /**

@@ -82,16 +82,18 @@ abstract class OscOptions
      * Create options list of available pathways
      *
      * @param bool $coreOnly
+     * @param bool $showAccess
      *
      * @return object[]
      */
-    public static function pathways($coreOnly = true)
+    public static function pathways($coreOnly = true, $showAccess = true)
     {
         $key = md5(
             json_encode(
                 array(
-                    'base' => 'pathways',
-                    'core' => $coreOnly
+                    'base'   => 'pathways',
+                    'core'   => $coreOnly,
+                    'access' => $showAccess
                 )
             )
         );
@@ -108,10 +110,10 @@ abstract class OscOptions
                 $query->where('IFNULL(pathway.users_id, 0) = 0');
             }
 
-            static::$cache[$key] = array_map(function ($row) {
+            static::$cache[$key] = array_map(function ($row) use ($showAccess) {
                 return (object)array(
                     'value' => $row->id,
-                    'text'  => sprintf('%s (%s)', $row->title, $row->level)
+                    'text'  => $showAccess ? sprintf('%s (%s)', $row->title, $row->level) : $row->title
                 );
             },
                 $db->setQuery($query)->loadObjectList()
