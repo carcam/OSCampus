@@ -8,6 +8,7 @@
 
 {% block list_head %}
     {{ list_macro.th_checkall() }}
+    {{ list_macro.th_ordering('pathway.ordering', list_dir, list_order, items, 'pathways.') }}
     {{ list_macro.th_sort('pathway.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
     {{ list_macro.th_sort('pathway.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
     {{ list_macro.th_sort('owner.name', 'COM_OSCAMPUS_PATHWAY_OWNER', list_dir, list_order) }}
@@ -17,6 +18,7 @@
 
 {% block list_item %}
     {{ list_macro.td_check(loop.index0, item.id) }}
+    {{ list_macro.td_ordering(loop.index0, item.ordering, 'pathway.ordering', 'pathways.', list_dir, list_order, pagination) }}
     {{ list_macro.td_published(item.published, loop.index0, 'pathways.') }}
     {{ list_macro.td_edit_link(item, loop.index0, 'pathway', 'pathways.', item.title, item.alias) }}
     {{ list_macro.td_text(item.owner_name ?: 'COM_OSCAMPUS_PATHWAY_OWNER_CORE') }}
