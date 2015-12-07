@@ -11,6 +11,21 @@
     </th>
 {% endmacro %}
 
+{% macro th_ordering(field, list_dir, list_order, items, prefix) %}
+    {% if joomla2 %}
+        <th width="10%">
+            {{ html('osc.grid.sort', 'JGRID_HEADING_ORDERING', field, list_dir, list_order)|raw }}
+            {% if field == list_order %}
+                {{ html('osc.grid.order', items, 'filesave.png', prefix ~ 'saveorder')|raw }}
+            {% endif %}
+        </th>
+    {% elseif joomla3 %}
+        <th width="1%" class="nowrap center hidden-phone">
+            {{ html('searchtools.sort', '', field, list_dir, list_order, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2')|raw }}
+        </th>
+    {% endif %}
+{% endmacro %}
+
 {% macro th_published(field, list_dir, list_order) %}
     <th width="1%" style="min-width:55px" class="nowrap center">
         {{ html('osc.grid.sort', 'COM_OSCAMPUS_PUBLISHED', field, list_dir, list_order)|raw }}
@@ -27,6 +42,43 @@
     <th class="nowrap"{{ width ? ' width="{{ width }}"' : '' }}>
         {{ text|lang }}
     </th>
+{% endmacro %}
+
+{% macro td_ordering(index, order_value, field, prefix, list_dir, list_order, pagination) %}
+    {% set enabled = (field == list_order) %}
+    {% if joomla2 %}
+        <td class="order">
+            {% if enabled %}
+                {% if list_dir|lower == 'asc' %}
+                    <span>{{ pagination.orderUpIcon(index, true, prefix ~'orderup')|raw }}</span>
+                    <span>{{ pagination.orderDownIcon(index, pagination.total, true, prefix ~ 'orderdown')|raw }}</span>
+                {% elseif list_dir|lower == 'desc' %}
+                    <span>{{ pagination.orderUpIcon(index, true, prefix ~ 'orderdown')|raw }}</span>
+                    <span>{{ pagination.orderDownIcon(index, pagination.total, true, prefix ~ 'orderup')|raw }}</span>
+                {% endif %}
+                <input {{ enabled ? '' : 'disabled="disabled"' }}
+                        type="text"
+                        name="order[]"
+                        size="5"
+                        value="{{ order_value }}"
+                        class="text-area-order"/>
+            {% else %}
+                {{ order_value }}
+            {% endif %}
+        </td>
+    {% else %}
+        <td class="order nowrap center hidden-phone">
+            {% set tt_text = html('tooltipText', 'JORDERINGDISABLED') %}
+            {% set iconClass = 'sortable-handler' ~ (enabled ? '' : ' inactive tip-top hasTooltip" title="{{ tt_text }}"') %}
+            <span class="{{ iconClass }}">
+                <span class="icon-menu"></span>
+            </span>
+            {% if enabled %}
+                <input type="text" style="display:none" name="order[]" size="5" value="{{ order_value }}"
+                       class="width-20 text-area-order "/>
+            {% endif %}
+        </td>
+    {% endif %}
 {% endmacro %}
 
 {% macro td_check(index, id) %}
