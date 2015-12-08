@@ -64,7 +64,8 @@ class OscampusViewCourses extends OscampusViewList
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
-                array($published, $pathway, $tag, $difficulty, $access, $teacher)
+                array($published, $tag, $pathway),
+                array($difficulty, $teacher, $access)
             )
         );
 
