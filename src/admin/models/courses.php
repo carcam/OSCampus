@@ -37,8 +37,8 @@ class OscampusModelCourses extends OscampusModelList
                 'course.*',
                 'teacher_user.name as teacher_name',
                 'viewlevel.title as viewlevel_title',
-                'GROUP_CONCAT(DISTINCT tag.title) AS tags',
-                'GROUP_CONCAT(DISTINCT pathway.title) AS pathways',
+                'GROUP_CONCAT(DISTINCT tag.title ORDER BY tag.title) AS tags',
+                'GROUP_CONCAT(DISTINCT pathway.title ORDER BY pathway.title) AS pathways',
                 'editor_user.name editor'
             )
         )
