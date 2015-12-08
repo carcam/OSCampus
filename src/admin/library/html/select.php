@@ -106,6 +106,15 @@ abstract class OscSelect
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
 
+    public static function access($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        $accessGroups = JHtml::_('access.assetgroups');
+
+        $options = array_merge(static::createAddOptions($addOptions), $accessGroups);
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
     /**
      * @param array|string $texts
      *

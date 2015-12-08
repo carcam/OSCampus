@@ -45,12 +45,19 @@ class OscampusViewCourses extends OscampusViewList
             'COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'
         );
 
+        $access = JHtml::_(
+            'osc.select.access',
+            'filter_access',
+            $this->state->get('filter.access'),
+            'COM_OSCAMPUS_OPTION_SELECT_ACCESS'
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
-                array($published, $pathway, $tag, $difficulty)
+                array($published, $pathway, $tag, $difficulty, $access)
             )
         );
 
