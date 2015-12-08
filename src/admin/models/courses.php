@@ -89,6 +89,10 @@ class OscampusModelCourses extends OscampusModelList
             $query->where('course.access = ' . $access);
         }
 
+        if ($teacher = (int)$this->getState('filter.teacher')) {
+            $query->where('teacher.id = ' . $teacher);
+        }
+
         $query->group('course.id');
 
         $primary   = $this->getState('list.ordering', 'course.title');
@@ -120,6 +124,9 @@ class OscampusModelCourses extends OscampusModelList
 
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
         $this->setState('filter.access', $access);
+
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+        $this->setState('filter.teacher', $teacher);
 
         parent::populateState($ordering, $direction);
     }

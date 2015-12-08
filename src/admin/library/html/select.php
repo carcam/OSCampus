@@ -97,7 +97,7 @@ abstract class OscSelect
      * @param array|string $attribs
      * @param string       $id
      *
-     * @return mixed
+     * @return string
      */
     public static function difficulty($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
@@ -106,11 +106,36 @@ abstract class OscSelect
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
 
+    /**
+     * @param string       $name
+     * @param string       $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return string
+     */
     public static function access($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
         $accessGroups = JHtml::_('access.assetgroups');
 
         $options = array_merge(static::createAddOptions($addOptions), $accessGroups);
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
+    /**
+     * @param string       $name
+     * @param string       $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return string
+     */
+    public static function teacher($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.teachers'));
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }

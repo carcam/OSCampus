@@ -52,12 +52,19 @@ class OscampusViewCourses extends OscampusViewList
             'COM_OSCAMPUS_OPTION_SELECT_ACCESS'
         );
 
+        $teacher = JHtml::_(
+            'osc.select.teacher',
+            'filter_teacher',
+            $this->state->get('filter.teacher'),
+            'COM_OSCAMPUS_OPTION_SELECT_TEACHER'
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $this->state->get('filter.search')
             ),
             'items' => array(
-                array($published, $pathway, $tag, $difficulty, $access)
+                array($published, $pathway, $tag, $difficulty, $access, $teacher)
             )
         );
 
