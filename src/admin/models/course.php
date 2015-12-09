@@ -117,6 +117,17 @@ class OscampusModelCourse extends OscampusModelAdmin
         return false;
     }
 
+    protected function getReorderConditions($table)
+    {
+        $app = OscampusFactory::getApplication();
+
+        if ($pathwayId = $app->input->getInt('filter_pathway')) {
+            return array('pathways_id = ' . $pathwayId);
+        }
+
+        return array();
+    }
+
     public function save($data)
     {
         if (parent::save($data)) {
