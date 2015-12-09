@@ -40,6 +40,16 @@ abstract class OscampusViewList extends OscampusViewAdmin
         $this->setVariable('items', $model->getItems());
         $this->setVariable('pagination', $model->getPagination());
 
+        $ordering = array(
+            'enabled'   => false,
+            'field'     => null,
+            'prefix'    => null,
+            'order'     => $this->escape($state->get('list.ordering')),
+            'direction' => $this->escape($state->get('list.direction'))
+        );
+        $this->setVariable('ordering', $ordering);
+
+
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
@@ -69,5 +79,63 @@ abstract class OscampusViewList extends OscampusViewAdmin
         OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $plural . '.delete');
 
         parent::setToolbar();
+    }
+
+    /**
+     * Return a group ID for determining if an item is at the top or bottom of a scoped sorting group
+     *
+     * @param object $item
+     *
+     * @return string
+     */
+    public function getSortGroupId($item)
+    {
+        return '';
+    }
+
+    /**
+     * Determine if the selected item is at the top of a sorting group
+     *
+     * @param int   $index
+     * @param array $items
+     *
+     * @return bool
+     */
+    public function isSortGroupTop($index, $items)
+    {
+        if ($index == 0) {
+            return true;
+        }
+
+        if (isset($items[$index])) {
+            $currentSortGroupId = $this->getSortGroupId($items[$index]);
+            $lastSortGroupId    = isset($items[$index - 1]) ? $this->getSortGroupId($items[$index - 1]) : '';
+            return $currentSortGroupId != $lastSortGroupId;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the selected item is at the bottom of a sorting group
+     *
+     * @param int   $index
+     * @param array $items
+     *
+     * @return bool
+     */
+    public function isSortGroupBottom($index, $items)
+    {
+        if (count($items) == ($index + 1)) {
+            return true;
+        }
+
+        if (isset($items[$index])) {
+            $currentSortGroupId = $this->getSortGroupId($items[$index]);
+            $nextSortGroupId    = isset($items[$index + 1]) ? $this->getSortGroupId($items[$index + 1]) : '';
+            return $currentSortGroupId != $nextSortGroupId;
+        }
+
+        return false;
     }
 }
