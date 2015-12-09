@@ -11,21 +11,14 @@ defined('_JEXEC') or die();
 class OscampusView extends JViewLegacy
 {
     /**
-     * @var OscampusModel
+     * @return mixed
      */
-    protected $model = null;
-
-    /**
-     * @var JObject
-     */
-    protected $state = null;
-
-    /**
-     * @return void
-     */
-    protected function setup()
+    public function getState($property = null, $default = null)
     {
-        $this->model = $this->getModel();
-        $this->state = $this->model->getState();
+        if ($model = $this->getModel()) {
+            return $model->getState($property, $default);
+        }
+
+        return $default;
     }
 }

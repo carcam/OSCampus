@@ -16,7 +16,7 @@ class OscampusViewTeachers extends OscampusViewList
 
         $filters = array(
             'text'  => array(
-                'value' => $this->state->get('filter.search'),
+                'value' => $this->getState()->get('filter.search'),
                 'description' => 'COM_OSCAMPUS_SEARCH_TEXT_TEACHERS_DESC'
             )
         );

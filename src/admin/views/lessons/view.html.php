@@ -14,6 +14,8 @@ class OscampusViewLessons extends OscampusViewList
     {
         parent::setup();
 
+        $state = $this->getState();
+
         $courseOptions = JHtml::_('osc.options.courses');
         array_unshift($courseOptions, JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COURSE')));
         $courses = JHtml::_(
@@ -23,19 +25,19 @@ class OscampusViewLessons extends OscampusViewList
             null,
             'value',
             'text',
-            $this->state->get('filter.course')
+            $state->get('filter.course')
         );
 
         $published = JHtml::_(
             'osc.select.published',
             'filter_published',
-            $this->state->get('filter.published'),
+            $state->get('filter.published'),
             'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
         );
 
         $filters = array(
             'text'  => array(
-                'value' => $this->state->get('filter.search')
+                'value' => $state->get('filter.search')
             ),
             'items' => array(
                 array(

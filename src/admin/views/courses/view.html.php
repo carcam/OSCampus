@@ -14,24 +14,26 @@ class OscampusViewCourses extends OscampusViewList
     {
         parent::setup();
 
+        $state = $this->getState();
+
         $published = JHtml::_(
             'osc.select.published',
             'filter_published',
-            $this->state->get('filter.published'),
+            $state->get('filter.published'),
             'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
         );
 
         $pathway = JHtml::_(
             'osc.select.pathway',
             'filter_pathway',
-            $this->state->get('filter.pathway'),
+            $state->get('filter.pathway'),
             'COM_OSCAMPUS_OPTION_SELECT_PATHWAY'
         );
 
         $tag = JHtml::_(
             'osc.select.tag',
             'filter_tag',
-            $this->state->get('filter.tag'),
+            $state->get('filter.tag'),
             array(
                 ''     => 'COM_OSCAMPUS_OPTION_SELECT_TAG',
                 'null' => 'COM_OSCAMPUS_OPTION_NOT_TAGGED'
@@ -41,27 +43,27 @@ class OscampusViewCourses extends OscampusViewList
         $difficulty = JHtml::_(
             'osc.select.difficulty',
             'filter_difficulty',
-            $this->state->get('filter.difficulty'),
+            $state->get('filter.difficulty'),
             'COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'
         );
 
         $access = JHtml::_(
             'osc.select.access',
             'filter_access',
-            $this->state->get('filter.access'),
+            $state->get('filter.access'),
             'COM_OSCAMPUS_OPTION_SELECT_ACCESS'
         );
 
         $teacher = JHtml::_(
             'osc.select.teacher',
             'filter_teacher',
-            $this->state->get('filter.teacher'),
+            $state->get('filter.teacher'),
             'COM_OSCAMPUS_OPTION_SELECT_TEACHER'
         );
 
         $filters = array(
             'text'  => array(
-                'value' => $this->state->get('filter.search')
+                'value' => $state->get('filter.search')
             ),
             'items' => array(
                 array($published, $tag, $pathway),
@@ -71,5 +73,4 @@ class OscampusViewCourses extends OscampusViewList
 
         $this->setVariable('filters', $filters);
     }
-
 }

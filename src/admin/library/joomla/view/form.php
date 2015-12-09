@@ -8,7 +8,6 @@
 
 defined('_JEXEC') or die();
 
-
 abstract class OscampusViewForm extends OscampusViewAdmin
 {
     /**
@@ -30,9 +29,9 @@ abstract class OscampusViewForm extends OscampusViewAdmin
     {
         parent::setup();
 
+        $this->model = $this->getModel();
         $this->form  = $this->model->getForm();
         $this->item  = $this->model->getItem();
-
 
         $this->setVariable(
             array(
