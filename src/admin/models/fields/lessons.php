@@ -31,6 +31,13 @@ class OscampusFormFieldLessons extends JFormField
         return join("\n", $html);
     }
 
+    /**
+     * We ignore $this->value and retrieve the modules/lessons based on the form ID field.
+     * If the course ID is in a different field, the 'coursefield' attribute can be used for
+     * overriding.
+     *
+     * @return int[int[]]
+     */
     protected function getLessons()
     {
         $courseField = (string)$this->element['coursefield'] ?: 'id';
@@ -62,6 +69,7 @@ class OscampusFormFieldLessons extends JFormField
                 foreach ($lessons as $lesson) {
                     if (!isset($modules[$lesson->modules_id])) {
                         $modules[$lesson->modules_id] = (object)array(
+                            'id'        => $lesson->modules_id,
                             'title'     => $lesson->module_title,
                             'alias'     => $lesson->module_alias,
                             'published' => $lesson->module_published,
@@ -78,9 +86,16 @@ class OscampusFormFieldLessons extends JFormField
         return array();
     }
 
+    /**
+     * Render html for top level list of modules
+     *
+     * @param object $module
+     *
+     * @return string
+     */
     protected function createModuleItem($module)
     {
-        $moduleInput = '<input type="hidden" name="%s[]" value="%s"/>%s';
+        $moduleInput = '<input type="hidden" name="%1$s[%2$s]" value="%2$s"/>%3$s';
 
         $html = array(
             '<li>',
@@ -99,9 +114,16 @@ class OscampusFormFieldLessons extends JFormField
         return join('', $html);
     }
 
+    /**
+     * Render the individual row for a lesson
+     *
+     * @param object $lesson
+     *
+     * @return string
+     */
     protected function createLessonItem($lesson)
     {
-        $lessonInput = '<input type="hidden" name="%s[][]" value="%s"/>%s';
+        $lessonInput = '<input type="hidden" name="%1$s[%2$s][]" value="%3$s"/>%4$s';
 
         $link       = 'index.php?option=com_oscampus&task=lesson.edit&id=' . $lesson->id;
         $lessonLink = JHtml::_('link', $link, $lesson->title, 'target="_blank"');
@@ -109,7 +131,7 @@ class OscampusFormFieldLessons extends JFormField
         $html = array(
             '<li>',
             '<i class="handle fa fa-caret-right"></i> ',
-            sprintf($lessonInput, $this->name, $lesson->id, $lessonLink),
+            sprintf($lessonInput, $this->name, $lesson->modules_id, $lesson->id, $lessonLink),
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $lesson->alias),
             " - {$lesson->viewlevel_title}",
             '</li>'
@@ -118,6 +140,11 @@ class OscampusFormFieldLessons extends JFormField
         return join('', $html);
     }
 
+    /**
+     * Add all js needed for drag/drop ordering
+     *
+     * @rfeturn void
+     */
     protected function addJavascript()
     {
         JHtml::_('osc.jquery');

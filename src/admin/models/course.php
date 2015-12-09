@@ -94,6 +94,7 @@ class OscampusModelCourse extends OscampusModelAdmin
             $courseId = (int)$this->getState($this->getName() . '.id');
             $pathways = empty($data['pathways']) ? array() : $data['pathways'];
             $tags     = empty($data['tags']) ? array() : $data['tags'];
+            $ordering = empty($data['lessons']) ? array() : $data['lessons'];
 
             return $this->updateJunctionTable(
                 '#__oscampus_courses_pathways.courses_id',
@@ -106,9 +107,50 @@ class OscampusModelCourse extends OscampusModelAdmin
                 $courseId,
                 'tags_id',
                 $tags
-            );
+            )
+            && $this->setLessonOrder($ordering);
         }
 
         return false;
+    }
+
+    /**
+     * Do a forced/manual ordering update for all modules and lessons.
+     * We are trusting that all ids are appropriate to this course.
+     *
+     * @param array $ordering
+     *
+     * @return bool
+     */
+    protected function setLessonOrder(array $ordering)
+    {
+        $db = $this->getDbo();
+
+        $moduleOrder = 1;
+        foreach ($ordering as $moduleId => $lessons) {
+            $setModule = (object)array(
+                'id'       => $moduleId,
+                'ordering' => $moduleOrder++
+            );
+            $db->updateObject('#__oscampus_modules', $setModule, 'id');
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+                return false;
+            }
+
+            foreach ($lessons as $lessonOrder => $lessonId) {
+                $set = (object)array(
+                    'id'       => $lessonId,
+                    'ordering' => $lessonOrder + 1
+                );
+                $db->updateObject('#__oscampus_lessons', $set, 'id');
+                if ($error = $db->getErrorMsg()) {
+                    $this->setError($error);
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
