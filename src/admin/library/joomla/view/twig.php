@@ -155,4 +155,21 @@ class OscampusViewTwig extends OscampusView
             $this->variables[$name] = $value;
         }
     }
+
+    /**
+     * Get variables set for the template
+     *
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    protected function getVariable($name, $default = null)
+    {
+        if (isset($this->variables[$name])) {
+            return $this->variables[$name];
+        }
+
+        return $default;
+    }
 }
