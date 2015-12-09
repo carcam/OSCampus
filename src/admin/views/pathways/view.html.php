@@ -14,6 +14,18 @@ class OscampusViewPathways extends OscampusViewList
     {
         parent::setup();
 
+        $state = $this->getState();
+
+        $ordering = array_merge(
+            $this->getVariable('ordering', array()),
+            array(
+                'field'   => 'pathway.ordering',
+                'prefix'  => 'pathways.',
+                'enabled' => $state->get('list.ordering') == 'pathway.ordering'
+            )
+        );
+        $this->setVariable('ordering', $ordering);
+
         $filters = array(
             'text'  => array(
                 'value' => $this->getState()->get('filter.search')
