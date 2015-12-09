@@ -64,6 +64,7 @@ class OscampusModelCourses extends OscampusModelList
             $query->where('course.published = ' . (int)$published);
         }
 
+        // Pathways are m:m and the source of ordering, making filtering a bit interesting
         if ($pathway = (int)$this->getState('filter.pathway')) {
             $queryPathway = $db->getQuery(true)
                 ->select('courses_id')
@@ -103,8 +104,16 @@ class OscampusModelCourses extends OscampusModelList
 
         $query->group('course.id');
 
+        // Set ordering
         $primary   = $this->getState('list.ordering', 'course.title');
         $direction = $this->getState('list.direction', 'ASC');
+
+        // Unless the pathway filter is in place, ordering makes no sense
+        if ($primary == 'cp.ordering' && !$pathway) {
+            $primary = 'course.title';
+            $this->setState('list.ordering', $primary);
+        }
+
         $query->order($primary . ' ' . $direction);
         if (!in_array($primary, array('course.title', 'course.id'))) {
             $query->order('course.title ' . $direction);
