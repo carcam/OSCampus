@@ -21,7 +21,8 @@ class OscampusModelCourses extends OscampusModelList
             'difficulty',      'course.difficulty',
             'published',       'course.published',
             'viewlevel_title', 'viewlevel.title',
-            'teacher_name',    'teacher_user.name'
+            'teacher_name',    'teacher_user.name',
+            'cp.ordering',     'ordering'
         );
 
         parent::__construct($config);
@@ -31,26 +32,30 @@ class OscampusModelCourses extends OscampusModelList
     {
         $db = $this->getDbo();
 
+        $pathwaysQuery = $db->getQuery(true)
+            ->select('GROUP_CONCAT(p2.title ORDER BY p2.title)')
+            ->from('#__oscampus_pathways AS p2')
+            ->innerJoin('#__oscampus_courses_pathways AS cp2 ON cp2.pathways_id = p2.id')
+            ->where('cp2.courses_id = course.id');
+
         $query = $db->getQuery(true);
         $query->select(
             array(
                 'course.*',
-                'teacher_user.name as teacher_name',
-                'viewlevel.title as viewlevel_title',
+                'teacher_user.name AS teacher_name',
+                'viewlevel.title AS viewlevel_title',
                 'GROUP_CONCAT(DISTINCT tag.title ORDER BY tag.title) AS tags',
-                'GROUP_CONCAT(DISTINCT pathway.title ORDER BY pathway.title) AS pathways',
-                'editor_user.name editor'
+                "({$pathwaysQuery}) AS pathways",
+                'editor_user.name AS editor'
             )
         )
             ->from('#__oscampus_courses course')
-            ->leftJoin('#__oscampus_teachers teacher ON course.teachers_id = teacher.id')
-            ->leftJoin('#__users teacher_user ON teacher.users_id = teacher_user.id')
-            ->leftJoin('#__viewlevels viewlevel ON course.access = viewlevel.id')
-            ->leftJoin('#__oscampus_courses_tags course_tags ON course.id = course_tags.courses_id')
-            ->leftJoin('#__oscampus_tags tag ON course_tags.tags_id = tag.id')
-            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = course.id')
-            ->leftJoin('#__oscampus_pathways pathway ON pathway.id = cp.pathways_id')
-            ->leftJoin('#__users editor_user ON editor_user.id = course.checked_out');
+            ->leftJoin('#__oscampus_teachers AS teacher ON course.teachers_id = teacher.id')
+            ->leftJoin('#__users AS teacher_user ON teacher.users_id = teacher_user.id')
+            ->leftJoin('#__viewlevels AS viewlevel ON course.access = viewlevel.id')
+            ->leftJoin('#__oscampus_courses_tags AS course_tags ON course.id = course_tags.courses_id')
+            ->leftJoin('#__oscampus_tags AS tag ON course_tags.tags_id = tag.id')
+            ->leftJoin('#__users AS editor_user ON editor_user.id = course.checked_out');
 
         $this->whereTextSearch($query, 'course.id', 'course.title', 'course.alias');
 
@@ -65,8 +70,11 @@ class OscampusModelCourses extends OscampusModelList
                 ->from('#__oscampus_courses_pathways')
                 ->where('pathways_id = ' . $pathway);
 
+            $query->leftJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id');
             $query->where("course.id IN ({$queryPathway})");
         }
+        $ordering = $pathway ? 'cp.ordering' : $db->q('---');
+        $query->select($ordering . ' AS ordering');
 
         $tag = $this->getState('filter.tag');
         if (is_numeric($tag) != '') {
