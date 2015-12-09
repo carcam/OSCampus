@@ -16,15 +16,8 @@ class OscampusViewCourses extends OscampusViewList
 
         $state = $this->getState();
 
-        $ordering = array_merge(
-            $this->getVariable('ordering', array()),
-            array(
-                'field'   => 'cp.ordering',
-                'prefix'  => 'courses.',
-                'enabled' => $state->get('list.ordering') == 'cp.ordering' && $state->get('filter.pathway') > 0
-            )
-        );
-        $this->setVariable('ordering', $ordering);
+        $enableOrdering = $state->get('list.ordering') == 'cp.ordering' && $state->get('filter.pathway') > 0;
+        $this->setOrdering('cp.ordering', 'courses.', $enableOrdering);
 
         $published = JHtml::_(
             'osc.select.published',

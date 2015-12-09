@@ -33,10 +33,8 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::setup();
 
         $model = $this->getModel();
-        $state = $model->getState();
+        $state = $this->getState();
 
-        $this->setVariable('list_order', $this->escape($state->get('list.ordering')));
-        $this->setVariable('list_dir', $this->escape($state->get('list.direction')));
         $this->setVariable('items', $model->getItems());
         $this->setVariable('pagination', $model->getPagination());
 
@@ -49,10 +47,33 @@ abstract class OscampusViewList extends OscampusViewAdmin
         );
         $this->setVariable('ordering', $ordering);
 
-
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
+    }
+
+    /**
+     * Set the standard ordering object values for use in Twig
+     *
+     * @param string $field
+     * @param string $prefix
+     * @param bool   $enabled
+     *
+     * @return void
+     */
+    protected function setOrdering($field = null, $prefix = null, $enabled = false)
+    {
+        $state = $this->getState();
+
+        $ordering = array_merge(
+            $this->getVariable('ordering', array()),
+            array(
+                'enabled' => $enabled,
+                'field'   => $field,
+                'prefix'  => $prefix
+            )
+        );
+        $this->setVariable('ordering', $ordering);
     }
 
     /**

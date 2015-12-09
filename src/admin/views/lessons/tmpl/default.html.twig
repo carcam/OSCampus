@@ -17,16 +17,16 @@
 
 {% block list_head %}
     {{ list_macro.th_checkall() }}
-    {{ list_macro.th_sort('lesson.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
-    {{ list_macro.th_sort('lesson.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
-    {{ list_macro.th_sort('lesson.type', 'COM_OSCAMPUS_LESSON_TYPE', list_dir, list_order) }}
-    {{ list_macro.th_sort('module.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
-    {{ list_macro.th_sort('module.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
-    {{ list_macro.th_sort('course.published', 'COM_OSCAMPUS_PUBLISHED', list_dir, list_order) }}
-    {{ list_macro.th_sort('course.title', 'COM_OSCAMPUS_TITLE', list_dir, list_order) }}
-    {{ list_macro.th_sort('course.released', 'COM_OSCAMPUS_COURSE_RELEASED_LABEL', list_dir, list_order) }}
-    {{ list_macro.th_sort('course.difficulty', 'COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL', list_dir, list_order) }}
-    {{ list_macro.th_sort('lesson.id', 'COM_OSCAMPUS_ID', list_dir, list_order) }}
+    {{ list_macro.th_sort('lesson.published', 'COM_OSCAMPUS_PUBLISHED', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('lesson.title', 'COM_OSCAMPUS_TITLE', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('lesson.type', 'COM_OSCAMPUS_LESSON_TYPE', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('module.published', 'COM_OSCAMPUS_PUBLISHED', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('module.title', 'COM_OSCAMPUS_TITLE', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('course.published', 'COM_OSCAMPUS_PUBLISHED', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('course.title', 'COM_OSCAMPUS_TITLE', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('course.released', 'COM_OSCAMPUS_COURSE_RELEASED_LABEL', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('course.difficulty', 'COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('lesson.id', 'COM_OSCAMPUS_ID', ordering.direction, ordering.order) }}
 {% endblock %}
 
 {% block list_item %}
