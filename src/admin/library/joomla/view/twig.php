@@ -59,18 +59,16 @@ class OscampusViewTwig extends OscampusView
         $loader = new Twig_Loader_Filesystem($this->_path['template']);
 
         $options = array(
-            // 'cache' => JPATH_CACHE,
+            'cache' => JPATH_CACHE,
             'debug' => true
         );
 
         $this->templatesEngine = new Twig_Environment($loader, $options);
         $this->templatesEngine->addExtension(new Twig_Extension_Debug);
         $this->templatesEngine->addExtension(new JoomlaTwig);
+        $this->templatesEngine->addGlobal('view', $this);
 
-        // Set the default template variables
-        $this->variables = array(
-            'view' => $this
-        );
+        $this->variables = array();
     }
 
     /**
