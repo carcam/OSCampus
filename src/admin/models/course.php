@@ -87,6 +87,36 @@ class OscampusModelCourse extends OscampusModelAdmin
         return array();
     }
 
+    /**
+     * Due to m:m relationship to pathways, we do a special reordering here
+     *
+     * @param array $pks
+     * @param array $order
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function saveorder($pks = null, $order = null)
+    {
+        $app = OscampusFactory::getApplication();
+        if ($pathwayId = $app->input->getInt('filter_pathway')) {
+            $db = $this->getDbo();
+            $sql = 'UPDATE #__oscampus_courses_pathways SET ordering = %s WHERE courses_id = %s AND pathways_id = ' . $pathwayId;
+            foreach ($pks as $index => $courseId) {
+                $db->setQuery(sprintf($sql, $order[$index], $courseId))->execute();
+                if ($error = $db->getErrorMsg()) {
+                    $this->setError($error);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        $this->setError(JText::_('COM_OSCAMPUS_ERROR_COURSE_REORDER_PATHWAY'));
+        return false;
+    }
+
     public function save($data)
     {
         if (parent::save($data)) {
