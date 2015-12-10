@@ -15,8 +15,8 @@
     {{ list_macro.th_sort('tags', 'COM_OSCAMPUS_TAGS', ordering.direction, ordering.order) }}
     {{ list_macro.th_sort('pathways', 'COM_OSCAMPUS_COURSE_PATHWAYS_LABEL', ordering.direction, ordering.order) }}
     {{ list_macro.th_sort('course.difficulty', 'COM_OSCAMPUS_COURSE_DIFFICULTY_LABEL', ordering.direction, ordering.order) }}
-    {{ list_macro.th_sort('teacher_name', 'COM_OSCAMPUS_TEACHER', ordering.direction, ordering.order) }}
-    {{ list_macro.th_sort('viewlevel_title', 'COM_OSCAMPUS_ACCESS_LEVEL', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('teacher_user.name', 'COM_OSCAMPUS_TEACHER', ordering.direction, ordering.order) }}
+    {{ list_macro.th_sort('viewlevel.title', 'COM_OSCAMPUS_ACCESS_LEVEL', ordering.direction, ordering.order) }}
     {{ list_macro.th_sort('course.id', 'COM_OSCAMPUS_ID', ordering.direction, ordering.order, '1') }}
 {% endblock %}
 

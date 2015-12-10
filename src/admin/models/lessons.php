@@ -72,10 +72,16 @@ defined('_JEXEC') or die();
          $primary = $this->getState('list.ordering', 'course.title');
          $direction = $this->getState('list.direction', 'ASC');
          if ($primary == 'lesson.ordering') {
-             $query->order('module.ordering ' . $direction);
+             $query->order(
+                 array(
+                     'module.ordering ' . $direction,
+                     'course.title ' . $direction
+                 )
+             );
          }
          $query->order($primary . ' ' . $direction);
-         if (!in_array($primary, array('lesson.title', 'lesson.id'))) {
+
+         if (!in_array($primary, array('lesson.title', 'lesson.id', 'lesson.ordering'))) {
              $query->order('lesson.title ' . $direction);
          }
 

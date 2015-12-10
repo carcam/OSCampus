@@ -8,7 +8,7 @@
 
 {% block list_head_upper %}
     <tr class="head2">
-        <th colspan="4">{{ 'COM_OSCAMPUS_LESSON'|lang }}</th>
+        <th colspan="5">{{ 'COM_OSCAMPUS_LESSON'|lang }}</th>
         <th colspan="2">{{ 'COM_OSCAMPUS_MODULE'|lang }}</th>
         <th colspan="4">{{ 'COM_OSCAMPUS_COURSE'|lang }}</th>
         <th></th>
@@ -17,6 +17,7 @@
 
 {% block list_head %}
     {{ list_macro.th_checkall() }}
+    {{ list_macro.th_ordering(ordering, items) }}
     {{ list_macro.th_sort('lesson.published', 'COM_OSCAMPUS_PUBLISHED', ordering.direction, ordering.order) }}
     {{ list_macro.th_sort('lesson.title', 'COM_OSCAMPUS_TITLE', ordering.direction, ordering.order) }}
     {{ list_macro.th_sort('lesson.type', 'COM_OSCAMPUS_LESSON_TYPE', ordering.direction, ordering.order) }}
@@ -31,6 +32,7 @@
 
 {% block list_item %}
     {{ list_macro.td_check(loop.index0, item.id) }}
+    {{ list_macro.td_ordering(loop.index0, item.ordering, items, ordering, pagination) }}
     {{ list_macro.td_published(item.published, loop.index0, 'lessons.') }}
     {{ list_macro.td_edit_link(item, loop.index0, 'lesson', 'lessons.', item.title, item.alias) }}
     {{ list_macro.td_text(item.type) }}

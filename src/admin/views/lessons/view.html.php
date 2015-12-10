@@ -16,6 +16,17 @@ class OscampusViewLessons extends OscampusViewList
 
         $state = $this->getState();
 
+        $ordering = array_merge(
+            $this->getVariable('ordering', array()),
+            array(
+                'field'   => 'lesson.ordering',
+                'prefix'  => 'lessons.',
+                'enabled' => $state->get('list.ordering') == 'lesson.ordering'
+            )
+        );
+        $this->setVariable('ordering', $ordering);
+
+
         $courseOptions = JHtml::_('osc.options.courses');
         array_unshift($courseOptions, JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COURSE')));
         $courses = JHtml::_(
@@ -48,5 +59,10 @@ class OscampusViewLessons extends OscampusViewList
         );
 
         $this->setVariable('filters', $filters);
+    }
+
+    public function getSortGroupId($item)
+    {
+        return $item->modules_id;
     }
 }
