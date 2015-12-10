@@ -44,6 +44,11 @@ class OscampusModelPathways extends OscampusModelList
 
         $this->whereTextSearch($query, 'pathway.id', 'pathway.title', 'pathway.alias');
 
+        $published = $this->getState('filter.published');
+        if ($published != '') {
+            $query->where('pathway.published = ' . (int)$published);
+        }
+
         if ($access = (int)$this->getState('filter.access')) {
             $query->where('pathway.access = ' . $access);
         }
@@ -63,6 +68,9 @@ class OscampusModelPathways extends OscampusModelList
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
 
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
+        $this->setState('filter.published', $published);
+        
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);
 
