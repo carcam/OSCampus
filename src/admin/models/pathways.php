@@ -70,7 +70,7 @@ class OscampusModelPathways extends OscampusModelList
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
         $this->setState('filter.published', $published);
-        
+
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);
 
