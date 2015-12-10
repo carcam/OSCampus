@@ -44,6 +44,10 @@ class OscampusModelPathways extends OscampusModelList
 
         $this->whereTextSearch($query, 'pathway.id', 'pathway.title', 'pathway.alias');
 
+        if ($access = (int)$this->getState('filter.access')) {
+            $query->where('pathway.access = ' . $access);
+        }
+
         $primary   = $this->getState('list.ordering', 'pathway.title');
         $direction = $this->getState('list.direction', 'ASC');
         $query->order($primary . ' ' . $direction);
@@ -56,8 +60,11 @@ class OscampusModelPathways extends OscampusModelList
 
     protected function populateState($ordering = null, $direction = null)
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
+
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $this->setState('filter.access', $access);
 
         parent::populateState('pathway.title', 'ASC');
     }
