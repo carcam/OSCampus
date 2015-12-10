@@ -60,13 +60,17 @@ defined('_JEXEC') or die();
 
          $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
 
+         $published = $this->getState('filter.published');
+         if ($published != '') {
+             $query->where('lesson.published = ' . (int)$published);
+         }
+
          if ($course = (int)$this->getState('filter.course')) {
              $query->where('course.id = ' . $course);
          }
 
-         $published = $this->getState('filter.published');
-         if ($published != '') {
-             $query->where('lesson.published = ' . (int)$published);
+         if ($lessonType = $this->getState('filter.lessontype')) {
+             $query->where('lesson.type = ' . $db->q($lessonType));
          }
 
          $primary = $this->getState('list.ordering', 'course.title');
@@ -98,11 +102,14 @@ defined('_JEXEC') or die();
          $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
          $this->setState('filter.search', $search);
 
+         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
+         $this->setState('filter.published', $published);
+
          $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'filter_course', null, 'int');
          $this->setState('filter.course', $course);
 
-         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
-         $this->setState('filter.published', $published);
+         $lessonType = $this->getUserStateFromRequest($this->context . '.filter.lessontype', 'filter_lessontype', '', 'string');
+         $this->setState('filter.lessontype', $lessonType);
 
          parent::populateState($ordering, $direction);
      }

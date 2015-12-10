@@ -35,13 +35,13 @@
     {{ list_macro.td_ordering(loop.index0, item.ordering, items, ordering, pagination) }}
     {{ list_macro.td_published(item.published, loop.index0, 'lessons.') }}
     {{ list_macro.td_edit_link(item, loop.index0, 'lesson', 'lessons.', item.title, item.alias) }}
-    {{ list_macro.td_text(item.type) }}
+    {{ list_macro.td_text(html('osc.lesson.type', item.type)) }}
     {{ list_macro.td_published(item.module_published, loop.index0, 'modules.') }}
     {{ list_macro.td_text(item.module_title) }}
     {{ list_macro.td_published(item.course_published, loop.index0, 'courses.') }}
     {{ list_macro.td_text(item.course_title) }}
     {{ list_macro.td_text(item.course_released) }}
-    {{ list_macro.td_text(item.course_difficulty) }}
+    {{ list_macro.td_text(html('osc.course.difficulty', item.course_difficulty)) }}
     {{ list_macro.td_text(item.id, 'center') }}
 
 {% endblock %}

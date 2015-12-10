@@ -27,7 +27,7 @@
     {{ list_macro.td_edit_link(item, loop.index0, 'course', 'courses.', item.title, item.alias) }}
     {{ list_macro.td_text(item.tags) }}
     {{ list_macro.td_text(item.pathways) }}
-    {{ list_macro.td_text(('COM_OSCAMPUS_COURSE_DIFFICULTY_' ~ item.difficulty|upper)|lang) }}
+    {{ list_macro.td_text(html('osc.course.difficulty', item.difficulty)) }}
     {{ list_macro.td_text(item.teacher_name) }}
     {{ list_macro.td_text(item.viewlevel_title) }}
     {{ list_macro.td_text(item.id, 'center') }}

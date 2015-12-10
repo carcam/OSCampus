@@ -141,6 +141,22 @@ abstract class OscSelect
     }
 
     /**
+     * @param string       $name
+     * @param string       $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return string
+     */
+    public static function lessontype($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.lessontypes'));
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
+    /**
      * @param array|string $texts
      *
      * @return array

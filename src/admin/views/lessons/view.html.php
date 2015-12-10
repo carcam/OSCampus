@@ -46,14 +46,22 @@ class OscampusViewLessons extends OscampusViewList
             'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
         );
 
+        $types = JHtml::_(
+            'osc.select.lessontype',
+            'filter_lessontype',
+            $state->get('filter.lessontype'),
+            'COM_OSCAMPUS_OPTION_SELECT_LESSONTYPE'
+        );
+
         $filters = array(
             'text'  => array(
                 'value' => $state->get('filter.search')
             ),
             'items' => array(
                 array(
+                    $published,
                     $courses,
-                    $published
+                    $types
                 )
             )
         );

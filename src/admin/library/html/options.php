@@ -174,4 +174,33 @@ abstract class OscOptions
 
         return static::$cache['courses'];
     }
+
+    /**
+     * Option list of available Lesson Types
+     * @TODO: This should not be hardcoded and needs to use the eventual lesson classes to get its list
+     *
+     * @return object[]
+     */
+    public static function lessontypes()
+    {
+        $options = array(
+            JHtml::_(
+                'select.option',
+                'quiz',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_QUIZ')
+            ),
+            JHtml::_(
+                'select.option',
+                'text',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_TEXT')
+            ),
+            JHtml::_(
+                'select.option',
+                'wistia',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_WISTIA')
+            )
+        );
+
+        return $options;
+    }
 }

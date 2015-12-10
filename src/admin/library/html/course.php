@@ -40,4 +40,24 @@ abstract class OscCourse
 
         return JHtml::_('link', JRoute::_($link), $text ?: $course->title, $attribs);
     }
+
+    /**
+     * Translate a difficulty code to text
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public static function difficulty($value)
+    {
+        $difficulties = JHtml::_('osc.options.difficulties');
+
+        foreach ($difficulties as $difficulty) {
+            if (!strcasecmp($difficulty->value, $value)) {
+                return $difficulty->text;
+            }
+        }
+
+        return $value . ': ' . JText::_('COM_OSCAMPUS_UNDEFINED');
+    }
 }

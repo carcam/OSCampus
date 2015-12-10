@@ -66,7 +66,7 @@ abstract class OscLesson
     }
 
     /**
-     * Load supporting js for the lesson ordering panel
+     * Load supporting js for the lesson ordering panel in the course editing form
      *
      * @param string       $container
      * @param array|string $options
@@ -91,5 +91,25 @@ abstract class OscLesson
 
         $options = json_encode($options);
         JHtml::_('osc.onready', "$.Oscampus.lesson.ordering({$options});");
+    }
+
+    /**
+     * Translate a lesson type code into text
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public static function type($value)
+    {
+        $types = JHtml::_('osc.options.lessontypes');
+
+        foreach ($types as $type) {
+            if (!strcasecmp($type->value, $value)) {
+                return $type->text;
+            }
+        }
+
+        return JText::_('COM_OSCAMPUS_UNDEFINED');
     }
 }
