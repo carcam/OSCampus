@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 class OscampusView extends JViewLegacy
 {
     /**
-     * @return mixed
+     * @return JObject
      */
     public function getState($property = null, $default = null)
     {
