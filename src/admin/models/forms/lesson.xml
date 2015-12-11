@@ -25,7 +25,7 @@
     <fieldset name="main" label="COM_OSCAMPUS_LESSON_TAB_MAIN_LABEL">
         <field
             name="type"
-            type="text"
+            type="oscampus.lessontype"
             label="COM_OSCAMPUS_LESSON_TYPE_LABEL"
             readonly="true"
             class="readonly"/>
