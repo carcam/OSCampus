@@ -99,9 +99,11 @@ class OscampusFormFieldLessons extends JFormField
 
         $html = array(
             '<li>',
-            '<i class="handle fa fa-caret-right"></i> ',
+            '<span class="handle">',
+            '<i class="fa fa-caret-right"></i> ',
             sprintf($moduleInput, $this->name, $module->id, $module->title),
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $module->alias),
+            '</span>',
             '<ul class="oscampus-lesson">'
         );
 
