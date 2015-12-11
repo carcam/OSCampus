@@ -157,6 +157,30 @@ abstract class OscSelect
     }
 
     /**
+     * @param string       $name
+     * @param string|int   $selected
+     * @param array|string $addOptions
+     * @param array|string $attribs
+     * @param string       $id
+     *
+     * @return mixed
+     */
+    public static function pathwayowner($name, $selected, $addOptions = null, $attribs = null, $id = null)
+    {
+        if ($users = JHtml::_('osc.options.pathwayowners')) {
+            $options = array_merge(static::createAddOptions($addOptions), $users);
+
+        } else {
+            $options = array(
+                JHtml::_('select.option', null, JText::_('COM_OSCAMPUS_OPTION_NO_PATHWAY_OWNERS'), 'value', 'text',
+                    true)
+            );
+        }
+
+        return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
+    }
+
+    /**
      * @param array|string $texts
      *
      * @return array

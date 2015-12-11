@@ -19,7 +19,7 @@ class OscampusModelPathways extends OscampusModelList
             'published',    'pathway.published',
             'ordering',     'pathway.ordering',
             'access_level', 'viewlevel.title',
-            'owner_name',   'owner.name'
+            'owner_name',   'owner_user.name'
         );
 
         parent::__construct($config);
@@ -33,20 +33,27 @@ class OscampusModelPathways extends OscampusModelList
         $query->select(
             array(
                 'pathway.*',
-                'viewlevel.title as access_level',
-                'editor_user.name editor'
+                'owner_user.name AS owner_name',
+                'owner_user.username AS owner_username',
+                'viewlevel.title AS access_level',
+                'editor_user.name AS editor'
             )
         )
-            ->from('#__oscampus_pathways pathway')
-            ->leftJoin('#__users owner ON owner.id = pathway.users_id')
-            ->leftJoin('#__viewlevels viewlevel ON pathway.access = viewlevel.id')
-            ->leftJoin('#__users editor_user ON editor_user.id = pathway.checked_out');
+            ->from('#__oscampus_pathways AS pathway')
+            ->leftJoin('#__users AS owner_user ON owner_user.id = pathway.users_id')
+            ->leftJoin('#__viewlevels AS viewlevel ON pathway.access = viewlevel.id')
+            ->leftJoin('#__users AS editor_user ON editor_user.id = pathway.checked_out');
 
         $this->whereTextSearch($query, 'pathway.id', 'pathway.title', 'pathway.alias');
 
         $published = $this->getState('filter.published');
         if ($published != '') {
             $query->where('pathway.published = ' . (int)$published);
+        }
+
+        $owner = $this->getState('filter.owner');
+        if ($owner != '') {
+            $query->where('IFNULL(pathway.users_id, 0) = ' . (int)$owner);
         }
 
         if ($access = (int)$this->getState('filter.access')) {
@@ -70,6 +77,9 @@ class OscampusModelPathways extends OscampusModelList
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
         $this->setState('filter.published', $published);
+
+        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'filter_owner', '', 'string');
+        $this->setState('filter.owner', $owner);
 
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);

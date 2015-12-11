@@ -203,4 +203,36 @@ abstract class OscOptions
 
         return $options;
     }
+
+    /**
+     * Generate option list of pathway owners
+     *
+     * @return object[]
+     */
+    public static function pathwayowners()
+    {
+        if (!isset(static::$cache['pathwayOwners'])) {
+            $db = OscampusFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('user.id, user.name, user.username')
+                ->from('#__users user')
+                ->innerJoin('#__oscampus_pathways pathway ON pathway.users_id = user.id')
+                ->order('user.name ASC');
+
+            $users = $db->setQuery($query)->loadObjectList();
+
+            $text = '%s (%s)';
+
+            static::$cache['pathwayOwners'] = array();
+            foreach ($users as $user) {
+                static::$cache['pathwayOwners'][] = JHtml::_(
+                    'select.option',
+                    $user->id,
+                    sprintf($text, $user->name, $user->username)
+                );
+            }
+        }
+
+        return static::$cache['pathwayOwners'];
+    }
 }

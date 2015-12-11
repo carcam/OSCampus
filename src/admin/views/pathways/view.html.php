@@ -26,6 +26,16 @@ class OscampusViewPathways extends OscampusViewList
             'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
         );
 
+        $owners = JHtml::_(
+            'osc.select.pathwayowner',
+            'filter_owner',
+            $state->get('filter.owner'),
+            array(
+                ''  => 'COM_OSCAMPUS_OPTION_SELECT_PATHWAY_OWNER',
+                '0' => 'COM_OSCAMPUS_OPTION_CORE_PATHWAY'
+            )
+        );
+
         $access = JHtml::_(
             'osc.select.access',
             'filter_access',
@@ -34,13 +44,11 @@ class OscampusViewPathways extends OscampusViewList
         );
 
         $filters = array(
-            'text' => array(
+            'text'  => array(
                 'value' => $this->getState()->get('filter.search')
             ),
             'items' => array(
-                array(
-                    $published, $access
-                )
+                array($published, $owners, $access)
             )
         );
 
