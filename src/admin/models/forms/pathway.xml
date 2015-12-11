@@ -16,7 +16,8 @@
             name="alias"
             type="text"
             label="COM_OSCAMPUS_PATHWAY_ALIAS_LABEL"
-            description="COM_OSCAMPUS_PATHWAY_ALIAS_DESC"/>
+            description="COM_OSCAMPUS_PATHWAY_ALIAS_DESC"
+            hint="JFIELD_ALIAS_PLACEHOLDER"/>
 
         <field
             name="image"
