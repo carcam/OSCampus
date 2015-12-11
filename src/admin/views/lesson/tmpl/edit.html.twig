@@ -13,3 +13,25 @@
     {{ html('osc.render.formfield', form.getField('title'))|raw }}
     {{ html('osc.render.formfield', form.getField('alias'))|raw }}
 {% endblock %}
+
+{% block form_body %}
+    {{ form_macro.tabs_startset(form, {'active' : 'main-panel', 'useCookie' : 1}) }}
+
+    {{ form_macro.tabs_add(form, 'main') }}
+    {{ form_macro.render_fieldset(form, 'main') }}
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_add(form, 'header', 'COM_OSCAMPUS_LESSON_HEADER_LABEL'|lang) }}
+    {{ form_macro.render_field(form, 'header', false) }}
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_add(form, 'content', 'COM_OSCAMPUS_LESSON_CONTENT_LABEL'|lang) }}
+    <p>Under Construction - this is the hard part</p>
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_add(form, 'footer', 'COM_OSCAMPUS_LESSON_FOOTER_LABEL'|lang) }}
+    {{ form_macro.render_field(form, 'footer', false) }}
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_end() }}
+{% endblock %}

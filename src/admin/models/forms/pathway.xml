@@ -46,6 +46,7 @@
             type="list"
             label="COM_OSCAMPUS_PUBLISHED"
             class="chzn-color-state"
+            default="1"
             required="true">
             <option value="0">JUNPUBLISHED</option>
             <option value="1">JPUBLISHED</option>
