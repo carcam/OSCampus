@@ -22,7 +22,8 @@ defined('_JEXEC') or die();
              'course_published',  'course.published',
              'course_released',   'course.released',
              'course_defficulty', 'course.difficulty',
-             'lesson_ordering',   'lesson.ordering'
+             'lesson_ordering',   'lesson.ordering',
+             'viewlevel_title',   'lesson_view.title'
          );
 
          parent::__construct($config);
@@ -44,6 +45,7 @@ defined('_JEXEC') or die();
                      'lesson.alias',
                      'lesson.type',
                      'lesson.published',
+                     'lesson_view.title AS viewlevel_title',
                      'module.title AS module_title',
                      'module.published AS module_published',
                      'course.title AS course_title',
@@ -71,6 +73,10 @@ defined('_JEXEC') or die();
 
          if ($lessonType = $this->getState('filter.lessontype')) {
              $query->where('lesson.type = ' . $db->q($lessonType));
+         }
+
+         if ($access = (int)$this->getState('filter.access')) {
+             $query->where('lesson.access = ' . $access);
          }
 
          $primary = $this->getState('list.ordering', 'course.title');
@@ -110,6 +116,9 @@ defined('_JEXEC') or die();
 
          $lessonType = $this->getUserStateFromRequest($this->context . '.filter.lessontype', 'filter_lessontype', '', 'string');
          $this->setState('filter.lessontype', $lessonType);
+
+         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+         $this->setState('filter.access', $access);
 
          parent::populateState($ordering, $direction);
      }
