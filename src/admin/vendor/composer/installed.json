@@ -172,12 +172,12 @@
         "version_normalized": "1.3.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/joomla-framework/string.git",
+            "url": "https://github.com/OSTraining/string.git",
             "reference": "1a61294f887a95ec3eb2e4dac12ba18ab6b2bf5a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/joomla-framework/string/zipball/1a61294f887a95ec3eb2e4dac12ba18ab6b2bf5a",
+            "url": "https://api.github.com/repos/OSTraining/string/zipball/1a61294f887a95ec3eb2e4dac12ba18ab6b2bf5a",
             "reference": "1a61294f887a95ec3eb2e4dac12ba18ab6b2bf5a",
             "shasum": ""
         },

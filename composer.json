@@ -24,12 +24,18 @@
     "config"           : {
         "vendor-dir": "src/admin/vendor"
     },
+    "repositories"     : [
+        {
+            "type": "vcs",
+            "url" : "https://github.com/OSTraining/string.git"
+        }
+    ],
     "require"          : {
         "php"                         : ">= 5.3",
         "ext-curl"                    : "*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "pimple/pimple"               : "~3.0",
         "twig/twig"                   : "~1.0",
-        "joomla/string"               : "~1.2"
+        "joomla/string"               : "~1.3"
     }
 }
