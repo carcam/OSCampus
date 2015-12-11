@@ -35,7 +35,7 @@
                 type="textarea"
                 class="inputbox"
                 label="COM_OSCAMPUS_CONFIGURATION_WISTIA_APIKEY_LABEL"
-                description="COM_OSWISTIA_CONFIGURATION_WISTIA_APIKEY_DESC"/>
+                description="COM_OSCAMPUS_CONFIGURATION_WISTIA_APIKEY_DESC"/>
 
         </fieldset>
     </fields>
