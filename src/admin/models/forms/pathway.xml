@@ -8,7 +8,7 @@
         <field
             name="title"
             type="text"
-            label="COM_OSCAMPUS_PATHWAY_TITLE_LABEL"
+            label="COM_OSCAMPUS_TITLE"
             class="input-xxlarge input-large-text"
             required="true"/>
 

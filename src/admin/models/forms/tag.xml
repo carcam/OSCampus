@@ -8,8 +8,7 @@
         <field
             name="title"
             type="text"
-            label="COM_OSCAMPUS_TAG_TITLE_LABEL"
-            description="COM_OSCAMPUS_TAG_TITLE_DESC"
+            label="COM_OSCAMPUS_TITLE"
             required="true"/>
 
         <field
