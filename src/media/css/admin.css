@@ -51,3 +51,12 @@
 fieldset.checkboxes input[type=checkbox] {
     margin-right: 4px;
 }
+
+.ui-sortable .ui-draggable-handle {
+    cursor: move;
+}
+
+ul ul.ui-sortable {
+    padding-left: 10px;
+    padding-top: 5px;
+}
