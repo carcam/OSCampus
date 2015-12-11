@@ -5,9 +5,11 @@
  # @license
  #}
 
-{% extends "admin_form.html.twig" %}
+{% extends 'admin_form.html.twig' %}
 
-{% block form_body %}
-    <h3>Under Construction</h3>
+{% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_LESSON_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
+
+{% block form_header %}
+    {{ html('osc.render.formfield', form.getField('title'))|raw }}
+    {{ html('osc.render.formfield', form.getField('alias'))|raw }}
 {% endblock %}
-
