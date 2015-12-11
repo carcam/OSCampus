@@ -129,8 +129,8 @@ class OscampusFormFieldLessons extends JFormField
         $lessonLink = JHtml::_('link', $link, $lesson->title, 'target="_blank"');
 
         $html = array(
-            '<li>',
-            '<i class="handle fa fa-caret-right"></i> ',
+            '<li class="handle">',
+            '<i class="fa fa-caret-right"></i> ',
             sprintf($lessonInput, $this->name, $lesson->modules_id, $lesson->id, $lessonLink),
             sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $lesson->alias),
             " - {$lesson->viewlevel_title}",
