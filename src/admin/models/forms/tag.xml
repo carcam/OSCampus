@@ -14,8 +14,8 @@
         <field
             name="alias"
             type="text"
-            label="COM_OSCAMPUS_TAG_ALIAS_LABEL"
-            description="COM_OSCAMPUS_TAG_ALIAS_DESC"
+            label="COM_OSCAMPUS_ALIAS"
+            description="JFIELD_ALIAS_PLACEHOLDER"
             hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
 </form>
