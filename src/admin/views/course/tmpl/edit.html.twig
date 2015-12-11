@@ -32,12 +32,12 @@
     {{ form_macro.render_field(form, 'description', true, '6') }}
     {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_add(form, 'lessons', 'COM_OSCAMPUS_LESSONS'|lang) }}
-    {% set link =  macro.lessons_link(item.id, 'COM_OSCAMPUS_LESSONS') %}
+    {{ form_macro.tabs_add(form, 'lessons', 'COM_OSCAMPUS_COURSE_TAB_LESSONS_LABEL'|lang) }}
+    {% set link =  macro.lessons_link(item.id, 'COM_OSCAMPUS_COURSE_TAB_LESSONS_LABEL') %}
     <p>{{ 'COM_OSCAMPUS_COURSE_LESSON_TAB'|sprintf(link)|raw }}</p>
 
     {{ form_macro.render_field(form, 'lessons', true) }}
-    <button type="button" class="reset-lesson-order">{{ 'COM_OSCAMPUS_LESSONS_ORDER_RESET'|lang }}</button>
+    <button type="button" class="reset-lesson-order">{{ 'COM_OSCAMPUS_COURSE_LESSONS_ORDER_RESET'|lang }}</button>
     {{ form_macro.tabs_panel_end() }}
 
     {{ form_macro.tabs_end() }}

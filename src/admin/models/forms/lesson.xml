@@ -26,7 +26,7 @@
         <field
             name="type"
             type="text"
-            label="COM_OSCAMPUS_LESSON_TYPE"
+            label="COM_OSCAMPUS_LESSON_TYPE_LABEL"
             readonly="true"
             class="readonly"/>
 
