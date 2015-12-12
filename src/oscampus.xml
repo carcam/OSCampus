@@ -2,12 +2,12 @@
 <extension type="component" version="2.5" method="upgrade">
     <name>COM_OSCAMPUS</name>
     <author>OSTraining</author>
-    <creationDate>December 10 2015</creationDate>
+    <creationDate>December 11 2015</creationDate>
     <copyright>Copyright (C) 2015 OSTraining.com</copyright>
     <license>GPL v3</license>
     <authorEmail>info@ostraining.com</authorEmail>
     <authorUrl>https://www.ostraining.com</authorUrl>
-    <version>0.0.1b10</version>
+    <version>0.0.1b11</version>
     <description>COM_OSCAMPUS_COMPONENT_DESCRIPTION</description>
 
     <scriptfile>script.install.php</scriptfile>
