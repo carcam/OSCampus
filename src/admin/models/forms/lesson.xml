@@ -24,6 +24,20 @@
 
     <fieldset name="main" label="COM_OSCAMPUS_LESSON_TAB_MAIN_LABEL">
         <field
+            name="courses_id"
+            type="oscampus.course"
+            label="COM_OSCAMPUS_COURSE"
+            readonly="true"
+            class="readonly"/>
+
+        <field
+            name="modules_id"
+            type="oscampus.module"
+            label="COM_OSCAMPUS_MODULE"
+            readonly="true"
+            class="readonly"/>
+
+        <field
             name="type"
             type="oscampus.lessontype"
             label="COM_OSCAMPUS_LESSON_TYPE_LABEL"

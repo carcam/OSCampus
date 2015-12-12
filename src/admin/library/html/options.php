@@ -235,4 +235,33 @@ abstract class OscOptions
 
         return static::$cache['pathwayOwners'];
     }
+
+    /**
+     * Generate list of module options for selected course
+     *
+     * @param int $courseId
+     *
+     * @return string
+     */
+    public static function modules($courseId)
+    {
+        $key = md5('module-' . $courseId);
+        if (!isset(static::$cache[$key])) {
+            $db = OscampusFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'module.id AS ' . $db->qn('value'),
+                        'module.title AS ' . $db->qn('text')
+                    )
+                )
+                ->from('#__oscampus_modules AS module')
+                ->where('module.courses_id =' . (int)$courseId)
+                ->order('module.ordering');
+
+            static::$cache[$key] = $db->setQuery($query)->loadObjectList();
+        }
+
+        return static::$cache[$key];
+    }
 }
