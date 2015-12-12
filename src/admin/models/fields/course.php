@@ -14,8 +14,8 @@ class OscampusFormFieldCourse extends JFormFieldList
 {
     protected function getOptions()
     {
-        return array(
-            JHtml::_('select.option', '', 'UnderConstruction')
-        );
+        $courses = JHtml::_('osc.options.courses');
+
+        return array_merge(parent::getOptions(), $courses);
     }
 }

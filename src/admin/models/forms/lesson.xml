@@ -27,15 +27,19 @@
             name="courses_id"
             type="oscampus.course"
             label="COM_OSCAMPUS_COURSE"
+            required="true"
             readonly="true"
-            class="readonly"/>
+            class="readonly">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_COURSE</option>
+        </field>
 
         <field
             name="modules_id"
             type="oscampus.module"
             label="COM_OSCAMPUS_MODULE"
-            readonly="true"
-            class="readonly"/>
+            required="true">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_MODULE</option>
+        </field>
 
         <field
             name="type"

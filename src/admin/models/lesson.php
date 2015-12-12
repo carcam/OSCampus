@@ -11,6 +11,23 @@ defined('_JEXEC') or die();
 
 class OscampusModelLesson extends OscampusModelAdmin
 {
+    public function getItem($pk = null)
+    {
+        if ($item = parent::getItem($pk)) {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('module.courses_id')
+                ->from('#__oscampus_modules AS module')
+                ->where('module.id = ' . $item->modules_id);
+
+            $item->courses_id = $db->setQuery($query)->loadResult();
+        } else {
+            $item->courses_id = null;
+        }
+
+        return $item;
+    }
+
     protected function getReorderConditions($table)
     {
         $conditions = array(
