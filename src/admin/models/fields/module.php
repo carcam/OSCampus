@@ -26,7 +26,7 @@ class OscampusFormFieldModule extends JFormFieldList
     protected function getCourseId()
     {
         $courseId = null;
-        
+
         if ($courseField = (string)$this->element['coursefield']) {
             $courseId = (int)$this->form->getfield($courseField)->value;
 
