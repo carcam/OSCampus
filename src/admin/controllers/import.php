@@ -114,10 +114,10 @@ class OscampusControllerImport extends OscampusControllerBase
         'id'           => null,
         'pid'          => null, // Filled in via callback
         'title'        => 'title',
-        'alias'        => 'alias',
+        'alias'        => null,
         'description'  => null,
         'image'        => null,
-        'published'    => 'published',
+        'published'    => null,
         'startpublish' => null,
         'endpublish'   => null,
         'metatitle'    => null,
@@ -765,6 +765,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 $oldId = $guruData['pid'];
                 if (isset($courses[$oldId])) {
                     $convertedData->courses_id = $courses[$oldId]->id;
+                    unset($convertedData->created, $convertedData->created_by_alias);
                     return true;
                 }
                 return false;

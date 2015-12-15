@@ -136,7 +136,6 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'm.courses_id = ' . (int)$this->getState('course.id'),
-                        'm.published = 1',
                         'l.published = 1'
                     )
                 )

@@ -53,9 +53,7 @@ class OscampusFormFieldLessons extends JFormField
                         'lesson.alias',
                         'lesson.published',
                         'viewlevel.title AS viewlevel_title',
-                        'module.title AS module_title',
-                        'module.alias AS module_alias',
-                        'module.published AS module_published'
+                        'module.title AS module_title'
                     )
                 )
                 ->from('#__oscampus_lessons AS lesson')
@@ -71,8 +69,6 @@ class OscampusFormFieldLessons extends JFormField
                         $modules[$lesson->modules_id] = (object)array(
                             'id'        => $lesson->modules_id,
                             'title'     => $lesson->module_title,
-                            'alias'     => $lesson->module_alias,
-                            'published' => $lesson->module_published,
                             'lessons'   => array()
                         );
                     }
@@ -102,7 +98,6 @@ class OscampusFormFieldLessons extends JFormField
             '<span class="handle">',
             '<i class="fa fa-caret-right"></i> ',
             sprintf($moduleInput, $this->name, $module->id, $module->title),
-            sprintf(' (%s: %s)', JText::_('COM_OSCAMPUS_ALIAS'), $module->alias),
             '</span>',
             '<ul class="oscampus-lesson">'
         );

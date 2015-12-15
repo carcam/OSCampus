@@ -25,8 +25,11 @@ class OscampusFormFieldModule extends JFormFieldList
 
     protected function getCourseId()
     {
+        $courseId = null;
+        
         if ($courseField = (string)$this->element['coursefield']) {
             $courseId = (int)$this->form->getfield($courseField)->value;
+
         } elseif ($this->value) {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true)
@@ -37,11 +40,6 @@ class OscampusFormFieldModule extends JFormFieldList
             $courseId = $db->setQuery($query)->loadResult();
         }
 
-        if (!empty($courseId)) {
-            $modules = JHtml::_('osc.options.modules', $courseId);
-            return array_merge(parent::getOptions(), $modules);
-        }
-
-        return parent::getOptions();
+        return $courseId;
     }
 }
