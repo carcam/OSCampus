@@ -56,6 +56,6 @@
         lessons  : 'ul.oscampus-lesson',
         reset    : '.reset-lesson-order',
         handle   : '.handle',
-        cursor   : 'grab'
+        cursor   : 'move'
     };
 })(jQuery);
