@@ -8,38 +8,38 @@
 
 defined('_JEXEC') or die();
 
-JFormHelper::loadFieldClass('List');
+JFormHelper::loadFieldClass('Text');
 
-class OscampusFormFieldModule extends JFormFieldList
+class OscampusFormFieldModule extends JFormFieldText
 {
-    protected function getOptions()
+    public function getInput()
     {
-        if ($courseId = $this->getCourseId()) {
-            $options = JHtml::_('osc.options.modules', $courseId);
+        $courseId = $this->getCourseId();
+        $options  = array_map(
+            function ($row) {
+                return $row->text;
+            },
+            JHtml::_('osc.options.modules', $courseId)
+        );
+        $options = json_encode($options);
 
-            return array_merge(parent::getOptions(), $options);
-        }
+        JHtml::_('script', 'com_oscampus/jquery-ui.js', false, true);
+        JHtml::_('stylesheet', 'com_oscampus/jquery-ui.css', null, true);
 
-        return array();
+        JHtml::_('osc.onready', "$('#{$this->id}').autocomplete({source: {$options}, autoFocus: true});");
+
+        return parent::getInput();
     }
 
     protected function getCourseId()
     {
         $courseId = null;
 
-        if ($courseField = (string)$this->element['coursefield']) {
-            $courseId = (int)$this->form->getfield($courseField)->value;
-
-        } elseif ($this->value) {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true)
-                ->select('courses_id')
-                ->from('#__oscampus_modules')
-                ->where('id = ' . (int)$this->value);
-
-            $courseId = $db->setQuery($query)->loadResult();
+        $fieldName = (string)$this->element['coursefield'] ?: 'courses_id';
+        if ($courseField = $this->form->getField($fieldName)) {
+            return $courseField->value;
         }
 
-        return $courseId;
+        return null;
     }
 }

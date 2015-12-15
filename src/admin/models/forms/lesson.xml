@@ -34,7 +34,7 @@
         </field>
 
         <field
-            name="modules_id"
+            name="module_title"
             type="oscampus.module"
             label="COM_OSCAMPUS_MODULE"
             required="true">
