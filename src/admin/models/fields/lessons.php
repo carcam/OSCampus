@@ -91,13 +91,18 @@ class OscampusFormFieldLessons extends JFormField
      */
     protected function createModuleItem($module)
     {
-        $moduleInput = '<input type="hidden" name="%1$s[%2$s]" value="%2$s"/>%3$s';
+        $moduleInput = sprintf(
+            '<input type="hidden" name="%1$s[%2$s]" value="%2$s"/>%3$s',
+            $this->name,
+            $module->id,
+            $module->title
+        );
 
         $html = array(
             '<li>',
             '<span class="handle">',
             '<i class="fa fa-caret-right"></i> ',
-            sprintf($moduleInput, $this->name, $module->id, $module->title),
+            $moduleInput,
             '</span>',
             '<ul class="oscampus-lesson">'
         );
