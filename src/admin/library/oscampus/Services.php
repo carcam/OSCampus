@@ -37,8 +37,8 @@ class Services implements ServiceProviderInterface
         };
 
         $pimple['lesson'] = $pimple->factory(function (Container $c) {
-            $properties = new Lesson\Properties();
-            return new Lesson($properties, $c['dbo']);
+            $properties = new \Oscampus\Lesson\Properties();
+            return new Lesson($c['dbo'], $properties);
         });
     }
 }

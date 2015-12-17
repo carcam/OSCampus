@@ -17,38 +17,19 @@ defined('_JEXEC') or die();
  *
  * @package Oscampus
  *
- * @TODO    : \JDatabase changes to \JDatabaseDriver in J!3
+ * @property-read int        $index
+ * @property-read Properties $previous
+ * @property-read Properties $current
+ * @property-read Properties $next
+ * @property-read object[]   $files
  *
- * These properties are returned from the current Properties object
- *
- * @property-read int      $id
- * @property-read int      $index
- * @property-read int      $pathways_id
- * @property-read int      $courses_id
- * @property-read int      $modules_id
- * @property-read string   $title
- * @property-read string   $alias
- * @property-read string   $type
- * @property-read string   $header
- * @property-read string   $footer
- * @property-read int      $access
- * @property-read int      $published
- * @property-read string   $pathway_title
- * @property-read string   $course_title
- * @property-read string   $module_title
- * @property-read object[] $files
  */
-class Lesson extends Object
+class Lesson extends AbstractBase
 {
     /**
-     * @var mixed
+     * @var int
      */
-    public $content = null;
-
-    /**
-     * @var string[]
-     */
-    protected $files = null;
+    protected $index = null;
 
     /**
      * @var Properties
@@ -66,33 +47,23 @@ class Lesson extends Object
     protected $next = null;
 
     /**
-     * @var \JDatabase|\JDatabaseDriver
+     * @var object[]
      */
-    protected $dbo = null;
+    protected $files = array();
 
-    /**
-     * @param Properties                  $properties
-     * @param \JDatabase|\JDatabaseDriver $dbo
-     */
-    public function __construct(Properties $properties, $dbo = null)
+    public function __construct(\JDatabase $dbo, Properties $properties)
     {
-        $this->previous = clone $properties;
+        $this->previous = $properties;
         $this->current  = clone $properties;
         $this->next     = clone $properties;
 
-        $this->dbo = $dbo ?: \OscampusFactory::getContainer()->dbo;
+        parent::__construct($dbo);
     }
 
     public function __get($name)
     {
-        if (in_array($name, array('previous', 'current', 'next'))) {
+        if (property_exists($this, $name)) {
             return $this->$name;
-
-        }
-
-        $method = 'get' . ucfirst(strtolower($name));
-        if (method_exists($this, $method)) {
-            return $this->$method();
 
         } elseif (property_exists($this->current, $name)) {
             return $this->current->$name;
@@ -102,13 +73,13 @@ class Lesson extends Object
     }
 
     /**
-     * Use a one-based index number to retrieve a lesson
+     * Use a zero-based index number to retrieve a lesson
      *
-     * @param int $pathwayId
-     * @param int $courseId
      * @param int $index
+     * @param int $courseId
+     * @param int $pathwayId
      */
-    public function load($pathwayId, $courseId, $index)
+    public function loadByIndex($index, $courseId, $pathwayId)
     {
         $query = $this->getQuery()
             ->where(
@@ -119,47 +90,72 @@ class Lesson extends Object
             );
 
         $offset = max(0, $index - 1);
-        $limit  = $offset ? 3 : 2;
-        $data   = $this->dbo->setQuery($query, $offset, $limit)->loadAssocList();
+        $limit  = $index ? 3 : 2;
+        $data   = $this->dbo->setQuery($query, $offset, $limit)->loadObjectList();
 
         if (count($data) == 1) {
             // Only one lesson found - no previous or next
-            array_unshift($data, array());
-            $data[] = array();
+            array_unshift($data, null);
+            $data[] = null;
 
         } elseif (count($data) == 2) {
             if ($offset == 0) {
                 // No previous lesson
-                array_unshift($data, array());
+                array_unshift($data, null);
 
             } else {
                 // No next lesson
-                $data[] = array();
+                $data[] = null;
             }
         }
 
-        $this->reset();
-        $this->setLessons($index, $data[0], $data[1], $data[2]);
+        $this->setLessons($index, $data);
     }
 
     /**
-     * Get related files for the currently loaded lesson
+     * Load lesson using its ID. Note that if the pathway is not
+     * specified, the first in pathway order will be selected
      *
-     * @return object[]
+     * @param int $lessonId
+     * @param int $pathwayId
      */
-    public function getFiles()
+    public function loadById($lessonId, $pathwayId = null)
     {
-        if ($this->files === null && $this->current->id > 0) {
-            $query = $this->dbo->getQuery(true)
-                ->select('f.*')
-                ->from('#__oscampus_files f')
-                ->innerJoin('#__oscampus_files_lessons fl ON fl.files_id = f.id')
-                ->where('fl.lessons_id = ' . $this->current->id);
+        $query = $this->dbo->getQuery(true)
+            ->select('cp.pathways_id, cp.courses_id')
+            ->from('#__oscampus_lessons AS lesson')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+            ->where('lesson.id = ' . (int)$lessonId)
+            ->order('cp.ordering ASC');
 
-            $this->files = $this->dbo->setQuery($query)->loadObjectList();
+        $result = $this->dbo->setQuery($query)->loadObject();
+
+        $courseId  = $result->courses_id;
+        $pathwayId = (int)$pathwayId ?: $result->pathways_id;
+
+        $query = $this->getQuery()
+            ->where(
+                array(
+                    'course.id = ' . $courseId,
+                    'pathway.id = ' . $pathwayId
+                )
+            );
+
+        $lessons = $this->dbo->setQuery($query)->loadObjectList();
+        foreach ($lessons as $index => $lesson) {
+            if ($lesson->id == $lessonId) {
+                $data = array(
+                    ($index > 0) ? $lessons[$index - 1] : null,
+                    $lesson,
+                    isset($lessons[$index + 1]) ? $lessons[$index + 1] : null
+                );
+
+                $this->setLessons($index, $data);
+            }
         }
-
-        return $this->files ?: array();
     }
 
     /**
@@ -174,56 +170,28 @@ class Lesson extends Object
                 array(
                     'lesson.*',
                     'module.courses_id',
-                    'module.title module_title',
-                    'course.title course_title',
+                    'module.title AS module_title',
+                    'course.title AS course_title',
                     'cp.pathways_id',
-                    'pathway.title pathway_title'
+                    'pathway.title AS pathway_title'
                 )
             )
-            ->from('#__oscampus_lessons lesson')
-            ->innerJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
-            ->innerJoin('#__oscampus_courses course ON course.id = module.courses_id')
-            ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways pathway ON pathway.id = cp.pathways_id')
-            ->order('module.ordering, lesson.ordering');
+            ->from('#__oscampus_lessons AS lesson')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+            ->order('pathway.ordering, cp.ordering, module.ordering, lesson.ordering');
 
         return $query;
     }
 
-    /**
-     * Set the previous/next lessons from the passed arrays
-     *
-     * @param int        $index
-     * @param null|array $previous
-     * @param null|array $current
-     * @param null|array $next
-     *
-     * @throws \Exception
-     */
-    protected function setLessons($index, array $previous, array $current, array $next)
+    protected function setLessons($index, array $data)
     {
-        if ($current) {
-            $this->setProperties($current);
-            $this->current->setProperties($current);
-            $this->current->index = $index;
+        $this->index = $index;
 
-            if ($previous) {
-                $this->previous->setProperties($previous);
-                $this->previous->index = $index - 1;
-            }
-
-            if ($next) {
-                $this->next->setProperties($next);
-                $this->next->index = $index + 1;
-            }
-        }
-    }
-
-    public function reset()
-    {
-        parent::reset();
-        $this->current->reset();
-        $this->previous->reset();
-        $this->next->reset();
+        $this->previous->load($data[0]);
+        $this->current->load($data[1]);
+        $this->next->load($data[2]);
     }
 }

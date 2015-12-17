@@ -10,9 +10,7 @@
  * @var OscampusViewLesson $this
  */
 defined('_JEXEC') or die();
-
 ?>
-
 <div class="osc-container oscampus-lesson" id="oscampus">
     <div class="page-header">
         <h1><?php echo $this->lesson->title; ?></h1>
@@ -24,10 +22,14 @@ defined('_JEXEC') or die();
         </div>
     <?php endif; ?>
 
-    <?php
-    $this->setLayout($this->lesson->type);
-    echo $this->loadTemplate();
-    ?>
+    <div>
+        <p>Under Construction</p>
+        <?php
+        echo '<pre>';
+        print_r($this->lesson->content);
+        echo '</pre>';
+        ?>
+    </div>
 
     <?php if ($this->lesson->footer) : ?>
         <div>
@@ -35,12 +37,12 @@ defined('_JEXEC') or die();
         </div>
     <?php endif; ?>
 
-    <?php if ($this->files) : ?>
+    <?php if ($this->lesson->files) : ?>
         <div>
             <h1><?php echo JText::_('COM_OSCAMPUS_FILES'); ?></h1>
             <ul>
                 <?php
-                foreach ($this->files as $file) {
+                foreach ($files as $file) {
                     echo '<li>' . JHtml::_('link', $file->path, $file->title, 'target="_blank"') . '</li>';
                 }
                 ?>

@@ -20,15 +20,21 @@ class OscampusModelLesson extends OscampusModelSite
     /**
      * @return Lesson
      */
-    public function getLesson()
+    public function getItem()
     {
         if ($this->lesson === null) {
-            $pid = (int)$this->getState('pathway.id');
-            $cid = (int)$this->getState('course.id');
-            $idx = (int)$this->getState('lesson.index');
-
             $this->lesson = OscampusFactory::getContainer()->lesson;
-            $this->lesson->load($pid, $cid, $idx);
+            $pathwayId = (int)$this->getState('pathway.id');
+
+            if ($lessonId = (int)$this->getState('lesson.id')) {
+                $this->lesson->loadById($lessonId, $pathwayId);
+
+            } else {
+                $courseId = (int)$this->getState('course.id');
+                $index = (int)$this->getState('lesson.index');
+
+                $this->lesson->loadByIndex($index, $courseId, $pathwayId);
+            }
         }
 
         return $this->lesson;

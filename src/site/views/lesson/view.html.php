@@ -25,7 +25,7 @@ class OscampusViewLesson extends OscampusViewSite
     public function display($tmpl = null)
     {
         $this->model  = $this->getModel();
-        $this->lesson = $this->model->getLesson();
+        $this->lesson = $this->model->getItem();
 
         $pathway = JFactory::getApplication()->getPathway();
 
@@ -39,6 +39,7 @@ class OscampusViewLesson extends OscampusViewSite
         $pathway->addItem($this->lesson->course_title, $link);
 
         $pathway->addItem($this->lesson->title);
+
         parent::display($tmpl);
     }
 
