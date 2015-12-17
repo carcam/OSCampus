@@ -63,8 +63,8 @@ class OscampusRouter
     public function build(&$query)
     {
         $segments  = array();
-        $routing   = OscampusRoute::getInstance();
-        $menuQuery = $routing->getQuery('pathways');
+        $route   = OscampusRoute::getInstance();
+        $menuQuery = $route->getQuery('pathways');
 
         if (empty($query['Itemid'])) {
             if (!empty($menuQuery['Itemid'])) {
@@ -86,17 +86,17 @@ class OscampusRouter
         $pathwayId = empty($query['pid']) ? null : $query['pid'];
         $courseId  = empty($query['cid']) ? null : $query['cid'];
 
-        if ($pathwayId && ($pathway = $routing->getPathwaySlug($pathwayId))) {
+        if ($pathwayId && ($pathway = $route->getPathwaySlug($pathwayId))) {
             $segments[] = $pathway;
             unset($query['pid']);
 
-            if ($courseId && ($course = $routing->getCourseSlug($courseId))) {
+            if ($courseId && ($course = $route->getCourseSlug($courseId))) {
                 $segments[] = $course;
                 unset($query['cid']);
 
                 if ($view == 'lesson' && $courseId && isset($query['idx'])) {
                     $lessonIndex = (int)$query['idx'];
-                    $lesson      = $routing->getLessonSlug($courseId, $lessonIndex);
+                    $lesson      = $route->getLessonSlug($courseId, $lessonIndex);
                     $segments[]  = $lesson;
                     unset($query['idx']);
                 }
@@ -113,20 +113,20 @@ class OscampusRouter
      */
     public function parse($segments)
     {
-        $routing = OscampusRoute::getInstance();
+        $route = OscampusRoute::getInstance();
         $vars    = array();
 
         if (!empty($segments[0])) {
             $viewIndex    = min(2, count($segments) - 1);
             $vars['view'] = $this->viewMap[$viewIndex];
 
-            $vars['pid'] = $routing->getPathwayFromSlug($segments[0]);
+            $vars['pid'] = $route->getPathwayFromSlug($segments[0]);
 
             if (!empty($segments[1])) {
-                $vars['cid'] = $routing->getCourseFromSlug($segments[1]);
+                $vars['cid'] = $route->getCourseFromSlug($segments[1]);
 
                 if (!empty($segments[2])) {
-                    $vars['idx'] = $routing->getLessonFromSlug($segments[2], $vars['cid']);
+                    $vars['idx'] = $route->getLessonFromSlug($segments[2], $vars['cid']);
                 }
             }
         }
