@@ -18,6 +18,21 @@ class Properties
     public $id = null;
 
     /**
+     * @var int
+     */
+    public $modules_id = null;
+
+    /**
+     * @var int
+     */
+    public $courses_id = null;
+
+    /**
+     * @var int
+     */
+    public $pathways_id = null;
+
+    /**
      * @var string
      */
     public $type = null;
@@ -57,6 +72,13 @@ class Properties
      */
     public $published = null;
 
+    public function __construct($data = null)
+    {
+        if ($data) {
+            $this->load($data);
+        }
+    }
+
     public function __clone()
     {
         $properties = array_keys(get_object_vars($this));
@@ -74,6 +96,10 @@ class Properties
             if (property_exists($this, $property)) {
                 $this->$property = $value;
             }
+        }
+
+        if ($this->content && is_string($this->content)) {
+            $this->content = json_decode($this->content);
         }
     }
 }

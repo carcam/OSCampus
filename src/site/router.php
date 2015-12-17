@@ -63,7 +63,7 @@ class OscampusRouter
     public function build(&$query)
     {
         $segments  = array();
-        $route   = OscampusRoute::getInstance();
+        $route     = OscampusRoute::getInstance();
         $menuQuery = $route->getQuery('pathways');
 
         if (empty($query['Itemid'])) {
@@ -83,8 +83,10 @@ class OscampusRouter
             $view = 'pathways';
         }
 
-        $pathwayId = empty($query['pid']) ? null : $query['pid'];
-        $courseId  = empty($query['cid']) ? null : $query['cid'];
+        $pathwayId   = empty($query['pid']) ? null : (int)$query['pid'];
+        $courseId    = empty($query['cid']) ? null : (int)$query['cid'];
+        $lessonId    = empty($query['lid']) ? null : (int)$query['lid'];
+        $lessonIndex = empty($query['index']) ? null : (int)$query['index'];
 
         if ($pathwayId && ($pathway = $route->getPathwaySlug($pathwayId))) {
             $segments[] = $pathway;
@@ -94,11 +96,22 @@ class OscampusRouter
                 $segments[] = $course;
                 unset($query['cid']);
 
-                if ($view == 'lesson' && $courseId && isset($query['idx'])) {
-                    $lessonIndex = (int)$query['idx'];
-                    $lesson      = $route->getLessonSlug($courseId, $lessonIndex);
-                    $segments[]  = $lesson;
-                    unset($query['idx']);
+                if ($view == 'lesson' && $courseId) {
+                    if ($lessonId) {
+                        $lesson = $route->getLessonSlug($lessonId);
+                        unset($query['lid']);
+                        if (isset($query['index'])) {
+                            unset($query['index']);
+                        }
+
+                    } else {
+                        $lesson = $route->getLessonSlug($courseId, $lessonIndex);
+                        unset($query['index']);
+                        if (isset($query['lid'])) {
+                            unset($query['lid']);
+                        }
+                    }
+                    $segments[] = $lesson;
                 }
             }
         }
@@ -114,7 +127,7 @@ class OscampusRouter
     public function parse($segments)
     {
         $route = OscampusRoute::getInstance();
-        $vars    = array();
+        $vars  = array();
 
         if (!empty($segments[0])) {
             $viewIndex    = min(2, count($segments) - 1);

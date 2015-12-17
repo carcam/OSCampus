@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Lesson\Properties;
+
 defined('_JEXEC') or die();
 
 class OscampusModelCourse extends OscampusModelSite
@@ -141,7 +143,7 @@ class OscampusModelCourse extends OscampusModelSite
                 }
 
                 $lesson->index     = $index;
-                $module->lessons[] = $lesson;
+                $module->lessons[] = new Properties($lesson);
             }
             if ($module->lessons) {
                 $lessons[] = clone $module;

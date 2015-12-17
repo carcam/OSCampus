@@ -12,7 +12,6 @@ class OscampusRoute
 {
     const SLUG_PATHWAY = 'pathways';
     const SLUG_COURSE  = 'courses';
-    const SLUG_MODULE  = 'modules';
     const SLUG_LESSON  = 'lessons';
 
     /**
@@ -168,7 +167,7 @@ class OscampusRoute
     }
 
     /**
-     * Wrapper function for static::getSlug()
+     * Wrapper function for $this->getSlug()
      *
      * @param int $id
      *
@@ -181,7 +180,7 @@ class OscampusRoute
     }
 
     /**
-     * Wrapper function for static::getSlug()
+     * Wrapper function for $this->getSlug()
      *
      * @param int $id
      *
@@ -194,85 +193,75 @@ class OscampusRoute
     }
 
     /**
-     * Wrapper function for static::getSlug()
-     *
-     * @param int $id    The course ID
-     * @param int $index The lesson index as ordered within the course
+     * @param int $id    The lesson ID or course ID
+     * @param int $index If supplied, the index within a course. If not, $id is a lesson id
      *
      * @return string
      * @throws Exception
      */
-    public function getModuleSlug($id, $index)
+    public function getLessonSlug($id, $index = null)
     {
-        return $this->getSlug(static::SLUG_MODULE, $id, $index);
+        $db    = OscampusFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('lesson.alias')
+            ->from('#__oscampus_lessons AS lesson');
+
+        if ($index === null || $index < 0) {
+            // Nice! we have the lesson id!
+            $query->where('lesson.id = ' . (int)$id);
+            $index = 0;
+
+        } else {
+            // A little more work, find by index
+            $query
+                ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+                ->where('course.id = ' . (int)$id)
+                ->order('module.ordering ASC, lesson.ordering ASC');
+        }
+
+        if ($alias = $db->setQuery($query, $index, 1)->loadResult()) {
+            return $alias;
+        }
+
+        $index = func_num_args() > 1 ? func_get_arg(1) : null;
+        if ($index === null || $index < 0) {
+            $identifier = $id;
+        } else {
+            $identifier = $id . '/' . $index;
+        }
+        throw new Exception(__CLASS__ . ": not found - Lesson={$identifier}", 404);
     }
 
     /**
-     * Wrapper function for static::getSlug()
-     *
-     * @param int $id    The course ID
-     * @param int $index The lesson index as ordered within the course
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function getLessonSlug($id, $index)
-    {
-        return $this->getSlug(static::SLUG_LESSON, $id, $index);
-    }
-
-    /**
-     * Find the url slug for the selected item type and id
+     * Find the url slug for selected item type.
      *
      * @param string $type  See static::SLUG_* constants
-     * @param int    $id    The id of the target item. For modules/lessons this is the courses_id
-     * @param int    $index For modules/lessons, the index of the lesson as ordered in the course.
+     * @param int    $id    The id of the target item
+     * @param int    $index For lessons, the zero-based index of the lesson as ordered in the course.
+     *                      If this argument is passed, $id will be assumed to be a course ID
      *
      * @return string
      * @throws Exception
      */
-    public function getSlug($type, $id, $index = 0)
+    protected function getSlug($type, $id, $index = null)
     {
-        $db     = JFactory::getDbo();
-        $query  = $db->getQuery(true);
-        $select = null;
-        $id     = (int)$id;
-        $index  = (int)$index;
-
-        switch ($type) {
-            case static::SLUG_PATHWAY:
-            case static::SLUG_COURSE:
-                $index = 0;
-                $table = '#__oscampus_' . $type;
-                $query->select('title, alias')
-                    ->from($table)
-                    ->where('id = ' . (int)$id);
-                break;
-
-            /** @noinspection PhpMissingBreakStatementInspection */
-            case static::SLUG_MODULE:
-                $select = 'm.title, m.alias';
-
-            case static::SLUG_LESSON:
-                $select = $select ?: 'l.title, l.alias';
-
-                $query->select($select)
-                    ->from('#__oscampus_lessons l')
-                    ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
-                    ->where('m.courses_id = ' . (int)$id)
-                    ->order('m.ordering, l.ordering');
-
-                break;
-
-            default:
-                throw new Exception(__CLASS__ . ": Unknown routing path - {$type}", 404);
+        if ($type == static::SLUG_LESSON) {
+            // This usage is a bit silly, but just in case!
+            return $this->getLessonSlug($id, $index);
         }
 
-        if ($item = $db->setQuery($query, $index, 1)->loadObject()) {
-            return $item->alias;
+        $db    = OscampusFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('alias')
+            ->from('#__oscampus_' . $type)
+            ->where('id = ' . (int)$id);
+
+        if ($alias = $db->setQuery($query)->loadResult()) {
+            return $alias;
         }
 
-        throw new Exception(__CLASS__ . ": not found - {$id}/{$index} ({$type})", 404);
+        throw new Exception(__CLASS__ . ": not found - {$type}={$id}", 404);
     }
 
     /**
@@ -334,7 +323,7 @@ class OscampusRoute
             ->order('m.ordering, l.ordering');
 
         $lessons = $db->setQuery($query)->loadObjectList();
-        $alias = $this->slugToAlias($slug);
+        $alias   = $this->slugToAlias($slug);
         foreach ($lessons as $index => $lesson) {
             if ($lesson->alias == $alias) {
                 return (int)$index;

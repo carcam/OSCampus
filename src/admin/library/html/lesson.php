@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Lesson\Properties;
+
 defined('_JEXEC') or die();
 
 abstract class OscLesson
@@ -29,21 +31,25 @@ abstract class OscLesson
     }
 
     /**
-     * @param object $lesson
-     * @param string $text
-     * @param mixed  $attribs
-     * @param bool   $uriOnly
+     * @param Properties $lesson
+     * @param string     $text
+     * @param mixed      $attribs
+     * @param bool       $uriOnly
      *
      * @return string
      */
-    public static function link($lesson, $text = null, $attribs = null, $uriOnly = false)
+    public static function link(Properties $lesson, $text = null, $attribs = null, $uriOnly = false)
     {
+        if (!$lesson->id) {
+            return '';
+        }
+
         $user = JFactory::getUser();
         if (in_array($lesson->access, $user->getAuthorisedViewLevels())) {
             $query         = OscampusRoute::getInstance()->getQuery('pathways');
             $query['view'] = 'lesson';
             $query['cid']  = $lesson->courses_id;
-            $query['idx']  = $lesson->index;
+            $query['lid']  = $lesson->id;
 
             if (!empty($lesson->pathways_id)) {
                 $query['pid'] = $lesson->pathways_id;
