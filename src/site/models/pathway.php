@@ -26,6 +26,7 @@ class OscampusModelPathway extends OscampusModelList
                     'p.id = ' . $this->getState('pathway.id'),
                     'p.published = 1',
                     'p.users_id IS NULL',
+                    'c.published',
                     'c.access IN (' . join(',', $viewLevels) . ')'
                 )
             )
