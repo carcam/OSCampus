@@ -216,8 +216,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadExerciseFiles();
         $this->log['Load Files'] = microtime(true);
 
-        return;
-
         $this->loadCertificates();
         $this->log['Load Certificates'] = microtime(true);
 
@@ -333,21 +331,18 @@ class OscampusControllerImport extends OscampusControllerBase
                     $insert->lessons_id = $lessonId;
                     $dbCampus->insertObject('#__oscampus_files_links', $insert);
                     if ($error = $dbCampus->getErrorMsg()) {
-                        die('error: ' . $error);
+                        $this->errors[] = $error;
+                        return;
                     }
                 }
             } else {
                 $dbCampus->insertObject('#__oscampus_files_links', $insert);
                 if ($error = $dbCampus->getErrorMsg()) {
-                    die('ERROR: ' . $error);
+                    $this->errors[] = $error;
+                    return;
                 }
             }
         }
-
-        echo '<pre>';
-        print_r($this->files);
-        echo '</pre>';
-
     }
 
     /**
@@ -483,7 +478,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
             $dbCampus->updateObject('#__oscampus_lessons', $lesson, 'id');
             if ($error = $dbCampus->getErrorMsg()) {
-                echo $error;
+                $this->errors[] = $error;
                 return;
             }
         }
