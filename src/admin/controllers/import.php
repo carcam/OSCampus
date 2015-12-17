@@ -870,6 +870,7 @@ class OscampusControllerImport extends OscampusControllerBase
                         )
                     );
                     $convertedData->links = json_encode($links);
+                    $convertedData->image = ltrim($convertedData->image, '/');
                     return true;
                 }
                 return false;
