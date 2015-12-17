@@ -40,6 +40,8 @@ class OscampusViewLesson extends OscampusViewSite
 
         $pathway->addItem($this->lesson->title);
 
+        $this->setLayout($this->lesson->type);
+
         parent::display($tmpl);
     }
 
