@@ -273,11 +273,13 @@ class OscampusRoute
      */
     public function getPathwayFromSlug($slug)
     {
+        $alias = $this->slugToAlias($slug);
+
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('id')
             ->from('#__oscampus_pathways')
-            ->where('alias = ' . $db->quote($this->slugToAlias($slug)));
+            ->where('alias = ' . $db->quote($alias));
 
         $id = $db->setQuery($query)->loadResult();
 
@@ -293,11 +295,13 @@ class OscampusRoute
      */
     public function getCourseFromSlug($slug)
     {
+        $alias = $this->slugToAlias($slug);
+
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
             ->select('id')
             ->from('#__oscampus_courses')
-            ->where('alias = ' . $db->quote($this->slugToAlias($slug)));
+            ->where('alias = ' . $db->quote($alias));
 
         $id = $db->setQuery($query)->loadResult();
 
@@ -314,24 +318,28 @@ class OscampusRoute
      */
     public function getLessonFromSlug($slug, $courseId)
     {
+        $alias = $this->slugToAlias($slug);
+
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true)
-            ->select('l.id, l.alias')
-            ->from('#__oscampus_lessons l')
-            ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
-            ->where('m.courses_id = ' . (int)$courseId)
-            ->order('m.ordering, l.ordering');
+            ->select('lesson.id')
+            ->from('#__oscampus_lessons AS lesson')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->where(
+                array(
+                    'module.courses_id = ' . (int)$courseId,
+                    'lesson.alias = ' . $db->q($alias)
+                )
+            );
 
-        $lessons = $db->setQuery($query)->loadObjectList();
-        $alias   = $this->slugToAlias($slug);
-        foreach ($lessons as $index => $lesson) {
-            if ($lesson->alias == $alias) {
-                return (int)$index;
-            }
+        $id = $db->setQuery($query)->loadResult();
+        if (!$id) {
+            // Default to the first lesson
+            $query->clear('where')->where('module.courses_id = ' . (int)$courseId);
+            $id = $db->setQuery($query, 0, 1)->loadResult();
         }
 
-        // Default to the first lesson
-        return 0;
+        return $id;
     }
 
     /**

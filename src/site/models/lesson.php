@@ -44,18 +44,18 @@ class OscampusModelLesson extends OscampusModelSite
     {
         $app = JFactory::getApplication();
 
+        $pid = $app->input->getInt('pid');
+        $this->setState('pathway.id', $pid);
+
+        $cid = $app->input->getInt('cid');
+        $this->setState('course.id', $cid);
+
         if ($lid = $app->input->getInt('lid')) {
             $this->setState('lesson.id', $lid);
 
         } else {
-            $pid = $app->input->getInt('pid');
-            $this->setState('pathway.id', $pid);
-
-            $cid = $app->input->getInt('cid');
-            $this->setState('course.id', $cid);
-
-            $lidx = $app->input->getInt('idx');
-            $this->setState('lesson.index', $lidx);
+            $index = $app->input->getInt('index');
+            $this->setState('lesson.index', $index);
         }
 
         $uid = $app->input->getInt('uid', JFactory::getUser()->id);

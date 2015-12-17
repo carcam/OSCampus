@@ -139,10 +139,11 @@ class OscampusRouter
                 $vars['cid'] = $route->getCourseFromSlug($segments[1]);
 
                 if (!empty($segments[2])) {
-                    $vars['idx'] = $route->getLessonFromSlug($segments[2], $vars['cid']);
+                    $vars['lid'] = $route->getLessonFromSlug($segments[2], $vars['cid']);
                 }
             }
         }
+
         return $vars;
     }
 }
