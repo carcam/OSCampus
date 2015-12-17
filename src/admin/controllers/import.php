@@ -180,8 +180,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->clearTable('#__oscampus_courses_pathways', false);
         $this->clearTable('#__oscampus_courses_tags', false);
-        $this->clearTable('#__oscampus_files_courses', false);
-        $this->clearTable('#__oscampus_files_lessons', false);
+        $this->clearTable('#__oscampus_files_links', false);
 
         $this->clearTable('#__oscampus_users_lessons');
         $this->clearTable('#__oscampus_files');
@@ -216,6 +215,8 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->loadExerciseFiles();
         $this->log['Load Files'] = microtime(true);
+
+        return;
 
         $this->loadCertificates();
         $this->log['Load Certificates'] = microtime(true);
@@ -306,11 +307,11 @@ class OscampusControllerImport extends OscampusControllerBase
             }
         }
 
-        // Then attach them to courses or lessons as needed
+        // Then attach them to courses and lessons
         foreach ($this->files as $file) {
             $coursesId   = $file->courses_id;
             $lessonQuery = $dbCampus->getQuery(true)
-                ->select('l.id, m.courses_id')
+                ->select('l.id')
                 ->from('#__oscampus_courses c')
                 ->innerJoin('#__oscampus_modules m ON m.courses_id = c.id')
                 ->innerJoin('#__oscampus_lessons l ON l.modules_id = m.id')
@@ -320,19 +321,33 @@ class OscampusControllerImport extends OscampusControllerBase
                         'l.footer like ' . $dbCampus->quote('%' . basename($file->path) . '%')
                     )
                 );
-            $lesson      = $dbCampus->setQuery($lessonQuery)->loadObjectList();
-            if (count($lesson) > 0) {
-                foreach ($lesson as $row) {
-                    $new = (object)array('files_id' => $file->id, 'lessons_id' => $row->id);
-                    $dbCampus->insertObject('#__oscampus_files_lessons', $new);
+
+            $lessonIds = $dbCampus->setQuery($lessonQuery)->loadColumn();
+
+            $insert = (object)array(
+                'files_id'   => $file->id,
+                'courses_id' => $coursesId
+            );
+            if ($lessonIds) {
+                foreach ($lessonIds as $lessonId) {
+                    $insert->lessons_id = $lessonId;
+                    $dbCampus->insertObject('#__oscampus_files_links', $insert);
+                    if ($error = $dbCampus->getErrorMsg()) {
+                        die('error: ' . $error);
+                    }
                 }
-
             } else {
-                $new = (object)array('files_id' => $file->id, 'courses_id' => $coursesId);
-                $dbCampus->insertObject('#__oscampus_files_courses', $new);
+                $dbCampus->insertObject('#__oscampus_files_links', $insert);
+                if ($error = $dbCampus->getErrorMsg()) {
+                    die('ERROR: ' . $error);
+                }
             }
-
         }
+
+        echo '<pre>';
+        print_r($this->files);
+        echo '</pre>';
+
     }
 
     /**
@@ -827,17 +842,19 @@ class OscampusControllerImport extends OscampusControllerBase
             'id',
             function ($guruData, $convertedData) use ($users) {
                 if (isset($users[$convertedData->users_id])) {
-                    $links = array(
-                        'website' => array(
-                            'link' => preg_match('#^https?://.+#', trim($guruData['website'])) ? trim($guruData['website']) : '',
+                    $links                = array(
+                        'website'  => array(
+                            'link' => preg_match('#^https?://.+#',
+                                trim($guruData['website'])) ? trim($guruData['website']) : '',
                             'show' => (int)(bool)$guruData['show_website'],
                         ),
-                        'email' => array(
+                        'email'    => array(
                             'link' => null,
                             'show' => (int)(bool)$guruData['show_email']
                         ),
-                        'blog' => array(
-                            'link' => preg_match('#^https?://.+#', trim($guruData['blog'])) ? trim($guruData['blog']) : '',
+                        'blog'     => array(
+                            'link' => preg_match('#^https?://.+#',
+                                trim($guruData['blog'])) ? trim($guruData['blog']) : '',
                             'show' => (int)(bool)$guruData['show_blog'],
                         ),
                         'facebook' => array(
@@ -848,7 +865,7 @@ class OscampusControllerImport extends OscampusControllerBase
                             )),
                             'show' => (int)$guruData['show_facebook'],
                         ),
-                        'twitter' => array(
+                        'twitter'  => array(
                             'link' => trim(preg_replace(
                                 '#^https?://(www\.)?(twitter\.com/)?#',
                                 '',

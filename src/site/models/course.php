@@ -83,35 +83,17 @@ class OscampusModelCourse extends OscampusModelSite
         if ($cid > 0) {
             $db = JFactory::getDbo();
 
-            $query1 = $db->getQuery(true)
-                ->select(
-                    array(
-                        'f.*',
-                        'fc.courses_id',
-                        'fc.ordering'
-                    )
-                )
-                ->from('#__oscampus_files f')
-                ->innerJoin('#__oscampus_files_courses fc ON fc.files_id = f.id')
-                ->innerJoin('#__oscampus_courses c ON c.id = fc.courses_id')
-                ->where('fc.courses_id = ' . $cid);
+            $query = $db->getQuery(true)
+                ->select('file.*')
+                ->from('#__oscampus_files file')
+                ->innerJoin('#__oscampus_files_links flink ON flink.files_id = file.id')
+                ->innerJoin('#__oscampus_courses course ON course.id = flink.courses_id')
+                ->leftJoin('#__oscampus_lessons lesson ON lesson.id = flink.lessons_id')
+                ->leftJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
+                ->where('flink.courses_id = ' . $cid)
+                ->order('module.ordering, lesson.ordering, flink.ordering')
+                ->group('file.id');
 
-            $query2 = $db->getQuery(true)
-                ->select(
-                    array(
-                        'f.*',
-                        'm.courses_id',
-                        'fl.ordering'
-                    )
-                )
-                ->from('#__oscampus_files f')
-                ->innerJoin('#__oscampus_files_lessons fl ON fl.files_id = f.id')
-                ->innerJoin('#__oscampus_lessons l ON l.id = fl.lessons_id')
-                ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
-                ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
-                ->where('m.courses_id = ' . $cid);
-
-            $query = "({$query1}) UNION ({$query2}) ORDER BY ordering ASC";
             $files = $db->setQuery($query)->loadObjectList();
         }
         return $files;
