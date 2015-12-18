@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die();
 ?>
-<div class="osc-container oscampus-wistia">
+<div class="osc-container oscampus-wistia" id="oscampus">
     <div class="osc-lesson-links">
         <?php echo $this->loadNavigation(); ?>
     </div>
