@@ -83,10 +83,10 @@ class OscampusRouter
             $view = 'pathways';
         }
 
-        $pathwayId   = empty($query['pid']) ? null : (int)$query['pid'];
-        $courseId    = empty($query['cid']) ? null : (int)$query['cid'];
-        $lessonId    = empty($query['lid']) ? null : (int)$query['lid'];
-        $lessonIndex = empty($query['index']) ? null : (int)$query['index'];
+        $pathwayId   = isset($query['pid']) ? (int)$query['pid'] : null;
+        $courseId    = isset($query['cid']) ? (int)$query['cid'] : null;
+        $lessonId    = isset($query['lid']) ? (int)$query['lid'] : null;
+        $lessonIndex = isset($query['index']) ? (int)$query['index'] : null;
 
         if ($pathwayId && ($pathway = $route->getPathwaySlug($pathwayId))) {
             $segments[] = $pathway;
@@ -96,7 +96,7 @@ class OscampusRouter
                 $segments[] = $course;
                 unset($query['cid']);
 
-                if ($view == 'lesson' && $courseId) {
+                if ($view == 'lesson') {
                     if ($lessonId) {
                         $lesson = $route->getLessonSlug($lessonId);
                         unset($query['lid']);
@@ -104,14 +104,16 @@ class OscampusRouter
                             unset($query['index']);
                         }
 
-                    } else {
+                    } elseif ($courseId) {
                         $lesson = $route->getLessonSlug($courseId, $lessonIndex);
                         unset($query['index']);
                         if (isset($query['lid'])) {
                             unset($query['lid']);
                         }
                     }
-                    $segments[] = $lesson;
+                    if (!empty($lesson)) {
+                        $segments[] = $lesson;
+                    }
                 }
             }
         }
