@@ -74,6 +74,7 @@ abstract class OscLink
     /**
      * Build link to a lesson on course ID/Index alone
      *
+     * @param int    $pid
      * @param int    $cid
      * @param int    $index
      * @param string $text
@@ -88,10 +89,10 @@ abstract class OscLink
             $app   = JFactory::getApplication();
             $query = OscampusRoute::getInstance()->getQuery('course');
 
-            $query['view'] = 'lesson';
-            $query['cid']  = (int)$cid;
-            $query['idx']  = (int)$index;
-            $query['pid']  = $pid;
+            $query['view']  = 'lesson';
+            $query['pid']   = $pid;
+            $query['cid']   = (int)$cid;
+            $query['index'] = (int)$index;
 
             $link = 'index.php?' . http_build_query($query);
             if ($uriOnly) {
