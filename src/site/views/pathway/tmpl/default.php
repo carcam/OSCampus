@@ -32,7 +32,7 @@ defined('_JEXEC') or die();
                 <div class="osc-course-start">
                     <?php
                     echo JHtml::_(
-                        'osc.lessonlink',
+                        'osc.link.lesson',
                         $item->pathways_id,
                         $item->id,
                         0,
