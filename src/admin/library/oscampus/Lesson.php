@@ -27,6 +27,8 @@ defined('_JEXEC') or die();
  */
 class Lesson extends AbstractBase
 {
+    const SUBCLASS_BASE = '\\Oscampus\\Lesson\Type\\';
+
     /**
      * @var int
      */
@@ -222,7 +224,7 @@ class Lesson extends AbstractBase
             return;
         }
 
-        $className = '\\Oscampus\\Lesson\Type\\' . ucfirst(strtolower($this->current->type));
+        $className = static::SUBCLASS_BASE . ucfirst(strtolower($this->current->type));
         if (class_exists($className)) {
             $this->renderer = new $className($this);
         }
