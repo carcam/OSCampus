@@ -97,9 +97,5 @@ class Properties
                 $this->$property = $value;
             }
         }
-
-        if ($this->content && is_string($this->content)) {
-            $this->content = json_decode($this->content);
-        }
     }
 }

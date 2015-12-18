@@ -40,5 +40,9 @@ class Services implements ServiceProviderInterface
             $properties = new \Oscampus\Lesson\Properties();
             return new Lesson($c['dbo'], $properties);
         });
+
+        $pimple['device'] = function(Container $c) {
+            return new \Mobile_Detect();
+        };
     }
 }

@@ -8,14 +8,21 @@
 
 namespace Oscampus\Lesson\Type;
 
-use Oscampus\Lesson\Type\AbstractType;
+use Oscampus\Lesson;
 
 defined('_JEXEC') or die();
 
-class Text extends AbstractType
+abstract class AbstractType
 {
-    public function render()
+    /**
+     * @var Lesson
+     */
+    protected $lesson = null;
+
+    public function __construct(Lesson $lesson)
     {
-        return $this->lesson->content;
+        $this->lesson = $lesson;
     }
+
+    abstract public function render();
 }

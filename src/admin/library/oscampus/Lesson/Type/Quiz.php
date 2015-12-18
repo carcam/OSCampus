@@ -8,10 +8,21 @@
 
 namespace Oscampus\Lesson\Type;
 
-use Oscampus\Lesson\AbstractType;
+use Oscampus\Lesson;
+use Oscampus\Lesson\Type\AbstractType;
 
 defined('_JEXEC') or die();
 
 class Quiz extends AbstractType
 {
+    public function render()
+    {
+        ob_start();
+        echo '<pre>';
+        print_r(json_decode($this->lesson->content));
+        echo '</pre>';
+
+        $result = ob_get_clean();
+        return $result;
+    }
 }

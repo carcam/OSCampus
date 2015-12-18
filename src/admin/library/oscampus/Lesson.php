@@ -9,6 +9,7 @@
 namespace Oscampus;
 
 use Oscampus\Lesson\Properties;
+use Oscampus\Lesson\Type\AbstractType;
 
 defined('_JEXEC') or die();
 
@@ -47,6 +48,11 @@ class Lesson extends AbstractBase
     protected $next = null;
 
     /**
+     * @var AbstractType
+     */
+    protected $renderer = null;
+
+    /**
      * @var object[]
      */
     protected $files = array();
@@ -75,11 +81,14 @@ class Lesson extends AbstractBase
     /**
      * Use a zero-based index number to retrieve a lesson
      *
-     * @param int $index
-     * @param int $courseId
-     * @param int $pathwayId
+     * @param int          $index
+     * @param int          $courseId
+     * @param int          $pathwayId
+     * @param AbstractType $renderer
+     *
+     * @return void
      */
-    public function loadByIndex($index, $courseId, $pathwayId)
+    public function loadByIndex($index, $courseId, $pathwayId, AbstractType $renderer = null)
     {
         $query = $this->getQuery()
             ->where(
@@ -109,17 +118,20 @@ class Lesson extends AbstractBase
             }
         }
 
-        $this->setLessons($index, $data);
+        $this->setLessons($index, $data, $renderer);
     }
 
     /**
      * Load lesson using its ID. Note that if the pathway is not
      * specified, the first in pathway order will be selected
      *
-     * @param int $lessonId
-     * @param int $pathwayId
+     * @param int          $lessonId
+     * @param int          $pathwayId
+     * @param AbstractType $renderer
+     *
+     * @return void
      */
-    public function loadById($lessonId, $pathwayId = null)
+    public function loadById($lessonId, $pathwayId = null, AbstractType $renderer = null)
     {
         $query = $this->dbo->getQuery(true)
             ->select('cp.pathways_id, cp.courses_id')
@@ -153,9 +165,15 @@ class Lesson extends AbstractBase
                     isset($lessons[$index + 1]) ? $lessons[$index + 1] : null
                 );
 
-                $this->setLessons($index, $data);
+                $this->setLessons($index, $data, $renderer);
+                return;
             }
         }
+    }
+
+    public function render()
+    {
+        return $this->renderer->render();
     }
 
     /**
@@ -186,12 +204,27 @@ class Lesson extends AbstractBase
         return $query;
     }
 
-    protected function setLessons($index, array $data)
+    /**
+     * @param int              $index
+     * @param array[]|object[] $data
+     * @param AbstractType     $renderer
+     */
+    protected function setLessons($index, array $data, AbstractType $renderer = null)
     {
         $this->index = $index;
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);
         $this->next->load($data[2]);
+
+        if ($renderer) {
+            $this->renderer = $renderer;
+            return;
+        }
+
+        $className = '\\Oscampus\\Lesson\Type\\' . ucfirst(strtolower($this->current->type));
+        if (class_exists($className)) {
+            $this->renderer = new $className($this);
+        }
     }
 }

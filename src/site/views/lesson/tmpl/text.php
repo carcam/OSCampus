@@ -14,6 +14,6 @@ defined('_JEXEC') or die();
 <div class="osc-container oscampus-text">
     <?php
     echo $this->loadNavigation();
-    echo $this->lesson->content;
+    echo $this->lesson->render();
     ?>
 </div>

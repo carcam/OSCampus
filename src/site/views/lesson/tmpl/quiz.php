@@ -13,30 +13,30 @@ defined('_JEXEC') or die();
 /**
  * @var Oscampus\Quiz $quiz
  */
-$this->lesson->content = new \Oscampus\Quiz($this->lesson->content);
 
-
-$quiz = $this->lesson->content;
 ?>
 
 <div class="osc-container oscampus-quiz">
-    <?php echo $this->loadNavigation(); ?>
+    <?php
+    echo $this->loadNavigation();
+    echo $this->lesson->render();
+    ?>
     <div class="osc-section osc-quiz-details">
         <div class="block4">
-            <?php echo $quiz->startTimer(); ?>
+            <?php //echo $quiz->startTimer(); ?>
         </div>
         <div class="block8">
             <div class="osc-quiz-right">
                 <strong>Quiz time limit:</strong>
-                <strong class="osc-positive-color"><?php echo (int)$quiz->timelimit; ?></strong> minutes
+                <strong class="osc-positive-color"><?php //echo (int)$quiz->timelimit; ?></strong> minutes
                 <br/>
                 <strong>Minimum score to pass this quiz:</strong>
-                <strong class="osc-positive-color"><?php echo $quiz->score . '%'; ?></strong>
+                <strong class="osc-positive-color"><?php //echo $quiz->score . '%'; ?></strong>
                 <br/>
             </div>
         </div>
     </div>
     <!-- .osc-section -->
 
-    <?php echo $this->loadTemplate('form'); ?>
+    <?php //echo $this->loadTemplate('form'); ?>
 </div>
