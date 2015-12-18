@@ -580,10 +580,21 @@
     -o-transition: opacity 0.4s ease 0s;
 }
 
-#oscampus.osc-container .osc-lesson-navigation {
+#oscampus.oscampus-lesson .osc-lesson-navigation,
+#oscampus.oscampus-text .osc-lesson-navigation,
+#oscampus.oscampus-wistia .osc-lesson-navigation,
+#oscampus.oscampus-quiz .osc-lesson-navigation {
+    float: right;
+}
+
+#oscampus.oscampus-wistia .osc-lesson-navigation {
     right: 10px;
     top: 10px;
-    float: right;
+}
+
+#oscampus.oscampus-lesson .osc-lesson-links,
+#oscampus.oscampus-text .osc-lesson-links {
+    margin-bottom: 10px;
 }
 
 #oscampus.osc-container .osc-lesson-options {
