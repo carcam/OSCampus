@@ -37,8 +37,12 @@
     {{ list_macro.td_edit_link(item, loop.index0, 'lesson', 'lessons.', item.title, item.alias) }}
     {{ list_macro.td_text(html('osc.lesson.type', item.type)) }}
     {{ list_macro.td_text(item.viewlevel_title) }}
-    {{ list_macro.td_published(item.course_published, loop.index0, 'courses.') }}
-    {{ list_macro.td_text(item.course_title) }}
+    {{ list_macro.td_published(item.course_published, loop.index0, 'courses.', false) }}
+    <td class="has-context">
+        <a href="index.php?option=com_oscampus&task=course.edit&id={{ item.courses_id }}">
+            {{ item.course_title }}
+        </a>
+    </td>
     {{ list_macro.td_text(item.course_released) }}
     {{ list_macro.td_text(html('osc.course.difficulty', item.course_difficulty)) }}
     {{ list_macro.td_text(item.id, 'center') }}

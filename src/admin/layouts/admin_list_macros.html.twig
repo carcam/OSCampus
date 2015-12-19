@@ -86,10 +86,10 @@
     </td>
 {% endmacro %}
 
-{% macro td_published(published, index, prefix) %}
+{% macro td_published(published, index, prefix, enabled = true) %}
     <td width="1%" class="nowrap center">
         <div class="btn-group">
-            {{ html('jgrid.published', published, index, prefix)|raw }}
+            {{ html('jgrid.published', published, index, prefix, enabled)|raw }}
         </div>
     </td>
 {% endmacro %}
