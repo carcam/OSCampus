@@ -98,40 +98,20 @@
                                         form.submit();
 
                                     } else {
-                                        var overlay = $('<div>')
-                                            .attr('id', wistiaEmbed.uuid + '_overlay')
-                                            .addClass('osc-wistia-overlay');
-                                        container.parent().append(overlay);
-
-                                        var wrapper = $('<div>').addClass('wrapper');
-                                        $(overlay).append(wrapper);
-
-                                        wrapper.html(
-                                            '<div style="padding-left: 25%; padding-right: 25%;">' + data.error + '</div>' +
+                                        $.Oscampus.wistia.openOverlay(container.parent, '<div style="padding-left: 25%; padding-right: 25%;">' + data.error + '</div>' +
                                             '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
                                             '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
                                             '  Skip to where you left off' +
                                             '</a>'
-                                        );
+                                        )
 
-                                        $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                                            overlay.fadeOut(200, function() {
-                                                overlay.remove();
-                                                wistiaEmbed.play();
-                                            });
-                                        });
+//                                        $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+//                                            overlay.fadeOut(200, function() {
+//                                                overlay.remove();
+//                                                wistiaEmbed.play();
+//                                            });
+//                                        });
 
-                                        var resize = function() {
-                                            overlay.css('height', $(wistiaEmbed.grid.main).height());
-                                            overlay.css('width', $(wistiaEmbed.grid.main).width());
-                                            wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
-                                        };
-
-                                        resize();
-                                        wistiaEmbed.bind('widthchange', resize);
-                                        wistiaEmbed.bind('heightchange', resize);
-
-                                        overlay.addClass('osc-visible');
                                     }
                                 }
                             });
@@ -139,48 +119,17 @@
                         } else {
                             wistiaEmbed.pause();
 
-                            // TODO: create a method to easy show custom overlays
-                            var overlay = $('<div>')
-                                .attr('id', wistiaEmbed.uuid + '_overlay')
-                                .addClass('osc-wistia-overlay');
-                            container.append(overlay);
-
-                            var wrapper = $('<div>').addClass('wrapper');
-                            $(overlay).append(wrapper);
-
-                            wrapper.html(
-                                '<div>Become a Pro Member<br>to download this video!</div>' +
-                                '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">' +
-                                '  <span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>' +
+                            var overlay = $.Oscampus.wistia.openOverlay(wistiaEmbed.uuid, '<div>Become a Pro Member<br>to download this video!</div>' +
+                                '<a href="#" class="subscribe_link">' +
+                                '  <span class="subscribe_icon">&nbsp;</span>' +
                                 '  Subscribe as Pro to download' +
-                                '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                                '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
+                                '</a><a href="#" class="resume_skip">' +
+                                '  <span class="resume_skip_arrow">&nbsp;</span>' +
                                 '  Skip to where you left off' +
                                 '</a>'
                             );
+                            container.append(overlay);
 
-                            $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
-                                window.location = downloadURL;
-                            });
-
-                            $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                                overlay.fadeOut(200, function() {
-                                    overlay.remove();
-                                    wistiaEmbed.play();
-                                });
-                            });
-
-                            var resize = function() {
-                                overlay.css('height', $(wistiaEmbed.grid.main).height());
-                                overlay.css('width', $(wistiaEmbed.grid.main).width());
-                                wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
-                            };
-
-                            resize();
-                            wistiaEmbed.bind('widthchange', resize);
-                            wistiaEmbed.bind('heightchange', resize);
-
-                            overlay.addClass('osc-visible');
                         }
                     });
 
@@ -324,9 +273,43 @@
 
                 wistiaEmbed.bind('play', hideWistiaButtons);
                 wistiaEmbed.bind('pause', hideWistiaButtons);
+            },
+
+            getOverlay: function(id, text) {
+                var overlay = $('<div>')
+                    .attr('id', 'overlay_' + id)
+                    .addClass('osc-wistia-overlay');
+
+                var wrapper = $('<div>').addClass('wrapper');
+                $(overlay).append(wrapper);
+
+                wrapper.html(text);
+
+                console.log($('#overlay_'+id+' .subcribe_'))
+
+                $('#subscribe').click(function() {
+                    //window.location = downloadURL;
+                });
+
+                $('#resume_skip').click(function() {
+                    overlay.fadeOut(200, function() {
+                        overlay.remove();
+                        wistiaEmbed.play();
+                    });
+                });
+
+                var resize = function() {
+                    overlay.css('height', $(wistiaEmbed.grid.main).height());
+                    overlay.css('width', $(wistiaEmbed.grid.main).width());
+                    wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
+                };
+
+                resize();
+                wistiaEmbed.bind('widthchange', resize);
+                wistiaEmbed.bind('heightchange', resize);
+
+                overlay.addClass('osc-visible');
             }
         }
-
-
     });
 })(jQuery);
