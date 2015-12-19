@@ -8,6 +8,9 @@
 
 namespace Oscampus\Lesson;
 
+use JUser;
+use OscampusFactory;
+
 defined('_JEXEC') or die();
 
 class Properties
@@ -97,5 +100,19 @@ class Properties
                 $this->$property = $value;
             }
         }
+    }
+
+    /**
+     * Determine if this lesson is authorised for the user
+     *
+     * @param JUser $user
+     *
+     * @return bool
+     */
+    public function isAuthorised(JUser $user = null)
+    {
+        $user = $user ?: OscampusFactory::getUser();
+
+        return in_array($this->access, $user->getAuthorisedViewLevels());
     }
 }

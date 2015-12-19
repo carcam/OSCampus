@@ -45,7 +45,7 @@ abstract class OscLesson
         }
 
         $user = JFactory::getUser();
-        if (in_array($lesson->access, $user->getAuthorisedViewLevels())) {
+        if ($lesson->isAuthorised()) {
             $query         = OscampusRoute::getInstance()->getQuery('pathways');
             $query['view'] = 'lesson';
             $query['cid']  = $lesson->courses_id;
@@ -61,7 +61,7 @@ abstract class OscLesson
 
         } else {
             // @TODO: Determine link for inaccessible lessons
-            $link = 'javascript:alert(\'under construction\');';
+            $link = 'javascript:alert(\'This lesson is not authorized - where should we go?\');';
         }
 
         if ($uriOnly) {

@@ -27,6 +27,11 @@ class OscampusViewLesson extends OscampusViewSite
         $this->model  = $this->getModel();
         $this->lesson = $this->model->getItem();
 
+        if (!$this->lesson->isAuthorised()) {
+            echo '<p>' . $this->lesson->title . ' is not accessible. We haven\'t determined what to do here yet</p>';
+            return;
+        }
+
         $pathway = JFactory::getApplication()->getPathway();
 
         $cid = $this->lesson->courses_id;

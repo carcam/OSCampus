@@ -8,6 +8,7 @@
 
 namespace Oscampus;
 
+use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
 
@@ -171,6 +172,20 @@ class Lesson extends AbstractBase
                 return;
             }
         }
+    }
+
+    /**
+     * Wrapper to pass request to properties class.
+     *
+     * See: \Oscampus\Lesson\Properties::isAuthorised()
+     *
+     * @param JUser $user
+     *
+     * @return bool
+     */
+    public function isAuthorised(JUser $user = null)
+    {
+        return $this->current->isAuthorised($user);
     }
 
     public function render()
