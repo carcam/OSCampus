@@ -428,10 +428,6 @@ class OscampusControllerImport extends OscampusControllerBase
                                 }
                                 $lesson->footer .= $mediaItem->content;
                                 break;
-
-                            default:
-                                $lesson->header .= "Guru Import Warning: Layout {$mediaItem->layout}, Unknown media type '{$mediaItem->type}'\n";
-                                break;
                         }
                         break;
 
