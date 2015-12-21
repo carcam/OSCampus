@@ -15,28 +15,24 @@ defined('_JEXEC') or die();
  */
 
 ?>
-
 <div class="osc-container oscampus-quiz" id="oscampus">
-    <?php
-    echo $this->loadNavigation();
-    echo $this->lesson->render();
-    ?>
-    <div class="osc-section osc-quiz-details">
-        <div class="block4">
-            <?php //echo $quiz->startTimer(); ?>
-        </div>
-        <div class="block8">
-            <div class="osc-quiz-right">
-                <strong>Quiz time limit:</strong>
-                <strong class="osc-positive-color"><?php //echo (int)$quiz->timelimit; ?></strong> minutes
-                <br/>
-                <strong>Minimum score to pass this quiz:</strong>
-                <strong class="osc-positive-color"><?php //echo $quiz->score . '%'; ?></strong>
-                <br/>
-            </div>
-        </div>
+    <div class="osc-section osc-lesson-links">
+        <?php echo $this->loadNavigation(); ?>
     </div>
-    <!-- .osc-section -->
 
-    <?php //echo $this->loadTemplate('form'); ?>
+    <?php if ($this->lesson->header) : ?>
+        <div class="osc-section oscampus-lesson-header">
+            <?php echo $this->lesson->header; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="osc-section oscampus-lesson-content">
+        <?php echo $this->lesson->render(); ?>
+    </div>
+
+    <?php if ($this->lesson->footer) : ?>
+        <div class="osc-section oscampus-lesson-footer">
+            <?php echo $this->lesson->footer; ?>
+        </div>
+    <?php endif; ?>
 </div>
