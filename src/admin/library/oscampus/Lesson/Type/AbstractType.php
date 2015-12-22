@@ -25,4 +25,9 @@ abstract class AbstractType
     }
 
     abstract public function render();
+
+    public function __toString()
+    {
+        return get_class($this);
+    }
 }
