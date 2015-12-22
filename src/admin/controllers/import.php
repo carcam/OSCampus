@@ -444,11 +444,11 @@ class OscampusControllerImport extends OscampusControllerBase
                             ? $questions[$mediaItem->quiz_id] : array();
 
                         $content = array(
-                            'score'     => $mediaItem->quiz_passing_score,
-                            'select'    => $mediaItem->quiz_question_count,
-                            'timelimit' => $mediaItem->quiz_timelimit,
-                            'alert_end' => $mediaItem->quiz_alert_end,
-                            'questions' => $quizQuestions
+                            'passingScore' => $mediaItem->quiz_passing_score,
+                            'quizLength'   => $mediaItem->quiz_question_count,
+                            'timeLimit'    => $mediaItem->quiz_timelimit,
+                            'limitAlert'   => $mediaItem->quiz_alert_end,
+                            'questions'    => $quizQuestions
                         );
 
                         $lesson->content = json_encode($content);
@@ -495,26 +495,30 @@ class OscampusControllerImport extends OscampusControllerBase
         $list           = $dbGuru->setQuery($questionsQuery)->loadObjectList();
         $questions      = array();
         foreach ($list as $question) {
-            $choices = array();
+            $answers = array();
             $correct = array_filter(explode('|', $question->answers));
             $correct = array_map('intval', $correct);
             for ($a = 1; $a <= 10; $a++) {
                 $f = "a{$a}";
                 if (!empty($question->$f)) {
-                    $choice    = array(
+                    $answer        = array(
                         'correct' => (int)in_array($a, $correct),
                         'text'    => stripslashes($question->$f)
                     );
-                    $choices[] = $choice;
+                    $key           = md5($answer['text']);
+                    $answers[$key] = $answer;
                 }
             }
 
             if (!isset($questions[$question->qid])) {
                 $questions[$question->qid] = array();
             }
-            $questions[$question->qid][] = array(
-                'text'    => stripslashes($question->text),
-                'choices' => $choices
+
+            $text                            = stripslashes($question->text);
+            $key                             = md5($text);
+            $questions[$question->qid][$key] = array(
+                'text'    => $text,
+                'answers' => $answers
             );
         }
 
