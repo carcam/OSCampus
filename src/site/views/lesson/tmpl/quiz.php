@@ -18,8 +18,28 @@ $questions = $quiz->getQuestions();
 
 ?>
 <div class="osc-container oscampus-quiz" id="oscampus">
-    <div class="osc-section osc-lesson-links">
-        <?php echo $this->loadNavigation(); ?>
+    <div class="osc-section">
+        <h1 style="float: left; margin: 0;"><?php echo $this->lesson->title; ?></h1>
+        <div class="osc-lesson-links">
+            <?php echo $this->loadNavigation(); ?>
+        </div>
+    </div>
+
+    <div class="osc-section" style="text-align: center; margin: 15px;">
+        <div class="block4">
+            <div id="oscampus-timer">
+                <div class="oscampus-timer-header" style="margin-bottom: 5px;">
+                    <?php echo JText::_('COM_OSCAMPUS_QUIZ_TIME_LEFT'); ?>
+                </div>
+                <div class="oscampus-timer-countdown" style="font-size: 50px;">
+                    10:00
+                </div>
+            </div>
+        </div>
+        <div class="block4">
+            <span style="font-weight: bold;"><?php echo JText::_('COM_OSCAMPUS_QUIZ_PASSING_SCORE'); ?></span>
+            <?php echo $quiz->passingScore . '%'; ?>
+        </div>
     </div>
 
     <?php if ($this->lesson->header) : ?>
@@ -35,7 +55,7 @@ $questions = $quiz->getQuestions();
             foreach ($questions as $qkey => $question):
                 ?>
                 <li class="<?php echo 'question' . ($qn++ % 2); ?>">
-                    <span><?php echo sprintf('Q%s: %s', $qn, $question->text);?></span>
+                    <span><?php echo sprintf('Q%s: %s', $qn, $question->text); ?></span>
                     <ul>
                         <?php
                         $an = 0;
