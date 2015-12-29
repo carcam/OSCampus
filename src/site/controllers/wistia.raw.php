@@ -6,8 +6,8 @@
  * @license
  */
 
-use Oscampus\Wistia\ApiData;
-use Oscampus\Wistia\Download;
+use Oscampus\Lesson\Type\Wistia\ApiData;
+use Oscampus\Lesson\Type\Wistia\Download;
 
 defined('_JEXEC') or die();
 
@@ -15,58 +15,30 @@ class OscampusControllerWistia extends OscampusControllerBase
 {
     public function download()
     {
-        $user = JFactory::getUser();
+        $this->checkToken();
+
+        $user = OscampusFactory::getUser();
 
         // Only usable by authorised users
         if (!$user->authorise('video.download', 'com_oscampus')) {
             throw new Exception(JText::_('JERROR_ALERTNOAUTHOR', 401));
         }
 
-        if (!JSession::checkToken()) {
-            throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 401);
+        // Check for over download limit
+        $download = new Download();
+        if ($download->userExceededLimit($user)) {
+            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $download->period), 401);
         }
 
-        $app = JFactory::getApplication();
-        $db  = JFactory::getDbo();
-
-        // Look for an ID
-        $id = $app->input->getAlnum('id', null);
-
+        $app = OscampusFactory::getApplication();
+        $id  = $app->input->getAlnum('id', null);
         if (empty($id)) {
-            throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOARGS'), 500);
+            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ARG', 'id'), 500);
         }
-
-        $params = JComponentHelper::getParams('com_oscampus');
-
-        if (Download::checkUserExceededDownloadLimit($user->id)) {
-            throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_DOWNLOAD_LIMIT', $downloadLimitPeriod), 401);
-        }
-
-        // Load the Data API
-        $apikey = $params->get('wistia.apikey');
-        if (empty($apikey)) {
-            throw new Exception(JText::_('COM_OSWISTIA_ERROR_NOAPIKEY'), 500);
-        }
-        $wistia = new ApiData($apikey);
 
         // Load the selected Media resource
-        $media = $wistia->selectAsset($id);
-        if (empty($media) || empty($media->selected)) {
-            throw new Exception(JText::sprintf('COM_OSWISTIA_ERROR_MEDIANOTFOUND', $id), 500);
-        }
+        $download->send($id);
 
-        Download::log($media, $user);
-
-        list(, $extension) = explode('/', $media->selected->contentType);
-
-        // Manually set response headers since Joomla rendering only gets in the way
-        header('Content-Type: ' . $media->selected->contentType);
-        header('Content-Disposition: attachment; filename=' . $media->name . '.' . $extension);
-
-        $ch = curl_init($media->selected->url);
-        curl_exec($ch);
-        curl_close($ch);
-
-        jexit();
+        throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_DOWNLOAD_FAILED'));
     }
 }

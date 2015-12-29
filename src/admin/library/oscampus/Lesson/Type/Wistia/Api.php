@@ -5,9 +5,12 @@
  * @copyright  2015 Open Source Training, LLC. All rights reserved
  * @license
  */
-namespace Oscampus\Wistia;
 
+namespace Oscampus\Lesson\Type\Wistia;
+
+use Exception;
 use JLog;
+use JText;
 
 defined('_JEXEC') or die();
 
@@ -18,7 +21,7 @@ defined('_JEXEC') or die();
  *
  * See http://wistia.com/doc/data-api
  */
-class ApiData
+class Api
 {
     const BASE_URL  = 'https://api.wistia.com/v1/';
     const USER_NAME = 'api';
@@ -36,10 +39,20 @@ class ApiData
     protected $cache = array();
 
     /**
-     * @param string $apiKey
+     * @var Video
      */
-    public function __construct($apiKey = null)
+    protected $video = null;
+
+    /**
+     * @param string $apiKey
+     *
+     * @throws Exception
+     */
+    public function __construct($apiKey)
     {
+        if (empty($apiKey)) {
+            throw new Exception(JText::_('COM_OSCAMPUS_WISTIA_ERROR_NOAPIKEY'), 500);
+        }
         $this->apiKey = $apiKey;
     }
 
@@ -57,14 +70,13 @@ class ApiData
     }
 
     /**
-     * Get all video details
+     * Get all base video details
      *
-     * @param int $id
-     *            Wistia identifier for a video can be hashed or not
+     * @param int $id Wistia identifier for a video can be hashed or not
      *
-     * @return object Video
+     * @return object
      */
-    public function mediaShow($id = null)
+    protected function getMedia($id = null)
     {
         if (empty($this->cache['media'][$id])) {
             if (!array_key_exists('media', $this->cache)) {
@@ -78,34 +90,28 @@ class ApiData
     /**
      * Select a single media asset from what is available for the specified ID.
      *
-     * @param       $id
-     *              The ID of the media desired
-     * @param int   $minwidth
-     *              The minimum width for an asset to be selected
-     * @param int   $minheight
-     *              The minimu height for an asset to be selected
-     * @param array $types
-     *              Array of mime types that allow for an asset to be selected
+     * @param string $id        The ID of the media desired
+     * @param int    $minWidth  The minimum width for an asset to be selected
+     * @param int    $minHeight The minimu height for an asset to be selected
+     * @param array  $types     Array of mime types that allow for an asset to be selected
      *
-     * @return object
+     * @return Video
      */
-    public function selectAsset($id, $minwidth = 0, $minheight = 0, $types = array('video/mp4'))
+    public function getVideo($id, $minWidth = 0, $minHeight = 0, $types = array('video/mp4'))
     {
-        if ($media = $this->mediaShow($id)) {
-            $media->selected = null;
+        if ($media = $this->getMedia($id)) {
             // Look for an asset that's within spec
-            foreach ($media->assets as $asset) {
+            foreach ($media->assets as $index => $asset) {
                 if (in_array($asset->contentType, $types)) {
-                    if ($asset->width >= $minwidth && $asset->height >= $minheight) {
-                        $media->selected = $asset;
-                        $minwidth        = max($asset->width, $minwidth);
-                        $minheight       = max($asset->height, $minheight);
+                    if ($asset->width >= $minWidth && $asset->height >= $minHeight) {
+                        $video = new Video($media, $index);
+                        return $video;
                     }
                 }
             }
 
         }
-        return $media;
+        return null;
     }
 
     /**
