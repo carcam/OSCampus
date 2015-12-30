@@ -109,13 +109,9 @@ class Wistia extends AbstractType
 
                 $js = <<< JSCRIPT
 <script>
-(function($) {
     wistiaEmbed.ready(function() {
-        $.Oscampus.wistia.addExtraControls({$options});
-        $.Oscampus.wistia.moveNavigationButtons();
-        $.Oscampus.wistia.fixVolumeBug();
+        jQuery.Oscampus.wistia.init({$options});
     });
-})(jQuery);
 </script>
 JSCRIPT;
                 return $js;

@@ -6,17 +6,12 @@
  * @license
  */
 
-use Oscampus\Wistia\Download;
+use Oscampus\Lesson\Type\Wistia\Download;
 
 defined('_JEXEC') or die();
 
 class OscampusControllerWistia extends OscampusControllerJson
 {
-    public function test()
-    {
-        echo json_encode('testing JSON Controller');
-    }
-
     /**
      * Toggle the autoplay state
      *
@@ -52,12 +47,9 @@ class OscampusControllerWistia extends OscampusControllerJson
      */
     public function setVolumeLevel()
     {
-        $app = JFactory::getApplication();
+        $level = JFactory::getApplication()->input->get('level', 1);
 
-        $level = $app->input->get('level', 1);
-
-        $session = JFactory::getSession();
-        $session->set('oscampus.video.volume', $level);
+        JFactory::getSession()->set('oscampus.video.volume', $level);
 
         echo json_encode((float)$level);
     }
@@ -68,30 +60,21 @@ class OscampusControllerWistia extends OscampusControllerJson
     public function downloadLimit()
     {
         $user = JFactory::getUser();
+        $download = new Download();
 
         $result = array(
-            'authorised' => true,
-            'period'     => null,
-            'error'      => null
+            'authorised' => false,
+            'period'     => JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $download->period),
+            'error'      => JText::_('JERROR_ALERTNOAUTHOR')
         );
 
         // Only usable by authorised users
         if (!$user->authorise('video.download', 'com_oscampus')) {
             $result['authorised'] = false;
             $result['error']      = JText::_('JERROR_ALERTNOAUTHOR');
-        }
 
-        $app    = JFactory::getApplication();
-        $params = JComponentHelper::getParams('com_oscampus');
-
-        $limitPeriod = (int)$params->get('videos.downloadLimitPeriod', 7);
-
-        $result['period'] = JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $limitPeriod);
-
-        if (Download::checkUserExceededDownloadLimit($user->id)) {
+        } elseif ($download->userExceededLimit()) {
             $result['authorised'] = false;
-
-            $period = JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $limitPeriod);
             $result['error'] = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
         }
 
