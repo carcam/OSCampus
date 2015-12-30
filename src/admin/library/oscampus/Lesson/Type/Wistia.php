@@ -75,7 +75,7 @@ class Wistia extends AbstractType
 
         $embed = new WistiaEmbed($this->id, $params);
 
-        return $embed->toString(); // . $this->setControls();
+        return $embed->toString() . $this->setControls();
     }
 
     /**
@@ -83,36 +83,32 @@ class Wistia extends AbstractType
      */
     protected function setControls()
     {
-        $user       = OscampusFactory::getUser();
-        $authorised = $user->authorise('video.control', 'com_oscampus');
-        if ($authorised) {
-            JHtml::_('script', 'com_oscampus/utilities.js', false, true);
-            JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+        $user   = OscampusFactory::getUser();
+        $device = OscampusFactory::getContainer()->device;
 
-            $device = OscampusFactory::getContainer()->device;
-            if (!$device->isMobile()) {
-                $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
+        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
+        JHtml::_('script', 'com_oscampus/wistia.js', false, true);
 
-                $options = json_encode(
-                    array(
-                        'download' => array(
-                            'authorised' => $authoriseDownload,
-                            'formToken'  => JSession::getFormToken()
-                        )
-                    )
-                );
+        $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
-                $js = <<< JSCRIPT
-<script>
-    wistiaEmbed.ready(function() {
-        jQuery.Oscampus.wistia.init({$options});
-    });
-</script>
-JSCRIPT;
-                return $js;
-            }
-        }
-        return '';
+        $options = json_encode(
+            array(
+                'isMobile' => $device->isMobile(),
+                'download' => array(
+                    'authorised' => $authoriseDownload,
+                    'formToken'  => JSession::getFormToken()
+                )
+            )
+        );
+
+        $js = array(
+            "<script>",
+            "wistiaEmbed.ready(function() {",
+            "    jQuery.Oscampus.wistia.init({$options});",
+            "});",
+            "</script>"
+        );
+        return join("\n", $js);
     }
 
     /**
