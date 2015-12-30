@@ -53,18 +53,19 @@ class Wistia extends AbstractType
         $device  = OscampusFactory::getContainer()->device;
         $params  = clone $oswistia->params;
 
-        $isNotMobile = !$device->isMobile();
-        $focus       = $session->get('oscampus.video.focus', true);
-        $volume      = $session->get('oscampus.video.volume', 1);
-        $authorised  = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
+        $volume     = $session->get('oscampus.video.volume', 1);
+        $authorised = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
 
-        $params->set('plugin-focus', $focus && $isNotMobile);
         $params->set('volume', $volume);
         $params->set('cacheVideoID', $this->id);
 
         if ($authorised) {
-            $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
+            $autoplay    = $session->get('oscampus.video.autoplay', $this->autoplay);
+            $isNotMobile = !$device->isMobile();
+            $focus       = $session->get('oscampus.video.focus', true);
+
             $params->set('autoplay', $autoplay);
+            $params->set('focus', $focus && $isNotMobile);
 
         } else {
             // Block features for non-authorised users
