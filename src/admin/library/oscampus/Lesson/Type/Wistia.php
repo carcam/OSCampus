@@ -36,43 +36,38 @@ class Wistia extends AbstractType
         $content = json_decode($lesson->content);
 
         $this->id       = empty($content->id) ? null : $content->id;
-        $this->autoplay = empty($content->autoplay) ? null : (bool)$content->autoplay;
+        $this->autoplay = empty($content->autoplay) ? true : (bool)$content->autoplay;
     }
 
-    public function render(
-        $cacheVideoID = false,
-        $forceAutoplay = false,
-        $width = null,
-        $height = null
-    ) {
+    public function render()
+    {
         if (!$this->pluginLoaded()) {
             throw new \Exception(\JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
         }
 
-        $session = OscampusFactory::getSession();
-        $device  = OscampusFactory::getContainer()->device;
-
-        $isNotMobile = !$device->isMobile();
-
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
         $oswistia->loadLibrary();
 
-        $params = clone $oswistia->params;
-        $params->set('cacheVideoID', $cacheVideoID);
-        $params->set('autoplay', $session->get('oscampus.video.autoplay', true) || $forceAutoplay);
-        $params->set('plugin-focus', $session->get('oscampus.video.focus', true) && $isNotMobile);
-        $params->set('volume', $session->get('oscampus.video.volume', 1));
+        /** @var \JRegistry $params */
+        $session = OscampusFactory::getSession();
+        $device  = OscampusFactory::getContainer()->device;
+        $params  = clone $oswistia->params;
 
-        if (!is_null($width)) {
-            $params->set('width', $width);
-        }
+        $isNotMobile = !$device->isMobile();
+        $focus       = $session->get('oscampus.video.focus', true);
+        $volume      = $session->get('oscampus.video.volume', 1);
+        $authorised  = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
 
-        if (!is_null($height)) {
-            $params->set('height', $height);
-        }
+        $params->set('plugin-focus', $focus && $isNotMobile);
+        $params->set('volume', $volume);
+        $params->set('cacheVideoID', $this->id);
 
-        // Block features for non authorized users
-        if (!OscampusFactory::getUser()->authorise('video.control', 'com_oscampus')) {
+        if ($authorised) {
+            $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
+            $params->set('autoplay', $autoplay);
+
+        } else {
+            // Block features for non-authorised users
             $params->set('autoplay', false);
             $params->set('focus', false);
             $params->set('captions', false);
@@ -80,13 +75,13 @@ class Wistia extends AbstractType
 
         $embed = new WistiaEmbed($this->id, $params);
 
-        return $embed->toString() . $this->addExtraControls();
+        return $embed->toString(); // . $this->setControls();
     }
 
     /**
      * @return string
      */
-    protected function addExtraControls()
+    protected function setControls()
     {
         $user       = OscampusFactory::getUser();
         $authorised = $user->authorise('video.control', 'com_oscampus');
