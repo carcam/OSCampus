@@ -65,12 +65,12 @@ class Wistia extends AbstractType
             $focus       = $session->get('oscampus.video.focus', true);
 
             $params->set('autoplay', $autoplay);
-            $params->set('focus', $focus && $isNotMobile);
+            $params->set('plugin-focus', $focus && $isNotMobile);
 
         } else {
             // Block features for non-authorised users
             $params->set('autoplay', false);
-            $params->set('focus', false);
+            $params->set('plugin-focus', false);
             $params->set('captions', false);
         }
 
