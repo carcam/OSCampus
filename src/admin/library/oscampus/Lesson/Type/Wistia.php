@@ -94,7 +94,7 @@ class Wistia extends AbstractType
 
         $options = json_encode(
             array(
-                'isMobile' => $device->isMobile(),
+                'extras' => !$device->isMobile(),
                 'download' => array(
                     'authorised' => $authoriseDownload,
                     'formToken'  => JSession::getFormToken()

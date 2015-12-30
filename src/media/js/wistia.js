@@ -1,6 +1,6 @@
 (function($) {
     $.extend($.fn, {
-        updateIcon: function(waiting) {
+        spinnerIcon: function(waiting) {
             var data = $(this).data();
 
             if (data.icon) {
@@ -33,7 +33,7 @@
     $.Oscampus = $.extend({}, $.Oscampus, {
         wistia: {
             options: {
-                isMobile: false,
+                extras: false,
                 download: {
                     authorised: false,
                     formToken : null
@@ -44,9 +44,11 @@
                 options = $.extend(this.options, options);
 
                 this.moveNavigationButtons();
-                this.addExtraControls(options);
-
                 this.saveVolumeChange();
+
+                if (options.extras) {
+                    this.addExtraControls(options);
+                }
             },
 
             /**
@@ -138,7 +140,7 @@
                     .text('Autoplay')
                     .prepend(icon)
                     .on('click', function(event) {
-                        $(this).updateIcon(true);
+                        $(this).spinnerIcon(true);
                         $.Oscampus.ajax({
                             context: this,
                             data   : {
@@ -154,13 +156,13 @@
                                     $(wistiaEmbed).trigger('autoplaydisabled');
                                 }
 
-                                $(this).updateIcon();
+                                $(this).spinnerIcon();
                             }
                         })
                     });
 
                 container.append(button);
-                button.updateIcon();
+                button.spinnerIcon();
             },
 
             /**
@@ -183,7 +185,7 @@
                     .text('Focus')
                     .prepend(icon)
                     .on('click', function(event) {
-                        button.updateIcon(true);
+                        button.spinnerIcon(true);
                         $.Oscampus.ajax({
                             data   : {
                                 task: 'wistia.toggleFocusState'
@@ -201,12 +203,12 @@
                                     $(wistiaEmbed).trigger('focusdisabled');
                                 }
 
-                                $(this).updateIcon();
+                                $(this).spinnerIcon();
                             }
                         });
                     });
 
-                button.updateIcon();
+                button.spinnerIcon();
                 container.append(button);
 
                 // Fix the focus on play
