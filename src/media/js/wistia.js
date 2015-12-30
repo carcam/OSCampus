@@ -33,7 +33,7 @@
     $.Oscampus = $.extend({}, $.Oscampus, {
         wistia: {
             options: {
-                extras: false,
+                extras  : false,
                 download: {
                     authorised: false,
                     formToken : null
@@ -41,13 +41,15 @@
             },
 
             init: function(options) {
-                options = $.extend(this.options, options);
+                options = $.extend({}, this.options, options);
+
+                this.createButton({name: 'focus', title: 'Focus'});
 
                 this.moveNavigationButtons();
                 this.saveVolumeChange();
 
                 if (options.extras) {
-                    this.addExtraControls(options);
+                this.addExtraControls(options);
                 }
             },
 
@@ -116,6 +118,7 @@
                     .addClass('osc-lesson-options osc-btn-group');
                 $(wistiaEmbed.grid.top_inside).append(container);
 
+                //this.buttonDownload(container);
                 this.buttonAutoplay(container);
                 this.buttonFocus(container);
             },
@@ -126,40 +129,27 @@
              * @param container
              */
             buttonAutoplay: function(container) {
-                var button = $('<div>'),
-                    icon   = $('<i class="fa">');
+                var button = this.createButton('autoPlay', 'Autoplay', function(event) {
+                    $(this).spinnerIcon(true);
+                    $.Oscampus.ajax({
+                        context: this,
+                        data   : {
+                            task: 'wistia.toggleAutoPlayState'
+                        },
+                        success: function(state) {
+                            wistiaEmbed.options.autoPlay = state;
+                            wistiaEmbed.params.autoplay = state;
 
-                button
-                    .data({
-                        icon  : icon,
-                        option: 'autoPlay'
-                    })
-                    .attr('id', wistiaEmbed.uuid + '_autoplay_button')
-                    .addClass('osc-btn autoplay')
-                    .attr('title', 'Autoplay')
-                    .text('Autoplay')
-                    .prepend(icon)
-                    .on('click', function(event) {
-                        $(this).spinnerIcon(true);
-                        $.Oscampus.ajax({
-                            context: this,
-                            data   : {
-                                task: 'wistia.toggleAutoPlayState'
-                            },
-                            success: function(state) {
-                                wistiaEmbed.options.autoPlay = state;
-                                wistiaEmbed.params.autoplay = state;
-
-                                if (state) {
-                                    $(wistiaEmbed).trigger('autoplayenabled');
-                                } else {
-                                    $(wistiaEmbed).trigger('autoplaydisabled');
-                                }
-
-                                $(this).spinnerIcon();
+                            if (state) {
+                                $(wistiaEmbed).trigger('autoplayenabled');
+                            } else {
+                                $(wistiaEmbed).trigger('autoplaydisabled');
                             }
-                        })
-                    });
+
+                            $(this).spinnerIcon();
+                        }
+                    })
+                });
 
                 container.append(button);
                 button.spinnerIcon();
@@ -171,42 +161,29 @@
              * @param container
              */
             buttonFocus: function(container) {
-                var button = $('<div>'),
-                    icon   = $('<i class="fa">');
+                var button = this.createButton('focus', 'Focus', function(event) {
+                    $(this).spinnerIcon(true);
+                    $.Oscampus.ajax({
+                        data   : {
+                            task: 'wistia.toggleFocusState'
+                        },
+                        context: this,
+                        success: function(state) {
+                            wistiaEmbed.options.focus = state;
+                            wistiaEmbed.params.focus = state;
 
-                button
-                    .data({
-                        icon    : icon,
-                        'option': 'focus'
-                    })
-                    .attr('id', wistiaEmbed.uuid + '_focus_button')
-                    .addClass('osc-btn focus')
-                    .attr('title', 'Focus')
-                    .text('Focus')
-                    .prepend(icon)
-                    .on('click', function(event) {
-                        button.spinnerIcon(true);
-                        $.Oscampus.ajax({
-                            data   : {
-                                task: 'wistia.toggleFocusState'
-                            },
-                            context: this,
-                            success: function(state) {
-                                wistiaEmbed.options.focus = state;
-                                wistiaEmbed.params.focus = state;
-
-                                if (state) {
-                                    wistiaEmbed.plugin['dimthelights'].dim();
-                                    $(wistiaEmbed).trigger('focusenabled');
-                                } else {
-                                    wistiaEmbed.plugin['dimthelights'].undim();
-                                    $(wistiaEmbed).trigger('focusdisabled');
-                                }
-
-                                $(this).spinnerIcon();
+                            if (state) {
+                                wistiaEmbed.plugin['dimthelights'].dim();
+                                $(wistiaEmbed).trigger('focusenabled');
+                            } else {
+                                wistiaEmbed.plugin['dimthelights'].undim();
+                                $(wistiaEmbed).trigger('focusdisabled');
                             }
-                        });
+
+                            $(this).spinnerIcon();
+                        }
                     });
+                });
 
                 button.spinnerIcon();
                 container.append(button);
@@ -298,6 +275,26 @@
                 }
                 container.append(buttonDownload);
 
+            },
+
+            createButton: function(name, title, action) {
+                var button = $('<div>'),
+                    icon   = $('<i class="fa">'),
+                    id     = wistiaEmbed.uuid + '_' + name + '_button';
+
+                button
+                    .data({
+                        icon  : icon,
+                        option: name
+                    })
+                    .attr('id', id)
+                    .addClass('osc-btn ' + name)
+                    .attr('title', title)
+                    .text(title)
+                    .prepend(icon)
+                    .on('click', action);
+
+                return button;
             },
 
             noauthOverlay: function(container) {
