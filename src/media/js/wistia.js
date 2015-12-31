@@ -33,17 +33,15 @@
     $.Oscampus = $.extend({}, $.Oscampus, {
         wistia: {
             options: {
-                extras  : false,
-                download: {
-                    authorised: false,
-                    formToken : null
+                extras   : false,
+                formToken: null,
+                download : {
+                    authorised: false
                 }
             },
 
             init: function(options) {
-                options = $.extend({}, this.options, options);
-
-                this.createButton({name: 'focus', title: 'Focus'});
+                options = $.extend(true, {}, this.options, options);
 
                 this.moveNavigationButtons();
                 this.saveVolumeChange();
@@ -118,7 +116,7 @@
                     .addClass('osc-lesson-options osc-btn-group');
                 $(wistiaEmbed.grid.top_inside).append(container);
 
-                //this.buttonDownload(container);
+                this.buttonDownload(container, options);
                 this.buttonAutoplay(container);
                 this.buttonFocus(container);
             },
@@ -220,69 +218,75 @@
                 });
             },
 
-            buttonDownload: function(container) {
-                var button = $('<div>');
-                button
-                    .attr('id', wistiaEmbed.uuid + '_download_button')
-                    .addClass('download osc-btn')
-                    .attr('title', 'Download')
-                    .text('Download')
-                    .prepend($('<i class="fa fa-cloud-download">'))
-                    .on('click', function(event) {
-                        if (options.download.authorised) {
-                            wistiaEmbed.pause();
+            buttonDownload: function(container, options) {
+                options = $.extend({}, this.options, options);
 
-                            // Get the download limit information
+                var button = this.createButton('download', 'Download');
+                button.data('icon').addClass('fa-cloud-download');
 
-                            $.Oscampus.ajax({
-                                data   : {
-                                    task: 'wistia.downloadLimit'
-                                },
-                                success: function(data) {
-                                    if (data.authorised) {
-                                        var formId = 'formDownload-' + wistiaEmbed.hashedId();
-                                        var form = $("#" + formId);
-                                        if (form.length == 0) {
-                                            var query = {
-                                                option: 'com_oscampus',
-                                                task  : 'wistia.download',
-                                                id    : wistiaEmbed.hashedId(),
-                                                format: 'raw'
-                                            };
-
-                                            form = $('<form>').attr({
-                                                id    : formId,
-                                                method: 'POST',
-                                                action: 'index.php?' + $.param(query)
-                                            });
-
-                                            if (options.download.formToken) {
-                                                var tokenField = $('<input type="hidden">')
-                                                    .attr('name', options.download.formToken)
-                                                    .val(1);
-                                                form.append(tokenField);
-                                            }
-
-                                            form.css('osc-visible', 'osc-hidden');
-                                            $('body').append(form);
-                                        }
-                                        form.submit();
-
-                                    } else {
-                                    }
-                                }
-                            });
-
-                        } else {
-                            wistiaEmbed.pause();
-                            alert('testing');
-                        }
-                    });
                 if (!options.download.authorised) {
-                    buttonDownload.addClass('osc-off');
+                    button.addClass('osc-off');
                 }
-                container.append(buttonDownload);
 
+                button.on('click', function(event) {
+                    if (options.download.authorised) {
+                        wistiaEmbed.pause();
+
+                        // Get the download limit information
+                        $.Oscampus.ajax({
+                            data   : {
+                                task: 'wistia.downloadLimit'
+                            },
+                            success: function(response) {
+                                if (response.authorised) {
+                                    var formId = 'formDownload-' + wistiaEmbed.hashedId();
+                                    var form = $("#" + formId);
+
+                                    if (form.length == 0) {
+                                        form = $('<form>');
+
+                                        var query = {
+                                            option: 'com_oscampus',
+                                            task  : 'wistia.download',
+                                            id    : wistiaEmbed.hashedId(),
+                                            format: 'raw'
+                                        };
+
+                                        form.attr({
+                                            id    : formId,
+                                            method: 'POST',
+                                            action: 'index.php?' + $.param(query)
+                                        });
+
+                                        if (options.formToken) {
+                                            var tokenField = $('<input>');
+                                            tokenField.attr({
+                                                type : 'hidden',
+                                                name : options.formToken,
+                                                value: 1
+                                            });
+                                            form.append(tokenField);
+                                        }
+
+                                        $('body').append(form);
+                                    }
+                                    form.submit();
+
+                                } else {
+                                    alert('Under Construction: over limit');
+                                    // Overlay for too many downloads
+                                }
+                            }
+                        });
+
+                    } else {
+                        // Overlay for noauth and link to upgrade page
+                        wistiaEmbed.pause();
+                        alert('Under Construction: Not Authorised');
+                    }
+                });
+
+                container.append(button);
             },
 
             createButton: function(name, title) {
