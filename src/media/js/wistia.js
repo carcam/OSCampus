@@ -49,7 +49,7 @@
                 this.saveVolumeChange();
 
                 if (options.extras) {
-                this.addExtraControls(options);
+                    this.addExtraControls(options);
                 }
             },
 
@@ -129,30 +129,34 @@
              * @param container
              */
             buttonAutoplay: function(container) {
-                var button = this.createButton('autoPlay', 'Autoplay', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        context: this,
-                        data   : {
-                            task: 'wistia.toggleAutoPlayState'
-                        },
-                        success: function(state) {
-                            wistiaEmbed.options.autoPlay = state;
-                            wistiaEmbed.params.autoplay = state;
+                var button = this.createButton('autoplay', 'Autoplay')
 
-                            if (state) {
-                                $(wistiaEmbed).trigger('autoplayenabled');
-                            } else {
-                                $(wistiaEmbed).trigger('autoplaydisabled');
+                button
+                    .data('option', 'autoPlay')
+                    .on('click', function(event) {
+                        $(this).spinnerIcon(true);
+                        $.Oscampus.ajax({
+                            context: this,
+                            data   : {
+                                task: 'wistia.toggleAutoPlayState'
+                            },
+                            success: function(state) {
+                                wistiaEmbed.options.autoPlay = state;
+                                wistiaEmbed.params.autoplay = state;
+
+                                if (state) {
+                                    $(wistiaEmbed).trigger('autoplayenabled');
+                                } else {
+                                    $(wistiaEmbed).trigger('autoplaydisabled');
+                                }
+
+                                $(this).spinnerIcon();
                             }
+                        })
+                    });
 
-                            $(this).spinnerIcon();
-                        }
-                    })
-                });
-
+                button.spinnerIcon()
                 container.append(button);
-                button.spinnerIcon();
             },
 
             /**
@@ -161,31 +165,35 @@
              * @param container
              */
             buttonFocus: function(container) {
-                var button = this.createButton('focus', 'Focus', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        data   : {
-                            task: 'wistia.toggleFocusState'
-                        },
-                        context: this,
-                        success: function(state) {
-                            wistiaEmbed.options.focus = state;
-                            wistiaEmbed.params.focus = state;
+                var button = this.createButton('focus', 'Focus');
 
-                            if (state) {
-                                wistiaEmbed.plugin['dimthelights'].dim();
-                                $(wistiaEmbed).trigger('focusenabled');
-                            } else {
-                                wistiaEmbed.plugin['dimthelights'].undim();
-                                $(wistiaEmbed).trigger('focusdisabled');
+                button
+                    .data('option', 'focus')
+                    .on(function(event) {
+                        $(this).spinnerIcon(true);
+                        $.Oscampus.ajax({
+                            data   : {
+                                task: 'wistia.toggleFocusState'
+                            },
+                            context: this,
+                            success: function(state) {
+                                wistiaEmbed.options.focus = state;
+                                wistiaEmbed.params.focus = state;
+
+                                if (state) {
+                                    wistiaEmbed.plugin['dimthelights'].dim();
+                                    $(wistiaEmbed).trigger('focusenabled');
+                                } else {
+                                    wistiaEmbed.plugin['dimthelights'].undim();
+                                    $(wistiaEmbed).trigger('focusdisabled');
+                                }
+
+                                $(this).spinnerIcon();
                             }
-
-                            $(this).spinnerIcon();
-                        }
+                        });
                     });
-                });
 
-                button.spinnerIcon();
+                button.spinnerIcon()
                 container.append(button);
 
                 // Fix the focus on play
@@ -277,22 +285,18 @@
 
             },
 
-            createButton: function(name, title, action) {
+            createButton: function(name, title) {
                 var button = $('<div>'),
                     icon   = $('<i class="fa">'),
                     id     = wistiaEmbed.uuid + '_' + name + '_button';
 
                 button
-                    .data({
-                        icon  : icon,
-                        option: name
-                    })
+                    .data('icon', icon)
                     .attr('id', id)
                     .addClass('osc-btn ' + name)
                     .attr('title', title)
                     .text(title)
-                    .prepend(icon)
-                    .on('click', action);
+                    .prepend(icon);
 
                 return button;
             },
