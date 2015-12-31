@@ -63,9 +63,9 @@ class OscampusControllerWistia extends OscampusControllerJson
         $download = new Download();
 
         $result = array(
-            'authorised' => false,
+            'authorised' => true,
             'period'     => JText::plural('COM_OSCAMPUS_VIDEO_DOWNLOAD_LIMIT_PERIOD', $download->period),
-            'error'      => JText::_('JERROR_ALERTNOAUTHOR')
+            'error'      => null
         );
 
         // Only usable by authorised users
