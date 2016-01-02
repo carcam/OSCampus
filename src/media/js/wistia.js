@@ -167,7 +167,7 @@
 
                 button
                     .data('option', 'focus')
-                    .on(function(event) {
+                    .on('click', function(event) {
                         $(this).spinnerIcon(true);
                         $.Oscampus.ajax({
                             data   : {
