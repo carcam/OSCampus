@@ -1,20 +1,35 @@
 (function($) {
     $.extend($.fn, {
+        /**
+         * Toggle a spinner icon with a base icon.
+         * Uses the data store to determine behaviors and requires wistiaEmbed initialised
+         * {
+         *    {jQuery} icon     : the html element displaying the icon
+         *    {string} option   : the wistiaEmbed option to determined enabled/disabled
+         *    {string} disabled : The icon to use when option is disabled
+         *    {string} enabled  : The icon to use when option is enabled
+         * }
+         *
+         * @param {bool} waiting
+         *
+         * @returns {jQuery}
+         */
         spinnerIcon: function(waiting) {
-            var data = $(this).data();
+            var data          = $(this).data(),
+                wistiaOptions = wistiaEmbed.options || null;
 
-            if (data.icon) {
-                var disabled      = data.disabled || 'fa-square-o',
-                    enabled       = data.enabled || 'fa-check-square',
-                    option        = data.option || 'generic',
-                    wistiaOptions = wistiaEmbed.options || null;
+            if (data.icon && wistiaOptions) {
+                var disabled = data.disabled || 'fa-square-o',
+                    enabled  = data.enabled || 'fa-check-square',
+                    option   = data.option || 'generic';
 
                 if (waiting) {
                     data.icon
                         .removeClass(disabled)
                         .removeClass(enabled)
                         .addClass('fa-spinner fa-spin');
-                } else {
+                }
+                else {
                     data.icon.removeClass('fa-spinner fa-spin');
 
                     if (!wistiaOptions.hasOwnProperty(option) || wistiaOptions[option]) {
@@ -43,6 +58,11 @@
                 }
             },
 
+            /**
+             * Initialise all custom video functions
+             *
+             * @param options
+             */
             init: function(options) {
                 options = $.extend(true, {}, this.options, options);
 
@@ -52,6 +72,153 @@
                 if (options.extras) {
                     this.addExtraControls(options);
                 }
+
+                this.fullScreen.init();
+            },
+
+            /**
+             * Fullscreen switching event handling
+             */
+            fullScreen: {
+                init: function() {
+                    this.replaceNative();
+                    //this.setNavigation();
+                },
+
+                /**
+                 * Replaces the native fullscreen button
+                 */
+                replaceNative: function() {
+                    var oldButton = $('[id^=wistia_fullscreenButton_]'),
+                        newButton = oldButton.clone();
+
+                    newButton
+                        .addClass('custom')
+                        .css({
+                            width : '50px',
+                            height: '32px',
+                            right : 0
+                        });
+
+                    oldButton
+                        .after(newButton)
+                        .remove();
+
+                    wistiaEmbed.grid.center.addEventListener('mouseenter', function(evt) {
+                        newButton.removeClass('wistia_romulus_hidden');
+                        newButton.addClass('wistia_romulus_visible');
+                    });
+
+                    wistiaEmbed.grid.center.addEventListener('mouseleave', function(evt) {
+                        newButton.removeClass('wistia_romulus_visible');
+                        newButton.addClass('wistia_romulus_hidden');
+                    });
+
+                    newButton.on('click', function() {
+                        if (screenfull.enabled) {
+                            if (screenfull.isFullscreen) {
+                                screenfull.exit();
+                            } else {
+                                screenfull.request($('main')[0]);
+                            }
+                        }
+                    });
+
+                    // Replace the native fullscreen mode
+                    wistiaEmbed.fullscreenButton = newButton[0];
+                    wistiaEmbed.requestFullscreen = function() {
+                        newButton.trigger('click');
+                    };
+
+                    if (screenfull.enabled) {
+                        document.addEventListener(screenfull.raw.fullscreenchange, function() {
+                            if (!screenfull.isFullscreen) {
+                                // Restore the video size
+                                var hashedId = wistiaEmbed.hashedId();
+                                var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
+                                elems.css('width', '100%');
+                                elems.css('height', '100%');
+                                $('body').removeClass('fullscreen');
+                            } else {
+                                $('body').addClass('fullscreen');
+                            }
+                        });
+
+                        document.addEventListener(screenfull.raw.fullscreenerror, function(event) {
+                            console.error('Failed to enable fullscreen', event);
+                        });
+                    }
+                },
+
+                setNavigation: function() {
+                    var next_type = $('#next_type').val(),
+                        prev_type = $('#prev_type').val();
+
+                    if (next_type !== 'quiz' && next_type !== 'false') {
+                        $('#nextbut').on('click', onClickButton);
+                    }
+
+                    if (prev_type !== 'quiz' && prev_type !== 'false') {
+                        $('#prevbut').on('click', onClickButton);
+                    }
+
+                    wistiaEmbed.bind('play', function(event) {
+                        $('#guru_content').removeClass('loading');
+                    });
+                },
+
+                onClick: function(event) {
+                    event.preventDefault();
+                    var $delegateTarget = $(event.delegateTarget),
+                        $guruContent    = $('#guru_content'),
+                        url             = $delegateTarget.attr('href'),
+                        isNext          = $delegateTarget.attr('id') == 'nextbut',
+                        loadingMsg      = '';
+
+                    url += (url.search(/\?/) >= 0) ? '&' : '?';
+                    url += 'tmpl=component';
+
+                    wistiaEmbed.pause();
+                    wistiaEmbed.plugin['dimthelights'].undim();
+
+                    // Show a "loading" message
+                    if ($delegateTarget.attr('id') === 'nextbut') {
+                        loadingMsg = 'Loading next lesson: ' + $('#next_name').val();
+                    } else {
+                        loadingMsg = 'Loading previous lesson: ' + $('#prev_name').val();
+                    }
+                    $guruContent.html('<span class="message">' + loadingMsg + '</span>');
+                    $guruContent.addClass('loading');
+
+                    document.title = 'Loading...';
+
+                    $guruContent.load(url, {}, function() {
+                        var interval = setInterval(function() {
+                            if (typeof wistiaEmbed.elem() !== 'undefined') {
+                                wistiaEmbed.ready(function() {
+                                    $('#guru_content').removeClass('loading');
+
+                                    fixFullscreen();
+                                    setNextPreviousButtonEvents();
+
+                                    // Update the url and title
+                                    var title = $('#step_title').text();
+                                    window.history.pushState(null, title, url.replace(/[&\?]tmpl=component/, ''));
+                                    document.title = title;
+
+                                    // Set the custom video speed
+                                    if (typeof Wistia.plugin['customspeed'] != 'undefined') {
+                                        Wistia.plugin['customspeed'](wistiaEmbed);
+                                    }
+                                });
+
+                                clearInterval(interval);
+                                interval = null;
+                            }
+                        }, 500);
+                    });
+                }
+
             },
 
             /**
@@ -83,6 +250,9 @@
                 }
             },
 
+            /**
+             * Move standard navigation buttons into the video area itself
+             */
             moveNavigationButtons: function() {
                 $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
 
@@ -112,6 +282,11 @@
                 wistiaEmbed.bind('pause', hideWistiaButtons);
             },
 
+            /**
+             * Create additional control buttons
+             *
+             * @param options
+             */
             addExtraControls: function(options) {
                 // Add the container for the buttons
                 var container = $('<div>')
@@ -311,9 +486,9 @@
                 /**
                  * The base overlay container
                  *
-                 * @param html
+                 * @param {string} html
                  *
-                 * @returns {*}
+                 * @returns {jQuery}
                  */
                 base: function(html) {
                     var overlay = $('<div>')
@@ -351,8 +526,8 @@
                 /**
                  * Resize the overlay container based on current conditions
                  *
-                 * @param overlay
-                 * @param wrapper
+                 * @param {jQuery} overlay
+                 * @param {jQuery} wrapper
                  */
                 resize: function(overlay, wrapper) {
                     wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
@@ -394,6 +569,14 @@
                 }
             },
 
+            /**
+             * Create the base for standard custom control buttons
+             *
+             * @param {string} name
+             * @param {string} title
+             *
+             * @returns {jQuery}
+             */
             createButton: function(name, title) {
                 var button = $('<div>'),
                     icon   = $('<i class="fa">'),

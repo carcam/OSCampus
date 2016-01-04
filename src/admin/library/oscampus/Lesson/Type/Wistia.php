@@ -88,6 +88,7 @@ class Wistia extends AbstractType
         $user   = OscampusFactory::getUser();
         $device = OscampusFactory::getContainer()->device;
 
+        JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
         JHtml::_('script', 'com_oscampus/utilities.js', false, true);
         JHtml::_('script', 'com_oscampus/wistia.js', false, true);
 
