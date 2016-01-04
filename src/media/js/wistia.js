@@ -115,7 +115,7 @@
                     });
 
                     newButton.on('click', function() {
-                        if (screenfull.enabled) {
+                        if (screenfull && screenfull.enabled) {
                             if (screenfull.isFullscreen) {
                                 screenfull.exit();
                             } else {
@@ -130,7 +130,7 @@
                         newButton.trigger('click');
                     };
 
-                    if (screenfull.enabled) {
+                    if (screenfull && screenfull.enabled) {
                         document.addEventListener(screenfull.raw.fullscreenchange, function() {
                             if (!screenfull.isFullscreen) {
                                 // Restore the video size
