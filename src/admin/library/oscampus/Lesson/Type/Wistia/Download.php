@@ -103,10 +103,15 @@ class Download
 
         $this->log($video, $user);
 
-        $extension = array_pop(explode('/', $video->mimeType));
-        header('Content-Type: ' . $video->mimeType);
-        header('Content-Disposition: attachment; filename=' . $video->name . '.' . $extension);
+        $type      = explode('/', $video->mimeType);
+        $extension = array_pop($type);
+        $fileName  = $video->name . '.' . $extension;
 
+        header('Content-Type: ' . $video->mimeType);
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+
+        // Try to avoid memory issues
+        ini_set('memory_limit', -1);
         $ch = curl_init($video->url);
         curl_exec($ch);
         curl_close($ch);
