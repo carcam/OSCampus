@@ -12,6 +12,7 @@ use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
 use JSession;
+use JText;
 use Oscampus\Lesson;
 use OscampusFactory;
 
@@ -42,7 +43,7 @@ class Wistia extends AbstractType
     public function render()
     {
         if (!$this->pluginLoaded()) {
-            throw new \Exception(\JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
+            throw new \Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
         }
 
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
@@ -101,6 +102,10 @@ class Wistia extends AbstractType
                 )
             )
         );
+
+        JText::script('COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP');
+        JText::script('COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE');
+        JText::script('COM_OSCAMPUS_WISTIA_RESUME');
 
         $js = array(
             "<script>",

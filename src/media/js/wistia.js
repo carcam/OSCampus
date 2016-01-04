@@ -223,6 +223,12 @@
                 });
             },
 
+            /**
+             * Add download button
+             *
+             * @param container
+             * @param options
+             */
             buttonDownload: function(container, options) {
                 options = $.extend({}, this.options, options);
 
@@ -298,7 +304,17 @@
                 container.append(button);
             },
 
+            /**
+             * Overlay factory for creating messages over the wistia video
+             */
             overlay: {
+                /**
+                 * The base overlay container
+                 *
+                 * @param html
+                 *
+                 * @returns {*}
+                 */
                 base: function(html) {
                     var overlay = $('<div>')
                         .attr('id', wistiaEmbed.uuid + '_overlay')
@@ -332,41 +348,48 @@
                     return overlay;
                 },
 
+                /**
+                 * Resize the overlay container based on current conditions
+                 *
+                 * @param overlay
+                 * @param wrapper
+                 */
                 resize: function(overlay, wrapper) {
                     wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
                 },
 
+                /**
+                 * Create the not-authorised/suggest signup overlay
+                 */
                 signup: function() {
                     var overlay = this.base(
-                        '<div>Become a Pro Member<br/>to download this video!</div>' +
-                        '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">' +
-                        '  <span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>' +
-                        '  Subscribe as Pro to download' +
-                        '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                        '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
-                        '  Skip to where you left off' +
-                        '</a>'
+                        '<div>' + Joomla.JText.COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP + '</div>'
+                        + '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
+                        + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
+                        + Joomla.JText.COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE
+                        + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
+                        + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                        + Joomla.JText.COM_OSCAMPUS_WISTIA_RESUME
+                        + '</a>'
                     );
 
                     $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
                         window.location = downloadURL;
                     });
-
-                    $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                        overlay.fadeOut(200, function() {
-                            overlay.remove();
-                            wistiaEmbed.play();
-                        });
-                    });
                 },
 
+                /**
+                 * Download request was refused overlay
+                 *
+                 * @param message
+                 */
                 refused: function(message) {
                     var overlay = this.base(
-                        '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>' +
-                        '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                        '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
-                        '  Skip to where you left off' +
-                        '</a>'
+                        '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>'
+                        + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
+                        + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                        + Joomla.JText.COM_OSCAMPUS_WISTIA_RESUME
+                        + '</a>'
                     );
                 }
             },
