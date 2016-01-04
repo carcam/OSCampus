@@ -54,3 +54,76 @@
         text-align: left;
     }
 }
+
+/* Wistia Lesson Overlays
+ ========================================================================== */
+.wistia_overlay {
+    background-color: rgba(48, 48, 48, 0.82);
+    box-shadow: rgba(0, 0, 0, 0.9) 0px 0px 218px 30px inset;
+    color: #fff;
+    display: inline-block;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e8333333',endColorStr='#e8333333');
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 26px;
+    position: absolute;
+    text-align: center;
+    left: 0;
+    top: 0;
+    white-space: normal;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.wistia_overlay.visible {
+    opacity: 1;
+}
+
+.wistia_overlay div.wrapper {
+    position: relative;
+}
+
+.wistia_overlay a {
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: normal;
+    line-height: 15px;
+    margin: 0 20px;
+    text-decoration: none;
+    display: inline-block;
+    height: 120px;
+    vertical-align: top;
+    width: 80px;
+    zoom: 1;
+}
+
+.wistia_overlay a.subscribe span {
+    background: url(../images/wistia-extra-controls.png) no-repeat -391px 22px;
+    display: block;
+    height: 80px;
+    width: 80px;
+}
+
+.wistia_overlay a.subscribe:hover span {
+    background-position: -468px 22px;
+}
+
+.wistia_overlay a.skip span {
+    background-image: url(http://fast.wistia.com/labs//resumable/skip-icon.png);
+    display: block;
+    height: 80px;
+    width: 80px;
+}
+
+.wistia_overlay a.skip:hover span {
+    background-position: 0px -80px;
+}
+
+.wistia_overlay a:hover {
+    color: #fff;
+}

@@ -281,8 +281,7 @@
                                         form.submit();
 
                                     } else {
-                                        alert('Under Construction: over limit');
-                                        // Overlay for too many downloads
+                                        $.Oscampus.wistia.overlay.refused(data.error);
                                     }
                                 },
                                 complete: function() {
@@ -291,13 +290,85 @@
                             });
 
                         } else {
-                            // Overlay for noauth and link to upgrade page
                             wistiaEmbed.pause();
-                            alert('Under Construction: Not Authorised');
+                            $.Oscampus.wistia.overlay.signup();
                         }
                     });
 
                 container.append(button);
+            },
+
+            overlay: {
+                base: function(html) {
+                    var overlay = $('<div>')
+                        .attr('id', wistiaEmbed.uuid + '_overlay')
+                        .addClass('wistia_overlay')
+                        .css({
+                            height: $(wistiaEmbed.grid.main).height(),
+                            width : $(wistiaEmbed.grid.main).width()
+                        });
+
+                    $(wistiaEmbed.grid.main).append(overlay);
+
+                    var wrapper = $('<div>').addClass('wrapper');
+                    $(overlay).append(wrapper);
+
+                    wrapper.html(html);
+
+                    this.resize(overlay, wrapper);
+
+                    wistiaEmbed.bind('widthchange', this.resize(overlay, wrapper));
+                    wistiaEmbed.bind('heightchange', this.resize(overlay, wrapper));
+
+                    overlay.addClass('visible');
+
+                    $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+                        overlay.fadeOut(200, function() {
+                            overlay.remove();
+                            wistiaEmbed.play();
+                        });
+                    });
+
+                    return overlay;
+                },
+
+                resize: function(overlay, wrapper) {
+                    wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
+                },
+
+                signup: function() {
+                    var overlay = this.base(
+                        '<div>Become a Pro Member<br/>to download this video!</div>' +
+                        '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">' +
+                        '  <span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>' +
+                        '  Subscribe as Pro to download' +
+                        '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
+                        '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
+                        '  Skip to where you left off' +
+                        '</a>'
+                    );
+
+                    $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
+                        window.location = downloadURL;
+                    });
+
+                    $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+                        overlay.fadeOut(200, function() {
+                            overlay.remove();
+                            wistiaEmbed.play();
+                        });
+                    });
+                },
+
+                refused: function(message) {
+                    var overlay = this.base(
+                        '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>' +
+                        '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
+                        '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
+                        '  Skip to where you left off' +
+                        '</a>'
+                    );
+                }
             },
 
             createButton: function(name, title) {
@@ -314,125 +385,6 @@
                     .prepend(icon);
 
                 return button;
-            },
-
-            noauthOverlay: function(container) {
-                var overlay = $('<div>')
-                    .attr('id', wistiaEmbed.uuid + '_overlay')
-                    .addClass('wistia_overlay');
-                container.parent().append(overlay);
-
-                var wrapper = $('<div>').addClass('wrapper');
-                $(overlay).append(wrapper);
-
-                wrapper.html(
-                    '<div style="padding-left: 25%; padding-right: 25%;">' + data.error + '</div>' +
-                    '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                    '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
-                    '  Skip to where you left off' +
-                    '</a>'
-                );
-
-                $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                    overlay.fadeOut(200, function() {
-                        overlay.remove();
-                        wistiaEmbed.play();
-                    });
-                });
-
-                function resize() {
-                    overlay.css('height', $(wistiaEmbed.grid.main).height());
-                    overlay.css('width', $(wistiaEmbed.grid.main).width());
-                    wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
-                }
-
-                resize();
-
-                wistiaEmbed.bind('widthchange', resize);
-                wistiaEmbed.bind('heightchange', resize);
-
-                overlay.addClass('visible');
-            },
-
-            signupOverlay: function() {
-                var overlay = $('<div>')
-                    .attr('id', wistiaEmbed.uuid + '_overlay')
-                    .addClass('wistia_overlay');
-                container.append(overlay);
-
-                var wrapper = $('<div>').addClass('wrapper');
-                $(overlay).append(wrapper);
-
-                wrapper.html(
-                    '<div>Become a Pro Member<br/>to download this video!</div>' +
-                    '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">' +
-                    '  <span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>' +
-                    '  Subscribe as Pro to download' +
-                    '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">' +
-                    '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>' +
-                    '  Skip to where you left off' +
-                    '</a>'
-                );
-
-                $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
-                    window.location = downloadURL;
-                });
-
-                $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
-                    overlay.fadeOut(200, function() {
-                        overlay.remove();
-                        wistiaEmbed.play();
-                    });
-                });
-
-                function resize() {
-                    overlay.css('height', $(wistiaEmbed.grid.main).height());
-                    overlay.css('width', $(wistiaEmbed.grid.main).width());
-                    wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
-                }
-
-                resize();
-
-                wistiaEmbed.bind('widthchange', resize);
-                wistiaEmbed.bind('heightchange', resize);
-
-                overlay.addClass('visible');
-            },
-
-            getOverlay: function(id, text) {
-                var overlay = $('<div>')
-                    .attr('id', 'overlay_' + id)
-                    .addClass('osc-wistia-overlay');
-
-                var wrapper = $('<div>').addClass('wrapper');
-                $(overlay).append(wrapper);
-
-                wrapper.html(text);
-
-                console.log($('#overlay_' + id + ' .subcribe_'))
-
-                $('#subscribe').click(function() {
-                    //window.location = downloadURL;
-                });
-
-                $('#resume_skip').click(function() {
-                    overlay.fadeOut(200, function() {
-                        overlay.remove();
-                        wistiaEmbed.play();
-                    });
-                });
-
-                var resize = function() {
-                    overlay.css('height', $(wistiaEmbed.grid.main).height());
-                    overlay.css('width', $(wistiaEmbed.grid.main).width());
-                    wrapper.css('top', Math.max(0, (overlay.height() - wrapper.height()) / 2) + 'px');
-                };
-
-                resize();
-                wistiaEmbed.bind('widthchange', resize);
-                wistiaEmbed.bind('heightchange', resize);
-
-                overlay.addClass('osc-visible');
             }
         }
     });
