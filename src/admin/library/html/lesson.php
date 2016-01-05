@@ -120,6 +120,13 @@ abstract class OscLesson
         return JText::_('COM_OSCAMPUS_UNDEFINED');
     }
 
+    /**
+     * Setup js for lesson navigation handling
+     * 
+     * @param Lesson $lesson
+     *
+     * @return void
+     */
     public static function navigation(Lesson $lesson)
     {
         $lessons = array(
@@ -139,6 +146,7 @@ abstract class OscLesson
         JText::script('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS');
         JText::script('COM_OSCAMPUS_LESSON_LOADING_TITLE');
 
+        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
         JHtml::_('script', 'com_oscampus/lesson.js', false, true);
         JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});");
     }
