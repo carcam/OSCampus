@@ -60,37 +60,41 @@
     };
 
     /**
-     * Method to respond to next/prev navigation buttons
+     * Method to respond to next/prev navigation buttons. Also provides
+     * .lesson.previous, .lesson.current, .lesson.next objects for general use
      *
      * @param {object} options
      */
-    $.Oscampus.lesson.navigation = function(options) {
-        options = $.extend({}, this.navigation.options, options);
 
-        var container = $('#oscampus.osc-container'),
-            setMessage = function(message) {
-                container
-                    .addClass('loading')
-                    .html('<span class="message">' + message + '</span>');
-                document.title = Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_TITLE;
-            };
-
-        if (options.next && options.next.title) {
-            $('#nextbut').on('click', function(evt) {
-                evt.preventDefault();
-                setMessage(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_NEXT.sprintf(options.next.title));
-            });
-        }
-
-        if (options.previous && options.previous.title) {
-            $('#prevbut').on('click', function(evt) {
-                setMessage(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_PREVIOUS.sprintf(options.previous.title));
-            });
-        }
-    };
-    $.Oscampus.lesson.navigation.options = {
+    $.Oscampus.lesson = $.extend($.Oscampus.lesson, {
+        previous: null,
         current : null,
         next    : null,
-        previous: null
-    };
+
+        navigation: function(options) {
+            this.previous = options.previous || null;
+            this.current = options.current || null;
+            this.next = options.next || null;
+
+            var container  = $('#oscampus.osc-container'),
+                setLoading = function(message) {
+                    container
+                        .addClass('loading')
+                        .html('<span class="message">' + message + '</span>');
+                    document.title = Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_TITLE;
+                };
+
+            if (this.next && this.next.title) {
+                $('#nextbut').on('click', function(evt) {
+                    setLoading(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_NEXT.sprintf(this.next.title));
+                }.bind(this));
+            }
+
+            if (this.previous && this.previous.title) {
+                $('#prevbut').on('click', function(evt) {
+                    setLoading(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_PREVIOUS.sprintf(this.previous.title));
+                }.bind(this));
+            }
+        }
+    });
 })(jQuery);
