@@ -82,6 +82,22 @@
                 }
             }
             return this;
+        },
+
+        /**
+         * Sometimes we want to insert a new event handler at the beginning of the queue
+         *
+         * @param {string} event
+         * @param {function} handler
+         *
+         * @returns {jQuery}
+         */
+        bindBefore: function(event, handler) {
+            $(this).on(event, handler);
+            var lastEvent = $._data($(this).get(0), 'events').click.pop();
+            $._data($(this).get(0), 'events').click.unshift(lastEvent);
+
+            return this;
         }
     });
 
@@ -210,5 +226,6 @@
         },
         options : null
     };
+
 })(jQuery);
 
