@@ -122,7 +122,7 @@ abstract class OscLesson
 
     /**
      * Setup js for lesson navigation handling
-     * 
+     *
      * @param Lesson $lesson
      *
      * @return void
