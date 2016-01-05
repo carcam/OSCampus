@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\Lesson;
 use Oscampus\Lesson\Properties;
 
 defined('_JEXEC') or die();
@@ -117,5 +118,28 @@ abstract class OscLesson
         }
 
         return JText::_('COM_OSCAMPUS_UNDEFINED');
+    }
+
+    public static function navigation(Lesson $lesson)
+    {
+        $lessons = array(
+            'previous' => $lesson->previous,
+            'current'  => $lesson->current,
+            'next'     => $lesson->next
+        );
+
+        foreach ($lessons as $properties) {
+            unset($properties->content);
+            $properties->link = JRoute::_(static::link($properties, null, null, true));
+        }
+
+        $lessons = json_encode($lessons);
+
+        JText::script('COM_OSCAMPUS_LESSON_LOADING_NEXT');
+        JText::script('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS');
+        JText::script('COM_OSCAMPUS_LESSON_LOADING_TITLE');
+
+        JHtml::_('script', 'com_oscampus/lesson.js', false, true);
+        JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});");
     }
 }

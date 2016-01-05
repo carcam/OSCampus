@@ -20,6 +20,8 @@ if ($next = $this->lesson->next) {
     $nextLink = JHtml::_('osc.lesson.link', $next, null, null, true);
 }
 
+JHtml::_('osc.lesson.navigation', $this->lesson);
+
 ?>
 <div class="osc-btn-group hidden osc-lesson-navigation" id="course-navigation">
     <a href="<?php echo JHtml::_('osc.link.course', $pathwayId, $courseId, null, null, true); ?>" class="osc-btn">

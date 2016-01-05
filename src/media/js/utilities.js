@@ -1,4 +1,21 @@
 (function($) {
+    /**
+     * Simple mimic of php sprintf replacing %s with passed strings
+     *
+     * @returns {string}
+     */
+    String.prototype.sprintf = function() {
+        var result = this.split('%s');
+
+        for (var i = 0; i < arguments.length; i++) {
+            if (result[i]) {
+                result[i] += arguments[i];
+            }
+        }
+
+        return result.join('');
+    };
+
     $.extend($.fn, {
         /**
          * Simple panel toggle that will enable/disable
@@ -67,6 +84,7 @@
             return this;
         }
     });
+
 
     $.Oscampus = $.extend({}, $.Oscampus);
 

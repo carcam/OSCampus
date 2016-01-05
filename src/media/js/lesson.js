@@ -58,4 +58,39 @@
         handle   : '.handle',
         cursor   : 'move'
     };
+
+    /**
+     * Method to respond to next/prev navigation buttons
+     *
+     * @param {object} options
+     */
+    $.Oscampus.lesson.navigation = function(options) {
+        options = $.extend({}, this.navigation.options, options);
+
+        var container = $('#oscampus.osc-container'),
+            setMessage = function(message) {
+                container
+                    .addClass('loading')
+                    .html('<span class="message">' + message + '</span>');
+                document.title = Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_TITLE;
+            };
+
+        if (options.next && options.next.title) {
+            $('#nextbut').on('click', function(evt) {
+                evt.preventDefault();
+                setMessage(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_NEXT.sprintf(options.next.title));
+            });
+        }
+
+        if (options.previous && options.previous.title) {
+            $('#prevbut').on('click', function(evt) {
+                setMessage(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_PREVIOUS.sprintf(options.previous.title));
+            });
+        }
+    };
+    $.Oscampus.lesson.navigation.options = {
+        current : null,
+        next    : null,
+        previous: null
+    };
 })(jQuery);
