@@ -39,7 +39,7 @@ abstract class JHtmlOsc
                         $debug  = (boolean)$config->get('debug');
                     }
 
-                    JHtml::_('script', 'com_oscampus/jquery.js', false, true, false, false, $debug);
+                    JHtml::_('script', 'com_oscampus/jquery.js', true, true, false, false, $debug);
 
                     // Check if we are loading in noConflict
                     if ($noConflict) {

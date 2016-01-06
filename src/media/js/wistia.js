@@ -466,13 +466,13 @@
                  */
                 signup: function() {
                     var overlay = this.base(
-                        '<div>' + Joomla.JText.COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP + '</div>'
+                        '<div>' + Joomla.JText._('COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP') + '</div>'
                         + '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
                         + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
-                        + Joomla.JText.COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE
+                        + Joomla.JText._('COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE')
                         + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
                         + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
-                        + Joomla.JText.COM_OSCAMPUS_WISTIA_RESUME
+                        + Joomla.JText._('COM_OSCAMPUS_WISTIA_RESUME')
                         + '</a>'
                     );
 
@@ -491,7 +491,7 @@
                         '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>'
                         + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
                         + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
-                        + Joomla.JText.COM_OSCAMPUS_WISTIA_RESUME
+                        + Joomla.JText._('COM_OSCAMPUS_WISTIA_RESUME')
                         + '</a>'
                     );
                 }

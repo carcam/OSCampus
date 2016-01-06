@@ -81,18 +81,18 @@
                     container
                         .addClass('loading')
                         .html('<span class="message">' + message + '</span>');
-                    document.title = Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_TITLE;
+                    document.title = Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_TITLE');
                 };
 
             if (this.next && this.next.title) {
                 $('#nextbut').on('click', function(evt) {
-                    setLoading(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_NEXT.sprintf(this.next.title));
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_NEXT').sprintf(this.next.title));
                 }.bind(this));
             }
 
             if (this.previous && this.previous.title) {
                 $('#prevbut').on('click', function(evt) {
-                    setLoading(Joomla.JText.COM_OSCAMPUS_LESSON_LOADING_PREVIOUS.sprintf(this.previous.title));
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS').sprintf(this.previous.title));
                 }.bind(this));
             }
         }
