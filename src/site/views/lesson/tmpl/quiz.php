@@ -73,6 +73,14 @@ $questions = $quiz->getQuestions();
             </div>
         <?php endforeach; ?>
     </div>
+    <!-- .osc-section -->
+
+    <div class="osc-section osc-quiz-submit">
+        <button class="osc-btn osc-btn-main" type="submit">
+            <?php echo JText::_('COM_OSCAMPUS_QUIZ_SUBMIT'); ?>
+        </button>
+    </div>
+    <!-- .osc-section -->
 
     <?php if ($this->lesson->footer) : ?>
         <div class="osc-section oscampus-lesson-footer">

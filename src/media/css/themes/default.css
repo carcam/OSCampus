@@ -765,6 +765,7 @@
     margin-bottom: 5px;
     color: #333;
     font-weight: 600;
+    font-size: 15px;
 }
 
 #oscampus.osc-container .osc-quiz-options {
@@ -788,6 +789,10 @@
 
 #oscampus.osc-container .osc-quiz-question .fa {
     font-size: 20px;
+}
+
+#oscampus.osc-container .osc-quiz-submit {
+    margin-top: 30px;
 }
 
 /* Media queries
