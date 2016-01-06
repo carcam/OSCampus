@@ -732,7 +732,7 @@
 }
 
 #oscampus.osc-container .osc-positive-color {
-    color: #008200;
+    color: #669900;
 }
 
 #oscampus.osc-container .osc-negative-color {
@@ -764,6 +764,7 @@
     padding: 10px 15px;
     margin-bottom: 5px;
     color: #333;
+    font-weight: 600;
 }
 
 #oscampus.osc-container .osc-quiz-options {
@@ -774,7 +775,7 @@
 
 #oscampus.osc-container .osc-quiz-options li {
     line-height: 26px;
-    padding-left: 15px;
+    padding-left: 35px;
 }
 
 #oscampus.osc-container.oscampus-quiz .fa-check {
