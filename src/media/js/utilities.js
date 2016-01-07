@@ -94,12 +94,13 @@
          */
         bindBefore: function(event, handler) {
             var elements = $(this),
-                lastEvent;
+                element, lastEvent;
 
-            elements.on(event, handler);
             for (var i=0; i<elements.length; i++) {
-                lastEvent = $._data(elements.get(i), 'events').click.pop();
-                $._data(elements.get(0), 'events').click.unshift(lastEvent);
+                element = elements.get(i);
+                $(element).on(event, handler);
+                lastEvent = $._data(element, 'events').click.pop();
+                $._data(element, 'events').click.unshift(lastEvent);
             }
 
             return this;
