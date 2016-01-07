@@ -85,15 +85,17 @@
                 };
 
             if (this.next && this.next.title) {
+                var next = this.next;
                 $('#nextbut').on('click', function(evt) {
-                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_NEXT').sprintf(this.next.title));
-                }.bind(this));
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_NEXT').sprintf(next.title));
+                });
             }
 
             if (this.previous && this.previous.title) {
+                var previous = this.previous;
                 $('#prevbut').on('click', function(evt) {
-                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS').sprintf(this.previous.title));
-                }.bind(this));
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS').sprintf(previous.title));
+                });
             }
         }
     });
