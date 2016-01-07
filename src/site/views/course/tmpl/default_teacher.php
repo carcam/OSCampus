@@ -12,6 +12,9 @@ defined('_JEXEC') or die();
  */
 $routing = OscampusRoute::getInstance();
 
+$pathwayId      = OscampusFactory::getApplication()->input->getInt('pid');
+$courseLinkBase = $routing->get('courses') . '&view=course&pid=' . $pathwayId;
+
 ?>
 <div id="content-teacher" class="osc-course-tabs-content" style="display: none">
     <div class="osc-table">
@@ -48,7 +51,7 @@ $routing = OscampusRoute::getInstance();
             </div>
             <?php
             foreach ($this->teacher->courses as $i => $course) :
-                $courseLink = JRoute::_($routing->get('courses') . '&view=course&cid=' . $course->id);
+                $courseLink = JRoute::_($courseLinkBase . '&cid=' . $course->id);
                 ?>
                 <div class="<?php echo 'osc-section ' . ($i % 2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                     <div class="block6">
