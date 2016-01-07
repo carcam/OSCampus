@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
+use JHtml;
 use Oscampus\Lesson;
 
 defined('_JEXEC') or die();
@@ -59,6 +60,10 @@ class Quiz extends AbstractType
 
     public function render()
     {
+        JHtml::_('osc.jquery');
+        JHtml::_('script', 'com_oscampus/quiz.js', false, true);
+        JHtml::_('osc.onready', '$.Oscampus.quiz.init()');
+
         return $this;
     }
 

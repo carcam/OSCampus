@@ -30,10 +30,10 @@ $questions = $quiz->getQuestions();
             <div id="oscampus-timer" class="osc-quiz-left">
                 <span class="osc-quiz-score-label">
                     <?php echo JText::_('COM_OSCAMPUS_QUIZ_TIME_LEFT'); ?>
-                </span><br/>
-                <span class="osc-quiz-percentage">
-                    10:00
-                </span><br/>
+                </span>
+                <br/>
+                <span class="osc-clock osc-quiz-percentage"></span>
+                <br/>
             </div>
         </div>
         <div class="block4">
