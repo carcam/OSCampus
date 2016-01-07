@@ -62,7 +62,7 @@ class Quiz extends AbstractType
     {
         JHtml::_('osc.jquery');
         JHtml::_('script', 'com_oscampus/quiz.js', false, true);
-        JHtml::_('osc.onready', '$.Oscampus.quiz.init()');
+        JHtml::_('osc.onready', '$.Oscampus.quiz.timer()');
 
         return $this;
     }

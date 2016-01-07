@@ -23,17 +23,15 @@
         options: {
             timer: {
                 selector: '#oscampus-timer .osc-clock',
-                minutes : 99
+                minutes : 10
             }
         },
 
-        init: function(options) {
-            options = $.extend(true, {}, this.options, options);
-
-            this.timer(options.timer);
-
-        },
-
+        /**
+         * Start the countdown timer
+         *
+         * @param {object} options
+         */
         timer: function(options) {
             options = $.extend({}, this.options.timer, options);
 
@@ -41,18 +39,14 @@
                 seconds = options.minutes * 60;
 
             clock.formatSeconds(seconds);
-            var update = function() {
+            var update = setInterval(function() {
                 seconds--;
                 clock.formatSeconds(seconds);
-                if (seconds == 0) {
+                if (seconds <= 0) {
                     clearInterval(update);
-                    update = null;
                     alert('time\'s up!');
                 }
-            };
-
-            var countDown = setInterval(update, 1000);
+            }, 1000);
         }
     };
-
 })(jQuery);
