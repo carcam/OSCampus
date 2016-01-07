@@ -10,8 +10,15 @@
  * @var OscampusViewLesson $this
  */
 defined('_JEXEC') or die();
+
+$component = OscampusFactory::getApplication()->input->getCmd('tmpl') == 'component';
+
+if (!$component):
+    ?>
+    <div class="osc-container oscampus-wistia" id="oscampus">
+    <?php
+endif;
 ?>
-<div class="osc-container oscampus-wistia" id="oscampus">
     <div class="osc-section">
         <h1 class="osc-lesson-title"><?php echo $this->lesson->title; ?></h1>
         <div class="osc-lesson-links">
@@ -20,19 +27,30 @@ defined('_JEXEC') or die();
     </div>
     <!-- .osc-lesson-links -->
 
-    <?php if ($this->lesson->header): ?>
-        <div class="osc-section oscampus-lesson-header">
-            <?php echo $this->lesson->header; ?>
-        </div>
-    <?php endif; ?>
-
+<?php
+if ($this->lesson->header):
+    ?>
+    <div class="osc-section oscampus-lesson-header">
+        <?php echo $this->lesson->header; ?>
+    </div>
+    <?php
+endif;
+?>
     <div class="osc-section oscampus-lesson-content">
         <?php echo $this->lesson->render(); ?>
     </div>
 
-    <?php if ($this->lesson->footer) : ?>
-        <div class="osc-section oscampus-lesson-footer">
-            <?php echo $this->lesson->footer; ?>
-        </div>
-    <?php endif; ?>
-</div>
+<?php
+if ($this->lesson->footer):
+    ?>
+    <div class="osc-section oscampus-lesson-footer">
+        <?php echo $this->lesson->footer; ?>
+    </div>
+    <?php
+endif;
+
+if (!$component):
+    ?>
+    </div>
+    <?php
+endif;
