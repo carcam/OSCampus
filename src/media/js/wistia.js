@@ -144,14 +144,14 @@
         },
 
         /**
-         * Set prev/next buttons for handling full screen navigation
+         * Set prev/next buttons for handling full screen navigation.
+         * If we're in fullscreen mode we have to do an ajax load of the next
+         * wistia lesson to retain fullscreen.
          */
         fullscreenNavigate: function() {
             $('#prevbut,#nextbut').bindBefore('click', function(evt) {
                 wistiaEmbed.pause();
                 wistiaEmbed.plugin['dimthelights'].undim();
-
-                console.log($.Oscampus);
 
                 var target = $.Oscampus.lesson[this.id === 'nextbut' ? 'next' : 'previous'];
                 if (screenfull.enabled && screenfull.isFullscreen && target.type) {
@@ -159,17 +159,11 @@
                         evt.preventDefault();
 
                         var container = $('#oscampus.osc-container');
-
                         container.load(target.link, {tmpl: 'component'}, function(text, status) {
-                            container.removeClass('loading');
                             var postProcess = setInterval(function() {
-                                console.log($.Oscampus);
-
                                 if (typeof wistiaEmbed.elem() !== 'undefined') {
                                     wistiaEmbed.ready(function() {
-
                                         $.Oscampus.wistia.moveNavigationButtons();
-                                        $.Oscampus.wistia.setFullScreen();
 
                                         // Update the url and title
                                         window.history.pushState(null, target.title, target.link);
@@ -183,6 +177,7 @@
 
                                     clearInterval(postProcess);
                                     postProcess = null;
+                                    container.removeClass('loading');
                                 }
                             }, 500);
                         });
@@ -250,11 +245,6 @@
 
             wistiaEmbed.bind('play', hideWistiaButtons);
             wistiaEmbed.bind('pause', hideWistiaButtons);
-
-            /*
-             * Special handling before the base lesson code tries to navigates away
-             */
-            this.fullscreenNavigate();
         },
 
         /**
