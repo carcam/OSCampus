@@ -164,23 +164,11 @@ class OscampusModelCourse extends OscampusModelSite
         $cid = (int)$this->getState('course.id');
 
         if ($uid > 0 && $cid > 0) {
-            $db = $this->getDbo();
 
-            $query = $db->getQuery(true)
-                ->select('ul.*')
-                ->from('#__oscampus_users_lessons ul')
-                ->innerJoin('#__oscampus_lessons l ON l.id = ul.lessons_id')
-                ->innerJoin('#__oscampus_modules m ON m.id = l.modules_id')
-                ->innerJoin('#__oscampus_courses c ON c.id = m.courses_id')
-                ->where(
-                    array(
-                        'c.id = ' . $cid,
-                        'ul.users_id = ' . $uid
-                    )
-                );
+            $activity = OscampusFactory::getContainer()->activity;
 
-            $viewed = $db->setQuery($query)->loadObjectList('lessons_id');
-            return $viewed;
+            $activity->setUser(OscampusFactory::getUser($uid));
+            return $activity->getCourse($cid);
         }
 
         return array();

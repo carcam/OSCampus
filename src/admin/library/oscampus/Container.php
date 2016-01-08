@@ -10,6 +10,7 @@ namespace Oscampus;
 
 use JDatabaseInterface;
 use Mobile_Detect;
+use Oscampus\UserActivity;
 
 defined('_JEXEC') or die();
 
@@ -21,6 +22,7 @@ defined('_JEXEC') or die();
  * @property JDatabaseInterface $dbo
  * @property Lesson             $lesson
  * @property Mobile_Detect      $device
+ * @property UserActivity       $activity
  */
 class Container extends \Pimple\Container
 {

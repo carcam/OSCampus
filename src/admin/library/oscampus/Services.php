@@ -8,7 +8,11 @@
 
 namespace Oscampus;
 
+use Mobile_Detect;
 use Oscampus\Lesson;
+use Oscampus\Lesson\Properties;
+use Oscampus\UserActivity;
+use OscampusFactory;
 use Pimple\Container AS Pimple;
 use Pimple\ServiceProviderInterface;
 
@@ -21,7 +25,6 @@ defined('_JEXEC') or die();
  */
 class Services implements ServiceProviderInterface
 {
-
     /**
      * Registers services on the given container.
      *
@@ -32,17 +35,25 @@ class Services implements ServiceProviderInterface
      */
     public function register(Pimple $pimple)
     {
-        $pimple['dbo'] = function(Container $c) {
-            return \OscampusFactory::getDbo();
+        $pimple['dbo'] = function (Container $c) {
+            return OscampusFactory::getDbo();
         };
 
-        $pimple['lesson'] = $pimple->factory(function (Container $c) {
-            $properties = new \Oscampus\Lesson\Properties();
-            return new Lesson($c['dbo'], $properties);
-        });
+        $pimple['lesson'] = $pimple->factory(
+            function (Container $c) {
+                $properties = new Properties();
+                return new Lesson($c['dbo'], $properties);
+            }
+        );
 
-        $pimple['device'] = function(Container $c) {
-            return new \Mobile_Detect();
+        $pimple['device'] = function () {
+            return new Mobile_Detect();
         };
+
+        $pimple['activity'] = $pimple->factory(
+            function (Container $c) {
+                return new UserActivity($c['dbo']);
+            }
+        );
     }
 }
