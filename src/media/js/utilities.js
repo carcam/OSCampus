@@ -216,5 +216,55 @@
         options : null
     };
 
+    /**
+     * Utilities for managing cookies
+     */
+    $.Oscampus.cookie = {
+        /**
+         * Get the value of the named cookie or return the default value
+         *
+         * @param {string} name
+         * @param {string} defaultValue
+         *
+         * @returns {string|null}
+         */
+        get: function(name, defaultValue) {
+            var cookies = document.cookie.split('; ');
+
+            for (var i=0; i<cookies.length; i++) {
+                if (cookies[i].indexOf(name + '=') == 0) {
+                    return cookies[i].split('=').pop();
+                }
+            }
+
+            return defaultValue || null;
+        },
+
+        /**
+         * Set the named cookie, overwriting if it exists
+         * and returning the original value
+         *
+         * @param {string} name
+         * @param {string} value
+         *
+         * @return {string}
+         */
+        set: function(name, value) {
+            var oldValue = this.get(name);
+
+            document.cookie = name + '=' + value;
+
+            return oldValue;
+        },
+
+        /**
+         * Delete the named cookie
+         *
+         * @param {string} name
+         */
+        delete: function(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+    }
 })(jQuery);
 
