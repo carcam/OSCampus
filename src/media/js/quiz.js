@@ -22,8 +22,8 @@
     $.Oscampus.quiz = {
         options: {
             timer: {
-                selector: '#oscampus-timer .osc-clock',
-                minutes : 10
+                selector : '#oscampus-timer .osc-clock',
+                timeLimit: 600
             }
         },
 
@@ -36,14 +36,17 @@
             options = $.extend({}, this.options.timer, options);
 
             var clock   = $(options.selector),
-                seconds = options.minutes * 60;
+                seconds = $.Oscampus.cookie.get('quiz_time', options.timeLimit);
 
             clock.formatSeconds(seconds);
+
             var update = setInterval(function() {
                 seconds--;
+                $.Oscampus.cookie.set('quiz_time', seconds);
                 clock.formatSeconds(seconds);
                 if (seconds <= 0) {
                     clearInterval(update);
+                    $.Oscampus.cookie.delete('quiz_time');
                     alert('time\'s up!');
                 }
             }, 1000);

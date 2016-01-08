@@ -16,11 +16,6 @@ defined('_JEXEC') or die();
 class Quiz extends AbstractType
 {
     /**
-     * @var object[]
-     */
-    protected $questions = null;
-
-    /**
      * @var int
      */
     public $quizLength = null;
@@ -39,6 +34,11 @@ class Quiz extends AbstractType
      * @var int
      */
     public $limitAlert = null;
+
+    /**
+     * @var object[]
+     */
+    protected $questions = null;
 
     public function __construct(Lesson $lesson)
     {
@@ -64,14 +64,33 @@ class Quiz extends AbstractType
         JHtml::_('script', 'com_oscampus/quiz.js', false, true);
         JHtml::_('osc.onready', '$.Oscampus.quiz.timer()');
 
+        if ($this->getUserState('quiz_time') === null) {
+            $this->setUserState('quiz_time', $this->timeLimit * 60);
+        }
+
         return $this;
     }
 
+    /**
+     * Custom method to select randomly ordered questions. Retains the
+     * same questions and order while the quiz time is still running
+     *
+     * @return array
+     */
     public function getQuestions()
     {
-        $length = min($this->quizLength, count($this->questions));
-        $keys = array_rand($this->questions, $length);
-        shuffle($keys);
+        $cookieStore = 'quiz_questions_' . $this->lesson->id;
+
+        if (($keys = $this->getUserState($cookieStore)) && $this->getUserState('quiz_time')) {
+            $keys = json_decode(base64_decode($keys));
+
+        } else {
+            $length = min($this->quizLength, count($this->questions));
+            $keys   = array_rand($this->questions, $length);
+            shuffle($keys);
+
+            $this->setUserState($cookieStore, base64_encode(json_encode($keys)));
+        }
 
         $selection = array();
         foreach ($keys as $key) {
