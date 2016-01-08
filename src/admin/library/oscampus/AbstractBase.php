@@ -8,19 +8,21 @@
 
 namespace Oscampus;
 
+use JDatabase;
+
 defined('_JEXEC') or die();
 
 abstract class AbstractBase
 {
     /**
-     * @var \JDatabase
+     * @var JDatabase
      */
     protected $dbo = null;
 
     /**
-     * @param \JDatabase $dbo
+     * @param JDatabase $dbo
      */
-    public function __construct(\JDatabase $dbo)
+    public function __construct(JDatabase $dbo)
     {
         $this->dbo = $dbo;
     }
