@@ -33,10 +33,10 @@ class UserActivity extends AbstractBase
         $this->user = $user ?: OscampusFactory::getUser();
     }
 
-    public function setUser(JUser $user)
+    public function setUser($id)
     {
-        if ($user->id != $this->user->id) {
-            $this->user = $user;
+        if ($id != $this->user->id) {
+            $this->user = OscampusFactory::getUser($id);
             $this->lessons = array();
         }
     }

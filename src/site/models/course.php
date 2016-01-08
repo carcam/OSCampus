@@ -167,7 +167,7 @@ class OscampusModelCourse extends OscampusModelSite
 
             $activity = OscampusFactory::getContainer()->activity;
 
-            $activity->setUser(OscampusFactory::getUser($uid));
+            $activity->setUser($uid);
             return $activity->getCourse($cid);
         }
 
