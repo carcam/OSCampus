@@ -8,6 +8,7 @@
 
 namespace Oscampus;
 
+use JDatabase;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
@@ -60,7 +61,7 @@ class Lesson extends AbstractBase
      */
     protected $files = array();
 
-    public function __construct(\JDatabase $dbo, Properties $properties)
+    public function __construct(JDatabase $dbo, Properties $properties)
     {
         $this->previous = $properties;
         $this->current  = clone $properties;
