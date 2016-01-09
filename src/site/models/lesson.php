@@ -7,11 +7,24 @@
  */
 
 use Oscampus\Lesson;
+use Oscampus\UserActivity;
 
 defined('_JEXEC') or die();
 
 class OscampusModelLesson extends OscampusModelSite
 {
+    /**
+     * @var UserActivity
+     */
+    protected $activity = null;
+
+    public function __construct(array $config)
+    {
+        parent::__construct($config);
+
+        $this->activity = OscampusFactory::getContainer()->activity;
+    }
+
     /**
      * @var Lesson
      */
@@ -24,17 +37,22 @@ class OscampusModelLesson extends OscampusModelSite
     {
         if ($this->lesson === null) {
             $this->lesson = OscampusFactory::getContainer()->lesson;
-            $pathwayId = (int)$this->getState('pathway.id');
+            $pathwayId    = (int)$this->getState('pathway.id');
 
             if ($lessonId = (int)$this->getState('lesson.id')) {
                 $this->lesson->loadById($lessonId, $pathwayId);
 
             } else {
                 $courseId = (int)$this->getState('course.id');
-                $index = (int)$this->getState('lesson.index');
+                $index    = (int)$this->getState('lesson.index');
 
                 $this->lesson->loadByIndex($index, $courseId, $pathwayId);
             }
+        }
+
+        if ($this->lesson && ($uid = $this->getState('user.id'))) {
+            $this->activity->setUser($uid);
+            $this->activity->visitLesson($this->lesson->id);
         }
 
         return $this->lesson;
