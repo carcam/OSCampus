@@ -28,7 +28,7 @@ class OscampusViewLesson extends OscampusViewSite
         $this->lesson = $this->model->getItem();
 
         if (!$this->lesson->isAuthorised()) {
-            echo '<p>' . $this->lesson->title . ' is not accessible. We haven\'t determined what to do here yet</p>';
+            parent::display('noauth');
             return;
         }
 
