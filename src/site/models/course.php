@@ -7,11 +7,24 @@
  */
 
 use Oscampus\Lesson\Properties;
+use Oscampus\UserActivity;
 
 defined('_JEXEC') or die();
 
 class OscampusModelCourse extends OscampusModelSite
 {
+    /**
+     * @var UserActivity
+     */
+    protected $activity = null;
+
+    public function __construct(array $config)
+    {
+        parent::__construct($config);
+
+        $this->activity = OscampusFactory::getContainer()->activity;
+    }
+
     public function getCourse()
     {
         $db = $this->getDbo();
@@ -164,11 +177,8 @@ class OscampusModelCourse extends OscampusModelSite
         $cid = (int)$this->getState('course.id');
 
         if ($uid > 0 && $cid > 0) {
-
-            $activity = OscampusFactory::getContainer()->activity;
-
-            $activity->setUser($uid);
-            return $activity->getCourse($cid);
+            $this->activity->setUser($uid);
+            return $this->activity->getCourse($cid);
         }
 
         return array();
