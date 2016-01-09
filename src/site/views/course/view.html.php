@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Lesson;
+
 defined('_JEXEC') or die();
 
 class OscampusViewCourse extends OscampusViewSite
@@ -21,7 +23,7 @@ class OscampusViewCourse extends OscampusViewSite
     protected $teacher = null;
 
     /**
-     * @var array
+     * @var Lesson[]
      */
     protected $lessons = array();
 
@@ -31,7 +33,7 @@ class OscampusViewCourse extends OscampusViewSite
     protected $files = array();
 
     /**
-     * @var array
+     * @var object[]
      */
     protected $viewed = array();
 
