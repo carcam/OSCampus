@@ -151,7 +151,7 @@ class OscampusFormFieldLessons extends JFormField
     {
         JHtml::_('osc.jquery');
         JHtml::_('osc.jui');
-        JHtml::_('script', 'com_oscampus/lesson.js', false, true);
+        JHtml::_('script', 'com_oscampus/admin/lesson.js', false, true);
 
         $options = json_encode(
             array(
@@ -159,6 +159,6 @@ class OscampusFormFieldLessons extends JFormField
             )
         );
 
-        JHtml::_('osc.onready', "$.Oscampus.lesson.ordering({$options});");
+        JHtml::_('osc.onready', "$.Oscampus.admin.lesson.ordering({$options});");
     }
 }
