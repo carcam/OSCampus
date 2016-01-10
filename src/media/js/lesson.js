@@ -31,14 +31,18 @@
         if (this.next && this.next.title) {
             var next = this.next;
             $(options.buttons.next).on('click', function(evt) {
-                setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_NEXT'), next.title);
+                if (next.authorised) {
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_NEXT'), next.title);
+                }
             });
         }
 
         if (this.previous && this.previous.title) {
             var previous = this.previous;
             $(options.buttons.previous).on('click', function(evt) {
-                setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS'), previous.title);
+                if (previous.authorised) {
+                    setLoading(Joomla.JText._('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS'), previous.title);
+                }
             });
         }
     };

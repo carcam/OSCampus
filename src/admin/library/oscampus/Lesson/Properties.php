@@ -75,6 +75,11 @@ class Properties
      */
     public $published = null;
 
+    /**
+     * @var bool
+     */
+    public $authorised = false;
+
     public function __construct($data = null)
     {
         if ($data) {
@@ -90,8 +95,10 @@ class Properties
         }
     }
 
-    public function load($data)
+    public function load($data, JUser $user = null)
     {
+        $user = $user ?: OscampusFactory::getUser();
+
         if (is_object($data)) {
             $data = get_object_vars($data);
         }
@@ -100,6 +107,8 @@ class Properties
                 $this->$property = $value;
             }
         }
+
+        $this->authorised = in_array($this->access, $user->getAuthorisedViewLevels());
     }
 
     /**
