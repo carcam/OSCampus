@@ -95,6 +95,12 @@ class Properties
         }
     }
 
+    /**
+     * Load properties. We trust that everything needed is being passed
+     *
+     * @param array|object $data
+     * @param JUser        $user
+     */
     public function load($data, JUser $user = null)
     {
         $user = $user ?: OscampusFactory::getUser();
