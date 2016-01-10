@@ -149,7 +149,9 @@
          * wistia lesson to retain fullscreen.
          */
         fullscreenNavigate: function() {
-            $('#prevbut,#nextbut').bindBefore('click', function(evt) {
+            var options = $.Oscampus.lesson.navigation.options;
+
+            $(options.buttons).bindBefore('click', function(evt) {
                 wistiaEmbed.pause();
                 wistiaEmbed.plugin['dimthelights'].undim();
 
@@ -158,7 +160,8 @@
                     if (target.type === 'wistia') {
                         evt.preventDefault();
 
-                        var container = $('#oscampus.osc-container');
+                        var container = $(options.container);
+
                         container.load(target.link, {tmpl: 'component'}, function(text, status) {
                             var postProcess = setInterval(function() {
                                 if (typeof wistiaEmbed.elem() !== 'undefined') {
