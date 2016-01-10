@@ -143,32 +143,39 @@ class UserActivity extends AbstractBase
     public function visitLesson($lessonId)
     {
         if ($this->user->id) {
-            $thisVisit = OscampusFactory::getDate()->toSql();
+            $app = OscampusFactory::getApplication();
 
-            $query = $this->dbo->getQuery(true)
-                ->select('*')
-                ->from('#__oscampus_users_lessons')
-                ->where(
-                    array(
-                        'users_id = ' . $this->user->id,
-                        'lessons_id = ' . (int)$lessonId
-                    )
-                );
+            $visited = $app->getUserState('oscampus.lesson.visited');
+            if ($visited != $lessonId) {
+                $thisVisit = OscampusFactory::getDate()->toSql();
 
-            if ($activity = $this->dbo->setQuery($query)->loadObject()) {
-                $activity->last_visit = $thisVisit;
-                $activity->visits++;
-                $this->dbo->updateObject('#__oscampus_users_lessons', $activity, 'id');
+                $query = $this->dbo->getQuery(true)
+                    ->select('*')
+                    ->from('#__oscampus_users_lessons')
+                    ->where(
+                        array(
+                            'users_id = ' . $this->user->id,
+                            'lessons_id = ' . (int)$lessonId
+                        )
+                    );
 
-            } else {
-                $activity = (object)array(
-                    'users_id'    => $this->user->id,
-                    'lessons_id'  => (int)$lessonId,
-                    'visits'      => 1,
-                    'first_visit' => $thisVisit,
-                    'last_visit'  => $thisVisit
-                );
-                $this->dbo->insertObject('#__oscampus_users_lessons', $activity);
+                if ($activity = $this->dbo->setQuery($query)->loadObject()) {
+                    $activity->last_visit = $thisVisit;
+                    $activity->visits++;
+                    $this->dbo->updateObject('#__oscampus_users_lessons', $activity, 'id');
+
+                } else {
+                    $activity = (object)array(
+                        'users_id'    => $this->user->id,
+                        'lessons_id'  => (int)$lessonId,
+                        'visits'      => 1,
+                        'first_visit' => $thisVisit,
+                        'last_visit'  => $thisVisit
+                    );
+                    $this->dbo->insertObject('#__oscampus_users_lessons', $activity);
+                }
+
+                $app->setUserState('oscampus.lesson.visited', $lessonId);
             }
         }
     }
