@@ -54,6 +54,7 @@
         options: {
             extras   : false,
             formToken: null,
+            interval : 5,
             download : {
                 authorised: false
             }
@@ -74,6 +75,41 @@
             this.moveNavigationButtons();
 
             this.setFullScreen();
+
+            this.setMonitoring(options);
+        },
+
+        /**
+         * Setup progress recording for this video
+         *
+         * @param {object} options
+         */
+        setMonitoring: function(options) {
+            var nextRecord = options.interval,
+                lesson     = $.Oscampus.lesson.current;
+
+            wistiaEmbed.bind('secondchange', function(s) {
+                var currentPercent = this.percentWatched() * 100,
+                    watched        = parseInt(currentPercent, 10);
+
+                if (watched >= nextRecord) {
+                    var ajaxOptions = {
+                        url   : 'index.php',
+                        method: 'post',
+                        data  : {
+                            option  : 'com_oscampus',
+                            format  : 'json',
+                            task    : 'activity.record',
+                            lessonId: lesson.id,
+                            score   : currentPercent
+                        }
+                    };
+                    ajaxOptions.data[options.formToken] = 1;
+
+                    $.ajax(ajaxOptions);
+                    nextRecord += options.interval;
+                }
+            });
         },
 
         /**
@@ -140,7 +176,6 @@
                     console.error('Failed to enable fullscreen', event);
                 });
             }
-
         },
 
         /**
