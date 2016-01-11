@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die();
 ?>
-<div class="osc-container oscampus-lesson" id="oscampus">
+<div class="<?php echo $this->getPageClass('osc-container oscampus-lesson'); ?>" id="oscampus">
     <div class="page-header">
         <h1><?php echo $this->lesson->title; ?></h1>
     </div>

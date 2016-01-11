@@ -14,9 +14,7 @@ defined('_JEXEC') or die();
 
 JHtml::_('osc.tabs', '.osc-course-tabs div');
 ?>
-
-<div class="osc-container oscampus-course" id="oscampus">
-
+<div class="<?php echo $this->getPageClass('osc-container oscampus-course'); ?>" id="oscampus">
     <div class="page-header">
         <h1><?php echo $this->course->title; ?></h1>
     </div>

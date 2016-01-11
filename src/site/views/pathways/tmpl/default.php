@@ -8,12 +8,12 @@
 
 defined('_JEXEC') or die();
 ?>
-
-<div class="osc-container oscampus-pathways" id="oscampus">
-
-    <div class="page-header">
-        <h1>Online Training</h1>
-    </div>
+<div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
+    <?php if ($heading = $this->getHeading('COM_SIMPLERENEW_HEADING_ONLINE_TRAINING')): ?>
+        <div class="page-header">
+            <h1><?php echo $heading; ?></h1>
+        </div>
+    <?php endif; ?>
 
     <?php
     foreach ($this->items as $item) :
