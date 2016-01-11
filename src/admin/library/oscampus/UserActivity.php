@@ -161,6 +161,22 @@ class UserActivity extends AbstractBase
     }
 
     /**
+     * Insert/Update user activity record
+     *
+     * @param Lesson $lesson
+     * @param int    $score
+     * @param null   $data
+     * @param bool   $updateLastVisitTime
+     */
+    public function recordProgress(Lesson $lesson, $score = 100, $data = null, $updateLastVisitTime = true)
+    {
+        $activity = $this->getStatus($lesson->id);
+        $lesson->renderer->prepareActivityProgress($activity, $score, $data, $updateLastVisitTime);
+
+        $this->setStatus($activity);
+    }
+
+    /**
      * Get an activity status record
      *
      * @param int $lessonId
@@ -187,6 +203,14 @@ class UserActivity extends AbstractBase
         if (empty($activity)) {
             $activity = $this->dbo->getTableColumns('#__oscampus_users_lessons');
             $activity = array_fill_keys(array_keys($activity), null);
+
+            $activity = array_merge(
+                $activity,
+                array(
+                    'users_id'   => $userId,
+                    'lessons_id' => $lessonId
+                )
+            );
         }
 
         return $activity;

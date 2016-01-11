@@ -60,6 +60,35 @@ abstract class AbstractType
         return $oldValue;
     }
 
+    /**
+     * Prepare an activity record for recording user progress. This is
+     * the default behavior. Subclasses should override as needed for
+     * their specialized purposes.
+     *
+     * @param object $activity
+     * @param float  $score
+     * @param mixed  $data
+     * @param bool   $updateLastVisitTime
+     *
+     * @return void
+     */
+    public function prepareActivityProgress($activity, $score, $data, $updateLastVisitTime = true)
+    {
+        if ($activity->score < $score) {
+            $activity->score = $score;
+        }
+
+        $now = OscampusFactory::getDate()->toSql();
+        if ($activity->score >= 100) {
+            $activity->completed = $now;
+        }
+        if ($updateLastVisitTime) {
+            $activity->last_visit = $now;
+        }
+
+        $activity->data  = $data;
+    }
+
     public function __toString()
     {
         return get_class($this);
