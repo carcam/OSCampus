@@ -50,7 +50,7 @@ class OscampusModelLesson extends OscampusModelSite
             }
         }
 
-        if ($this->lesson && ($uid = $this->getState('user.id'))) {
+        if ($this->lesson->id && ($uid = $this->getState('user.id'))) {
             $this->activity->setUser($uid);
             $this->activity->visitLesson($this->lesson->id);
         }
