@@ -186,40 +186,45 @@
         fullscreenNavigate: function() {
             var options = $.Oscampus.lesson.navigation.options;
 
-            $(options.buttons).bindBefore('click', function(evt) {
-                wistiaEmbed.pause();
-                wistiaEmbed.plugin['dimthelights'].undim();
+            $.each(options.buttons, function(direction, id) {
+                if ($.Oscampus.lesson[direction]) {
+                    $(id).bindBefore('click', function(evt) {
+                        wistiaEmbed.pause();
+                        wistiaEmbed.plugin['dimthelights'].undim();
 
-                var target = $.Oscampus.lesson[this.id === 'nextbut' ? 'next' : 'previous'];
-                if (screenfull.enabled && screenfull.isFullscreen && target.type) {
-                    if (target.type === 'wistia') {
-                        evt.preventDefault();
+                        var target = $.Oscampus.lesson[direction];
 
-                        var container = $(options.container);
+                        if (screenfull.enabled && screenfull.isFullscreen && target.type) {
+                            if (target.type === 'wistia') {
+                                evt.preventDefault();
 
-                        container.load(target.link, {tmpl: 'component'}, function(text, status) {
-                            var postProcess = setInterval(function() {
-                                if (typeof wistiaEmbed.elem() !== 'undefined') {
-                                    wistiaEmbed.ready(function() {
-                                        $.Oscampus.wistia.moveNavigationButtons();
+                                var container = $(options.container);
 
-                                        // Update the url and title
-                                        window.history.pushState(null, target.title, target.link);
-                                        document.title = target.title;
+                                container.load(target.link, {tmpl: 'component'}, function(text, status) {
+                                    var postProcess = setInterval(function() {
+                                        if (typeof wistiaEmbed.elem() !== 'undefined') {
+                                            wistiaEmbed.ready(function() {
+                                                $.Oscampus.wistia.moveNavigationButtons();
 
-                                        // Set the custom video speed
-                                        if (typeof Wistia.plugin['customspeed'] != 'undefined') {
-                                            Wistia.plugin['customspeed'](wistiaEmbed);
+                                                // Update the url and title
+                                                window.history.pushState(null, target.title, target.link);
+                                                document.title = target.title;
+
+                                                // Set the custom video speed
+                                                if (typeof Wistia.plugin['customspeed'] != 'undefined') {
+                                                    Wistia.plugin['customspeed'](wistiaEmbed);
+                                                }
+                                            });
+
+                                            clearInterval(postProcess);
+                                            postProcess = null;
+                                            container.removeClass('loading');
                                         }
-                                    });
-
-                                    clearInterval(postProcess);
-                                    postProcess = null;
-                                    container.removeClass('loading');
-                                }
-                            }, 500);
-                        });
-                    }
+                                    }, 500);
+                                });
+                            }
+                        }
+                    });
                 }
             });
         },
