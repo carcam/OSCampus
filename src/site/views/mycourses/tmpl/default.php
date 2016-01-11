@@ -8,4 +8,12 @@
 
 defined('_JEXEC') or die();
 ?>
-<h1>Under Construction</h1>
+<div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
+    <?php if ($heading = $this->getHeading('COM_SIMPLERENEW_HEADING_MYCOURSES')): ?>
+        <div class="page-header">
+            <h1><?php echo $heading; ?></h1>
+        </div>
+    <?php endif; ?>
+
+    <p>Under Construction</p>
+</div>
