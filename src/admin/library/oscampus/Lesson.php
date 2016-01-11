@@ -90,7 +90,7 @@ class Lesson extends AbstractBase
      * @param int          $pathwayId
      * @param AbstractType $renderer
      *
-     * @return void
+     * @return Lesson
      */
     public function loadByIndex($index, $courseId, $pathwayId, AbstractType $renderer = null)
     {
@@ -123,6 +123,8 @@ class Lesson extends AbstractBase
         }
 
         $this->setLessons($index, $data, $renderer);
+
+        return $this;
     }
 
     /**
@@ -133,7 +135,7 @@ class Lesson extends AbstractBase
      * @param int          $pathwayId
      * @param AbstractType $renderer
      *
-     * @return void
+     * @return Lesson
      */
     public function loadById($lessonId, $pathwayId = null, AbstractType $renderer = null)
     {
@@ -170,9 +172,10 @@ class Lesson extends AbstractBase
                 );
 
                 $this->setLessons($index, $data, $renderer);
-                return;
             }
         }
+
+        return $this;
     }
 
     /**
