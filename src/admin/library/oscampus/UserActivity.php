@@ -147,21 +147,12 @@ class UserActivity extends AbstractBase
 
             $visited = $app->getUserState('oscampus.lesson.visited');
             if ($visited != $lessonId) {
-                $thisVisit = OscampusFactory::getDate()->toSql();
-
-                if ($activity = $this->getStatus($lessonId)) {
-                    $activity->last_visit = $thisVisit;
+                $activity = $this->getStatus($lessonId);
+                if ($activity->id) {
+                    $activity->last_visit = OscampusFactory::getDate()->toSql();
                     $activity->visits++;
-
-                } else {
-                    $activity = array(
-                        'users_id'    => $this->user->id,
-                        'lessons_id'  => (int)$lessonId,
-                        'visits'      => 1,
-                        'first_visit' => $thisVisit,
-                        'last_visit'  => $thisVisit
-                    );
                 }
+
                 $this->setStatus($activity);
 
                 $app->setUserState('oscampus.lesson.visited', $lessonId);
@@ -181,19 +172,24 @@ class UserActivity extends AbstractBase
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
-            $query = $this->dbo->getQuery(true)
+            $query    = $this->dbo->getQuery(true)
                 ->select('*')
                 ->from('#__oscampus_users_lessons')
                 ->where(
                     array(
-                        'users_id = ' . $this->user->id,
+                        'users_id = ' . (int)$userId,
                         'lessons_id = ' . (int)$lessonId
                     )
                 );
-            return $this->dbo->setQuery($query)->loadObject();
+            $activity = $this->dbo->setQuery($query)->loadObject();
         }
 
-        return null;
+        if (empty($activity)) {
+            $activity = $this->dbo->getTableColumns('#__oscampus_users_lessons');
+            $activity = array_fill_keys(array_keys($activity), null);
+        }
+
+        return $activity;
     }
 
     /**
@@ -209,9 +205,16 @@ class UserActivity extends AbstractBase
             $activity = (object)$activity;
         }
 
-        if (is_object($activity)) {
+        if (is_object($activity) && !empty($activity->users_id) && !empty($activity->lessons_id)) {
+            $thisVisit = OscampusFactory::getDate()->toSql();
+
             if (empty($activity->id)) {
+                $activity->first_visit = $thisVisit;
+                $activity->last_visit  = $thisVisit;
+                $activity->visits      = 1;
+
                 $success = $this->dbo->insertObject('#__oscampus_users_lessons', $activity);
+
             } else {
                 $success = $this->dbo->updateObject('#__oscampus_users_lessons', $activity, 'id');
             }
