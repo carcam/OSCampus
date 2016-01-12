@@ -386,11 +386,12 @@ class OscampusControllerImport extends OscampusControllerBase
         $updateList       = array();
         foreach ($mediaList as $mediaItem) {
             if (isset($this->lessons[$mediaItem->lessons_id])) {
+                $guruLessonId = $mediaItem->lessons_id;
                 $this->mediaCount++;
 
-                $lessonId = $this->lessons[$mediaItem->lessons_id]->id;
-                if (isset($updateList[$lessonId])) {
-                    $lesson = $updateList[$lessonId];
+                $lessonId = $this->lessons[$guruLessonId]->id;
+                if (isset($updateList[$guruLessonId])) {
+                    $lesson = $updateList[$guruLessonId];
 
                 } else {
                     $lesson = (object)array(
@@ -459,18 +460,20 @@ class OscampusControllerImport extends OscampusControllerBase
                         break;
                 }
 
-                $updateList[$lessonId] = $lesson;
+                $updateList[$guruLessonId] = $lesson;
             }
         }
 
         $dbCampus = JFactory::getDbo();
-        foreach ($updateList as $lessonId => $lesson) {
+        foreach ($updateList as $guruLessonId => $lesson) {
             if ($lesson->type == 'wistia' && $lesson->content == '') {
                 // Some classes were set for the incorrect layout
                 $lesson->type    = 'text';
                 $lesson->content = $lesson->footer;
                 $lesson->footer  = '';
             }
+            $this->lessons[$guruLessonId]->type    = $lesson->type;
+            $this->lessons[$guruLessonId]->content = $lesson->content;
 
             $dbCampus->updateObject('#__oscampus_lessons', $lesson, 'id');
             if ($error = $dbCampus->getErrorMsg()) {
