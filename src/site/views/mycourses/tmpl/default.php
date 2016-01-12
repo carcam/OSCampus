@@ -39,7 +39,7 @@ defined('_JEXEC') or die();
                     <?php echo $item->last_lesson->format('Y-m-d'); ?>
                 </div>
                 <div class="block3">
-                    TBD
+                    <span class="osc-percentage-NaN" style="background: gray; display: inline-block; color: #fff; width: 55%;"><small style="padding-left: 10px;">%NaN</small></span>
                 </div>
             </div>
         <?php endforeach; ?>
