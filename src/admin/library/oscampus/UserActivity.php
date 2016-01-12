@@ -145,16 +145,15 @@ class UserActivity extends AbstractBase
         if ($this->user->id) {
             $app = OscampusFactory::getApplication();
 
+            $activity = $this->getStatus($lessonId);
+
+            // Always record the current time
+            $activity->last_visit = OscampusFactory::getDate()->toSql();
+
+            // Don't bump the visit count if the page is only refreshing
             $visited = $app->getUserState('oscampus.lesson.visited');
-            if ($visited != $lessonId) {
-                $activity = $this->getStatus($lessonId);
-                if ($activity->id) {
-                    $activity->last_visit = OscampusFactory::getDate()->toSql();
-                    $activity->visits++;
-                }
-
-                $this->setStatus($activity);
-
+            if ($activity->id && $visited != $lessonId) {
+                $activity->visits++;
                 $app->setUserState('oscampus.lesson.visited', $lessonId);
             }
         }
