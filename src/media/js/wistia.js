@@ -52,10 +52,11 @@
 
     $.Oscampus.wistia = {
         options: {
-            extras   : false,
-            formToken: null,
-            interval : 5,
-            download : {
+            extras     : false,
+            formToken  : null,
+            intervalPct: 10,
+            gracePct   : 3,
+            download   : {
                 authorised: false
             }
         },
@@ -85,30 +86,53 @@
          * @param {object} options
          */
         setMonitoring: function(options) {
-            var nextRecord = options.interval,
+            var nextRecord = options.intervalPct,
                 lesson     = $.Oscampus.lesson.current;
 
-            wistiaEmbed.bind('secondchange', function(s) {
-                var currentPercent = this.percentWatched() * 100,
-                    watched        = parseInt(currentPercent, 10);
-
-                if (watched >= nextRecord) {
-                    var ajaxOptions = {
-                        url   : 'index.php',
-                        method: 'post',
-                        data  : {
-                            option  : 'com_oscampus',
-                            format  : 'json',
-                            task    : 'activity.record',
-                            lessonId: lesson.id,
-                            score   : currentPercent
-                        }
-                    };
-                    ajaxOptions.data[options.formToken] = 1;
-
-                    $.ajax(ajaxOptions);
-                    nextRecord += options.interval;
+            var ajaxOptions = {
+                url   : 'index.php',
+                method: 'post',
+                data  : {
+                    option  : 'com_oscampus',
+                    format  : 'json',
+                    task    : 'activity.record',
+                    lessonId: lesson.id,
+                    score   : 0
                 }
+            };
+            ajaxOptions.data[options.formToken] = 1;
+
+            wistiaEmbed.bind('secondchange', function(currentSecond) {
+                var currentPercent = parseInt(this.percentWatched() * 100, 10);
+
+                // Use a grace period to consider a video completely watched
+                if (currentPercent + options.gracePct > 100) {
+                    currentPercent = 100;
+                }
+
+                if (currentPercent >= nextRecord) {
+                    $.ajax($.extend(true, {}, ajaxOptions, {
+                        data: {
+                            score: currentPercent
+                        }
+                    }));
+                    nextRecord += options.intervalPct;
+                }
+            });
+
+            wistiaEmbed.bind('end', function() {
+                var finalPercent = parseInt(this.percentWatched() * 100, 10);
+
+                // Because percentWatched hardly ever returns 100% even when it's true
+                if (finalPercent + options.gracePct >= 100) {
+                    finalPercent = 100;
+                }
+
+                $.ajax($.extend(true, {}, ajaxOptions, {
+                    data: {
+                        score: finalPercent
+                    }
+                }));
             });
         },
 
