@@ -17,23 +17,32 @@ defined('_JEXEC') or die();
         </div>
     <?php endif; ?>
 
-    <table>
-        <thead>
-        <tr>
-            <th><?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?></th>
-            <th><?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?></th>
-            <th><?php echo JText::_('COM_OSCAMPUS_COURSE_PROGRESS'); ?></th>
-        </tr>
-        </thead>
+    <div class="osc-table">
+        <div class="osc-section osc-row-heading osc-hide-tablet">
+            <div class="block6">
+                <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?>
+            </div>
+            <div class="block3">
+                <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?>
+            </div>
+            <div class="block3">
+                <i class="fa fa-battery-3"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_PROGRESS'); ?>
+            </div>
+        </div>
 
-        <tbody>
         <?php foreach ($this->items as $item) : ?>
-            <tr>
-                <td><?php echo JHtml::_('osc.course.link', $item); ?></td>
-                <td><?php echo $item->last_lesson->format('Y-m-d'); ?></td>
-                <td>TBD</td>
-            </tr>
+            <div class="osc-section osc-row-one">
+                <div class="block6">
+                    <?php echo JHtml::_('osc.course.link', $item); ?>
+                </div>
+                <div class="block3">
+                    <?php echo $item->last_lesson->format('Y-m-d'); ?>
+                </div>
+                <div class="block3">
+                    TBD
+                </div>
+            </div>
         <?php endforeach; ?>
-        </tbody>
-    </table>
+
+    </div>
 </div>
