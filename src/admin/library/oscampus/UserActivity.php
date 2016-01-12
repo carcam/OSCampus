@@ -156,6 +156,8 @@ class UserActivity extends AbstractBase
                 $activity->visits++;
                 $app->setUserState('oscampus.lesson.visited', $lessonId);
             }
+
+            $this->setStatus($activity);
         }
     }
 
@@ -203,7 +205,7 @@ class UserActivity extends AbstractBase
             $activity = $this->dbo->getTableColumns('#__oscampus_users_lessons');
             $activity = array_fill_keys(array_keys($activity), null);
 
-            $activity = array_merge(
+            $activity = (object)array_merge(
                 $activity,
                 array(
                     'users_id'   => $userId,
