@@ -10,5 +10,18 @@ defined('_JEXEC') or die();
 
 class OscampusViewMycourses extends OscampusViewSite
 {
+    /**
+     * @var object[]
+     */
+    protected $items = null;
 
+    public function display($tpl = null)
+    {
+        /** @var OscampusModelMycourses $model */
+        $model = $this->getModel();
+
+        $this->items = $model->getItems();
+
+        parent::display($tpl);
+    }
 }
