@@ -34,6 +34,7 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $mediaCount    = 0;
     protected $mediaSkipped  = 0;
     protected $viewCount     = 0;
+    protected $viewQuizCount = 0;
 
     protected $log = array();
 
@@ -159,6 +160,9 @@ class OscampusControllerImport extends OscampusControllerBase
     protected $customPathways  = array();
     protected $customJunctions = array();
 
+    protected $questionDuplicates    = array();
+    protected $questionDuplicateFlag = ' [DUPLICATE]';
+
     public function __construct($config = array())
     {
         parent::__construct($config);
@@ -222,7 +226,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadViewed();
         $this->log['Load Viewed'] = microtime(true);
 
-        //$this->loadViewedQuizzes();
+        $this->loadViewedQuizzes();
         $this->log['Load Viewed Quizzes'] = microtime(true);
 
         $this->loadWistiaDownloadLog();
@@ -503,7 +507,7 @@ class OscampusControllerImport extends OscampusControllerBase
             $correct = array_map('intval', $correct);
             for ($a = 1; $a <= 10; $a++) {
                 $f = "a{$a}";
-                if (!empty($question->$f)) {
+                if ($question->$f != '') {
                     $answer        = array(
                         'correct' => (int)in_array($a, $correct),
                         'text'    => stripslashes($question->$f)
@@ -517,8 +521,14 @@ class OscampusControllerImport extends OscampusControllerBase
                 $questions[$question->qid] = array();
             }
 
-            $text                            = stripslashes($question->text);
-            $key                             = md5($text);
+            $text = stripslashes($question->text);
+            $key  = md5($text);
+            if (isset($questions[$question->qid][$key])) {
+                $text .= $this->questionDuplicateFlag;
+                $this->questionDuplicates[] = $question->id;
+
+                $key = md5($text);
+            }
             $questions[$question->qid][$key] = array(
                 'text'    => $text,
                 'answers' => $answers
@@ -597,6 +607,8 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function loadViewedQuizzes()
     {
+        $this->viewQuizCount = 0;
+
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
@@ -617,12 +629,12 @@ class OscampusControllerImport extends OscampusControllerBase
                 )
             )
             ->from('#__guru_quiz q')
-            ->innerJoin('#__guru_questions qq ON qq . qid = q . id')
-            ->innerJoin('#__guru_quiz_question_taken qqt ON qqt . question_id = qq . id')
-            ->innerJoin('#__guru_quiz_taken qt ON qt . id = qqt . show_result_quiz_id')
-            ->innerJoin('#__users u ON u . id = qt . user_id')
-            ->innerJoin('#__guru_mediarel mr ON mr . media_id = q . id AND mr . layout = 12')
-            ->innerJoin('#__guru_task t ON t . id = mr . type_id')
+            ->innerJoin('#__guru_questions qq ON qq.qid = q.id')
+            ->innerJoin('#__guru_quiz_question_taken qqt ON qqt.question_id = qq.id')
+            ->innerJoin('#__guru_quiz_taken qt ON qt.id = qqt.show_result_quiz_id')
+            ->innerJoin('#__users u ON u.id = qt.user_id')
+            ->innerJoin('#__guru_mediarel mr ON mr.media_id = q.id AND mr.layout = 12')
+            ->innerJoin('#__guru_task t ON t.id = mr.type_id')
             ->order('qt.date_taken_quiz desc, q.id desc, qqt.id asc');
 
         $scoreCalc = function ($score_quiz) {
@@ -656,15 +668,22 @@ class OscampusControllerImport extends OscampusControllerBase
 
                 $correct = $cleanResults($correct);
                 $answer  = $cleanResults($answer);
+                $answer = array_pop($answer);
 
                 $i = 0;
                 foreach ((array)$result->answers as $aKey => $a) {
                     $i++;
-                    if (in_array($i, $answer)) {
+                    if ($i == $answer) {
                         $result->selected = $aKey;
                     }
 
                     if (in_array($i, $correct) && !$a->correct) {
+                        echo 'SENT: ' . func_get_arg(2) . ' :: ' . func_get_arg(3);
+                        echo '<pre>';
+                        print_r($correct);
+                        print_r($answer);
+                        print_r($pool->$qkey);
+                        echo '</pre>';
                         die('mismatch on correct answers');
                     }
                 }
@@ -693,8 +712,8 @@ class OscampusControllerImport extends OscampusControllerBase
                 $quizContent = json_decode($lesson->content);
 
                 $questionsQuery->clear('where')->where('mr.type_id = ' . $guruLessonId);
-                $questions = $dbGuru->setQuery($questionsQuery)->loadObjectList();
 
+                $questions = $dbGuru->setQuery($questionsQuery)->loadObjectList();
                 foreach ($questions as $question) {
                     $userId = $question->user_id;
                     if (isset($users[$userId])) {
@@ -712,7 +731,11 @@ class OscampusControllerImport extends OscampusControllerBase
                         $users[$userId]          = $userStatus;
                     }
 
-                    $qkey                    = md5($question->question);
+                    if (in_array($question->question_id, $this->questionDuplicates)) {
+                        $question->question .= $this->questionDuplicateFlag;
+                    }
+                    $qkey = md5($question->question);
+
                     $userStatus->data[$qkey] = $getAnswer(
                         $quizContent,
                         $question->question,
@@ -741,18 +764,22 @@ class OscampusControllerImport extends OscampusControllerBase
                     $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
                 }
 
+                $segments = array_chunk($insertValues, 150);
 
-                $insertQuery = $dbCampus->getQuery(true)
-                    ->insert('#__oscampus_users_lessons')
-                    ->columns(array_keys($insertKeys))
-                    ->values($insertValues);
+                foreach ($segments as $segment) {
+                    $insertQuery = $dbCampus->getQuery(true)
+                        ->insert('#__oscampus_users_lessons')
+                        ->columns(array_keys($insertKeys))
+                        ->values($segment);
 
-                $dbCampus->setQuery($insertQuery)->execute();
-                if ($error = $dbCampus->getErrorMsg()) {
-                    $this->errors[] = $error;
-                    echo '<br/>' . $error . '<br/>';
-                    return;
+                    $dbCampus->setQuery($insertQuery)->execute();
+                    if ($error = $dbCampus->getErrorMsg()) {
+                        $this->errors[] = $error;
+                        return;
+                    }
                 }
+
+                $this->viewQuizCount += count($insertValues);
             }
         }
     }
@@ -1214,6 +1241,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->files)) . ' Files</li>';
         echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
         echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
+        echo '<li>' . number_format($this->viewQuizCount) . ' Quizzes Taken';
         echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
