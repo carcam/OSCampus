@@ -15,7 +15,7 @@ class OscampusControllerImport extends OscampusControllerBase
         '#^\s*<br[\s/]*>\s*$#ims'
     );
 
-    protected $viewedQuizChunk = 100;
+    protected $viewedQuizChunk = 150;
 
     protected $groupToView = array(
         1         => 1, // Public group == Public View Level
@@ -569,7 +569,7 @@ class OscampusControllerImport extends OscampusControllerBase
             )
             ->order('user_id');
 
-        $keys   = array('users_id', 'lessons_id', 'completed', 'visits', 'first_visit', 'last_visit');
+        $keys   = array('users_id', 'lessons_id', 'completed', 'score', 'visits', 'first_visit', 'last_visit');
         $offset = 0;
         $limit  = 1000;
         while ($items = $dbGuru->setQuery($viewedQuery, $offset, $limit)->loadObjectList()) {
@@ -579,14 +579,19 @@ class OscampusControllerImport extends OscampusControllerBase
 
                 foreach ($lessons as $lesson) {
                     if (isset($this->lessons[$lesson])) {
-                        $data[] = array(
+                        $activity = array(
                             'users_id'    => $item->user_id,
                             'lessons_id'  => $this->lessons[$lesson]->id,
                             'completed'   => str_replace('0000-00-00', '', $item->date_completed) ?: null,
+                            'score' => 0,
                             'visits'      => 1,
                             'first_visit' => str_replace('0000-00-00', '', $item->date_last_visit) ?: null,
                             'last_visit'  => str_replace('0000-00-00', '', $item->date_last_visit) ?: null
                         );
+                        if ($activity['completed']) {
+                            $activity['score'] = 100;
+                        }
+                        $data[] = $activity;
                     }
                 }
             }
