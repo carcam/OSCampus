@@ -271,6 +271,8 @@ class OscampusControllerImport extends OscampusControllerBase
 
     public function showlog()
     {
+        echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+
         $path = JPATH_SITE . '/logs/oscampus.import.log';
 
         if (is_file($path)) {

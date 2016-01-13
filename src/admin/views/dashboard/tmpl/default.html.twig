@@ -12,5 +12,12 @@
 
     <p>Run the <a href="index.php?option=com_oscampus&task=import.import">current import</a></p>
     <p>(Don't worry - it's safe to run whenever you want!</p>
-    <p>Be patient while it runs, it currently takes about 9 minutes to complete</p>
+    <p>
+        Be patient while it runs, it currently takes about 9 minutes to complete. You may recieve a 500 error
+        or an internal server error. This is due to apache timing out ahead of php. The script will probably still
+        be running and the log file will likely be written a several minutes after you recieve the error.
+    </p>
+
+    <p>
+        <a href="index.php?option=com_oscampus&task=import.showlog">View the log for the last import</a></p>
 {% endblock %}
