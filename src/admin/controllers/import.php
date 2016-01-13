@@ -764,7 +764,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
                 }
 
-                $segments = array_chunk($insertValues, 150);
+                $segments = array_chunk($insertValues, 100);
 
                 foreach ($segments as $segment) {
                     $insertQuery = $dbCampus->getQuery(true)
