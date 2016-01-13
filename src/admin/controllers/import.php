@@ -15,7 +15,7 @@ class OscampusControllerImport extends OscampusControllerBase
         '#^\s*<br[\s/]*>\s*$#ims'
     );
 
-    protected $viewedQuizChunk = 150;
+    protected $viewedQuizChunk = 100;
 
     protected $groupToView = array(
         1         => 1, // Public group == Public View Level
@@ -181,6 +181,8 @@ class OscampusControllerImport extends OscampusControllerBase
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
 
+        ob_start();
+
         echo '<p>Max Execution Time: ' . ini_get('max_execution_time') . '<br/>';
         echo 'Memory Limit: ' . ini_get('memory_limit') . '</p>';
 
@@ -256,8 +258,31 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->displayResults();
 
+        $log = ob_get_contents();
+        file_put_contents(JPATH_SITE . '/logs/oscampus.import.log', $log);
+
+        ob_clean();
+
         error_reporting(0);
         ini_set('display_errors', 0);
+
+        JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
+    }
+
+    public function showlog()
+    {
+        $path = JPATH_SITE . '/logs/oscampus.import.log';
+
+        if (is_file($path)) {
+            $modified = new DateTime();
+            $modified->setTimestamp(filemtime($path));
+            echo '<p>Last Import finished at: ' . $modified->format('Y-m-d H:i:s T (P)') . '</p>';
+
+            echo file_get_contents($path);
+
+        } else {
+            echo '<p>Log file was not found</p>';
+        }
     }
 
     /**
@@ -1129,6 +1154,7 @@ class OscampusControllerImport extends OscampusControllerBase
                 $this->errors[] = $error;
                 return;
             }
+            $this->downloadCount += count($segment);
         }
 
     }
