@@ -15,6 +15,8 @@ class OscampusControllerImport extends OscampusControllerBase
         '#^\s*<br[\s/]*>\s*$#ims'
     );
 
+    protected $viewedQuizChunk = 100;
+
     protected $groupToView = array(
         1         => 1, // Public group == Public View Level
         2         => 2, // Non-member == Registered VL
@@ -174,9 +176,13 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         error_reporting(-1);
         ini_set('display_errors', 1);
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
 
         echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+
+        echo '<p>Max Execution Time: ' . ini_get('max_execution_time') . '<br/>';
+        echo 'Memory Limit: ' . ini_get('memory_limit') . '</p>';
 
         $this->log['Start'] = microtime(true);
 
@@ -243,6 +249,10 @@ class OscampusControllerImport extends OscampusControllerBase
 
         $this->fixOrdering('#__oscampus_pathways');
         $this->log['Fix Ordering Fields'] = microtime(true);
+
+        echo '<p>Memory: ' . number_format(memory_get_usage(true) / 1024 / 1024) . 'M<br/>';
+        echo 'Peak Memory: ' . number_format(memory_get_peak_usage(true) / 1024 / 1024) . 'M<br/>';
+        echo 'Total Time: ' . number_format(microtime(true) - $this->log['Start'], 2) . ' Minutes</p>';
 
         $this->displayResults();
 
@@ -668,7 +678,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
                 $correct = $cleanResults($correct);
                 $answer  = $cleanResults($answer);
-                $answer = array_pop($answer);
+                $answer  = array_pop($answer);
 
                 $i = 0;
                 foreach ((array)$result->answers as $aKey => $a) {
@@ -764,7 +774,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
                 }
 
-                $segments = array_chunk($insertValues, 100);
+                $segments = array_chunk($insertValues, $this->viewedQuizChunk);
 
                 foreach ($segments as $segment) {
                     $insertQuery = $dbCampus->getQuery(true)
@@ -1078,31 +1088,44 @@ class OscampusControllerImport extends OscampusControllerBase
      */
     protected function loadWistiaDownloadLog()
     {
-        $db    = JFactory::getDbo();
+        $db = JFactory::getDbo();
+
+        $fields = array(
+            'users_id'           => 'downloaded_by users_id',
+            'downloaded'         => 'downloaded',
+            'ip'                 => 'downloaded_from ip',
+            'media_hashed_id'    => 'media_hashed_id',
+            'media_project_name' => 'media_project_name',
+            'media_name'         => 'media_name'
+        );
+
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'downloaded_by users_id',
-                    'downloaded',
-                    'downloaded_from ip',
-                    'media_hashed_id',
-                    'media_project_name',
-                    'media_name'
-                )
-            )
+            ->select($fields)
             ->from('#__oswistia_download_log')
             ->order('id');
 
-        $list                = $db->setQuery($query)->loadObjectList();
-        $this->downloadCount = 0;
-        foreach ($list as $row) {
-            $db->insertObject('#__oscampus_wistia_downloads', $row);
+        $rows = $db->setQuery($query)->loadAssocList();
+
+        $insertValues = array();
+        foreach ($rows as $row) {
+            $quotedValues   = array_map(array($db, 'quote'), $row);
+            $insertValues[] = str_replace($db->quote(''), 'NULL', join(',', $quotedValues));
+        }
+
+        $segments = array_chunk($insertValues, 1000);
+        foreach ($segments as $segment) {
+            $insertQuery = $db->getQuery(true)
+                ->insert('#__oscampus_wistia_downloads')
+                ->columns(array_keys($fields))
+                ->values($segment);
+
+            $db->setQuery($insertQuery)->execute();
             if ($error = $db->getErrorMsg()) {
                 $this->errors[] = $error;
                 return;
             }
-            $this->downloadCount++;
         }
+
     }
 
     /**
