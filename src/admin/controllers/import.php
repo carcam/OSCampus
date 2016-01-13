@@ -223,7 +223,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->log['Load Viewed'] = microtime(true);
 
         //$this->loadViewedQuizzes();
-        //$this->log['Load Viewed Quizzes'] = microtime(true);
+        $this->log['Load Viewed Quizzes'] = microtime(true);
 
         $this->loadWistiaDownloadLog();
         $this->log['Load Wistia Log'] = microtime(true);
@@ -549,7 +549,7 @@ class OscampusControllerImport extends OscampusControllerBase
             )
             ->order('user_id');
 
-        $keys   = array('users_id', 'lessons_id', 'completed', 'last_visit');
+        $keys   = array('users_id', 'lessons_id', 'completed', 'visits', 'first_visit', 'last_visit');
         $offset = 0;
         $limit  = 1000;
         while ($items = $dbGuru->setQuery($viewedQuery, $offset, $limit)->loadObjectList()) {
@@ -560,10 +560,12 @@ class OscampusControllerImport extends OscampusControllerBase
                 foreach ($lessons as $lesson) {
                     if (isset($this->lessons[$lesson])) {
                         $data[] = array(
-                            'users_id'   => $item->user_id,
-                            'lessons_id' => $this->lessons[$lesson]->id,
-                            'completed'  => str_replace('0000-00-00', '', $item->date_completed) ?: null,
-                            'last_visit' => str_replace('0000-00-00', '', $item->date_last_visit) ?: null
+                            'users_id'    => $item->user_id,
+                            'lessons_id'  => $this->lessons[$lesson]->id,
+                            'completed'   => str_replace('0000-00-00', '', $item->date_completed) ?: null,
+                            'visits'      => 1,
+                            'first_visit' => str_replace('0000-00-00', '', $item->date_last_visit) ?: null,
+                            'last_visit'  => str_replace('0000-00-00', '', $item->date_last_visit) ?: null
                         );
                     }
                 }
@@ -598,8 +600,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
-        $lessons = $dbCampus->setQuery('Select * From #__oscampus_lessons')->loadObjectList('id');
-
         $questionsQuery = $dbGuru->getQuery(true)
             ->select(
                 array(
@@ -625,54 +625,133 @@ class OscampusControllerImport extends OscampusControllerBase
             ->innerJoin('#__guru_task t ON t . id = mr . type_id')
             ->order('qt.date_taken_quiz desc, q.id desc, qqt.id asc');
 
-        $start   = 0;
-        $limit   = 10;
-        $lastRow = null;
-        $viewed  = null;
-        while ($questions = $dbGuru->setQuery($questionsQuery, $start, $limit)->loadObjectList()) {
-            foreach ($questions as $question) {
-                if (isset($this->lessons[$question->lessons_id])) {
-                    $lessonId   = $this->lessons[$question->lessons_id]->id;
-                    $currentRow = array(
-                        'users_id'   => $question->user_id,
-                        'lessons_id' => $lessonId
+        $scoreCalc = function ($score_quiz) {
+            if (substr_count($score_quiz, '|') == 1) {
+                list($correct, $length) = explode('|', $score_quiz);
+                return ($correct / $length) * 100;
+            }
+            die('bad format');
+        };
 
+        $cleanResults = function ($string) {
+            $cleaned = array_filter(explode('|', $string));
+            array_walk($cleaned, function (&$row) {
+                $row = preg_replace('/[^\d]/', '', $row);
+            });
+            return $cleaned;
+        };
+
+        $getAnswer = function ($quiz, $question, $answer, $correct) use ($cleanResults) {
+            $pool   = $quiz->questions;
+            $result = (object)array(
+                'text'     => null,
+                'answers'  => array(),
+                'selected' => null
+            );
+
+            $qkey = md5(stripslashes($question));
+            if (isset($pool->$qkey)) {
+                $result->text    = $pool->$qkey->text;
+                $result->answers = $pool->$qkey->answers;
+
+                $correct = $cleanResults($correct);
+                $answer  = $cleanResults($answer);
+
+                $i = 0;
+                foreach ((array)$result->answers as $aKey => $a) {
+                    $i++;
+                    if (in_array($i, $answer)) {
+                        $result->selected = $aKey;
+                    }
+
+                    if (in_array($i, $correct) && !$a->correct) {
+                        die('mismatch on correct answers');
+                    }
+                }
+                return $result;
+            }
+
+            echo '<pre>';
+            var_dump($question);
+            var_dump($answer);
+            var_dump($correct);
+
+            print_r($quiz);
+            echo '</pre>';
+
+            die('bad question');
+        };
+
+        $activity = OscampusFactory::getContainer()->activity;
+
+        $insertKeys = get_object_vars($activity->getStatus(0, 0));
+        unset($insertKeys['id']);
+
+        foreach ($this->lessons as $guruLessonId => $lesson) {
+            $users = array();
+            if ($lesson->type == 'quiz') {
+                $quizContent = json_decode($lesson->content);
+
+                $questionsQuery->clear('where')->where('mr.type_id = ' . $guruLessonId);
+                $questions = $dbGuru->setQuery($questionsQuery)->loadObjectList();
+
+                foreach ($questions as $question) {
+                    $userId = $question->user_id;
+                    if (isset($users[$userId])) {
+                        $userStatus = $users[$userId];
+
+                    } else {
+                        $userStatus = $activity->getStatus($lesson->id, $userId);
+                        unset($userStatus->id);
+
+                        $userStatus->score       = $scoreCalc($question->score_quiz);
+                        $userStatus->visits      = 1;
+                        $userStatus->first_visit = $question->last_visit;
+                        $userStatus->last_visit  = $question->last_visit;
+                        $userStatus->data        = array();
+                        $users[$userId]          = $userStatus;
+                    }
+
+                    $qkey                    = md5($question->question);
+                    $userStatus->data[$qkey] = $getAnswer(
+                        $quizContent,
+                        $question->question,
+                        $question->answer_given,
+                        $question->answers
                     );
-                    if ($lastRow != $currentRow) {
-                        if ($viewed) {
-                            echo 'COUNT: ' . count($viewed['questions']) . '/' . $viewed['quiz']->count . '<br/>';
+                }
 
-                            foreach ($viewed['questions'] as $q) {
-                            }
-                        }
+                $insertValues = array();
+                foreach ($users as $userId => $user) {
+                    $user->data = array_values($user->data);
 
-                        $viewed = array_merge(
-                            $currentRow,
-                            array(
-                                'score'      => 0,
-                                'old_score'  => $question->score_quiz,
-                                'last_visit' => $question->last_visit,
-                                'quiz'       => json_decode($lessons[$lessonId]->content),
-                                'questions'  => array()
-                            )
-                        );
-                    }
-
-                    foreach ($viewed['quiz']->questions as $idx => $offered) {
-                        if (!strcasecmp($question->question, $offered->text)) {
-                            $answer = ($question->answer_given == '') ? null : ((int)$question->answer_given - 1);
-
-                            $response              = clone $offered;
-                            $response->answer      = $answer;
-                            $response->old         = array(
-                                'correct' => $question->answers,
-                                'chosen'  => $question->answer_given
-                            );
-                            $viewed['questions'][] = $response;
-                            break;
+                    $correct = 0;
+                    foreach ($user->data as $result) {
+                        if ($selected = $result->selected) {
+                            $correct += (int)$result->answers->$selected->correct;
                         }
                     }
-                    $lastRow = $currentRow;
+                    $user->score = round(($correct / count($user->data)) * 100, 0);
+                    if ($user->score >= $quizContent->passingScore) {
+                        $user->completed = $user->last_visit;
+                    }
+                    $user->data = json_encode($user->data);
+
+                    $quotedValues   = array_map(array($dbCampus, 'quote'), (array)$user);
+                    $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
+                }
+
+
+                $insertQuery = $dbCampus->getQuery(true)
+                    ->insert('#__oscampus_users_lessons')
+                    ->columns(array_keys($insertKeys))
+                    ->values($insertValues);
+
+                $dbCampus->setQuery($insertQuery)->execute();
+                if ($error = $dbCampus->getErrorMsg()) {
+                    $this->errors[] = $error;
+                    echo '<br/>' . $error . '<br/>';
+                    return;
                 }
             }
         }
