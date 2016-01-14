@@ -594,6 +594,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     'lesson_id != ' . $dbGuru->quote('')
                 )
             )
+            ->group('pid, user_id')
             ->order('user_id');
 
         $keys   = array('users_id', 'lessons_id', 'completed', 'score', 'visits', 'first_visit', 'last_visit');
@@ -602,10 +603,11 @@ class OscampusControllerImport extends OscampusControllerBase
         while ($items = $dbGuru->setQuery($viewedQuery, $offset, $limit)->loadObjectList()) {
             $data = array();
             foreach ($items as $item) {
-                $lessons = explode('||', trim($item->lesson_id, '|'));
+                $lessons = array_unique(explode('||', trim($item->lesson_id, '|')));
+                sort($lessons);
 
                 foreach ($lessons as $lesson) {
-                    if (isset($this->lessons[$lesson])) {
+                    if (isset($this->lessons[$lesson]) && $this->lessons[$lesson]->type != 'quiz') {
                         $activity = array(
                             'users_id'    => $item->user_id,
                             'lessons_id'  => $this->lessons[$lesson]->id,
