@@ -71,6 +71,32 @@ class Quiz extends AbstractType
         return $this;
     }
 
+    public function readAttempt($activity)
+    {
+        if (isset($activity->data) && $activity->data) {
+            $attempt = json_decode($activity->data);
+
+            $total   = count($attempt);
+            $correct = 0;
+            foreach ($attempt as $question) {
+                $question->answers = (array)$question->answers;
+                $selected = $question->selected;
+                if (isset($question->answers[$selected])) {
+                    $correct += (int)$question->answers[$selected]->correct;
+                } else {
+                    $question->selected = null;
+                }
+            }
+            return (object)array(
+                'score'     => round(($correct / $total) * 100, 0),
+                'correct'   => $correct,
+                'questions' => $attempt
+            );
+        }
+
+        return null;
+    }
+
     /**
      * Custom method to select randomly ordered questions. Retains the
      * same questions and order while the quiz time is still running

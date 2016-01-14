@@ -183,7 +183,7 @@ class UserActivity extends AbstractBase
      * @param int $lessonId
      * @param int $userId
      *
-     * @return object|null
+     * @return object
      */
     public function getStatus($lessonId, $userId = null)
     {

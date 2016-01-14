@@ -22,10 +22,16 @@ class OscampusViewLesson extends OscampusViewSite
      */
     protected $lesson = null;
 
+    /**
+     * @var object
+     */
+    protected $activity = null;
+
     public function display($tmpl = null)
     {
-        $this->model  = $this->getModel();
-        $this->lesson = $this->model->getItem();
+        $this->model    = $this->getModel();
+        $this->lesson   = $this->model->getItem();
+        $this->activity = $this->model->getActivityStatus();
 
         if (!$this->lesson->isAuthorised()) {
             parent::display('noauth');
@@ -57,7 +63,7 @@ class OscampusViewLesson extends OscampusViewSite
      */
     protected function loadNavigation()
     {
-        $oldLayout = $this->setLayout('default');
+        $oldLayout  = $this->setLayout('default');
         $navigation = $this->loadTemplate('navigation');
         $this->setLayout($oldLayout);
 

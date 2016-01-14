@@ -58,6 +58,17 @@ class OscampusModelLesson extends OscampusModelSite
         return $this->lesson;
     }
 
+    /**
+     * The user activity record for this lesson
+     *
+     * @return object
+     */
+    public function getActivityStatus()
+    {
+        $lesson = $this->getItem();
+        return $this->activity->getStatus($lesson->id);
+    }
+
     protected function populateState()
     {
         $app = JFactory::getApplication();
