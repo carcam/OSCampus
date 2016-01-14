@@ -254,7 +254,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
         echo '<p>Memory: ' . number_format(memory_get_usage(true) / 1024 / 1024) . 'M<br/>';
         echo 'Peak Memory: ' . number_format(memory_get_peak_usage(true) / 1024 / 1024) . 'M<br/>';
-        echo 'Total Time: ' . number_format((microtime(true) - $this->log['Start'])/60, 2) . ' Minutes</p>';
+        echo 'Total Time: ' . number_format((microtime(true) - $this->log['Start']) / 60, 2) . ' Minutes</p>';
 
         $this->displayResults();
 
@@ -612,7 +612,7 @@ class OscampusControllerImport extends OscampusControllerBase
                             'users_id'    => $item->user_id,
                             'lessons_id'  => $this->lessons[$lesson]->id,
                             'completed'   => str_replace('0000-00-00', '', $item->date_completed) ?: null,
-                            'score' => 0,
+                            'score'       => 0,
                             'visits'      => 1,
                             'first_visit' => str_replace('0000-00-00', '', $item->date_last_visit) ?: null,
                             'last_visit'  => str_replace('0000-00-00', '', $item->date_last_visit) ?: null
