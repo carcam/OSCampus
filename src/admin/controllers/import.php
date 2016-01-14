@@ -750,8 +750,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $insertKeys = get_object_vars($activity->getStatus(0, 0));
         unset($insertKeys['id']);
 
+        $users = array();
         foreach ($this->lessons as $guruLessonId => $lesson) {
-            $users = array();
             if ($lesson->type == 'quiz') {
                 $quizContent = json_decode($lesson->content);
 
@@ -788,42 +788,45 @@ class OscampusControllerImport extends OscampusControllerBase
                     );
                 }
 
-                $insertValues = array();
-                foreach ($users as $userId => $user) {
-                    $user->data = array_values($user->data);
+                if (count($users) >= $this->viewedQuizChunk) {
+                    $insertValues = array();
+                    foreach ($users as $userId => $user) {
+                        $user->data = array_values($user->data);
 
-                    $correct = 0;
-                    foreach ($user->data as $result) {
-                        if ($selected = $result->selected) {
-                            $correct += (int)$result->answers->$selected->correct;
+                        $correct = 0;
+                        foreach ($user->data as $result) {
+                            if ($selected = $result->selected) {
+                                $correct += (int)$result->answers->$selected->correct;
+                            }
+                        }
+                        $user->score = round(($correct / count($user->data)) * 100, 0);
+                        if ($user->score >= $quizContent->passingScore) {
+                            $user->completed = $user->last_visit;
+                        }
+                        $user->data = json_encode($user->data);
+
+                        $quotedValues   = array_map(array($dbCampus, 'quote'), (array)$user);
+                        $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
+                    }
+
+                    $segments = array_chunk($insertValues, $this->viewedQuizChunk);
+
+                    foreach ($segments as $segment) {
+                        $insertQuery = $dbCampus->getQuery(true)
+                            ->insert('#__oscampus_users_lessons')
+                            ->columns(array_keys($insertKeys))
+                            ->values($segment);
+
+                        $dbCampus->setQuery($insertQuery)->execute();
+                        if ($error = $dbCampus->getErrorMsg()) {
+                            $this->errors[] = $error;
+                            return;
                         }
                     }
-                    $user->score = round(($correct / count($user->data)) * 100, 0);
-                    if ($user->score >= $quizContent->passingScore) {
-                        $user->completed = $user->last_visit;
-                    }
-                    $user->data = json_encode($user->data);
 
-                    $quotedValues   = array_map(array($dbCampus, 'quote'), (array)$user);
-                    $insertValues[] = str_replace($dbCampus->quote(''), 'NULL', join(',', $quotedValues));
+                    $this->viewQuizCount += count($insertValues);
+                    $users = array();
                 }
-
-                $segments = array_chunk($insertValues, $this->viewedQuizChunk);
-
-                foreach ($segments as $segment) {
-                    $insertQuery = $dbCampus->getQuery(true)
-                        ->insert('#__oscampus_users_lessons')
-                        ->columns(array_keys($insertKeys))
-                        ->values($segment);
-
-                    $dbCampus->setQuery($insertQuery)->execute();
-                    if ($error = $dbCampus->getErrorMsg()) {
-                        $this->errors[] = $error;
-                        return;
-                    }
-                }
-
-                $this->viewQuizCount += count($insertValues);
             }
         }
     }
