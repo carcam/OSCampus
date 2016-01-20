@@ -37,7 +37,7 @@ endif;
             $correct = $selected && $question->answers[$selected]->correct;
             $icon    = $correct ? 'fa-check' : 'fa-times';
             ?>
-            <h4><i class="<?php echo 'fa ' . $icon; ?>"></i> <?php echo $i . '. ' . $question->text; ?></h4>
+            <h4><i class="<?php echo 'fa ' . $icon; ?>"></i> <?php echo $i++ . '. ' . $question->text; ?></h4>
             <ul class="osc-quiz-options">
                 <?php
                 foreach ($question->answers as $key => $answer) :
