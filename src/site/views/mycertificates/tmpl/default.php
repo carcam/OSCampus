@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
                 <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_DATE_EARNED'); ?>
             </div>
             <div class="block3">
-                <i class="fa fa-battery-3"></i> <?php echo JText::_('COM_OSCAMPUS_CERTIFICATE'); ?>
+                <i class="fa fa-file-pdf-o"></i> <?php echo JText::_('COM_OSCAMPUS_CERTIFICATE'); ?>
             </div>
         </div>
 
