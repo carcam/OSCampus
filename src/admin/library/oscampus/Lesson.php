@@ -20,11 +20,12 @@ defined('_JEXEC') or die();
  *
  * @package Oscampus
  *
- * @property-read int        $index
- * @property-read Properties $previous
- * @property-read Properties $current
- * @property-read Properties $next
- * @property-read object[]   $files
+ * @property-read int          $index
+ * @property-read Properties   $previous
+ * @property-read Properties   $current
+ * @property-read Properties   $next
+ * @property-read object[]     $files
+ * @property-read AbstractType $renderer
  *
  */
 class Lesson extends AbstractBase
