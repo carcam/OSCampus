@@ -13,6 +13,7 @@ use Oscampus\Lesson;
 use Oscampus\Lesson\Properties;
 use Oscampus\UserActivity;
 use OscampusFactory;
+use OscampusTable;
 use Pimple\Container AS Pimple;
 use Pimple\ServiceProviderInterface;
 
@@ -39,6 +40,10 @@ class Services implements ServiceProviderInterface
             return OscampusFactory::getDbo();
         };
 
+        $pimple['user'] = function (Container $c) {
+            return OscampusFactory::getUser();
+        };
+
         $pimple['lesson'] = $pimple->factory(
             function (Container $c) {
                 $properties = new Properties();
@@ -52,7 +57,8 @@ class Services implements ServiceProviderInterface
 
         $pimple['activity'] = $pimple->factory(
             function (Container $c) {
-                return new UserActivity($c['dbo']);
+                $data = new Lesson\ActivityStatus();
+                return new UserActivity($c['dbo'], $c['user'], $data);
             }
         );
     }

@@ -23,7 +23,7 @@ class OscampusViewLesson extends OscampusViewSite
     protected $lesson = null;
 
     /**
-     * @var object
+     * @var Lesson\ActivityStatus
      */
     protected $activity = null;
 

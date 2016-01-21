@@ -10,6 +10,7 @@ namespace Oscampus;
 
 use JDatabase;
 use JUser;
+use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 
 defined('_JEXEC') or die();
@@ -22,15 +23,21 @@ class UserActivity extends AbstractBase
     protected $user = null;
 
     /**
+     * @var ActivityStatus
+     */
+    protected $status = null;
+
+    /**
      * @var array[]
      */
     protected $lessons = array();
 
-    public function __construct(JDatabase $dbo, JUser $user = null)
+    public function __construct(JDatabase $dbo, JUser $user, ActivityStatus $activityStatus)
     {
         parent::__construct($dbo);
 
-        $this->user = $user ?: OscampusFactory::getUser();
+        $this->user   = $user;
+        $this->status = $activityStatus;
     }
 
     /**
@@ -43,7 +50,7 @@ class UserActivity extends AbstractBase
     public function setUser($id)
     {
         if ($id != $this->user->id) {
-            $this->user    = OscampusFactory::getUser($id);
+            $this->user->load($id);
             $this->lessons = array();
         }
 
@@ -189,7 +196,7 @@ class UserActivity extends AbstractBase
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
-            $query    = $this->dbo->getQuery(true)
+            $query  = $this->dbo->getQuery(true)
                 ->select('*')
                 ->from('#__oscampus_users_lessons')
                 ->where(
@@ -198,15 +205,12 @@ class UserActivity extends AbstractBase
                         'lessons_id = ' . (int)$lessonId
                     )
                 );
-            $activity = $this->dbo->setQuery($query)->loadObject();
+            $status = $this->dbo->setQuery($query)->loadObject(get_class($this->status));
         }
 
-        if (empty($activity)) {
-            $activity = $this->dbo->getTableColumns('#__oscampus_users_lessons');
-            $activity = array_fill_keys(array_keys($activity), null);
-
-            $activity = (object)array_merge(
-                $activity,
+        if (empty($status)) {
+            $status = clone $this->status;
+            $status->setProperties(
                 array(
                     'users_id'   => $userId,
                     'lessons_id' => $lessonId
@@ -214,34 +218,34 @@ class UserActivity extends AbstractBase
             );
         }
 
-        return $activity;
+        return $status;
     }
 
     /**
      * insert/update an activity status record
      *
-     * @param array|object $activity
+     * @param array|object $status
      *
      * @return bool
      */
-    public function setStatus($activity)
+    public function setStatus($status)
     {
-        if (is_array($activity)) {
-            $activity = (object)$activity;
+        if (is_array($status)) {
+            $status = (object)$status;
         }
 
-        if (is_object($activity) && !empty($activity->users_id) && !empty($activity->lessons_id)) {
+        if (is_object($status) && !empty($status->users_id) && !empty($status->lessons_id)) {
             $thisVisit = OscampusFactory::getDate()->toSql();
 
-            if (empty($activity->id)) {
-                $activity->first_visit = $thisVisit;
-                $activity->last_visit  = $thisVisit;
-                $activity->visits      = 1;
+            if (empty($status->id)) {
+                $status->first_visit = $thisVisit;
+                $status->last_visit  = $thisVisit;
+                $status->visits      = 1;
 
-                $success = $this->dbo->insertObject('#__oscampus_users_lessons', $activity);
+                $success = $this->dbo->insertObject('#__oscampus_users_lessons', $status);
 
             } else {
-                $success = $this->dbo->updateObject('#__oscampus_users_lessons', $activity, 'id');
+                $success = $this->dbo->updateObject('#__oscampus_users_lessons', $status, 'id');
             }
             return $success;
         }
