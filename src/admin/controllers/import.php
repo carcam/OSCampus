@@ -764,7 +764,7 @@ class OscampusControllerImport extends OscampusControllerBase
                         $userStatus = $users[$userId];
 
                     } else {
-                        $userStatus = $activity->getStatus($lesson->id, $userId);
+                        $userStatus = $activity->getStatus($lesson->id, $userId)->toObject();
                         unset($userStatus->id);
 
                         $userStatus->score       = $scoreCalc($question->score_quiz);
