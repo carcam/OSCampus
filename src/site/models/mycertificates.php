@@ -19,7 +19,7 @@ class OscampusModelMycertificates extends OscampusModelList
             ->select(
                 array(
                     'certificate.*',
-                    'cp.pathways_id',
+                    'MIN(cp.pathways_id) AS pathways_id',
                     'course.difficulty',
                     'course.length',
                     'course.title',
@@ -36,7 +36,8 @@ class OscampusModelMycertificates extends OscampusModelList
                     'pathway.access IN (' . $levels . ')'
                 )
             )
-            ->order('certificate.date_earned DESC');
+            ->group('course.id')
+            ->order('course.title ASC');
 
         return $query;
     }
