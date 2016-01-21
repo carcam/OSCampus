@@ -8,6 +8,8 @@
 
 namespace Oscampus;
 
+use JDatabaseQuery;
+use Oscampus\DateTime;
 use JDatabase;
 use JUser;
 use Oscampus\Lesson\ActivityStatus;
@@ -62,26 +64,23 @@ class UserActivity extends AbstractBase
      *
      * @param $courseId
      *
-     * @return array
+     * @return ActivityStatus[]
      */
     protected function get($courseId)
     {
         if ($this->user->id) {
             if (!isset($this->lessons[$courseId])) {
-                $query = $this->dbo->getQuery(true)
-                    ->select('ul.*, module.courses_id')
-                    ->from('#__oscampus_lessons lesson')
-                    ->innerJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
-                    ->leftJoin('#__oscampus_users_lessons ul ON ul.lessons_id = lesson.id')
+                $query = $this->getStatusQuery()
                     ->where(
                         array(
                             'ul.users_id = ' . $this->user->id,
                             'module.courses_id = ' . (int)$courseId
                         )
-                    )
-                    ->order('module.ordering ASC, lesson.ordering ASC');
+                    );
 
-                $this->lessons[$courseId] = $this->dbo->setQuery($query)->loadObjectList('lessons_id');
+                $this->lessons[$courseId] = $this->dbo
+                    ->setQuery($query)
+                    ->loadObjectList('lessons_id', get_class($this->status));
             }
         }
 
@@ -113,7 +112,7 @@ class UserActivity extends AbstractBase
      *
      * @param int $courseId
      *
-     * @return object[]
+     * @return ActivityStatus[]
      */
     public function getCourse($courseId)
     {
@@ -129,7 +128,7 @@ class UserActivity extends AbstractBase
      * @param int $lessonId
      * @param int $courseId
      *
-     * @return object|null
+     * @return ActivityStatus
      */
     public function getLesson($lessonId, $courseId = null)
     {
@@ -152,19 +151,20 @@ class UserActivity extends AbstractBase
         if ($this->user->id) {
             $app = OscampusFactory::getApplication();
 
-            $activity = $this->getStatus($lessonId);
+            $status = $this->getStatus($lessonId);
 
             // Always record the current time
-            $activity->last_visit = OscampusFactory::getDate()->toSql();
+            $status->last_visit = OscampusFactory::getDate()->toSql();
 
             // Don't bump the visit count if the page is only refreshing
             $visited = $app->getUserState('oscampus.lesson.visited');
-            if ($activity->id && $visited != $lessonId) {
-                $activity->visits++;
-                $app->setUserState('oscampus.lesson.visited', $lessonId);
+            if ($status->id && $visited != $lessonId) {
+                $status->visits++;
             }
 
-            $this->setStatus($activity);
+            $this->setStatus($status);
+            $app->setUserState('oscampus.lesson.visited', $lessonId);
+
         }
     }
 
@@ -178,10 +178,11 @@ class UserActivity extends AbstractBase
      */
     public function recordProgress(Lesson $lesson, $score = 100, $data = null, $updateLastVisitTime = true)
     {
-        $activity = $this->getStatus($lesson->id);
-        $lesson->renderer->prepareActivityProgress($activity, $score, $data, $updateLastVisitTime);
+        $status = $this->getStatus($lesson->id);
 
-        $this->setStatus($activity);
+        $lesson->renderer->prepareActivityProgress($status, $score, $data, $updateLastVisitTime);
+
+        $this->setStatus($status);
     }
 
     /**
@@ -190,15 +191,13 @@ class UserActivity extends AbstractBase
      * @param int $lessonId
      * @param int $userId
      *
-     * @return object
+     * @return ActivityStatus
      */
     public function getStatus($lessonId, $userId = null)
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
-            $query  = $this->dbo->getQuery(true)
-                ->select('*')
-                ->from('#__oscampus_users_lessons')
+            $query  = $this->getStatusQuery()
                 ->where(
                     array(
                         'users_id = ' . (int)$userId,
@@ -222,30 +221,46 @@ class UserActivity extends AbstractBase
     }
 
     /**
+     * Standard query for finding status records. We're doing this so
+     * that we can pull all activity records for a course by filtering
+     * on module.courses_id when needed
+     *
+     * @return JDatabaseQuery
+     */
+    protected function getStatusQuery()
+    {
+        $query = $this->dbo->getQuery(true)
+            ->select('ul.*')
+            ->from('#__oscampus_lessons lesson')
+            ->innerJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
+            ->leftJoin('#__oscampus_users_lessons ul ON ul.lessons_id = lesson.id')
+            ->order('module.ordering ASC, lesson.ordering ASC');
+
+        return $query;
+    }
+
+    /**
      * insert/update an activity status record
      *
-     * @param array|object $status
+     * @param ActivityStatus $status
      *
      * @return bool
      */
-    public function setStatus($status)
+    public function setStatus(ActivityStatus $status)
     {
-        if (is_array($status)) {
-            $status = (object)$status;
-        }
-
-        if (is_object($status) && !empty($status->users_id) && !empty($status->lessons_id)) {
-            $thisVisit = OscampusFactory::getDate()->toSql();
-
+        if (!empty($status->users_id) && !empty($status->lessons_id)) {
             if (empty($status->id)) {
+                $thisVisit = new DateTime();
                 $status->first_visit = $thisVisit;
                 $status->last_visit  = $thisVisit;
                 $status->visits      = 1;
 
-                $success = $this->dbo->insertObject('#__oscampus_users_lessons', $status);
+                $insert = $status->toObject();
+                $success = $this->dbo->insertObject('#__oscampus_users_lessons', $insert);
 
             } else {
-                $success = $this->dbo->updateObject('#__oscampus_users_lessons', $status, 'id');
+                $update = $status->toObject();
+                $success = $this->dbo->updateObject('#__oscampus_users_lessons', $update, 'id');
             }
             return $success;
         }

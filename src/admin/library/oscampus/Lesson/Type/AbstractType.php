@@ -8,7 +8,9 @@
 
 namespace Oscampus\Lesson\Type;
 
+use Oscampus\DateTime;
 use Oscampus\Lesson;
+use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 
 defined('_JEXEC') or die();
@@ -65,20 +67,20 @@ abstract class AbstractType
      * the default behavior. Subclasses should override as needed for
      * their specialized purposes.
      *
-     * @param object $activity
-     * @param float  $score
-     * @param mixed  $data
-     * @param bool   $updateLastVisitTime
+     * @param ActivityStatus $activity
+     * @param int            $score
+     * @param mixed          $data
+     * @param bool           $updateLastVisitTime
      *
      * @return void
      */
-    public function prepareActivityProgress($activity, $score, $data, $updateLastVisitTime = true)
+    public function prepareActivityProgress(ActivityStatus $activity, $score, $data, $updateLastVisitTime = true)
     {
         if ($activity->score < $score) {
             $activity->score = $score;
         }
 
-        $now = OscampusFactory::getDate()->toSql();
+        $now = new DateTime();
         if ($activity->score >= 100) {
             $activity->completed = $now;
         }
@@ -86,7 +88,7 @@ abstract class AbstractType
             $activity->last_visit = $now;
         }
 
-        $activity->data  = $data;
+        $activity->data = $data;
     }
 
     public function __toString()

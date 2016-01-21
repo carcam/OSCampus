@@ -9,6 +9,7 @@
 namespace Oscampus\Lesson;
 
 use DateTime;
+use JDatabase;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -66,10 +67,9 @@ class ActivityStatus
      */
     protected $defaultValues = null;
 
-    public function __construct(array $data = array())
+    public function __construct()
     {
-        $data = $data ?: get_object_vars($this);
-        $this->setProperties($data);
+        $this->setProperties(get_object_vars($this));
     }
 
     public function __clone()
@@ -77,6 +77,60 @@ class ActivityStatus
         $this->setProperties(array(), true);
     }
 
+    /**
+     * Return all public properties as an array using transformations
+     * for use in database queries
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $properties = $this->getDefaults();
+        foreach ($properties as $name => $default) {
+            if ($this->$name instanceof DateTime) {
+                $properties[$name] = $this->$name->format('Y-m-d H:i:s');
+            } else {
+                $properties[$name] = $this->$name;
+            }
+        }
+
+        return $properties;
+    }
+
+    /**
+     * Wrapper for toArray() to return an object
+     *
+     * @return object
+     */
+    public function toObject()
+    {
+        return (object)$this->toArray();
+    }
+
+    /**
+     * Wrapper for toArray() to return a JSON string
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return json_encode($this->toArray());
+    }
+
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Set public properties using an array. Optionally set all
+     * other properties not referenced/
+     *
+     * @param array $data
+     * @param bool  $setAll
+     *
+     * @return void
+     */
     public function setProperties(array $data = array(), $setAll = false)
     {
         $properties = $this->getDefaults();
@@ -91,6 +145,12 @@ class ActivityStatus
         }
     }
 
+    /**
+     * Set a single property, applying any transformations that may be needed
+     *
+     * @param string $name
+     * @param mixed $value
+     */
     public function setProperty($name, $value)
     {
         switch ($name) {
@@ -117,6 +177,11 @@ class ActivityStatus
         }
     }
 
+    /**
+     * Find all public properties and their default values
+     *
+     * @return array
+     */
     protected function getDefaults()
     {
         if ($this->defaultValues === null) {
