@@ -22,11 +22,11 @@ abstract class OscCourse
     public static function link($course, $text = null, $attribs = null, $uriOnly = false)
     {
         $query        = OscampusRoute::getInstance()->getQuery('course');
-        $query['cid'] = $course->id;
+        $query['cid'] = isset($course->courses_id) ? $course->courses_id : $course->id;
 
         if (!empty($course->pathways_id)) {
             $query['pid'] = $course->pathways_id;
-        } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
+        } elseif ($pid = OscampusFactory::getApplication()->input->getInt('pid')) {
             $query['pid'] = $pid;
         } else {
             throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_PATHWAY_REQUIRED', __METHOD__), 500);
