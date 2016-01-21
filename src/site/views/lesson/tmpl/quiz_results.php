@@ -17,8 +17,7 @@ defined('_JEXEC') or die();
  */
 
 $quiz     = $this->lesson->renderer;
-$activity = $this->activity;
-$attempt  = $quiz->readAttempt($activity);
+$attempt  = $quiz->getLastAttempt($this->activity);
 
 if ($this->lesson->header) :
     ?>
@@ -32,7 +31,7 @@ endif;
     <div class="osc-quiz-question">
         <?php
         $i           = 1;
-        foreach ($attempt->questions as $question) :
+        foreach ($attempt as $question) :
             $selected = $question->selected;
             $correct = $selected && $question->answers[$selected]->correct;
             $icon    = $correct ? 'fa-check' : 'fa-times';

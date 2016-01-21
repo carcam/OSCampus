@@ -9,7 +9,9 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
+use Oscampus\DateTime;
 use Oscampus\Lesson;
+use Oscampus\Lesson\ActivityStatus;
 
 defined('_JEXEC') or die();
 
@@ -71,30 +73,23 @@ class Quiz extends AbstractType
         return $this;
     }
 
-    public function readAttempt($activity)
+    /**
+     * @param ActivityStatus $activity
+     *
+     * @return object[]
+     */
+    public function getLastAttempt(ActivityStatus $activity)
     {
         if (isset($activity->data) && $activity->data) {
-            $attempt = json_decode($activity->data);
-
-            $total   = count($attempt);
-            $correct = 0;
-            foreach ($attempt as $question) {
+            $questions = json_decode($activity->data);
+            foreach ($questions as $question) {
                 $question->answers = (array)$question->answers;
-                $selected = $question->selected;
-                if (isset($question->answers[$selected])) {
-                    $correct += (int)$question->answers[$selected]->correct;
-                } else {
-                    $question->selected = null;
-                }
             }
-            return (object)array(
-                'score'     => round(($correct / $total) * 100, 0),
-                'correct'   => $correct,
-                'questions' => $attempt
-            );
+
+            return $questions;
         }
 
-        return null;
+        return array();
     }
 
     /**
@@ -124,5 +119,70 @@ class Quiz extends AbstractType
         }
 
         return $selection;
+    }
+
+    /**
+     * Override the default behavior to review and grade a quiz
+     *
+     * @param ActivityStatus $status
+     * @param int            $score
+     * @param mixed          $data
+     * @param bool           $updateLastVisitTime
+     */
+    public function prepareActivityProgress(ActivityStatus $status, $score, $data, $updateLastVisitTime = true)
+    {
+        if (is_array($data)) {
+            $status->score = 0;
+
+            $responses = $this->collectResponse($data);
+            foreach ($responses as $response) {
+                $selected = $response->selected;
+                $answer   = $response->answers[$selected];
+
+                $status->score += (int)$answer->correct;
+            }
+            $status->score = round(($status->score / count($responses)) * 100, 0);
+            $status->data = json_encode($responses);
+        }
+
+        $now = new DateTime();
+        if ($status->score >= $this->passingScore) {
+            $status->completed = $now;
+        }
+        if ($updateLastVisitTime) {
+            $status->last_visit = $now;
+        }
+    }
+
+    /**
+     * Process the raw responses from a form. Expects an array in
+     * the form
+     * array( questionHash => answerHash)
+     *
+     * Where the hashes are md5 hashes of the associated texts.
+     *
+     * @param array $responses
+     *
+     * @return array
+     */
+    protected function collectResponse(array $responses)
+    {
+        $questions = $this->getQuestions();
+
+        $data = array();
+        foreach ($responses as $question => $answer) {
+            if (isset($questions[$question])) {
+                $q = $questions[$question];
+                if (isset($q->answers[$answer])) {
+                    $data[] = (object)array(
+                        'text'     => $q->text,
+                        'answers'  => $q->answers,
+                        'selected' => $answer
+                    );
+                }
+            }
+        }
+
+        return $data;
     }
 }

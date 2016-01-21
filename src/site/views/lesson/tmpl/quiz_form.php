@@ -54,7 +54,7 @@ $questions = $quiz->getQuestions();
     </div>
 <?php endif; ?>
 
-<form id="quizForm" name="quizForm" action="javascript:alert('under construction');">
+<form id="quizForm" name="quizForm" method="post" action="">
     <div class="osc-section oscampus-lesson-content">
         <?php
         $qn = 0;
@@ -71,7 +71,7 @@ $questions = $quiz->getQuestions();
                         <li><input
                                 id="<?php echo $id; ?>"
                                 type="radio"
-                                name="<?php echo $qkey; ?>"
+                                name="<?php echo "questions[{$qkey}]"; ?>"
                                 value="<?php echo $akey; ?>"/>
                             <?php echo $answer->text; ?>
                         </li>
@@ -88,6 +88,10 @@ $questions = $quiz->getQuestions();
         </button>
     </div>
     <!-- .osc-section -->
+
+    <input type="hidden" name="option" value="com_oscampus"/>
+    <input type="hidden" name="task" value="quiz.grade"/>
+    <?php echo JHtml::_('form.token'); ?>
 </form>
 
 <?php

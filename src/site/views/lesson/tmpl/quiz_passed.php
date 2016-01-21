@@ -18,8 +18,6 @@ defined('_JEXEC') or die();
 
 $quiz     = $this->lesson->renderer;
 $activity = $this->activity;
-
-$attempt = $quiz->readAttempt($activity);
 ?>
 
 <div class="osc-section">
@@ -38,14 +36,14 @@ $attempt = $quiz->readAttempt($activity);
     <div class="block3">
         <div class="osc-quiz-left">
             <span class="osc-quiz-score-label">Your Score</span><br/>
-            <span class="osc-quiz-percentage"><?php echo $attempt->score . '%'; ?></span><br/>
+            <span class="osc-quiz-percentage"><?php echo $activity->score . '%'; ?></span><br/>
             <span class="osc-quiz-failed-label osc-positive-color">(Passed!)</span><br/>
         </div>
     </div>
     <div class="block8">
         <div class="osc-quiz-right">
             <strong>Your score:</strong> <strong
-                class="osc-positive-color"><?php echo $attempt->score . '%'; ?></strong>, minimum score to pass is:
+                class="osc-positive-color"><?php echo $activity->score . '%'; ?></strong>, minimum score to pass is:
             <strong class="osc-positive-color"><?php echo $quiz->passingScore . '%'; ?></strong>.<br/>
             <strong>Congratulations! You passed!</strong>
         </div>
