@@ -22,8 +22,9 @@
     $.Oscampus.quiz = {
         options: {
             timer: {
-                selector : '#oscampus-timer .osc-clock',
-                timeLimit: 600
+                selector  : '#oscampus-timer .osc-clock',
+                timeLimit : 600,
+                limitAlert: 60
             }
         },
 

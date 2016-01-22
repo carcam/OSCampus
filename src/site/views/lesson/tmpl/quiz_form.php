@@ -59,19 +59,22 @@ $questions = $quiz->getQuestions();
         <?php
         $qn = 0;
         foreach ($questions as $qkey => $question):
+            $name = 'questions[' . $qkey . ']';
             ?>
             <div class="<?php echo 'question' . ($qn++ % 2); ?> osc-quiz-question">
+                <input type="hidden" name="<?php echo $name; ?>" value=""/>
                 <h4><?php echo sprintf('Q%s: %s', $qn, $question->text); ?></h4>
                 <ul class="osc-quiz-options">
                     <?php
                     $an = 0;
                     foreach ($question->answers as $akey => $answer):
-                        $id = $qkey . '_' . $akey;
+                        $id   = $qkey . '_' . $akey;
                         ?>
-                        <li><input
+                        <li>
+                            <input
                                 id="<?php echo $id; ?>"
                                 type="radio"
-                                name="<?php echo "questions[{$qkey}]"; ?>"
+                                name="<?php echo $name; ?>"
                                 value="<?php echo $akey; ?>"/>
                             <?php echo $answer->text; ?>
                         </li>

@@ -20,22 +20,22 @@ class Quiz extends AbstractType
     /**
      * @var int
      */
+    public $passingScore = 70;
+
+    /**
+     * @var int
+     */
+    public $timeLimit = 10;
+
+    /**
+     * @var int
+     */
+    public $limitAlert = 1;
+
+    /**
+     * @var int
+     */
     public $quizLength = null;
-
-    /**
-     * @var int
-     */
-    public $passingScore = null;
-
-    /**
-     * @var int
-     */
-    public $timeLimit = null;
-
-    /**
-     * @var int
-     */
-    public $limitAlert = null;
 
     /**
      * @var object[]
@@ -46,25 +46,28 @@ class Quiz extends AbstractType
     {
         parent::__construct($lesson);
 
-        $properties = (array)json_decode($lesson->content);
+        $content = json_decode($lesson->content);
 
-        foreach ($properties as $property => $value) {
-            if (property_exists($this, $property)) {
-                $this->$property = $value;
-            }
-        }
-
-        $this->questions = (array)$this->questions;
+        $this->questions = isset($content->questions) ? (array)$content->questions : array();
         foreach ($this->questions as $question) {
             $question->answers = (array)$question->answers;
         }
+        $this->quizLength = isset($content->quizLength) ? $content->quizLength : count($this->questions);
     }
 
     public function render()
     {
         JHtml::_('osc.jquery');
         JHtml::_('script', 'com_oscampus/quiz.js', false, true);
-        JHtml::_('osc.onready', '$.Oscampus.quiz.timer()');
+
+        $options = json_encode(
+            array(
+                'timeLimit'  => 5, //$this->timeLimit * 60,
+                'limitAlert' => $this->limitAlert * 60
+            )
+        );
+
+        JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
 
         if ($this->getUserState('quiz_time') === null) {
             $this->setUserState('quiz_time', $this->timeLimit * 60);
@@ -142,7 +145,7 @@ class Quiz extends AbstractType
                 $status->score += (int)$answer->correct;
             }
             $status->score = round(($status->score / count($responses)) * 100, 0);
-            $status->data = json_encode($responses);
+            $status->data  = json_encode($responses);
         }
 
         $now = new DateTime();
@@ -172,14 +175,13 @@ class Quiz extends AbstractType
         $data = array();
         foreach ($responses as $question => $answer) {
             if (isset($questions[$question])) {
-                $q = $questions[$question];
-                if (isset($q->answers[$answer])) {
-                    $data[] = (object)array(
-                        'text'     => $q->text,
-                        'answers'  => $q->answers,
-                        'selected' => $answer
-                    );
-                }
+                $q      = $questions[$question];
+                $a      = isset($q->answers[$answer]) ? $answer : null;
+                $data[] = (object)array(
+                    'text'     => $q->text,
+                    'answers'  => $q->answers,
+                    'selected' => $a
+                );
             }
         }
 
