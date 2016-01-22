@@ -164,7 +164,6 @@ class UserActivity extends AbstractBase
 
             $this->setStatus($status);
             $app->setUserState('oscampus.lesson.visited', $lessonId);
-
         }
     }
 
