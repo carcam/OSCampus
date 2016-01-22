@@ -62,7 +62,7 @@ class Quiz extends AbstractType
 
         $options = json_encode(
             array(
-                'timeLimit'  => 5, //$this->timeLimit * 60,
+                'timeLimit'  => $this->timeLimit * 60,
                 'limitAlert' => $this->limitAlert * 60
             )
         );
