@@ -454,10 +454,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
                         switch ($mediaItem->type) {
                             case 'video':
-                                $content = array(
-                                    'id'       => null,
-                                    'autoplay' => $mediaItem->autoplay,
-                                );
+                                $content = array('id' => null);
                                 if (preg_match('#{wistia}(.*?){/wistia}#', $mediaItem->content, $matches)) {
                                     $content['id'] = $matches[1];
                                 }
@@ -486,10 +483,7 @@ class OscampusControllerImport extends OscampusControllerBase
                             ? $questions[$mediaItem->quiz_id] : array();
 
                         $content = array(
-                            'passingScore' => $mediaItem->quiz_passing_score,
                             'quizLength'   => $mediaItem->quiz_question_count,
-                            'timeLimit'    => $mediaItem->quiz_timelimit,
-                            'limitAlert'   => $mediaItem->quiz_alert_end,
                             'questions'    => $quizQuestions
                         );
 
@@ -800,7 +794,7 @@ class OscampusControllerImport extends OscampusControllerBase
                             }
                         }
                         $user->score = round(($correct / count($user->data)) * 100, 0);
-                        if ($user->score >= $quizContent->passingScore) {
+                        if ($user->score >= 70) {
                             $user->completed = $user->last_visit;
                         }
                         $user->data = json_encode($user->data);
