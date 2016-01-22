@@ -63,33 +63,15 @@ abstract class AbstractType
     }
 
     /**
-     * Prepare an activity record for recording user progress. This is
-     * the default behavior. Subclasses should override as needed for
-     * their specialized purposes.
+     * Prepare an ActivityStatus for recording user progress.
      *
-     * @param ActivityStatus $activity
+     * @param ActivityStatus $status
      * @param int            $score
      * @param mixed          $data
-     * @param bool           $updateLastVisitTime
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $activity, $score, $data, $updateLastVisitTime = true)
-    {
-        if ($activity->score < $score) {
-            $activity->score = $score;
-        }
-
-        $now = new DateTime();
-        if ($activity->score >= 100) {
-            $activity->completed = $now;
-        }
-        if ($updateLastVisitTime) {
-            $activity->last_visit = $now;
-        }
-
-        $activity->data = $data;
-    }
+    abstract public function prepareActivityProgress(ActivityStatus $status, $score, $data);
 
     public function __toString()
     {

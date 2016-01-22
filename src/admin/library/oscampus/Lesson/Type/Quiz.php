@@ -121,14 +121,15 @@ class Quiz extends AbstractType
     }
 
     /**
-     * Override the default behavior to review and grade a quiz
+     * Prepare an ActivityStatus for recording user progress.
      *
      * @param ActivityStatus $status
      * @param int            $score
      * @param mixed          $data
-     * @param bool           $updateLastVisitTime
+     *
+     * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data, $updateLastVisitTime = true)
+    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
     {
         if (is_array($data)) {
             $status->score = 0;
@@ -148,9 +149,7 @@ class Quiz extends AbstractType
         if ($status->score >= $this->passingScore) {
             $status->completed = $now;
         }
-        if ($updateLastVisitTime) {
-            $status->last_visit = $now;
-        }
+        $status->last_visit = $now;
     }
 
     /**

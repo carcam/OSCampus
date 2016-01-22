@@ -13,7 +13,9 @@ use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
 use JSession;
 use JText;
+use Oscampus\DateTime;
 use Oscampus\Lesson;
+use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 
 defined('_JEXEC') or die();
@@ -135,5 +137,30 @@ class Wistia extends AbstractType
         }
 
         return $loaded;
+    }
+
+    /**
+     * Prepare an ActivityStatus for recording user progress.
+     *
+     * @param ActivityStatus $status
+     * @param int            $score
+     * @param mixed          $data
+     *
+     * @return void
+     */
+    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    {
+        if ($status->score < $score) {
+            $status->score = $score;
+        }
+
+        $now = new DateTime();
+        if ($status->score >= 100) {
+            $status->score     = 100;
+            $status->completed = $now;
+        }
+        $status->last_visit = $now;
+
+        $status->data = $data;
     }
 }

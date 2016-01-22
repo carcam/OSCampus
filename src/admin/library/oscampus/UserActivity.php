@@ -173,15 +173,21 @@ class UserActivity extends AbstractBase
      * @param Lesson $lesson
      * @param int    $score
      * @param null   $data
-     * @param bool   $updateLastVisitTime
+     * @param bool   $clearCompleted
      */
-    public function recordProgress(Lesson $lesson, $score = 100, $data = null, $updateLastVisitTime = true)
+    public function recordProgress(Lesson $lesson, $score = 100, $data = null, $clearCompleted = false)
     {
         $status = $this->getStatus($lesson->id);
 
-        $lesson->renderer->prepareActivityProgress($status, $score, $data, $updateLastVisitTime);
+        if ($clearCompleted) {
+            $status->completed = null;
+        }
 
-        $this->setStatus($status);
+        if (!$status->completed) {
+            $lesson->renderer->prepareActivityProgress($status, $score, $data);
+
+            $this->setStatus($status);
+        }
     }
 
     /**
