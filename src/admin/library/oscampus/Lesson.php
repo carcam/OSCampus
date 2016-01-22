@@ -21,6 +21,19 @@ defined('_JEXEC') or die();
  * @package Oscampus
  *
  * @property-read int          $index
+ * @property-read int          $id
+ * @property-read int          $modules_id
+ * @property-read int          $courses_id
+ * @property-read int          $pathways_id
+ * @property-read string       $type
+ * @property-read string       $title
+ * @property-read string       $alias
+ * @property-read string       $header
+ * @property-read mixed        $content
+ * @property-read string       $footer
+ * @property-read int          $access
+ * @property-read bool         $published
+ * @property-read bool         $authorised
  * @property-read Properties   $previous
  * @property-read Properties   $current
  * @property-read Properties   $next
@@ -31,6 +44,21 @@ defined('_JEXEC') or die();
 class Lesson extends AbstractBase
 {
     const SUBCLASS_BASE = '\\Oscampus\\Lesson\Type\\';
+
+    /**
+     * @var string
+     */
+    public $courseTitle = null;
+
+    /**
+     * @var string
+     */
+    public $moduleTitle = null;
+
+    /**
+     * @var string
+     */
+    public $pathwayTitle = null;
 
     /**
      * @var int
@@ -234,6 +262,11 @@ class Lesson extends AbstractBase
     protected function setLessons($index, array $data, AbstractType $renderer = null)
     {
         $this->index = $index;
+
+        $currentValues      = (object)$data[1];
+        $this->courseTitle  = $currentValues->course_title;
+        $this->moduleTitle  = $currentValues->module_title;
+        $this->pathwayTitle = $currentValues->pathway_title;
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);
