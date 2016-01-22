@@ -28,8 +28,8 @@ class OscampusControllerQuiz extends OscampusControllerBase
             $pathwayId = $app->input->getInt('pid');
             $responses = $app->input->get('questions', array(), 'array');
 
-            $lesson    = $container->lesson->loadById($lessonId, $pathwayId);
-            $activity  = $container->activity;
+            $lesson   = $container->lesson->loadById($lessonId, $pathwayId);
+            $activity = $container->activity;
 
             $activity->recordProgress($lesson, 0, $responses);
 
