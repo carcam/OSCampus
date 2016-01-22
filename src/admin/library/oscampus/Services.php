@@ -37,6 +37,7 @@ class Services implements ServiceProviderInterface
      */
     public function register(Pimple $pimple)
     {
+        /* Start Services */
         $pimple['dbo'] = function (Container $c) {
             return OscampusFactory::getDbo();
         };
@@ -45,6 +46,19 @@ class Services implements ServiceProviderInterface
             return OscampusFactory::getUser();
         };
 
+        $pimple['device'] = function () {
+            return new Mobile_Detect();
+        };
+        /* End Services */
+
+        /* Start Factory Services */
+        $pimple['course'] = $pimple->factory(
+            function (Container $c) {
+                $properties = new Properties();
+                return new Course($c['dbo'], $c['user'], $properties);
+            }
+        );
+
         $pimple['lesson'] = $pimple->factory(
             function (Container $c) {
                 $properties = new Properties();
@@ -52,15 +66,12 @@ class Services implements ServiceProviderInterface
             }
         );
 
-        $pimple['device'] = function () {
-            return new Mobile_Detect();
-        };
-
         $pimple['activity'] = $pimple->factory(
             function (Container $c) {
                 $data = new ActivityStatus();
                 return new UserActivity($c['dbo'], $c['user'], $data);
             }
         );
+        /* End Factory Services */
     }
 }
