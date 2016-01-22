@@ -8,6 +8,8 @@
 
 namespace Oscampus\Lesson\Type\Wistia;
 
+use OscampusFactory;
+
 defined('_JEXEC') or die();
 
 class Video
@@ -89,8 +91,8 @@ class Video
             $this->embedCode   = $media->embedCode;
             $this->name        = $media->name;
             $this->project     = $media->project->name;
-            $this->created     = new \DateTime($media->created);
-            $this->updated     = new \DateTime($media->updated);
+            $this->created     = OscampusFactory::getDate($media->created);
+            $this->updated     = OscampusFactory::getDate($media->updated);
             $this->duration    = $media->duration;
             $this->description = $media->description;
             $this->thumbUrl    = $media->thumbnail->url;

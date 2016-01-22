@@ -8,9 +8,9 @@
 
 namespace Oscampus\Lesson\Type;
 
-use Oscampus\DateTime;
 use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\AbstractType;
+use OscampusFactory;
 
 defined('_JEXEC') or die();
 
@@ -33,6 +33,6 @@ class Text extends AbstractType
     public function prepareActivityProgress(ActivityStatus $status, $score, $data)
     {
         $status->score = 100;
-        $status->completed = new DateTime();
+        $status->completed = OscampusFactory::getDate();
     }
 }

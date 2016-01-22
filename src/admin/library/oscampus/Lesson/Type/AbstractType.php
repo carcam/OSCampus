@@ -8,7 +8,6 @@
 
 namespace Oscampus\Lesson\Type;
 
-use Oscampus\DateTime;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;

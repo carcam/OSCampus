@@ -9,7 +9,6 @@
 namespace Oscampus;
 
 use JDatabaseQuery;
-use Oscampus\DateTime;
 use JDatabase;
 use JUser;
 use Oscampus\Lesson\ActivityStatus;
@@ -255,7 +254,7 @@ class UserActivity extends AbstractBase
     {
         if (!empty($status->users_id) && !empty($status->lessons_id)) {
             if (empty($status->id)) {
-                $thisVisit = new DateTime();
+                $thisVisit = OscampusFactory::getDate();
                 $status->first_visit = $thisVisit;
                 $status->last_visit  = $thisVisit;
                 $status->visits      = 1;

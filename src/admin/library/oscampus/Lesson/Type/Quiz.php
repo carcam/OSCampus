@@ -9,9 +9,9 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use Oscampus\DateTime;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
+use OscampusFactory;
 
 defined('_JEXEC') or die();
 
@@ -145,7 +145,7 @@ class Quiz extends AbstractType
             $status->data  = json_encode($responses);
         }
 
-        $now = new DateTime();
+        $now = OscampusFactory::getDate();
         if ($status->score >= $this->passingScore) {
             $status->completed = $now;
         }

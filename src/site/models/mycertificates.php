@@ -6,6 +6,8 @@
  * @license
  */
 
+use OscampusFactory;
+
 defined('_JEXEC') or die();
 
 class OscampusModelMycertificates extends OscampusModelList
@@ -48,7 +50,7 @@ class OscampusModelMycertificates extends OscampusModelList
 
         foreach ($items as $item) {
             if (!$item->date_earned instanceof DateTime) {
-                $item->date_earned = new DateTime($item->date_earned);
+                $item->date_earned = OscampusFactory::getDate($item->date_earned);
             }
         }
 

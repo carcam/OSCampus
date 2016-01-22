@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson;
 
 use DateTime;
-use JDatabase;
+use OscampusFactory;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -158,10 +158,10 @@ class ActivityStatus
             case 'last_visit':
             case 'first_visit':
                 if (is_string($value)) {
-                    $this->$name = new DateTime($value);
+                    $this->$name = OscampusFactory::getDate($value);
 
                 } elseif (is_numeric($value)) {
-                    $this->$name = new DateTime();
+                    $this->$name = OscampusFactory::getDate();
                     $this->$name->setTimestamp($value);
 
                 } elseif ($value instanceof DateTime) {

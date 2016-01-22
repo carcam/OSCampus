@@ -276,7 +276,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $path = JPATH_SITE . '/logs/oscampus.import.log';
 
         if (is_file($path)) {
-            $modified = new Oscampus\DateTime();
+            $modified = OscampusFactory::getDate();
             $modified->setTimestamp(filemtime($path));
             echo '<p>Last Import finished at: ' . $modified->format('Y-m-d H:i:s T (P)') . '</p>';
 

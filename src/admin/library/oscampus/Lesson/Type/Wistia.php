@@ -13,7 +13,6 @@ use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
 use JSession;
 use JText;
-use Oscampus\DateTime;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
@@ -154,7 +153,7 @@ class Wistia extends AbstractType
             $status->score = $score;
         }
 
-        $now = new DateTime();
+        $now = OscampusFactory::getDate();
         if ($status->score >= 100) {
             $status->score     = 100;
             $status->completed = $now;

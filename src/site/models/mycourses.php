@@ -6,6 +6,8 @@
  * @license
  */
 
+use OscampusFactory;
+
 defined('_JEXEC') or die();
 
 class OscampusModelMycourses extends OscampusModelList
@@ -49,7 +51,7 @@ class OscampusModelMycourses extends OscampusModelList
 
         foreach ($items as $item) {
             if (!$item->last_lesson instanceof DateTime) {
-                $item->last_lesson = new DateTime($item->last_lesson);
+                $item->last_lesson = OscampusFactory::getDate($item->last_lesson);
             }
         }
 
