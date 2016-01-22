@@ -100,6 +100,8 @@ class Properties
      *
      * @param array|object $data
      * @param JUser        $user
+     *
+     * @return Properties
      */
     public function load($data, JUser $user = null)
     {
@@ -115,6 +117,8 @@ class Properties
         }
 
         $this->authorised = in_array($this->access, $user->getAuthorisedViewLevels());
+
+        return $this;
     }
 
     /**
