@@ -62,16 +62,12 @@ class Quiz extends AbstractType
 
         $options = json_encode(
             array(
-                'timeLimit'  => $this->timeLimit * 60,
+                'timeLimit'  => $this->getUserState('quiz_time', $this->timeLimit * 60),
                 'limitAlert' => $this->limitAlert * 60
             )
         );
 
         JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
-
-        if ($this->getUserState('quiz_time') === null) {
-            $this->setUserState('quiz_time', $this->timeLimit * 60);
-        }
 
         return $this;
     }
