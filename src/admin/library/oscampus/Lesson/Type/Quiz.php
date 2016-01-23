@@ -60,14 +60,16 @@ class Quiz extends AbstractType
         JHtml::_('osc.jquery');
         JHtml::_('script', 'com_oscampus/quiz.js', false, true);
 
-        $options = json_encode(
-            array(
-                'timeLimit'  => $this->getUserState('quiz_time', $this->timeLimit * 60),
-                'limitAlert' => $this->limitAlert * 60
-            )
-        );
+        if ($this->lesson->isAuthorised()) {
+            $options = json_encode(
+                array(
+                    'timeLimit'  => $this->getUserState('quiz_time', $this->timeLimit * 60),
+                    'limitAlert' => $this->limitAlert * 60
+                )
+            );
 
-        JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
+            JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
+        }
 
         return $this;
     }

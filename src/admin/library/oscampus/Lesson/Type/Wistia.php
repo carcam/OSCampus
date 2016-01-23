@@ -15,7 +15,10 @@ use JSession;
 use JText;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
+use Oscampus\Lesson\Type\Wistia\Api;
+use OscampusComponentHelper;
 use OscampusFactory;
+use OscampusUtilitiesArray;
 
 defined('_JEXEC') or die();
 
@@ -50,6 +53,10 @@ class Wistia extends AbstractType
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
         $oswistia->loadLibrary();
 
+        if (!$this->lesson->isAuthorised()) {
+            return $this->renderStatic();
+        }
+
         /** @var \JRegistry $params */
         $session = OscampusFactory::getSession();
         $device  = OscampusFactory::getContainer()->device;
@@ -78,7 +85,31 @@ class Wistia extends AbstractType
 
         $embed = new WistiaEmbed($this->id, $params);
 
-        return $embed->toString() . $this->setControls();
+        $output = $embed->toString();
+        if ($this->lesson->isAuthorised()) {
+            $output .= $this->setControls();
+        }
+        return $output;
+    }
+
+    /**
+     * Render a still image version of this video
+     *
+     * @return string
+     */
+    protected function renderStatic()
+    {
+        $params = OscampusComponentHelper::getParams();
+        $api    = new Api($params->get('wistia.apikey'));
+
+        $thumb = $api->getThumbnail($this->id);
+
+        $attribs = array(
+            'src'    => $thumb->url,
+            'width'  => $thumb->size[0],
+            'height' => $thumb->size[1]
+        );
+        return '<image ' . OscampusUtilitiesArray::toString($attribs) . '/>';
     }
 
     /**

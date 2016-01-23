@@ -33,11 +33,6 @@ class OscampusViewLesson extends OscampusViewSite
         $this->lesson   = $this->model->getItem();
         $this->activity = $this->model->getActivityStatus();
 
-        if (!$this->lesson->isAuthorised()) {
-            parent::display('noauth');
-            return;
-        }
-
         $pathway = JFactory::getApplication()->getPathway();
 
         $link = JHtml::_('osc.link.pathway', $this->lesson->pathways_id, null, null, true);
@@ -51,19 +46,30 @@ class OscampusViewLesson extends OscampusViewSite
         $this->setLayout($this->lesson->type);
 
         parent::display($tmpl);
+
+        if (!$this->lesson->isAuthorised()) {
+            echo $this->loadDefaultTemplate('noauth');
+        }
     }
 
     /**
      * Get the default navigation controls
      *
      * @return string
+     *
+     * @deprecated use loadDefaultTemplate() instead
      */
     protected function loadNavigation()
     {
+        return $this->loadDefaultTemplate('navigation');
+    }
+
+    protected function loadDefaultTemplate($name)
+    {
         $oldLayout  = $this->setLayout('default');
-        $navigation = $this->loadTemplate('navigation');
+        $template = $this->loadTemplate($name);
         $this->setLayout($oldLayout);
 
-        return $navigation;
+        return $template;
     }
 }

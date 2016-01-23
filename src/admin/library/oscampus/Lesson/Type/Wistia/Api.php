@@ -115,6 +115,28 @@ class Api
     }
 
     /**
+     * Gets the Still Image version of the video
+     * @TODO: Possibly need a strategy to extract thumbnail from video asset
+     *
+     * @param string     $id
+     *
+     * @return null|Video
+     */
+    public function getThumbnail($id)
+    {
+        if ($media = $this->getMedia($id)) {
+            foreach ($media->assets as $index => $asset) {
+                if ($asset->type == 'StillImageFile') {
+                    $thumb = new Video($media, $index);
+                    return $thumb;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Make request to Wistia
      *
      * @param string $module

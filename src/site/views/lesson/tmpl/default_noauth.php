@@ -7,5 +7,24 @@
  */
 
 defined('_JEXEC') or die();
+
 ?>
-<p><?php echo $this->lesson->title; ?> is not accessible. We haven't determined what to do here yet</p>
+<div id="signup_overlay">
+    <div class="wrapper">
+        <h1>Become a member to view this session</h1>
+    </div>
+</div>
+
+<script>
+    (function($) {
+        var parent = $('#oscampus');
+
+        var overlay = $('#signup_overlay');
+            //.css({
+            //    width : parent.width(),
+            //    height: parent.height()
+            //});
+
+        parent.prepend(overlay);
+    })(jQuery);
+</script -->
