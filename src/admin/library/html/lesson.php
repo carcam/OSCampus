@@ -45,25 +45,19 @@ abstract class OscLesson
             return '';
         }
 
-        $user = JFactory::getUser();
-        if ($lesson->isAuthorised()) {
-            $query         = OscampusRoute::getInstance()->getQuery('pathways');
-            $query['view'] = 'lesson';
-            $query['cid']  = $lesson->courses_id;
-            $query['lid']  = $lesson->id;
+        $query = OscampusRoute::getInstance()->getQuery('pathways');
 
-            if (!empty($lesson->pathways_id)) {
-                $query['pid'] = $lesson->pathways_id;
-            } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
-                $query['pid'] = $pid;
-            }
+        $query['view'] = 'lesson';
+        $query['cid']  = $lesson->courses_id;
+        $query['lid']  = $lesson->id;
 
-            $link = 'index.php?' . http_build_query($query);
-
-        } else {
-            // @TODO: Determine link for inaccessible lessons
-            $link = 'javascript:alert(\'This lesson is not authorized - where should we go?\');';
+        if (!empty($lesson->pathways_id)) {
+            $query['pid'] = $lesson->pathways_id;
+        } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
+            $query['pid'] = $pid;
         }
+
+        $link = 'index.php?' . http_build_query($query);
 
         if ($uriOnly) {
             return $link;
