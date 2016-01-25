@@ -6,8 +6,6 @@
  * @license
  */
 
-use OscampusFactory;
-
 defined('_JEXEC') or die();
 
 class OscampusModelMycertificates extends OscampusModelList
