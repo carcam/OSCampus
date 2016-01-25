@@ -22,7 +22,6 @@ defined('_JEXEC') or die();
  *
  * @property JDatabaseInterface $dbo
  * @property JUser              $user
- * @property Course             $course
  * @property Lesson             $lesson
  * @property Mobile_Detect      $device
  * @property UserActivity       $activity

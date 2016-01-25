@@ -52,13 +52,6 @@ class Services implements ServiceProviderInterface
         /* End Services */
 
         /* Start Factory Services */
-        $pimple['course'] = $pimple->factory(
-            function (Container $c) {
-                $properties = new Properties();
-                return new Course($c['dbo'], $c['user'], $properties);
-            }
-        );
-
         $pimple['lesson'] = $pimple->factory(
             function (Container $c) {
                 $properties = new Properties();
