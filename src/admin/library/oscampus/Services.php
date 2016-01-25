@@ -65,6 +65,12 @@ class Services implements ServiceProviderInterface
                 return new UserActivity($c['dbo'], $c['user'], $data);
             }
         );
+
+        $pimple['certificate'] = $pimple->factory(
+            function (Container $c) {
+                return new Certificate($c['dbo'], $c['user']);
+            }
+        );
         /* End Factory Services */
     }
 }

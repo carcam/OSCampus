@@ -20,6 +20,7 @@ defined('_JEXEC') or die();
  *
  * @package OSCampus
  *
+ * @property Certificate        $certificate
  * @property JDatabaseInterface $dbo
  * @property JUser              $user
  * @property Lesson             $lesson
