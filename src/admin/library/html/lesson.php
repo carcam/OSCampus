@@ -32,30 +32,17 @@ abstract class OscLesson
     }
 
     /**
-     * @param Properties $lesson
-     * @param string     $text
-     * @param mixed      $attribs
-     * @param bool       $uriOnly
+     * @param Properties|Lesson $lesson
+     * @param string            $text
+     * @param mixed             $attribs
+     * @param bool              $uriOnly
      *
      * @return string
+     * @throws Exception
      */
-    public static function link(Properties $lesson, $text = null, $attribs = null, $uriOnly = false)
+    public static function link($lesson, $text = null, $attribs = null, $uriOnly = false)
     {
-        if (!$lesson->id) {
-            return '';
-        }
-
-        $query = OscampusRoute::getInstance()->getQuery('pathways');
-
-        $query['view'] = 'lesson';
-        $query['cid']  = $lesson->courses_id;
-        $query['lid']  = $lesson->id;
-
-        if (!empty($lesson->pathways_id)) {
-            $query['pid'] = $lesson->pathways_id;
-        } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
-            $query['pid'] = $pid;
-        }
+        $query = static::linkQuery($lesson);
 
         $link = 'index.php?' . http_build_query($query);
 
@@ -115,5 +102,74 @@ abstract class OscLesson
         JHtml::_('osc.jquery');
         JHtml::_('script', 'com_oscampus/lesson.js', false, true);
         JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});");
+    }
+
+    /**
+     * Create the link to retry a quiz
+     *
+     * @param Properties|Lesson $lesson
+     * @param string            $text
+     * @param string|array      $attribs
+     * @param bool              $uriOnly
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function retrylink($lesson, $text, $attribs = null, $uriOnly)
+    {
+        $query         = static::linkQuery($lesson);
+        $query['task'] = 'lesson.retry';
+
+        $link = 'index.php?' . http_build_query($query);
+        if ($uriOnly) {
+            return $link;
+        }
+
+        return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
+    }
+
+    /**
+     * Get the base url query the lesson
+     *
+     * @param Properties|Lesson $lesson
+     *
+     * @return array|null
+     * @throws Exception
+     */
+    protected static function linkQuery($lesson)
+    {
+        if ($lesson instanceof Lesson) {
+            $properties = $lesson->current;
+        } elseif ($lesson instanceof Properties) {
+            $properties = $lesson;
+        } else {
+            throw new Exception(
+                JText::sprintf(
+                    'COM_OSCAMPUS_ERROR_ARGUMENT_INVALID',
+                    __CLASS__,
+                    __METHOD__,
+                    getType($lesson)
+                )
+            );
+        }
+
+        if (!$properties->id) {
+            return null;
+        }
+
+        $query = OscampusRoute::getInstance()->getQuery('pathways');
+
+        $query['view'] = 'lesson';
+        $query['cid']  = $properties->courses_id;
+        $query['lid']  = $properties->id;
+
+        if (!empty($properties->pathways_id)) {
+            $query['pid'] = $properties->pathways_id;
+
+        } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
+            $query['pid'] = $pid;
+        }
+
+        return $query;
     }
 }
