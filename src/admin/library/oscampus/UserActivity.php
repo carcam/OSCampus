@@ -276,15 +276,16 @@ class UserActivity extends AbstractBase
         if (!empty($status->users_id) && !empty($status->lessons_id)) {
             if (empty($status->id)) {
                 $thisVisit = OscampusFactory::getDate();
+
                 $status->first_visit = $thisVisit;
                 $status->last_visit  = $thisVisit;
                 $status->visits      = 1;
 
-                $insert = $status->toObject();
+                $insert  = $status->toObject();
                 $success = $this->dbo->insertObject('#__oscampus_users_lessons', $insert);
 
             } else {
-                $update = $status->toObject();
+                $update  = $status->toObject();
                 $success = $this->dbo->updateObject('#__oscampus_users_lessons', $update, 'id');
             }
             return $success;
