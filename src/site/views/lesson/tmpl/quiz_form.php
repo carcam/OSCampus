@@ -54,7 +54,7 @@ $questions = $quiz->getQuestions();
     </div>
 <?php endif; ?>
 
-<form id="quizForm" name="quizForm" method="post" action="">
+<form id="formQuiz" name="formQuiz" method="post" action="">
     <div class="osc-section oscampus-lesson-content">
         <?php
         $qn = 0;

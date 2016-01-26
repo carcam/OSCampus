@@ -17,8 +17,10 @@ defined('_JEXEC') or die();
  * @var Quiz $quiz
  */
 
-$quiz = $this->lesson->renderer;
-if ($this->activity->data) {
+$quiz  = $this->lesson->renderer;
+$retry = OscampusFactory::getApplication()->input->getInt('retry', 0);
+
+if ($this->activity->data && !$retry) {
     if ($this->activity->score < $quiz->passingScore) {
         $quizTemplate = 'failed';
     } else {

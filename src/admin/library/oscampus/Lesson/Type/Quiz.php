@@ -9,6 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
+use JText;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
@@ -71,12 +72,14 @@ class Quiz extends AbstractType
         if ($this->lesson->isAuthorised()) {
             $options = json_encode(
                 array(
-                    'timeLimit'  => $this->getUserState('quiz_time', $this->timeLimit * 60),
-                    'limitAlert' => $this->limitAlert * 60
+                    'timer' => array(
+                        'timeLimit'  => $this->timeLimit * 60,
+                        'limitAlert' => $this->limitAlert * 60
+                    )
                 )
             );
 
-            JHtml::script('COM_OSCAMPUS_QUIZ_TIMEOUT');
+            JText::script('COM_OSCAMPUS_QUIZ_TIMEOUT');
 
             JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
         }

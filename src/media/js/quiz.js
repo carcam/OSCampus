@@ -21,6 +21,7 @@
 
     $.Oscampus.quiz = {
         options: {
+            form: '#formQuiz',
             timer: {
                 selector  : '#oscampus-timer .osc-clock',
                 timeLimit : 600,
@@ -34,29 +35,30 @@
          * @param {object} options
          */
         timer: function(options) {
-            options = $.extend({}, this.options.timer, options);
+            options = $.extend(true, {}, this.options, options);
 
-            var clock   = $(options.selector),
-                seconds = $.Oscampus.cookie.get('quiz_time', options.timeLimit);
+            var clock   = $(options.timer.selector),
+                seconds = $.Oscampus.cookie.get('quiz_time', options.timer.timeLimit),
+                form = $(options.form);
 
             clock.formatSeconds(seconds);
-
-            $.Oscampus.cookie.delete('quiz_time');
 
             var update = setInterval(function() {
                 seconds--;
                 $.Oscampus.cookie.set('quiz_time', seconds);
                 clock.formatSeconds(seconds);
                 if (seconds <= 0) {
-                    $('#quizForm button[type=submit]').prop('disabled', true);
-
                     clearInterval(update);
-                    $.Oscampus.cookie.delete('quiz_time');
                     alert(Joomla.JText._('COM_OSCAMPUS_QUIZ_TIMEOUT'));
-
-                    $('#quizForm').submit();
+                    form.submit();
                 }
             }, 1000);
+
+            form.on('submit', function(evt) {
+                clearInterval(update);
+                $(this).find('button[type=submit]').prop('disabled', true);
+                $.Oscampus.cookie.delete('quiz_time');
+            });
         }
     };
 })(jQuery);
