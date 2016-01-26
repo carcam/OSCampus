@@ -13,42 +13,42 @@ use Oscampus\AbstractPrototype;
 
 defined('_JEXEC') or die();
 
-class ActivityStatus extends AbstractPrototype
+class ActivitySummary extends AbstractPrototype
 {
     /**
      * @var int
      */
-    public $id = null;
+    public $id          = null;
 
     /**
      * @var int
      */
-    public $users_id = null;
+    public $users_id    = null;
 
     /**
      * @var int
      */
-    public $lessons_id = null;
+    public $lessons     = null;
+
+    /**
+     * @var int
+     */
+    public $viewed      = null;
+
+    /**
+     * @var int
+     */
+    public $visits      = null;
 
     /**
      * @var DateTime
      */
-    public $completed = null;
+    public $completed   = null;
 
     /**
-     * @var int
+     * @var DateTime
      */
-    public $score = 0;
-
-    /**
-     * @var int
-     */
-    public $visits = 0;
-
-    /**
-     * @var mixed
-     */
-    public $data = null;
+    public $certificate = null;
 
     /**
      * @var DateTime
@@ -58,11 +58,12 @@ class ActivityStatus extends AbstractPrototype
     /**
      * @var DateTime
      */
-    public $last_visit = null;
+    public $last_visit  = null;
 
     protected $dateProperties = array(
         'completed',
-        'last_visit',
-        'first_visit'
+        'certificate',
+        'first_visit',
+        'last_visit'
     );
 }
