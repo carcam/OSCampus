@@ -483,8 +483,8 @@ class OscampusControllerImport extends OscampusControllerBase
                             ? $questions[$mediaItem->quiz_id] : array();
 
                         $content = array(
-                            'quizLength'   => $mediaItem->quiz_question_count,
-                            'questions'    => $quizQuestions
+                            'quizLength' => $mediaItem->quiz_question_count,
+                            'questions'  => $quizQuestions
                         );
 
                         $lesson->content = json_encode($content);
@@ -1653,6 +1653,121 @@ class OscampusControllerImport extends OscampusControllerBase
                 $row->ordering = $order + 1;
                 $db->updateObject($table, $row, 'id');
             }
+        }
+    }
+
+    public function fixLessonViews()
+    {
+        echo '<h3>User Activity Log Corrections</h3>';
+
+        echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__oscampus_courses');
+
+        $courses = $db->setQuery($query)->loadColumn();
+
+        $queryCount = $db->getQuery(true)
+            ->select('m1.courses_id, count(distinct l1.id) lessons')
+            ->from('#__oscampus_lessons AS l1')
+            ->innerJoin('#__oscampus_modules AS m1 ON m1.id = l1.modules_id')
+            ->group('m1.courses_id');
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'course.id',
+                    'activity.users_id',
+                    'lcount.lessons',
+                    'count(DISTINCT activity.lessons_id) AS viewed',
+                    'SUM(DISTINCT activity.visits) AS visits',
+                    'MAX(activity.completed) AS completed',
+                    'certificate.date_earned AS certificate',
+                    'MIN(activity.first_visit) AS first_visit',
+                    'MAX(activity.last_visit) AS last_visit'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->leftJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->leftJoin('#__oscampus_certificates AS certificate ON certificate.users_id = activity.users_id AND certificate.courses_id = course.id')
+            ->leftJoin("({$queryCount}) AS lcount ON lcount.courses_id = course.id")
+            ->group('activity.users_id, module.courses_id')
+            ->having(
+                array(
+                    'viewed != lessons',
+                    'certificate IS NOT NULL'
+                )
+            );
+
+        $insertKeys = array(
+            'users_id',
+            'lessons_id',
+            'completed',
+            'score',
+            'visits',
+            'first_visit',
+            'last_visit'
+        );
+
+        $inserts = array();
+        $total = 0;
+        foreach ($courses as $courseId) {
+            $query->clear('where')->where('course.id = ' . $courseId);
+
+            $activity = $db->setQuery($query)->loadObjectList();
+
+            foreach ($activity as $userActivity) {
+                $queryUser = $db->getQuery(true)
+                    ->select('lesson.id')
+                    ->from('#__oscampus_lessons lesson')
+                    ->innerJoin('#__oscampus_modules module on module.id = lesson.modules_id')
+                    ->leftJoin('#__oscampus_users_lessons activity on activity.lessons_id = lesson.id AND activity.users_id = ' . $userActivity->users_id)
+                    ->where(
+                        array(
+                            'module.courses_id = ' . $userActivity->id,
+                            'activity.id is null'
+                        )
+                    );
+
+                $missingLessons = $db->setQuery($queryUser)->loadColumn();
+                foreach ($missingLessons as $missingLesson) {
+                    $inserts[] = join(',', array(
+                            'users_id'    => $userActivity->users_id,
+                            'lessons_id'  => $missingLesson,
+                            'completed'   => $db->quote($userActivity->completed),
+                            'score'       => 100,
+                            'visits'      => 1,
+                            'first_visit' => $db->quote($userActivity->first_visit),
+                            'last_visit'  => $db->quote($userActivity->last_visit)
+                        )
+                    );
+                }
+            }
+
+            if (count($inserts) > 1000) {
+                $insertQuery = $db->getQuery(true)
+                    ->insert('#__oscampus_users_lessons')
+                    ->columns($insertKeys)
+                    ->values($inserts);
+
+                $db->setQuery($insertQuery)->execute();
+                echo '<br/>Fixed: ' . count($inserts);
+                echo '<br/>ERROR: ' . $db->getErrorMsg() . '<br/>';
+
+                $total += count($inserts);
+                $inserts = array();
+            }
+        }
+
+        if ($total) {
+            echo '<br/><br/>Total Corrections: ' . number_format($total);
+        } else {
+            echo '<br/><br/>All User Activity records are consistent';
         }
     }
 }
