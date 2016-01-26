@@ -105,18 +105,21 @@ class Properties
      */
     public function load($data, JUser $user = null)
     {
-        $user = $user ?: OscampusFactory::getUser();
+        if ($data) {
+            $user = $user ?: OscampusFactory::getUser();
 
-        if (is_object($data)) {
-            $data = get_object_vars($data);
-        }
-        foreach ($data as $property => $value) {
-            if (property_exists($this, $property)) {
-                $this->$property = $value;
+            if (is_object($data)) {
+                $data = get_object_vars($data);
             }
-        }
 
-        $this->authorised = in_array($this->access, $user->getAuthorisedViewLevels());
+            foreach ($data as $property => $value) {
+                if (property_exists($this, $property)) {
+                    $this->$property = $value;
+                }
+            }
+
+            $this->authorised = in_array($this->access, $user->getAuthorisedViewLevels());
+        }
 
         return $this;
     }
