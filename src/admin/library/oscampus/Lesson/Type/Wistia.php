@@ -136,9 +136,12 @@ class Wistia extends AbstractType
             )
         );
 
-        JText::script('COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP');
-        JText::script('COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE');
-        JText::script('COM_OSCAMPUS_WISTIA_RESUME');
+        JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
+        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
+        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_SIGNUP');
+        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_SUBSCRIBE');
+        JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
+        JText::script('COM_OSCAMPUS_VIDEO_RESUME');
 
         $js = array(
             "<script>",

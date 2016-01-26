@@ -337,7 +337,7 @@
          * @param container
          */
         buttonAutoplay: function(container) {
-            var button = this.createButton('autoplay', 'Autoplay')
+            var button = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'))
 
             button
                 .data('option', 'autoPlay')
@@ -374,7 +374,7 @@
          * @param container
          */
         buttonFocus: function(container) {
-            var button = this.createButton('focus', 'Focus');
+            var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
 
             button
                 .data('option', 'focus')
@@ -439,7 +439,7 @@
         buttonDownload: function(container, options) {
             options = $.extend({}, this.options, options);
 
-            var button = this.createButton('download', 'Download');
+            var button = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
             if (!options.download.authorised) {
                 button.addClass('osc-off');
             }
@@ -570,13 +570,13 @@
              */
             signup: function() {
                 var overlay = this.base(
-                    '<div>' + Joomla.JText._('COM_OSCAMPUS_WISTIA_DOWNLOAD_SIGNUP') + '</div>'
+                    '<div>' + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_SIGNUP') + '</div>'
                     + '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
                     + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
-                    + Joomla.JText._('COM_OSCAMPUS_WISTIA_DOWNLOAD_SUBSCRIBE')
+                    + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_SUBSCRIBE')
                     + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
                     + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
-                    + Joomla.JText._('COM_OSCAMPUS_WISTIA_RESUME')
+                    + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
 
@@ -595,7 +595,7 @@
                     '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>'
                     + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
                     + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
-                    + Joomla.JText._('COM_OSCAMPUS_WISTIA_RESUME')
+                    + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
             }

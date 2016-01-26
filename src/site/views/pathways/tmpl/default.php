@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
-    <?php if ($heading = $this->getHeading('COM_SIMPLERENEW_HEADING_ONLINE_TRAINING')): ?>
+    <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_ONLINE_TRAINING')): ?>
         <div class="page-header">
             <h1><?php echo $heading; ?></h1>
         </div>

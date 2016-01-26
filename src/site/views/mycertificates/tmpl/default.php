@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 $pdfIcon = '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_PDF');
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-mycertificates'); ?>" id="oscampus">
-    <?php if ($heading = $this->getHeading('COM_SIMPLERENEW_HEADING_MYCERTIFICATES')): ?>
+    <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCERTIFICATES')): ?>
         <div class="page-header">
             <h1><?php echo $heading; ?></h1>
         </div>
