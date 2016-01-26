@@ -88,12 +88,7 @@ class UserActivity extends AbstractBase
         if ($this->user->id) {
             if (!isset($this->lessons[$courseId])) {
                 $query = $this->getStatusQuery()
-                    ->where(
-                        array(
-                            'ul.users_id = ' . $this->user->id,
-                            'module.courses_id = ' . (int)$courseId
-                        )
-                    );
+                    ->where('module.courses_id = ' . (int)$courseId);
 
                 $this->lessons[$courseId] = $this->dbo
                     ->setQuery($query)
@@ -205,7 +200,7 @@ class UserActivity extends AbstractBase
 
             $this->setStatus($status);
             if ($status->completed) {
-                $this->certificate->award($this);
+                $this->certificate->award($status->courses_id, $this);
             }
         }
     }
@@ -222,18 +217,16 @@ class UserActivity extends AbstractBase
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
-            $query  = $this->getStatusQuery()
-                ->where(
-                    array(
-                        'users_id = ' . (int)$userId,
-                        'lessons_id = ' . (int)$lessonId
-                    )
-                );
+            $query = $this->getStatusQuery()
+                ->where('lesson.id = ' . (int)$lessonId);
+
             $status = $this->dbo->setQuery($query)->loadObject(get_class($this->status));
         }
 
         if (empty($status)) {
             $status = clone $this->status;
+        }
+        if (!$status->users_id) {
             $status->setProperties(
                 array(
                     'users_id'   => $userId,
@@ -254,11 +247,13 @@ class UserActivity extends AbstractBase
      */
     protected function getStatusQuery()
     {
+        $userId = $this->user->id;
+
         $query = $this->dbo->getQuery(true)
-            ->select('ul.*')
+            ->select('activity.*, module.courses_id, lesson.type')
             ->from('#__oscampus_lessons lesson')
-            ->innerJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
-            ->leftJoin('#__oscampus_users_lessons ul ON ul.lessons_id = lesson.id')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->leftJoin('#__oscampus_users_lessons AS activity ON activity.lessons_id = lesson.id AND activity.users_id = ' . $userId)
             ->order('module.ordering ASC, lesson.ordering ASC');
 
         return $query;
@@ -274,6 +269,8 @@ class UserActivity extends AbstractBase
     public function setStatus(ActivityStatus $status)
     {
         if (!empty($status->users_id) && !empty($status->lessons_id)) {
+            $fields = $this->dbo->getTableColumns('#__oscampus_users_lessons');
+
             if (empty($status->id)) {
                 $thisVisit = OscampusFactory::getDate();
 
@@ -281,11 +278,11 @@ class UserActivity extends AbstractBase
                 $status->last_visit  = $thisVisit;
                 $status->visits      = 1;
 
-                $insert  = $status->toObject();
+                $insert  = (object)array_intersect_key($status->toArray(), $fields);
                 $success = $this->dbo->insertObject('#__oscampus_users_lessons', $insert);
 
             } else {
-                $update  = $status->toObject();
+                $update  = (object)array_intersect_key($status->toArray(), $fields);
                 $success = $this->dbo->updateObject('#__oscampus_users_lessons', $update, 'id');
             }
             return $success;
@@ -315,7 +312,7 @@ class UserActivity extends AbstractBase
                     'course.id',
                     'activity.users_id',
                     'lcount.lessons',
-                    'count(DISTINCT activity.lessons_id) AS lessons',
+                    'count(DISTINCT activity.lessons_id) AS viewed',
                     'SUM(DISTINCT activity.visits) AS visits',
                     'MAX(activity.completed) AS completed',
                     'certificate.date_earned AS certificate',

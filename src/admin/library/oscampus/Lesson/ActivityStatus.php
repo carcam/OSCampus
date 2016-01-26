@@ -31,6 +31,16 @@ class ActivityStatus extends AbstractPrototype
     public $lessons_id = null;
 
     /**
+     * @var int
+     */
+    public $courses_id = null;
+
+    /**
+     * @var string
+     */
+    public $type = null;
+
+    /**
      * @var DateTime
      */
     public $completed = null;
