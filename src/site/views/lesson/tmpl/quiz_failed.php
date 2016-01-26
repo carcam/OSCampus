@@ -67,9 +67,10 @@ $activity = $this->activity;
 
                             <?php
                             echo JHtml::_(
-                                'link',
-                                "javascript:alert('Under Construction');",
-                                'Later',
+                                'osc.link.course',
+                                $this->lesson->pathways_id,
+                                $this->lesson->courses_id,
+                                JText::_('COM_OSCAMPUS_LATER'),
                                 'class="osc-btn"'
                             );
                             ?>
