@@ -37,9 +37,4 @@ class OscampusControllerQuiz extends OscampusControllerBase
         }
 
     }
-
-    public function retry()
-    {
-        echo 'under construction';
-    }
 }
