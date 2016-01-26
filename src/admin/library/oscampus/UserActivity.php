@@ -133,27 +133,6 @@ class UserActivity extends AbstractBase
     }
 
     /**
-     * Get tracking data for the current user in the selected lesson.
-     * If the course ID is already known, there is a small performance
-     * improvement if it is provided also.
-     *
-     * @param int $lessonId
-     * @param int $courseId
-     *
-     * @return ActivityStatus
-     */
-    public function getLesson($lessonId, $courseId = null)
-    {
-        $courseId = $courseId ?: $this->getCourseIdFromLessonId($lessonId);
-        $lessons  = $this->get($courseId);
-        if (empty($lessons[$lessonId])) {
-            return null;
-        }
-
-        return $lessons[$lessonId];
-    }
-
-    /**
      * Update last visit date and number of visits
      *
      * @param int $lessonId
@@ -209,11 +188,12 @@ class UserActivity extends AbstractBase
      * Get an activity status record
      *
      * @param int $lessonId
+     * @param int $courseId
      * @param int $userId
      *
      * @return ActivityStatus
      */
-    public function getStatus($lessonId, $userId = null)
+    public function getStatus($lessonId, $courseId = null, $userId = null)
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
