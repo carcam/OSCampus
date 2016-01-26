@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 /** @var OscampusViewMycertificates $this */
 
-$pdfIcon = JHtml::_('image', 'com_oscampus/icon-pdf.png', JText::_('COM_OSCAMPUS_DOWNLOAD_PDF'), null, true);
+$pdfIcon = '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_PDF');
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-mycertificates'); ?>" id="oscampus">
     <?php if ($heading = $this->getHeading('COM_SIMPLERENEW_HEADING_MYCERTIFICATES')): ?>
