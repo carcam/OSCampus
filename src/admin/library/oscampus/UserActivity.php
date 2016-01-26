@@ -12,6 +12,7 @@ use JDatabaseQuery;
 use JDatabase;
 use JUser;
 use Oscampus\Lesson\ActivityStatus;
+use Oscampus\Lesson\ActivitySummary;
 use OscampusFactory;
 
 defined('_JEXEC') or die();
@@ -29,16 +30,33 @@ class UserActivity extends AbstractBase
     protected $status = null;
 
     /**
+     * @var ActivitySummary
+     */
+    protected $summary = null;
+
+    /**
+     * @var Certificate
+     */
+    public $certificate = null;
+
+    /**
      * @var array[]
      */
     protected $lessons = array();
 
-    public function __construct(JDatabase $dbo, JUser $user, ActivityStatus $activityStatus)
-    {
+    public function __construct(
+        JDatabase $dbo,
+        JUser $user,
+        ActivityStatus $activityStatus,
+        ActivitySummary $activitySummary,
+        Certificate $certificate
+    ) {
         parent::__construct($dbo);
 
-        $this->user   = $user;
-        $this->status = $activityStatus;
+        $this->user        = $user;
+        $this->status      = $activityStatus;
+        $this->summary     = $activitySummary;
+        $this->certificate = $certificate;
     }
 
     /**
@@ -186,6 +204,9 @@ class UserActivity extends AbstractBase
             $lesson->renderer->prepareActivityProgress($status, $score, $data);
 
             $this->setStatus($status);
+            if ($status->completed) {
+                $this->certificate->award($this);
+            }
         }
     }
 
@@ -270,5 +291,56 @@ class UserActivity extends AbstractBase
         }
 
         return false;
+    }
+
+    /**
+     * Get a summary of this user's activity for courses
+     *
+     * @param int $courseId
+     *
+     * @return ActivitySummary|ActivitySummary[]
+     */
+    public function summary($courseId = null)
+    {
+        $queryCount = $this->dbo->getQuery(true)
+            ->select('m1.courses_id, count(distinct l1.id) lessons')
+            ->from('#__oscampus_lessons AS l1')
+            ->innerJoin('#__oscampus_modules AS m1 ON m1.id = l1.modules_id')
+            ->group('m1.courses_id');
+
+        $query = $this->dbo->getQuery(true)
+            ->select(
+                array(
+                    'course.id',
+                    'activity.users_id',
+                    'lcount.lessons',
+                    'count(DISTINCT activity.lessons_id) AS lessons',
+                    'SUM(DISTINCT activity.visits) AS visits',
+                    'MAX(activity.completed) AS completed',
+                    'certificate.date_earned AS certificate',
+                    'MIN(activity.first_visit) AS first_visit',
+                    'MAX(activity.last_visit) AS last_visit'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->leftJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->leftJoin('#__oscampus_certificates AS certificate ON certificate.users_id = activity.users_id AND certificate.courses_id = course.id')
+            ->leftJoin("({$queryCount}) AS lcount ON lcount.courses_id = course.id")
+            ->where('activity.users_id = ' . $this->user->id)
+            ->group('activity.users_id, module.courses_id');
+
+        if ($courseId) {
+            $query->where('course.id = ' . (int)$courseId);
+        }
+
+        $summary = $this->dbo->setQuery($query)->loadObjectlist('id', get_class($this->summary));
+
+        if ($courseId) {
+            return array_pop($summary);
+        }
+
+        return $summary;
     }
 }

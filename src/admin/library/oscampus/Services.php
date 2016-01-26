@@ -11,10 +11,9 @@ namespace Oscampus;
 use Mobile_Detect;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
+use Oscampus\Lesson\ActivitySummary;
 use Oscampus\Lesson\Properties;
-use Oscampus\UserActivity;
 use OscampusFactory;
-use OscampusTable;
 use Pimple\Container AS Pimple;
 use Pimple\ServiceProviderInterface;
 
@@ -61,8 +60,14 @@ class Services implements ServiceProviderInterface
 
         $pimple['activity'] = $pimple->factory(
             function (Container $c) {
-                $data = new ActivityStatus();
-                return new UserActivity($c['dbo'], $c['user'], $data);
+                $status  = new ActivityStatus();
+                $summary = new ActivitySummary();
+                return new UserActivity(
+                    $c['dbo'],
+                    $c['user'],
+                    $status,
+                    $summary,
+                    $c['certificate']);
             }
         );
 
