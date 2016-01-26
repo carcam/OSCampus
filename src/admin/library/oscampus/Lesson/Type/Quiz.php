@@ -76,6 +76,8 @@ class Quiz extends AbstractType
                 )
             );
 
+            JHtml::script('COM_OSCAMPUS_QUIZ_TIMEOUT');
+
             JHtml::_('osc.onready', "$.Oscampus.quiz.timer({$options})");
         }
 
