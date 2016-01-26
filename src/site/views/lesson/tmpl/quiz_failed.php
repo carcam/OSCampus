@@ -35,9 +35,18 @@ $activity = $this->activity;
         </div>
         <div class="block3">
             <div class="osc-quiz-left">
-                <span class="osc-quiz-score-label">Your Score</span><br/>
-                <span class="osc-quiz-percentage"><?php echo $activity->score . '%'; ?></span><br/>
-                <span class="osc-quiz-failed-label osc-negative-color">(Failed)</span><br/>
+            <span class="osc-quiz-score-label">
+                <?php echo JText::_('COM_OSCAMPUS_QUIZ_YOUR_SCORE'); ?>
+            </span>
+                <br/>
+            <span class="osc-quiz-percentage">
+                <?php echo $activity->score . '%'; ?>
+            </span>
+                <br/>
+            <span class="osc-quiz-failed-label osc-negative-color">
+                <?php echo JText::_('COM_OSCAMPUS_QUIZ_STATUS_FAILED'); ?>
+            </span>
+                <br/>
             </div>
         </div>
         <div class="block8">
@@ -49,8 +58,22 @@ $activity = $this->activity;
                 <strong>Would you like to take it again now?</strong><br/>
 
                 <div class="osc-btn-group">
-                    <button type="submit" class="osc-btn osc-btn-main">Yes, I want to try again!</button>
-                    <button type="submit" class="osc-btn">Later</button>
+                    <?php
+                    echo JHtml::_(
+                        'osc.lesson.retrylink',
+                        $this->lesson->current,
+                        JText::_('COM_OSCAMPUS_QUIZ_RETRY'),
+                        'class="osc-btn osc-btn-main"'
+                    );
+                    ?>
+                    <?php
+                    echo JHtml::_(
+                        'link',
+                        "javascript:alert('Under Construction');",
+                        'Later',
+                        'class="osc-btn"'
+                    );
+                    ?>
                 </div>
             </div>
         </div>
