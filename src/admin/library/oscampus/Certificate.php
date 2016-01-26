@@ -8,8 +8,8 @@
 
 namespace Oscampus;
 
-use JDatabase;
-use Juser;
+use Oscampus\Lesson\Type\Quiz;
+use OscampusFactory;
 
 defined('_JEXEC') or die();
 
@@ -21,20 +21,32 @@ defined('_JEXEC') or die();
 class Certificate extends AbstractBase
 {
     /**
-     * @var JUser
+     * Award a certificate if all requirements have been passed
+     *
+     * @param int          $courseId
+     * @param UserActivity $activity
      */
-    protected $user = null;
-
-    public function __construct(JDatabase $dbo, JUser $user)
+    public function award($courseId, UserActivity $activity)
     {
-        parent::__construct($dbo);
+        $summary = $activity->summary($courseId);
+        if ($summary->viewed == $summary->lessons) {
+            $lessons = $activity->getCourse($courseId);
+            foreach ($lessons as $lessonId => $lesson) {
+                if ($lesson->type == 'quiz') {
+                    if ($lesson->score < Quiz::PASSING_SCORE) {
+                        return;
+                    }
+                }
+            }
 
-        $this->user = $user;
-    }
-
-    public function award($courseId, $userId)
-    {
-        // @TODO: Create a certificate
+            // All requirements passed, award certificate
+            $certificate = (object)array(
+                'users_id'    => $summary->users_id,
+                'courses_id'  => $courseId,
+                'date_earned' => OscampusFactory::getDate()->toSql()
+            );
+            $this->dbo->insertObject('#__oscampus_certificates', $certificate);
+        }
     }
 
     /**
@@ -44,7 +56,7 @@ class Certificate extends AbstractBase
      *
      * @return null|object
      */
-    protected function snapshot($courseId)
+    public function snapshot($courseId)
     {
         $query = $this->dbo->getQuery(true)
             ->select(
