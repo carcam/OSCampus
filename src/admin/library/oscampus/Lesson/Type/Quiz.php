@@ -17,20 +17,24 @@ defined('_JEXEC') or die();
 
 class Quiz extends AbstractType
 {
-    /**
-     * @var int
-     */
-    public $passingScore = 70;
+    const PASSING_SCORE = 70;
+    const TIME_LIMIT    = 10;
+    const LIMIT_ALERT   = 1;
 
     /**
      * @var int
      */
-    public $timeLimit = 10;
+    public $passingScore = null;
 
     /**
      * @var int
      */
-    public $limitAlert = 1;
+    public $timeLimit = null;
+
+    /**
+     * @var int
+     */
+    public $limitAlert = null;
 
     /**
      * @var int
@@ -45,6 +49,10 @@ class Quiz extends AbstractType
     public function __construct(Lesson $lesson)
     {
         parent::__construct($lesson);
+
+        $this->passingScore = static::PASSING_SCORE;
+        $this->timeLimit    = static::TIME_LIMIT;
+        $this->limitAlert   = static::LIMIT_ALERT;
 
         $content = json_decode($lesson->content);
 
