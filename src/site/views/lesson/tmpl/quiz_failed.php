@@ -18,7 +18,6 @@ defined('_JEXEC') or die();
 
 $quiz     = $this->lesson->renderer;
 $activity = $this->activity;
-$retryLink = JHtml::_('osc.lesson.retrylink', $this->lesson, null, null, true);
 ?>
 <div class="osc-container oscampus-quiz" id="oscampus">
     <div class="osc-section">
@@ -59,21 +58,19 @@ $retryLink = JHtml::_('osc.lesson.retrylink', $this->lesson, null, null, true);
                 <strong>Would you like to take it again now?</strong><br/>
 
                 <div class="osc-btn-group">
-                    <form id="formRetry" name="formRetry" action="<?php echo $retryLink; ?>" method="post">
-                        <div class="osc-btn-group">
-                            <button class="osc-btn osc-btn-main">
-                                <?php echo JText::_('COM_OSCAMPUS_QUIZ_RETRY'); ?>
-                            </button><?php
-                            echo JHtml::_(
-                                'link',
-                                "javascript:alert('Under Construction');",
-                                'Later',
-                                'class="osc-btn"'
-                            );
-                            ?>
-                            <?php echo JHtml::_('form.token'); ?>
-                        </div>
-                    </form>
+                    <form id="formRetry" name="formRetry" action="" method="post">
+                        <button class="osc-btn osc-btn-main">
+                            <?php echo JText::_('COM_OSCAMPUS_QUIZ_RETRY'); ?>
+                        </button>
+                        <input type="hidden" name="retry" value="1"/>
+                    <?php
+                    echo JHtml::_(
+                        'link',
+                        "javascript:alert('Under Construction');",
+                        'Later',
+                        'class="osc-btn"'
+                    );
+                    ?>
                 </div>
             </div>
         </div>

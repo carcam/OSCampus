@@ -223,7 +223,7 @@
          * Get the value of the named cookie or return the default value
          *
          * @param {string} name
-         * @param {string} defaultValue
+         * @param {*} defaultValue
          *
          * @returns {string|null}
          */
