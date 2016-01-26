@@ -18,32 +18,32 @@ class ActivitySummary extends AbstractPrototype
     /**
      * @var int
      */
-    public $id          = null;
+    public $id = null;
 
     /**
      * @var int
      */
-    public $users_id    = null;
+    public $users_id = null;
 
     /**
      * @var int
      */
-    public $lessons     = null;
+    public $lessons = null;
 
     /**
      * @var int
      */
-    public $viewed      = null;
+    public $viewed = null;
 
     /**
      * @var int
      */
-    public $visits      = null;
+    public $visits = null;
 
     /**
      * @var DateTime
      */
-    public $completed   = null;
+    public $completed = null;
 
     /**
      * @var DateTime
@@ -58,7 +58,7 @@ class ActivitySummary extends AbstractPrototype
     /**
      * @var DateTime
      */
-    public $last_visit  = null;
+    public $last_visit = null;
 
     protected $dateProperties = array(
         'completed',
