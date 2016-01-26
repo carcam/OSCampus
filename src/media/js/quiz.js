@@ -41,14 +41,20 @@
 
             clock.formatSeconds(seconds);
 
+            $.Oscampus.cookie.delete('quiz_time');
+
             var update = setInterval(function() {
                 seconds--;
                 $.Oscampus.cookie.set('quiz_time', seconds);
                 clock.formatSeconds(seconds);
                 if (seconds <= 0) {
+                    $('#quizForm button[type=submit]').prop('disabled', true);
+
                     clearInterval(update);
                     $.Oscampus.cookie.delete('quiz_time');
-                    alert('time\'s up!');
+                    alert(Joomla.JText._('COM_OSCAMPUS_QUIZ_TIMEOUT'));
+
+                    $('#quizForm').submit();
                 }
             }, 1000);
         }
