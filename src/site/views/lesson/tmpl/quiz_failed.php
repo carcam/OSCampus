@@ -35,17 +35,17 @@ $activity = $this->activity;
         </div>
         <div class="block3">
             <div class="osc-quiz-left">
-        <span class="osc-quiz-score-label">
-            <?php echo JText::_('COM_OSCAMPUS_QUIZ_YOUR_SCORE'); ?>
-        </span>
-                <br/>
-        <span class="osc-quiz-percentage">
-            <?php echo $activity->score . '%'; ?>
-        </span>
-                <br/>
-        <span class="osc-quiz-failed-label osc-negative-color">
-            <?php echo JText::_('COM_OSCAMPUS_QUIZ_STATUS_FAILED'); ?>
-        </span>
+                <span class="osc-quiz-score-label">
+                    <?php echo JText::_('COM_OSCAMPUS_QUIZ_YOUR_SCORE'); ?>
+                </span>
+                        <br/>
+                <span class="osc-quiz-percentage">
+                    <?php echo $activity->score . '%'; ?>
+                </span>
+                        <br/>
+                <span class="osc-quiz-failed-label osc-negative-color">
+                    <?php echo JText::_('COM_OSCAMPUS_QUIZ_STATUS_FAILED'); ?>
+                </span>
                 <br/>
             </div>
         </div>

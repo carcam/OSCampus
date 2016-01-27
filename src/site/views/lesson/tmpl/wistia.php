@@ -27,28 +27,15 @@ endif;
     </div>
     <!-- .osc-lesson-links -->
 
-<?php
-if ($this->lesson->header):
-    ?>
-    <div class="osc-section oscampus-lesson-header">
-        <?php echo $this->lesson->header; ?>
-    </div>
-    <?php
-endif;
-?>
+    <?php echo $this->loadDefaultTemplate('header'); ?>
+
     <div class="osc-section oscampus-lesson-content">
         <?php echo $this->lesson->render(); ?>
     </div>
 
 <?php
-if ($this->lesson->footer):
-    ?>
-    <div class="osc-section oscampus-lesson-footer">
-        <?php echo $this->lesson->footer; ?>
-    </div>
-    <?php
-endif;
 
+echo $this->loadDefaultTemplate('footer');
 echo $this->loadDefaultTemplate('files');
 
 if (!$component):

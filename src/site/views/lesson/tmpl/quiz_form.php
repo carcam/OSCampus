@@ -48,11 +48,7 @@ $questions = $quiz->getQuestions();
     </div>
 </div>
 
-<?php if ($this->lesson->header) : ?>
-    <div class="osc-section oscampus-lesson-header">
-        <?php echo $this->lesson->header; ?>
-    </div>
-<?php endif; ?>
+<?php echo $this->loadDefaultTemplate('header'); ?>
 
 <form id="formQuiz" name="formQuiz" method="post" action="">
     <div class="osc-section oscampus-lesson-content">
@@ -98,11 +94,4 @@ $questions = $quiz->getQuestions();
 </form>
 
 <?php
-if ($this->lesson->footer) :
-    ?>
-    <div class="osc-section oscampus-lesson-footer">
-        <?php echo $this->lesson->footer; ?>
-    </div>
-    <?php
-endif;
-?>
+echo $this->loadDefaultTemplate('footer');

@@ -19,15 +19,8 @@ defined('_JEXEC') or die();
 $quiz     = $this->lesson->renderer;
 $attempt  = $quiz->getLastAttempt($this->activity);
 
-if ($this->lesson->header) :
-    ?>
-    <div class="osc-section oscampus-lesson-header">
-        <?php echo $this->lesson->header; ?>
-    </div>
-    <?php
-endif;
+echo $this->loadDefaultTemplate('header');
 ?>
-
     <div class="osc-quiz-question">
         <?php
         $i           = 1;
@@ -51,11 +44,4 @@ endif;
     <!-- .osc-section -->
 
 <?php
-if ($this->lesson->footer) :
-    ?>
-    <div class="osc-section oscampus-lesson-footer">
-        <?php echo $this->lesson->footer; ?>
-    </div>
-    <?php
-endif;
-
+echo $this->loadDefaultTemplate('footer');
