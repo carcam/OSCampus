@@ -59,18 +59,6 @@ class OscampusViewLesson extends OscampusViewSite
         }
     }
 
-    /**
-     * Get the default navigation controls
-     *
-     * @return string
-     *
-     * @deprecated use loadDefaultTemplate() instead
-     */
-    protected function loadNavigation()
-    {
-        return $this->loadDefaultTemplate('navigation');
-    }
-
     protected function loadDefaultTemplate($name)
     {
         $oldLayout = $this->setLayout('default');

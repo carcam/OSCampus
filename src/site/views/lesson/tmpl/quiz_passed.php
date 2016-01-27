@@ -23,7 +23,7 @@ $activity = $this->activity;
 <div class="osc-section">
     <h1 class="osc-lesson-title"><?php echo $this->lesson->title; ?></h1>
     <div class="osc-lesson-links">
-        <?php echo $this->loadNavigation(); ?>
+        <?php echo $this->loadDefaultTemplate('navigation'); ?>
     </div>
 </div>
 
