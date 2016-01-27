@@ -199,4 +199,25 @@ class Quiz extends AbstractType
 
         return $data;
     }
+
+    /**
+     * Prepare data and provide XML for use in lesson admin UI.
+     *
+     * @param JObject $data
+     *
+     * @return SimpleXMLElement
+     */
+    public function prepareAdminData(JObject $data)
+    {
+        $content = $data->get('content');
+        if ($content && is_string($content)) {
+            $data->set('content', json_decode($content, true));
+        }
+
+        $path = __DIR__ . '/quiz.xml';
+
+        $xml  = simplexml_load_file($path);
+
+        return $xml;
+    }
 }

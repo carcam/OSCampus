@@ -37,4 +37,15 @@ class Text extends AbstractType
         $status->score = 100;
         $status->completed = OscampusFactory::getDate();
     }
+
+    public function prepareAdminData(JObject $data)
+    {
+        $path = __DIR__ . '/text.xml';
+        if (is_file($path)) {
+            $xml = simplexml_load_file($path);
+            return $xml;
+        }
+
+        return null;
+    }
 }

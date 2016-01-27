@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <form>
+        <fieldset name="content">
+            <field
+                name="content"
+                type="oscampus.questions"
+                label="COM_OSCAMPUS_QUIZ_CONTENT_LABEL"
+                description="COM_OSCAMPUS_QUIZ_CONTENT_DESCRIPTION"
+                required="true"/>
+        </fieldset>
+    </form>
+</metadata>
