@@ -32,4 +32,5 @@ if ($this->activity->data && !$retry) {
 ?>
 <div class="osc-container oscampus-quiz" id="oscampus">
     <?php echo $this->loadTemplate($quizTemplate); ?>
+    <?php echo $this->loadDefaultTemplate('files'); ?>
 </div>

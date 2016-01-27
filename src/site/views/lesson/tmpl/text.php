@@ -34,4 +34,6 @@ defined('_JEXEC') or die();
             <?php echo $this->lesson->footer; ?>
         </div>
     <?php endif; ?>
+
+    <?php echo $this->loadDefaultTemplate('files'); ?>
 </div>

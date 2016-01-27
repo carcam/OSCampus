@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\File;
 use Oscampus\Lesson;
 use Oscampus\UserActivity;
 
@@ -67,6 +68,35 @@ class OscampusModelLesson extends OscampusModelSite
     {
         $lesson = $this->getItem();
         return $this->activity->getStatus($lesson->id);
+    }
+
+    /**
+     * @return File[]
+     */
+    public function getFiles()
+    {
+        if ($lessonId = $this->getState('lesson.id')) {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'file.id',
+                        'file.path',
+                        'file.title',
+                        'file.description'
+                    )
+                )
+                ->from('#__oscampus_files AS file')
+                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
+                ->where('flink.lessons_id = ' . (int)$lessonId)
+                ->order('flink.ordering ASC, file.title ASC');
+
+            $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
+
+            return $files;
+        }
+
+        return array();
     }
 
     protected function populateState()

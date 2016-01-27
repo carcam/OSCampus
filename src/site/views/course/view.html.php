@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\File;
 use Oscampus\Lesson;
 
 defined('_JEXEC') or die();
@@ -28,7 +29,7 @@ class OscampusViewCourse extends OscampusViewSite
     protected $lessons = array();
 
     /**
-     * @var array
+     * @var File[]
      */
     protected $files = array();
 

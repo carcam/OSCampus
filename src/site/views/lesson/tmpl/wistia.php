@@ -49,6 +49,8 @@ if ($this->lesson->footer):
     <?php
 endif;
 
+echo $this->loadDefaultTemplate('files');
+
 if (!$component):
     ?>
     </div>

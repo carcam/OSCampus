@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\File;
 use Oscampus\Lesson\Properties;
 use Oscampus\UserActivity;
 
@@ -88,7 +89,7 @@ class OscampusModelCourse extends OscampusModelSite
     /**
      * Get all additional file downloads for this course
      *
-     * @return array
+     * @return File[]
      */
     public function getFiles()
     {
@@ -99,17 +100,33 @@ class OscampusModelCourse extends OscampusModelSite
             $db = JFactory::getDbo();
 
             $query = $db->getQuery(true)
-                ->select('file.*')
-                ->from('#__oscampus_files file')
-                ->innerJoin('#__oscampus_files_links flink ON flink.files_id = file.id')
-                ->innerJoin('#__oscampus_courses course ON course.id = flink.courses_id')
-                ->leftJoin('#__oscampus_lessons lesson ON lesson.id = flink.lessons_id')
-                ->leftJoin('#__oscampus_modules module ON module.id = lesson.modules_id')
+                ->select(
+                    array(
+                        'file.id',
+                        'file.path',
+                        'file.title',
+                        'file.description'
+                    )
+                )
+                ->from('#__oscampus_files AS file')
+                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
+                ->innerJoin('#__oscampus_courses AS course ON course.id = flink.courses_id')
+                ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = flink.lessons_id')
+                ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
                 ->where('flink.courses_id = ' . $cid)
-                ->order('module.ordering, lesson.ordering, flink.ordering')
+                ->order('module.ordering, lesson.ordering, flink.ordering, file.title')
                 ->group('file.id');
 
-            $files = $db->setQuery($query)->loadObjectList();
+            error_reporting(-1);
+            ini_set('display_errors', 1);
+
+            $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
+
+            echo $db->getErrorMsg();
+            error_reporting(0);
+            ini_set('display_errors', 0);
+
+
         }
         return $files;
     }

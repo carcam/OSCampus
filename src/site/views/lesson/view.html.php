@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\File;
 use Oscampus\Lesson;
 
 defined('_JEXEC') or die();
@@ -23,6 +24,11 @@ class OscampusViewLesson extends OscampusViewSite
     protected $lesson = null;
 
     /**
+     * @var File[]
+     */
+    protected $files = array();
+
+    /**
      * @var Lesson\ActivityStatus
      */
     protected $activity = null;
@@ -31,6 +37,7 @@ class OscampusViewLesson extends OscampusViewSite
     {
         $this->model    = $this->getModel();
         $this->lesson   = $this->model->getItem();
+        $this->files    = $this->model->getFiles();
         $this->activity = $this->model->getActivityStatus();
 
         $pathway = JFactory::getApplication()->getPathway();
@@ -66,8 +73,8 @@ class OscampusViewLesson extends OscampusViewSite
 
     protected function loadDefaultTemplate($name)
     {
-        $oldLayout  = $this->setLayout('default');
-        $template = $this->loadTemplate($name);
+        $oldLayout = $this->setLayout('default');
+        $template  = $this->loadTemplate($name);
         $this->setLayout($oldLayout);
 
         return $template;
