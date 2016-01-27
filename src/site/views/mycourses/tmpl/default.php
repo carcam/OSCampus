@@ -19,27 +19,21 @@ defined('_JEXEC') or die();
 
     <div class="osc-table">
         <div class="osc-section osc-row-heading osc-hide-tablet">
-            <div class="block6">
+            <div class="block8">
                 <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?>
             </div>
-            <div class="block3">
+            <div class="block4">
                 <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?>
-            </div>
-            <div class="block3">
-                <i class="fa fa-battery-3"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_PROGRESS'); ?>
             </div>
         </div>
 
         <?php foreach ($this->items as $item) : ?>
             <div class="osc-section osc-row-one">
-                <div class="block6">
+                <div class="block8">
                     <?php echo JHtml::_('osc.course.link', $item); ?>
                 </div>
-                <div class="block3">
+                <div class="block4">
                     <?php echo $item->last_lesson->format('Y-m-d'); ?>
-                </div>
-                <div class="block3">
-                    <span class="osc-percentage-NaN" style="background: gray; display: inline-block; color: #fff; width: 55%;"><small style="padding-left: 10px;">%NaN</small></span>
                 </div>
             </div>
         <?php endforeach; ?>
