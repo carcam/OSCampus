@@ -35,17 +35,17 @@ $activity = $this->activity;
         </div>
         <div class="block3">
             <div class="osc-quiz-left">
-            <span class="osc-quiz-score-label">
-                <?php echo JText::_('COM_OSCAMPUS_QUIZ_YOUR_SCORE'); ?>
-            </span>
+        <span class="osc-quiz-score-label">
+            <?php echo JText::_('COM_OSCAMPUS_QUIZ_YOUR_SCORE'); ?>
+        </span>
                 <br/>
-            <span class="osc-quiz-percentage">
-                <?php echo $activity->score . '%'; ?>
-            </span>
+        <span class="osc-quiz-percentage">
+            <?php echo $activity->score . '%'; ?>
+        </span>
                 <br/>
-            <span class="osc-quiz-failed-label osc-negative-color">
-                <?php echo JText::_('COM_OSCAMPUS_QUIZ_STATUS_FAILED'); ?>
-            </span>
+        <span class="osc-quiz-failed-label osc-negative-color">
+            <?php echo JText::_('COM_OSCAMPUS_QUIZ_STATUS_FAILED'); ?>
+        </span>
                 <br/>
             </div>
         </div>
@@ -59,13 +59,11 @@ $activity = $this->activity;
 
                 <div class="osc-btn-group">
                     <form id="formRetry" name="formRetry" action="" method="post">
+                        <input type="hidden" name="retry" value="1"/>
                         <div class="osc-btn-group">
                             <button class="osc-btn osc-btn-main">
                                 <?php echo JText::_('COM_OSCAMPUS_QUIZ_RETRY'); ?>
-                            </button>
-                            <input type="hidden" name="retry" value="1"/>
-
-                            <?php
+                            </button><?php
                             echo JHtml::_(
                                 'osc.link.course',
                                 $this->lesson->pathways_id,
@@ -82,5 +80,4 @@ $activity = $this->activity;
     </div>
     <!-- .osc-section -->
 </div>
-
 <?php echo $this->loadTemplate('results');
