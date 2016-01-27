@@ -8,9 +8,12 @@
 
 namespace Oscampus\Lesson\Type;
 
+use JForm;
+use JObject;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
+use SimpleXMLElement;
 
 defined('_JEXEC') or die();
 
@@ -71,6 +74,24 @@ abstract class AbstractType
      * @return void
      */
     abstract public function prepareActivityProgress(ActivityStatus $status, $score, $data);
+
+    /**
+     * Prepare data and provide XML for use in lesson admin UI.
+     *
+     * @param JObject $data
+     *
+     * @return SimpleXMLElement
+     */
+    public function prepareAdminData(JObject $data)
+    {
+        $path = __DIR__ . '/default.xml';
+        if (is_file($path)) {
+            $xml = simplexml_load_file($path);
+            return $xml;
+        }
+
+        return null;
+    }
 
     public function __toString()
     {

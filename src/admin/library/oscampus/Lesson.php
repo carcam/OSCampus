@@ -9,6 +9,8 @@
 namespace Oscampus;
 
 use JDatabase;
+use JForm;
+use JObject;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
@@ -226,6 +228,19 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
+    public function loadAdminForm(JForm $form, $data)
+    {
+        $renderer = $this->getRenderer($data->get('type'));
+        if ($renderer) {
+            $xml = $renderer->prepareAdminData($data);
+            if ($xml) {
+                if ($subForm = array_shift($xml->xpath('form'))) {
+                    $form->load($subForm[0]);
+                };
+            }
+        }
+    }
+
     /**
      * Get the base query for finding lessons
      *
@@ -272,14 +287,25 @@ class Lesson extends AbstractBase
         $this->current->load($data[1]);
         $this->next->load($data[2]);
 
-        if ($renderer) {
-            $this->renderer = $renderer;
-            return;
+        $this->renderer = $renderer ?: $this->getRenderer();
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return AbstractType|null
+     */
+    protected function getRenderer($type = null)
+    {
+        $type = $type ?: $this->current->type;
+        if ($type) {
+            $className = static::SUBCLASS_BASE . ucfirst(strtolower($type));
+
+            if (class_exists($className)) {
+                return new $className($this);
+            }
         }
 
-        $className = static::SUBCLASS_BASE . ucfirst(strtolower($this->current->type));
-        if (class_exists($className)) {
-            $this->renderer = new $className($this);
-        }
+        return null;
     }
 }

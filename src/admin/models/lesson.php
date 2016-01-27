@@ -27,6 +27,17 @@ class OscampusModelLesson extends OscampusModelAdmin
         return $item;
     }
 
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        if ($data) {
+            OscampusFactory::getContainer()
+                ->lesson
+                ->loadAdminForm($form, $data);
+        }
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
     protected function getReorderConditions($table)
     {
         $conditions = array(

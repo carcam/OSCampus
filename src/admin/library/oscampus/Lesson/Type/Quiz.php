@@ -9,10 +9,12 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
+use JObject;
 use JText;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
+use SimpleXMLElement;
 
 defined('_JEXEC') or die();
 

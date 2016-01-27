@@ -8,9 +8,11 @@
 
 namespace Oscampus\Lesson\Type;
 
+use JObject;
 use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\AbstractType;
 use OscampusFactory;
+use SimpleXMLElement;
 
 defined('_JEXEC') or die();
 

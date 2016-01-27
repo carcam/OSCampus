@@ -65,12 +65,14 @@ abstract class OscRender
             if ($legend === true) {
                 $legend = $fieldSets[$fieldSet]->label;
             }
+            $description = $fieldSets[$fieldSet]->description;
+
             $fields = $form->getFieldset($fieldSet);
 
             if (version_compare(JVERSION, '3.0', 'lt')) {
-                $html = static::adminFieldsetJ2($fields, $legend, $span);
+                $html = static::adminFieldsetJ2($fields, $legend, $description, $span);
             } else {
-                $html = static::adminFieldsetJ3($fields, $legend, $span);
+                $html = static::adminFieldsetJ3($fields, $legend, $description, $span);
             }
         }
         return join("\n", $html);
@@ -143,18 +145,22 @@ abstract class OscRender
      * Render a fieldset block for Joomla! 3 admin UI
      *
      * @param JFormFIeld[] $fields
-     * @param bool|string  $legend
+     * @param string       $legend
+     * @param string       $description
      * @param int|string   $span
      *
-     * @return array
+     * @return string[]
      */
-    protected static function adminFieldsetJ3(array $fields, $legend, $span)
+    protected static function adminFieldsetJ3(array $fields, $legend, $description, $span)
     {
         $html   = array();
         $html[] = "<div class=\"span{$span}\">";
         if ($legend) {
             $html[] = '<fieldset class="adminform">';
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
+        }
+        if ($description) {
+            $html[] = '<div>' . JText::_($description) . '</div>';
         }
 
         /** @var JFormField $field */
@@ -220,12 +226,13 @@ abstract class OscRender
      * Render a fieldset block for Joomla! 2 admin UI
      *
      * @param JFormField[] $fields
-     * @param bool|string  $legend
+     * @param string       $legend
+     * @param string       $description
      * @param int|string   $span
      *
-     * @return array
+     * @return string[]
      */
-    protected static function adminFieldsetJ2(array $fields, $legend, $span)
+    protected static function adminFieldsetJ2(array $fields, $legend, $description, $span)
     {
         $html   = array();
         $html[] = '<div class="fltlft width-' . static::spanToWidth($span) . '">';
@@ -233,6 +240,9 @@ abstract class OscRender
 
         if ($legend) {
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
+        }
+        if ($description) {
+            $html[] = '<div>' . JText::_($description) . '</div>';
         }
 
         $html = array_merge($html, static::adminFieldsJ2($fields));

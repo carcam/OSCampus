@@ -26,7 +26,7 @@
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'content', 'COM_OSCAMPUS_LESSON_TAB_CONTENT_LABEL'|lang) }}
-    <p>Under Construction - this is the hard part</p>
+    {{ form_macro.render_fieldset(form, 'content') }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'footer', 'COM_OSCAMPUS_LESSON_TAB_FOOTER_LABEL'|lang) }}
