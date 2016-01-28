@@ -2,12 +2,19 @@
 <metadata>
     <form>
         <fieldset name="content">
-            <field
-                name="content"
-                type="oscampus.questions"
-                label="COM_OSCAMPUS_QUIZ_CONTENT_LABEL"
-                description="COM_OSCAMPUS_QUIZ_CONTENT_DESCRIPTION"
-                required="true"/>
+            <fields name="content">
+                <field
+                    name="quizLength"
+                    type="text"/>
+
+                <field
+                    name="questions"
+                    type="oscampus.questions"
+                    label="COM_OSCAMPUS_QUIZ_CONTENT_LABEL"
+                    description="COM_OSCAMPUS_QUIZ_CONTENT_DESCRIPTION"
+                    required="true"/>
+
+            </fields>
         </fieldset>
     </form>
 </metadata>
