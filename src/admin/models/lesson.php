@@ -77,8 +77,19 @@ class OscampusModelLesson extends OscampusModelAdmin
             $data['modules_id'] = $module->id;
         }
 
-        if (!empty($data['content']) && !is_string($data['content'])){
-            $data['content'] = json_encode($data['content']);
+
+        try {
+            $fixedData = new JRegistry($data);
+
+            OscampusFactory::getContainer()
+                ->lesson
+                ->saveAdminChanges($fixedData);
+
+            $data = $fixedData->toArray();
+
+        } catch (Exception $e) {
+            // @TODO: we can't fail properly yet
+            OscampusFactory::getApplication()->enqueueMessage('Partial save with error: ' . $e->getMessage(), 'notice');
         }
 
         return parent::save($data);

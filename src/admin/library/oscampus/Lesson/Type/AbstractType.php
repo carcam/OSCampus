@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
+use Exception;
 use JRegistry;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
@@ -28,6 +29,12 @@ abstract class AbstractType
         $this->lesson = $lesson;
     }
 
+    /**
+     * Each lesson type must provide the output, loading of
+     * js, etc needed for their particular needs
+     *
+     * @return string
+     */
     abstract public function render();
 
     /**
@@ -90,6 +97,20 @@ abstract class AbstractType
         }
 
         return null;
+    }
+
+    /**
+     * The default procedure to vet the lesson content on saving
+     * changes in admin. Note passing of data object allowing
+     * modification of any of the form POST data
+     *
+     * @param JRegistry $data
+     *
+     * @throws Exception
+     */
+    public function saveAdminChanges(JRegistry $data)
+    {
+        // Subclasses indicate a problem by throwing Exception
     }
 
     public function __toString()

@@ -220,4 +220,41 @@ class Quiz extends AbstractType
 
         return $xml;
     }
+
+    public function saveAdminChanges(JRegistry $data)
+    {
+        $quiz = $data->get('content');
+
+        if ($quiz) {
+            if (is_string($quiz)) {
+                $quiz = json_decode($quiz, true);
+            }
+        }
+
+        $oldQuestions = (array)$quiz->questions;
+        $newQuestions = array();
+        foreach ($oldQuestions as $qOldKey => $question) {
+            $qKey    = md5($question->text);
+            $correct = $question->correct;
+
+            $answers = array();
+            foreach ((array)$question->answers as $aOldKey => $answer) {
+                $aKey = md5($answer);
+
+                $answers[$aKey] = array(
+                    'text'    => $answer,
+                    'correct' => (int)($correct == $aOldKey)
+                );
+            }
+
+            $newQuestions[$qKey] = array(
+                'text'    => $question->text,
+                'answers' => $answers
+            );
+        }
+
+        $quiz->questions = $newQuestions;
+
+        $data->set('content', json_encode($quiz));
+    }
 }

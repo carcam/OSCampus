@@ -8,6 +8,7 @@
 
 namespace Oscampus;
 
+use Exception;
 use JDatabase;
 use JForm;
 use JRegistry;
@@ -223,6 +224,11 @@ class Lesson extends AbstractBase
         return $this->current->isAuthorised($user);
     }
 
+    /**
+     * The primary rendering function for lesson content
+     *
+     * @return string
+     */
     public function render()
     {
         return $this->renderer->render();
@@ -238,6 +244,23 @@ class Lesson extends AbstractBase
                     $form->load($subForm[0]);
                 };
             }
+        }
+    }
+
+    /**
+     * Opportunity for Lesson Types to verify and massage content data
+     * as needed
+     *
+     * @param JRegistry $data
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function saveAdminChanges(JRegistry $data)
+    {
+        $renderer = $this->getRenderer($data->get('type'));
+        if ($renderer) {
+            $renderer->saveAdminChanges($data);
         }
     }
 

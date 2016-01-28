@@ -14,19 +14,75 @@ class OscampusFormFieldQuestions extends JFormField
     {
         echo '<h4>Please don\'t mind the mess - this is a work in progress</h4>';
 
-        $html = array('<div>');
-        foreach ($this->value as $qkey => $question) {
-            $attribs = array(
-                'id'       => $this->id . '_' . $qkey,
-                'name'     => $this->name . '[' . $qkey . ']',
-                'value'    => $question['text'],
-                'disabled' => 'disabled',
-                'size'     => 75
-            );
-            $html[]  = '<div class="clr"></div>';
-            $html[]  = '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+        // Temporary css fixes
+        $css = <<<STYLEFIX
+.osc-quiz-questions input {
+    float: none !important;
+}
+.osc-quiz-questions li {
+    padding-left: 10px !important;
+}
+
+.osc-quiz-questions li.osc-question ul {
+    padding-bottom: 10px;
+}
+STYLEFIX;
+
+        OscampusFactory::getDocument()->addStyleDeclaration($css);
+
+        $html = array(
+            '<div class="clr"></div>',
+            '<div class="osc-quiz-questions">',
+            '<ul>'
+        );
+        foreach ($this->value as $qKey => $question) {
+            $qId   = $this->id . '_' . $qKey;
+            $qName = $this->name . '[' . $qKey . ']';
+
+            $html[] = '<li class="osc-question">Q: ' . $this->createInput($qId . '_text', $qName . '[text]', $question['text']);
+
+            $answers = array();
+            foreach ($question['answers'] as $aKey => $answer) {
+                $aId   = $qId . '_' . $aKey;
+                $aName = $qName . '[answers][' . $aKey . ']';
+
+                $answerTextInput    = $this->createInput($aId, $aName, $answer['text']);
+                $answerCorrectInput = '<input'
+                    . ' id="' . $qId . '_correct"'
+                    . ' name="' . $qName . '[correct]"'
+                    . ' type="radio"'
+                    . ' value="' . $aKey . '"'
+                    . ($answer['correct'] ? ' checked' : '')
+                    . '/>';
+
+                $html[] = '<li class="answer">'
+                    . $answerCorrectInput
+                    . $answerTextInput
+                    . '</li>';
+            }
+
+            $html[] = '<ul>';
+
+            $html[] = '</ul>';
+            $html[] = '</li>';
         }
 
+        $html[] = '</ul>';
+        $html[] = '</div>';
+
         return join('', $html);
+    }
+
+    protected function createInput($id, $name, $value)
+    {
+        $attribs = array(
+            'id'    => $id,
+            'type'  => 'text',
+            'name'  => $name,
+            'value' => $value,
+            'size'  => 75
+        );
+
+        return '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
     }
 }
