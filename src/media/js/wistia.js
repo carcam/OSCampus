@@ -52,13 +52,15 @@
 
     $.Oscampus.wistia = {
         options: {
-            extras     : false,
+            mobile     : false,
             formToken  : null,
             intervalPct: 10,
             gracePct   : 3,
-            download   : {
-                authorised: false
-            }
+            authorised : {
+                download: false,
+                controls: false
+            },
+            offClass: 'osc-off'
         },
 
         /**
@@ -69,7 +71,7 @@
         init: function(options) {
             options = $.extend(true, {}, this.options, options);
 
-            if (options.extras) {
+            if (!options.mobile) {
                 this.addExtraControls(options);
             }
             this.saveVolumeChange();
@@ -327,17 +329,27 @@
             $(wistiaEmbed.grid.top_inside).append(container);
 
             this.buttonDownload(container, options);
-            this.buttonAutoplay(container);
-            this.buttonFocus(container);
+
+            if (options.authorised.controls) {
+                this.buttonAutoplay(container, options);
+                this.buttonFocus(container, options);
+            }
         },
 
         /**
          * Add autoplay button to the container
          *
-         * @param container
+         * @param {object} container
+         * @param {object} options
          */
-        buttonAutoplay: function(container) {
+        buttonAutoplay: function(container, options) {
             var button = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'))
+
+            if (wistiaEmbed.params.autoplay) {
+                button.removeClass(options.offClass);
+            } else {
+                button.addClass(options.offClass);
+            }
 
             button
                 .data('option', 'autoPlay')
@@ -355,8 +367,10 @@
 
                             if (state) {
                                 $(wistiaEmbed).trigger('autoplayenabled');
+                                button.removeClass(options.offClass);
                             } else {
                                 $(wistiaEmbed).trigger('autoplaydisabled');
+                                button.addClass(options.offClass);
                             }
                         },
                         complete: function() {
@@ -371,10 +385,17 @@
         /**
          * Add focus button to container
          *
-         * @param container
+         * @param {object} container
+         * @param {object} options
          */
-        buttonFocus: function(container) {
+        buttonFocus: function(container, options) {
             var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
+
+            if (wistiaEmbed.options.focus) {
+                button.removeClass(options.offClass)
+            } else {
+                button.addClass(options.offClass);
+            }
 
             button
                 .data('option', 'focus')
@@ -393,9 +414,11 @@
                             if (state) {
                                 wistiaEmbed.plugin['dimthelights'].dim();
                                 $(wistiaEmbed).trigger('focusenabled');
+                                button.removeClass(options.offClass);
                             } else {
                                 wistiaEmbed.plugin['dimthelights'].undim();
                                 $(wistiaEmbed).trigger('focusdisabled');
+                                button.addClass(options.offClass);
                             }
                         },
                         complete: function() {
@@ -440,15 +463,15 @@
             options = $.extend({}, this.options, options);
 
             var button = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
-            if (!options.download.authorised) {
-                button.addClass('osc-off');
+            if (!options.authorised.download) {
+                button.addClass(options.offClass);
             }
 
             button
                 .data('enabled', 'fa-cloud-download')
                 .spinnerIcon()
                 .on('click', function(event) {
-                    if (options.download.authorised) {
+                    if (options.authorised.download) {
                         $(this).spinnerIcon(true);
                         wistiaEmbed.pause();
 

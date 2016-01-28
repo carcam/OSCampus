@@ -64,19 +64,19 @@ class Wistia extends AbstractType
         $device  = OscampusFactory::getContainer()->device;
         $params  = clone $oswistia->params;
 
-        $volume     = $session->get('oscampus.video.volume', 1);
-        $authorised = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
+        $volume   = $session->get('oscampus.video.volume', 1);
+        $controls = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
 
         $params->set('volume', $volume);
         $params->set('cacheVideoID', $this->id);
 
-        if ($authorised) {
-            $autoplay    = $session->get('oscampus.video.autoplay', $this->autoplay);
-            $isNotMobile = !$device->isMobile();
-            $focus       = $session->get('oscampus.video.focus', true);
+        if ($controls) {
+            $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
+            $focus    = $session->get('oscampus.video.focus', true);
+            $isMobile = $device->isMobile();
 
             $params->set('autoplay', $autoplay);
-            $params->set('plugin-focus', $focus && $isNotMobile);
+            $params->set('plugin-focus', $focus && !$isMobile);
 
         } else {
             // Block features for non-authorised users
@@ -89,7 +89,7 @@ class Wistia extends AbstractType
 
         $output = $embed->toString();
         if ($this->lesson->isAuthorised()) {
-            $output .= $this->setControls();
+            $output .= $this->setControls($controls);
         }
         return $output;
     }
@@ -115,9 +115,11 @@ class Wistia extends AbstractType
     }
 
     /**
+     * @param bool $controls
+     *
      * @return string
      */
-    protected function setControls()
+    protected function setControls($controls)
     {
         $user   = OscampusFactory::getUser();
         $device = OscampusFactory::getContainer()->device;
@@ -130,10 +132,11 @@ class Wistia extends AbstractType
 
         $options = json_encode(
             array(
-                'extras'    => !$device->isMobile(),
-                'formToken' => JSession::getFormToken(),
-                'download'  => array(
-                    'authorised' => $authoriseDownload
+                'mobile'     => $device->isMobile(),
+                'formToken'  => JSession::getFormToken(),
+                'authorised' => array(
+                    'download' => $authoriseDownload,
+                    'controls' => $controls
                 )
             )
         );
@@ -215,7 +218,7 @@ class Wistia extends AbstractType
 
         $path = __DIR__ . '/wistia.xml';
 
-        $xml  = simplexml_load_file($path);
+        $xml = simplexml_load_file($path);
 
         return $xml;
     }
