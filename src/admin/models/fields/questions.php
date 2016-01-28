@@ -12,7 +12,8 @@ class OscampusFormFieldQuestions extends JFormField
 {
     protected function getInput()
     {
-        echo '<h4>Please don\'t mind the mess - this is a work in progress</h4>';
+        JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
+
 
         // Temporary css fixes
         $css = <<<STYLEFIX
@@ -35,11 +36,19 @@ STYLEFIX;
             '<div class="osc-quiz-questions">',
             '<ul>'
         );
+
+        // Begin build questions for current quiz
         foreach ($this->value as $qKey => $question) {
             $qId   = $this->id . '_' . $qKey;
             $qName = $this->name . '[' . $qKey . ']';
 
-            $html[] = '<li class="osc-question">Q: ' . $this->createInput($qId . '_text', $qName . '[text]', $question['text']);
+            $html[] = '<li class="osc-question">Q: '
+                . $this->createInput($qId . '_text', $qName . '[text]', $question['text'])
+                . '<i class="fa fa-minus-circle osc-delete-question"></i>';
+
+
+            // Begin build answers for current question
+            $html[] = '<ul>';
 
             $answers = array();
             foreach ($question['answers'] as $aKey => $answer) {
@@ -58,16 +67,21 @@ STYLEFIX;
                 $html[] = '<li class="answer">'
                     . $answerCorrectInput
                     . $answerTextInput
+                    . '<i class="fa fa-minus-circle osc-delete-answer"></i>'
                     . '</li>';
             }
 
-            $html[] = '<ul>';
-
+            $html[] = '<li class="osc-add-answer"><i class="fa fa-plus-circle"></i> Add Answer</li>';
             $html[] = '</ul>';
+            // End build answers for current question
+
             $html[] = '</li>';
         }
 
+        $html[] = '<li class="osc-add-question"><i class="fa fa-plus-circle"></i> Add Question</li>';
         $html[] = '</ul>';
+        // End build questions for current quiz
+
         $html[] = '</div>';
 
         return join('', $html);
