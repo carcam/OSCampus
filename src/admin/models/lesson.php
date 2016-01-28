@@ -43,13 +43,24 @@ class OscampusModelLesson extends OscampusModelAdmin
 
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
-        if ($data instanceof JObject) {
-            $fixedData = new JRegistry($data->getProperties());
+        if ($data) {
+            $fixedData = $data instanceof JObject ? $data->getProperties() : $data;
+            $fixedData = new JRegistry($fixedData);
+
             OscampusFactory::getContainer()
                 ->lesson
                 ->loadAdminForm($form, $fixedData);
 
-            $data->setProperties($fixedData->toArray());
+            if (is_array($data)) {
+                $data = $fixedData->toArray();
+
+            } elseif ($data instanceof JObject) {
+                $data->setProperties($fixedData->toArray());
+
+            } elseif (is_object($data)) {
+                $data = $fixedData->toObject();
+            }
+
         }
 
         parent::preprocessForm($form, $data, $group);
@@ -89,6 +100,12 @@ class OscampusModelLesson extends OscampusModelAdmin
 
         } catch (Exception $e) {
             // @TODO: we can't fail properly yet
+
+            if ($_SERVER['REMOTE_ADDR'] == '71.236.165.244') {
+                $this->setError($e->getMessage());
+                return false;
+            }
+
             OscampusFactory::getApplication()->enqueueMessage('Partial save with error: ' . $e->getMessage(), 'notice');
         }
 
