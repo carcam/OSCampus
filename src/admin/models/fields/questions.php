@@ -8,12 +8,19 @@
 
 defined('_JEXEC') or die();
 
+if (!defined('OSCAMPUS_LOADED')) {
+    require_once JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
+}
+
 class OscampusFormFieldQuestions extends JFormField
 {
     protected function getInput()
     {
         JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
 
+        JHtml::_('osc.jquery');
+        JHtml::_('script', 'com_oscampus/admin/quiz.js', false, true);
+        JHtml::_('osc.onready', '$.Oscampus.admin.quiz.init();');
 
         // Temporary css fixes
         $css = <<<STYLEFIX
