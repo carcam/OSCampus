@@ -10,7 +10,7 @@ namespace Oscampus;
 
 use JDatabase;
 use JForm;
-use JObject;
+use JRegistry;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
@@ -228,7 +228,7 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
-    public function loadAdminForm(JForm $form, $data)
+    public function loadAdminForm(JForm $form, JRegistry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {

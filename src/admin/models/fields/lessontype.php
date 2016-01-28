@@ -8,36 +8,10 @@
 
 defined('_JEXEC') or die();
 
-JFormHelper::loadFieldType('Radio');
+JFormHelper::loadFieldType('List');
 
-class OscampusFormFieldLessontype extends JFormFieldRadio
+class OscampusFormFieldLessontype extends JFormFieldList
 {
-    public function getInput()
-    {
-        $readonly = (string)$this->element['readonly'];
-        if ($readonly == 'true' || $readonly == '1') {
-            $options = $this->getOptions();
-
-            $attribs = array(
-                'readonly' => 'readonly',
-                'disabled' => 'disabled',
-                'class'    => (string)$this->element['class']
-            );
-            return JHtml::_(
-                'select.genericlist',
-                $options,
-                $this->name,
-                $attribs,
-                'value',
-                'text',
-                $this->value,
-                $this->id
-            );
-        }
-
-        return parent::getInput();
-    }
-
     protected function getOptions()
     {
         $types = JHtml::_('osc.options.lessontypes');

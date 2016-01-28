@@ -8,9 +8,8 @@
 
 namespace Oscampus\Lesson\Type;
 
-use JObject;
+use JRegistry;
 use Oscampus\Lesson\ActivityStatus;
-use Oscampus\Lesson\Type\AbstractType;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -38,7 +37,12 @@ class Text extends AbstractType
         $status->completed = OscampusFactory::getDate();
     }
 
-    public function prepareAdminData(JObject $data)
+    /**
+     * @param JRegistry $data
+     *
+     * @return null|SimpleXMLElement
+     */
+    public function prepareAdminData(JRegistry $data)
     {
         $path = __DIR__ . '/text.xml';
         if (is_file($path)) {

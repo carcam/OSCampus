@@ -27,12 +27,29 @@ class OscampusModelLesson extends OscampusModelAdmin
         return $item;
     }
 
-    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    public function getForm($data = array(), $loadData = true)
     {
+        $form = parent::getForm($data, $loadData);
+
         if ($data) {
+            $fixedData = new JRegistry($data);
             OscampusFactory::getContainer()
                 ->lesson
-                ->loadAdminForm($form, $data);
+                ->loadAdminForm($form, $fixedData);
+        }
+
+        return $form;
+    }
+
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        if ($data instanceof JObject) {
+            $fixedData = new JRegistry($data->getProperties());
+            OscampusFactory::getContainer()
+                ->lesson
+                ->loadAdminForm($form, $fixedData);
+
+            $data->setProperties($fixedData->toArray());
         }
 
         parent::preprocessForm($form, $data, $group);
@@ -49,6 +66,8 @@ class OscampusModelLesson extends OscampusModelAdmin
 
     public function save($data)
     {
+        unset($data['courses_id'], $data['module_title']);
+
         if ($module = $this->getModule($data)) {
             if (!$module->store()) {
                 $this->setError($module->getError());
@@ -57,7 +76,10 @@ class OscampusModelLesson extends OscampusModelAdmin
 
             $data['modules_id'] = $module->id;
         }
-        unset($data['courses_id'], $data['module_title']);
+
+        if (!empty($data['content']) && !is_string($data['content'])){
+            $data['content'] = json_encode($data['content']);
+        }
 
         return parent::save($data);
     }

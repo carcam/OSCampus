@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use JObject;
+use JRegistry;
 use JText;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
@@ -203,11 +203,11 @@ class Quiz extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JObject $data
+     * @param JRegistry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JObject $data)
+    public function prepareAdminData(JRegistry $data)
     {
         $content = $data->get('content');
         if ($content && is_string($content)) {
@@ -216,7 +216,7 @@ class Quiz extends AbstractType
 
         $path = __DIR__ . '/quiz.xml';
 
-        $xml  = simplexml_load_file($path);
+        $xml = simplexml_load_file($path);
 
         return $xml;
     }

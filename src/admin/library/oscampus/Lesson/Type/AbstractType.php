@@ -8,8 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
-use JForm;
-use JObject;
+use JRegistry;
 use Oscampus\Lesson;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
@@ -78,11 +77,11 @@ abstract class AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JObject $data
+     * @param JRegistry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JObject $data)
+    public function prepareAdminData(JRegistry $data)
     {
         $path = __DIR__ . '/default.xml';
         if (is_file($path)) {
