@@ -12,6 +12,15 @@ JFormHelper::loadFieldType('List');
 
 class OscampusFormFieldLessontype extends JFormFieldList
 {
+    public function setup(&$element, $value, $group = null)
+    {
+        if (empty($value) && $element['readonly']) {
+            $element['readonly'] = 'false';
+        }
+
+        return parent::setup($element, $value, $group);
+    }
+
     protected function getOptions()
     {
         $types = JHtml::_('osc.options.lessontypes');

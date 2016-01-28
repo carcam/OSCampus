@@ -45,8 +45,9 @@
             name="type"
             type="oscampus.lessontype"
             label="COM_OSCAMPUS_LESSON_TYPE_LABEL"
-            readonly="true"
-            class="readonly"/>
+            readonly="true">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_LESSONTYPE</option>
+        </field>
 
         <field
             name="published"
