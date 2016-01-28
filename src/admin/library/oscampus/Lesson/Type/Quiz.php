@@ -122,7 +122,7 @@ class Quiz extends AbstractType
             $keys = json_decode(base64_decode($keys));
 
         } else {
-            $length = min($this->quizLength, count($this->questions));
+            $length = $this->quizLength ?: (int)(count($this->questions) * .75);
             $keys   = array_rand($this->questions, $length);
             shuffle($keys);
 
