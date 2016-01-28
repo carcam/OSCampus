@@ -5,13 +5,17 @@
             <fields name="content">
                 <field
                     name="quizLength"
-                    type="text"/>
+                    type="text"
+                    label="COM_OSCAMPUS_QUIZ_CONTENT_LENGTH_LABEL"
+                    description="COM_OSCAMPUS_QUIZ_CONTENT_LENGTH_DESC"
+                    size="5"
+                    filter="integer"/>
 
                 <field
                     name="questions"
                     type="oscampus.questions"
-                    label="COM_OSCAMPUS_QUIZ_CONTENT_LABEL"
-                    description="COM_OSCAMPUS_QUIZ_CONTENT_DESCRIPTION"
+                    label="COM_OSCAMPUS_QUIZ_CONTENT_QUESTIONS_LABEL"
+                    description="COM_OSCAMPUS_QUIZ_CONTENT_QUESTIONS_DESC"
                     required="true"/>
 
             </fields>
