@@ -60,7 +60,6 @@ class OscampusModelLesson extends OscampusModelAdmin
             } elseif (is_object($data)) {
                 $data = $fixedData->toObject();
             }
-
         }
 
         parent::preprocessForm($form, $data, $group);

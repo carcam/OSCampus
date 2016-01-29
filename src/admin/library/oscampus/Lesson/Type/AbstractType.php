@@ -88,16 +88,7 @@ abstract class AbstractType
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
-    {
-        $path = __DIR__ . '/default.xml';
-        if (is_file($path)) {
-            $xml = simplexml_load_file($path);
-            return $xml;
-        }
-
-        return null;
-    }
+    abstract public function prepareAdminData(JRegistry $data);
 
     /**
      * The default procedure to vet the lesson content on saving

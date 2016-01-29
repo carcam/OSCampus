@@ -239,11 +239,14 @@ class Lesson extends AbstractBase
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {
             $xml = $renderer->prepareAdminData($data);
-            if ($xml) {
-                if ($subForm = array_shift($xml->xpath('form'))) {
-                    $form->load($subForm[0]);
-                };
-            }
+        } else {
+            $xml = null;
+        }
+
+        if ($xml) {
+            if ($subForm = array_shift($xml->xpath('form'))) {
+                $form->load($subForm[0]);
+            };
         }
     }
 
@@ -320,13 +323,14 @@ class Lesson extends AbstractBase
      */
     protected function getRenderer($type = null)
     {
-        $type = $type ?: $this->current->type;
-        if ($type) {
-            $className = static::SUBCLASS_BASE . ucfirst(strtolower($type));
+        $type = ucfirst(strtolower($type ?: $this->current->type));
+        if (!$type) {
+            $type = 'DefaultType';
+        }
+        $className = static::SUBCLASS_BASE . ucfirst($type);
 
-            if (class_exists($className)) {
-                return new $className($this);
-            }
+        if (class_exists($className)) {
+            return new $className($this);
         }
 
         return null;
