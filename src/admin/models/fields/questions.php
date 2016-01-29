@@ -22,22 +22,6 @@ class OscampusFormFieldQuestions extends JFormField
         JHtml::_('script', 'com_oscampus/admin/quiz.js', false, true);
         JHtml::_('osc.onready', '$.Oscampus.admin.quiz.init();');
 
-        // Temporary css fixes
-        $css = <<<STYLEFIX
-.osc-quiz-questions input {
-    float: none !important;
-}
-.osc-quiz-questions li {
-    padding-left: 10px !important;
-}
-
-.osc-quiz-questions li.osc-question ul {
-    padding-bottom: 10px;
-}
-STYLEFIX;
-
-        OscampusFactory::getDocument()->addStyleDeclaration($css);
-
         $html = array(
             '<div class="clr"></div>',
             '<div class="osc-quiz-questions">',
@@ -49,7 +33,7 @@ STYLEFIX;
             $qId   = $this->id . '_' . $qKey;
             $qName = $this->name . '[' . $qKey . ']';
 
-            $html[] = '<li class="osc-question">Q: '
+            $html[] = '<li class="osc-question"><h4>Question:</h4>'
                 . $this->createInput($qId . '_text', $qName . '[text]', $question['text'])
                 . '<i class="fa fa-minus-circle osc-delete-question"></i>';
 
@@ -71,7 +55,7 @@ STYLEFIX;
                     . ($answer['correct'] ? ' checked' : '')
                     . '/>';
 
-                $html[] = '<li class="answer">'
+                $html[] = '<li class="osc-answer">'
                     . $answerCorrectInput
                     . $answerTextInput
                     . '<i class="fa fa-minus-circle osc-delete-answer"></i>'
