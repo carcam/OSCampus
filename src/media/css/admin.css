@@ -83,7 +83,7 @@ ul ul.ui-sortable {
     width: 500px;
     font-weight: 600;
     font-size: 13px;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     padding: 5px 10px;
     border-left-style: solid;
     border-left-width: 5px;
@@ -92,8 +92,7 @@ ul ul.ui-sortable {
 .osc-quiz-questions ul li.osc-answer > input[type="text"] {
     width: 448px;
     font-size: 12px;
-    margin-bottom: 4px;
-    margin-top: 0;
+    margin: 0 0 4px 0;
     padding: 2px 8px;
 }
 
@@ -102,10 +101,55 @@ ul ul.ui-sortable {
     margin-right: 5px;
 }
 
+.osc-quiz-questions button {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    color: #fff;
+    background: #999;
+    border: none;
+}
+
+.osc-quiz-questions button:hover,
+.osc-quiz-questions button:focus {
+    border: none;
+}
+
+.osc-quiz-questions button.osc-btn-warning-admin {
+    background: #ff0000;
+}
+
+.osc-quiz-questions button.osc-btn-warning-admin:hover,
+.osc-quiz-questions button.osc-btn-warning-admin:focus {
+    background: #FF4D4D;
+}
+
+.osc-quiz-questions button.osc-btn-main-admin {
+    background: #8cc14c;
+}
+
+.osc-quiz-questions button.osc-btn-main-admin:hover,
+.osc-quiz-questions button.osc-btn-main-admin:focus {
+    background: #99c85f;
+}
+
 .osc-quiz-questions ul li.osc-question > button,
 .osc-quiz-questions ul li.osc-answer > button {
     float: right;
-    margin-left: 5px;
+    margin: 0 0 0 5px;
+}
+
+.osc-quiz-questions ul li.osc-question > button,
+.osc-quiz-questions ul li.osc-add-question > button {
+    font-size: 14px;
+    padding: 8px 5px;
+}
+
+.osc-quiz-questions ul li.osc-answer > button,
+.osc-quiz-questions ul li.osc-add-answer > button {
+    font-size: 12px;
+    padding: 6px 6px;
 }
 
 .osc-quiz-questions ul li h4 {
@@ -123,4 +167,10 @@ ul ul.ui-sortable {
 
 .osc-quiz-questions ul li.osc-add-answer {
     padding-left: 62px;
+}
+
+.osc-quiz-questions ul li.osc-add-question {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
 }
