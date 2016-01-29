@@ -33,9 +33,9 @@ class OscampusFormFieldQuestions extends JFormField
             $qId   = $this->id . '_' . $qKey;
             $qName = $this->name . '[' . $qKey . ']';
 
-            $html[] = '<li class="osc-question"><h4>Question:</h4>'
+            $html[] = '<li class="osc-question">'
                 . $this->createInput($qId . '_text', $qName . '[text]', $question['text'])
-                . '<i class="fa fa-minus-circle osc-delete-question"></i>';
+                . '<button><i class="fa fa-minus-circle osc-delete-question"></i></button>';
 
 
             // Begin build answers for current question
@@ -58,18 +58,18 @@ class OscampusFormFieldQuestions extends JFormField
                 $html[] = '<li class="osc-answer">'
                     . $answerCorrectInput
                     . $answerTextInput
-                    . '<i class="fa fa-minus-circle osc-delete-answer"></i>'
+                    . '<button><i class="fa fa-minus-circle osc-delete-answer"></i></button>'
                     . '</li>';
             }
 
-            $html[] = '<li class="osc-add-answer"><i class="fa fa-plus-circle"></i> Add Answer</li>';
+            $html[] = '<li class="osc-add-answer"><button><i class="fa fa-plus-circle"></i> Add Answer</li></button>';
             $html[] = '</ul>';
             // End build answers for current question
 
             $html[] = '</li>';
         }
 
-        $html[] = '<li class="osc-add-question"><i class="fa fa-plus-circle"></i> Add Question</li>';
+        $html[] = '<li class="osc-add-question"><button><i class="fa fa-plus-circle"></i> Add Question</button></li>';
         $html[] = '</ul>';
         // End build questions for current quiz
 
