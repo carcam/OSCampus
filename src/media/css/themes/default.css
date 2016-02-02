@@ -433,8 +433,8 @@
     color: #41a1d6;
 }
 
-#oscampus.osc-container .osc-row-one a i:before,
-#oscampus.osc-container .osc-row-two a i:before {
+#oscampus.osc-container a.osc-btn i:before,
+#oscampus.osc-container button.osc-btn i:before {
     color: #fff;
 }
 
