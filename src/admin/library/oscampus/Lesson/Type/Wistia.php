@@ -112,7 +112,7 @@ class Wistia extends AbstractType
             'width'  => $thumb->size[0],
             'height' => $thumb->size[1]
         );
-        return '<image ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+        return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
     }
 
     /**
