@@ -10,7 +10,6 @@ defined('_JEXEC') or die();
 
 /** @var OscampusViewMycertificates $this */
 
-$pdfIcon = '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_PDF');
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-mycertificates'); ?>" id="oscampus">
     <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCERTIFICATES')): ?>
@@ -41,7 +40,7 @@ $pdfIcon = '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_P
                     <?php echo $item->date_earned->format('Y-m-d'); ?>
                 </div>
                 <div class="block3">
-                    <?php echo JHtml::_('link', "javascript:alert('Under Construction');", $pdfIcon);  ?>
+                    <?php echo JHtml::_('osc.link.certificate', $item->id); ?>
                 </div>
             </div>
         <?php endforeach; ?>

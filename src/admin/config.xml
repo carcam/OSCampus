@@ -22,6 +22,12 @@
             </field>
         </fields>
 
+        <field
+            name="certificateImage"
+            type="media"
+            label="COM_OSCAMPUS_CONFIGURATION_CERTIFICATE_IMAGE_LABEL"
+            description="COM_OSCAMPUS_CONFIGURATION_CERTIFICATE_IMAGE_DESC"/>
+
     </fieldset>
 
     <fields name="videos">

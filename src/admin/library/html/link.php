@@ -103,4 +103,26 @@ abstract class OscLink
 
         return '';
     }
+
+    /**
+     * Create link to a single certificate
+     *
+     * @param int    $id
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function certificate($id, $text = null)
+    {
+        $text = $text ?: '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_PDF');
+
+        $query = array(
+            'option' => 'com_oscampus',
+            'view'   => 'certificate',
+            'format' => 'pdf',
+            'id'     => (int)$id
+        );
+
+        return JHtml::_('link', 'index.php?' . http_build_query($query), $text);
+    }
 }
