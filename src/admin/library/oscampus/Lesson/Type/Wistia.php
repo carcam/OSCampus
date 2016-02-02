@@ -12,6 +12,7 @@ use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
 use JRegistry;
+use JRoute;
 use JSession;
 use JText;
 use Oscampus\Lesson;
@@ -123,6 +124,7 @@ class Wistia extends AbstractType
     {
         $user   = OscampusFactory::getUser();
         $device = OscampusFactory::getContainer()->device;
+        $config = OscampusComponentHelper::getParams();
 
         JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
         JHtml::_('script', 'com_oscampus/utilities.js', false, true);
@@ -130,11 +132,15 @@ class Wistia extends AbstractType
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
+        $menuId      = $config->get('signup.upgrade');
+        $upgradeUrl = $menuId ? JRoute::_('index.php?Itemid=' . $menuId) : null;
+
         $options = json_encode(
             array(
-                'mobile'     => $device->isMobile(),
-                'formToken'  => JSession::getFormToken(),
-                'authorised' => array(
+                'mobile'      => $device->isMobile(),
+                'formToken'   => JSession::getFormToken(),
+                'upgradeUrl' => $upgradeUrl,
+                'authorised'  => array(
                     'download' => $authoriseDownload,
                     'controls' => $controls
                 )
@@ -143,8 +149,8 @@ class Wistia extends AbstractType
 
         JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
         JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_SIGNUP');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_SUBSCRIBE');
+        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE');
+        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK');
         JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
         JText::script('COM_OSCAMPUS_VIDEO_RESUME');
 

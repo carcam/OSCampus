@@ -56,11 +56,12 @@
             formToken  : null,
             intervalPct: 10,
             gracePct   : 3,
+            upgradeUrl : null,
             authorised : {
                 download: false,
                 controls: false
             },
-            offClass: 'osc-off'
+            offClass   : 'osc-off'
         },
 
         /**
@@ -527,7 +528,8 @@
 
                     } else {
                         wistiaEmbed.pause();
-                        $.Oscampus.wistia.overlay.signup();
+
+                        $.Oscampus.wistia.overlay.upgrade(options.upgradeUrl);
                     }
                 });
 
@@ -589,14 +591,14 @@
             },
 
             /**
-             * Create the not-authorised/suggest signup overlay
+             * Create the not-authorised/suggest upgrade overlay
              */
-            signup: function() {
+            upgrade: function(upgradeUrl) {
                 var overlay = this.base(
-                    '<div>' + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_SIGNUP') + '</div>'
-                    + '<a href="#" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
+                    '<div>' + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE') + '</div>'
+                    + '<a href="' + upgradeUrl + '" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
                     + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
-                    + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_SUBSCRIBE')
+                    + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK')
                     + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
                     + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
