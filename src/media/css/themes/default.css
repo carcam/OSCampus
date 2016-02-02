@@ -626,6 +626,17 @@
     opacity: 0;
 }
 
+#oscampus.osc-container .osc-free-tag {
+    background: #ed8034;
+    font-size: 12px;
+    margin: 0px 0px 0px 5px;
+    line-height: 16px;
+    display: inline-block;
+    text-align: center;
+    padding: 2px 5px;
+    color: #fff;
+}
+
 /* Wistia
  ========================================================================== */
 #oscampus.osc-container .osc-wistia-overlay {

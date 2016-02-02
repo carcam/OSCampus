@@ -25,7 +25,7 @@ abstract class OscLesson
         $user = JFactory::getUser();
         if ($user->guest) {
             if (in_array($lesson->access, $user->getAuthorisedViewLevels())) {
-                return '<span class="free_img"></span>';
+                return '<span class="osc-free-tag">' . JText::_('COM_OSCAMPUS_LESSON_FREE') . '</span>';
             }
         }
         return '';
