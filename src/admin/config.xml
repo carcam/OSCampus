@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <config>
+    <fieldset
+        name="main"
+        label="COM_OSCAMPUS_CONFIGURATION_MAIN">
+
+        <fields name="signup">
+            <field
+                name="trial"
+                type="menuitem"
+                label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_DESC">
+                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
+            </field>
+
+            <field
+                name="upgrade"
+                type="menuitem"
+                label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_DESC">
+                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
+            </field>
+        </fields>
+
+    </fieldset>
+
     <fields name="videos">
         <fieldset
             name="videos"
