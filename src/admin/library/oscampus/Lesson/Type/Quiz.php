@@ -231,30 +231,30 @@ class Quiz extends AbstractType
             }
         }
 
-        $oldQuestions = (array)$quiz->questions;
-        $newQuestions = array();
-        foreach ($oldQuestions as $qOldKey => $question) {
-            $qKey    = md5($question->text);
-            $correct = $question->correct;
+        $questions = array();
+        foreach ((array)$quiz->questions as $questionId => $question) {
+            $questionKey = md5($question['text']);
+            $correct     = $question['correct'];
 
             $answers = array();
-            foreach ((array)$question->answers as $aOldKey => $answer) {
-                $aKey = md5($answer);
+            foreach ((array)$question['answers'] as $answerId => $answer) {
+                $answerKey = md5($answer);
 
-                $answers[$aKey] = array(
+                $answers[$answerKey] = array(
                     'text'    => $answer,
-                    'correct' => (int)($correct == $aOldKey)
+                    'correct' => (int)($correct == $answerId)
                 );
             }
 
-            $newQuestions[$qKey] = array(
-                'text'    => $question->text,
-                'answers' => $answers
-            );
+            if ($answers = array_filter($answers)) {
+                $questions[$questionKey] = array(
+                    'text'    => $question['text'],
+                    'answers' => $answers
+                );
+            }
         }
 
-        $quiz->questions = $newQuestions;
-
+        $quiz->questions = $questions;
         $data->set('content', json_encode($quiz));
     }
 }

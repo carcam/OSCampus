@@ -29,36 +29,29 @@ class OscampusFormFieldQuestions extends JFormField
         );
 
         // Begin build questions for current quiz
-        foreach ($this->value as $qKey => $question) {
-            $qId   = $this->id . '_' . $qKey;
-            $qName = $this->name . '[' . $qKey . ']';
+        $questionCount = 0;
+        foreach ($this->value as $question) {
+            $questionId   = $this->id . '_' . $questionCount;
+            $questionName = $this->name . '[' . $questionCount . ']';
 
             $html[] = '<li class="osc-question">'
-                . $this->createInput($qId . '_text', $qName . '[text]', $question['text'])
+                . $this->createInput($questionId . '_text', $questionName . '[text]', $question['text'])
                 . $this->createButton('osc-btn-warning-admin osc-delete-question', 'fa-times');
+
+            $questionCount++;
 
             // Begin build answers for current question
             $html[] = '<ul>';
 
-            $answers = array();
-            foreach ($question['answers'] as $aKey => $answer) {
-                $aId   = $qId . '_' . $aKey;
-                $aName = $qName . '[answers][' . $aKey . ']';
-
-                $answerTextInput    = $this->createInput($aId, $aName, $answer['text']);
-                $answerCorrectInput = '<input'
-                    . ' id="' . $qId . '_correct"'
-                    . ' name="' . $qName . '[correct]"'
-                    . ' type="radio"'
-                    . ' value="' . $aKey . '"'
-                    . ($answer['correct'] ? ' checked' : '')
-                    . '/>';
-
-                $html[] = '<li class="osc-answer">'
-                    . $answerCorrectInput
-                    . $answerTextInput
-                    . $this->createButton('osc-btn-warning-admin osc-delete-answer', 'fa-times')
-                    . '</li>';
+            $answerCount = 0;
+            foreach ($question['answers'] as $answer) {
+                $html[] = $this->createAnswer(
+                    $questionId,
+                    $questionName,
+                    $answerCount++,
+                    $answer['text'],
+                    $answer['correct']
+                );
             }
 
             $html[] = '<li'
@@ -115,5 +108,39 @@ class OscampusFormFieldQuestions extends JFormField
             . '</button>';
 
         return $button;
+    }
+
+    /**
+     * Create standard answer input
+     *
+     * @param string $questionId
+     * @param string $questionName
+     * @param string $key
+     * @param string $text
+     * @param bool   $correct
+     *
+     * @return string
+     */
+    protected function createAnswer($questionId, $questionName, $key, $text, $correct)
+    {
+        $id   = $questionId . '_' . $key;
+        $name = $questionName . '[answers][' . $key . ']';
+
+        $answerTextInput    = $this->createInput($id, $name, $text);
+        $answerCorrectInput = '<input'
+            . ' id="' . $questionId . '_correct"'
+            . ' name="' . $questionName . '[correct]"'
+            . ' type="radio"'
+            . ' value="' . $key . '"'
+            . ($correct ? ' checked' : '')
+            . '/>';
+
+        $html = '<li class="osc-answer">'
+            . $answerCorrectInput
+            . $answerTextInput
+            . $this->createButton('osc-btn-warning-admin osc-delete-answer', 'fa-times')
+            . '</li>';
+
+        return $html;
     }
 }
