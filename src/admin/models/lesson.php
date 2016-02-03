@@ -135,4 +135,39 @@ class OscampusModelLesson extends OscampusModelAdmin
 
         return null;
     }
+
+    /**
+     * @param JTable $table
+     */
+    protected function prepareTable(&$table)
+    {
+        if (!$table->id) {
+            $ordering = 0;
+            if ($table->modules_id) {
+                $ordering = $table->getNextOrder('modules_id = ' . $table->modules_id);
+            }
+            $table->ordering = $ordering;
+        }
+
+        if (!$table->alias) {
+            $table->alias = OscampusApplicationHelper::stringURLSafe($table->title);
+
+            $db    = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('count(*)')
+                ->from('#__oscampus_lessons')
+                ->where(
+                    array(
+                        'modules_id = ' . $table->modules_id,
+                        'alias = ' . $db->quote($table->alias),
+                        'id != ' . $table->id
+                    )
+                );
+
+            if ($duplicates = $db->setQuery($query)->loadResult()) {
+                $table->alias .= '-' . $duplicates;
+            }
+        }
+
+    }
 }
