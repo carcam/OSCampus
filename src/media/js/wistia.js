@@ -346,7 +346,7 @@
         buttonAutoplay: function(container, options) {
             var button = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'))
 
-            if (wistiaEmbed.params.autoplay) {
+            if (wistiaEmbed.options.autoPlay) {
                 button.removeClass(options.offClass);
             } else {
                 button.addClass(options.offClass);
@@ -364,7 +364,7 @@
                         },
                         success : function(state) {
                             wistiaEmbed.options.autoPlay = state;
-                            wistiaEmbed.params.autoplay = state;
+                            wistiaEmbed.params.autoPlay = state;
 
                             if (state) {
                                 $(wistiaEmbed).trigger('autoplayenabled');
