@@ -107,12 +107,15 @@ abstract class OscLink
     /**
      * Create link to a single certificate
      *
-     * @param int    $id
-     * @param string $text
+     * @param int          $id
+     * @param string       $text
+     * @param array|string $attribs
+     * @param bool         $uriOnly
+     * @param bool         $fullUri
      *
      * @return string
      */
-    public static function certificate($id, $text = null)
+    public static function certificate($id, $text = null, $attribs = null, $uriOnly = false, $fullUri = false)
     {
         $text = $text ?: '<i class="fa fa-download"></i> ' . JText::_('COM_OSCAMPUS_DOWNLOAD_PDF');
 
@@ -123,6 +126,28 @@ abstract class OscLink
             'id'     => (int)$id
         );
 
-        return JHtml::_('link', 'index.php?' . http_build_query($query), $text);
+        $link = JRoute::_('index.php?' . http_build_query($query));
+
+        if ($fullUri) {
+            $link = static::absoluteLink($link);
+        }
+
+        if ($uriOnly) {
+            return $link;
+        }
+
+        return JHtml::_('link', $link, $text, $attribs);
+    }
+
+    /**
+     * Turn a relative url into an absolute url
+     *
+     * @param string $relativeLink
+     *
+     * @return string
+     */
+    protected static function absoluteLink($relativeLink)
+    {
+        return str_replace('//', '/', OscampusFactory::getURI()->root() . $relativeLink);
     }
 }
