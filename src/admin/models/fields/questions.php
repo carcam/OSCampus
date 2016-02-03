@@ -35,8 +35,7 @@ class OscampusFormFieldQuestions extends JFormField
 
             $html[] = '<li class="osc-question">'
                 . $this->createInput($qId . '_text', $qName . '[text]', $question['text'])
-                . '<button class="osc-btn-warning-admin"><i class="fa fa-times osc-delete-question"></i></button>';
-
+                . $this->createButton('osc-btn-warning-admin osc-delete-question', 'fa-times');
 
             // Begin build answers for current question
             $html[] = '<ul>';
@@ -58,18 +57,24 @@ class OscampusFormFieldQuestions extends JFormField
                 $html[] = '<li class="osc-answer">'
                     . $answerCorrectInput
                     . $answerTextInput
-                    . '<button class="osc-btn-warning-admin"><i class="fa fa-times osc-delete-answer"></i></button>'
+                    . $this->createButton('osc-btn-warning-admin osc-delete-answer', 'fa-times')
                     . '</li>';
             }
 
-            $html[] = '<li class="osc-add-answer"><button class="osc-btn-main-admin"><i class="fa fa-plus"></i> Add Answer</li></button>';
+            $html[] = '<li'
+                . ' class="osc-add-answer">'
+                . $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_QUIZ_ADD_ANSWER')
+                . '</li>';
             $html[] = '</ul>';
             // End build answers for current question
 
             $html[] = '</li>';
         }
 
-        $html[] = '<li class="osc-add-question"><button class="osc-btn-main-admin"><i class="fa fa-plus"></i> Add Question</button></li>';
+        $html[] = '<li'
+            . ' class="osc-add-question">'
+            . $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_QUIZ_ADD_QUESTION')
+            . '</li>';
         $html[] = '</ul>';
         // End build questions for current quiz
 
@@ -89,5 +94,26 @@ class OscampusFormFieldQuestions extends JFormField
         );
 
         return '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+    }
+
+    /**
+     * Create the standard add/delete buttons
+     *
+     * @param string $class
+     * @param string $icon
+     * @param string $text
+     *
+     * @return string
+     */
+    protected function createButton($class, $icon, $text = null)
+    {
+        $button = '<button'
+            . ' type="button"'
+            . ' class="' . $class . '">'
+            . '<i class="fa ' . $icon . '"></i>'
+            . ($text ? ' ' . JText::_($text) : '')
+            . '</button>';
+
+        return $button;
     }
 }
