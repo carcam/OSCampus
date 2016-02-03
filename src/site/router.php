@@ -51,21 +51,31 @@ function OscampusParseRoute($segments)
 class OscampusRouter
 {
     /**
-     * @var array Sequence of segments mapped to corresponding view
+     * @var string[] Sequence of segments mapped to corresponding view
      */
     protected $viewMap = array('pathway', 'course', 'lesson');
 
     /**
-     * @param $query
+     * @var string
+     */
+    protected $viewUnmanaged = 'osc_view';
+
+    /**
+     * @param mixed[] $query
      *
-     * @return array
+     * @return string[]
      */
     public function build(&$query)
     {
         $segments = array();
         $route    = OscampusRoute::getInstance();
 
-        if (isset($query['view']) && $query['view'] == 'certificate') {
+        if (!empty($query['view'])) {
+            $view = $query['view'];
+            unset($query['view']);
+        }
+
+        if (!empty($view) && $view == 'certificate') {
             // Certificates should be rooted on 'mycertificates' view
             $menuQuery = $route->getQuery('mycertificates');
 
@@ -76,9 +86,6 @@ class OscampusRouter
                 $segments[] = $id;
             }
 
-            if (isset($query['view'])) {
-                unset($query['view']);
-            }
             if (isset($query['format'])) {
                 unset($query['format']);
             }
@@ -89,19 +96,12 @@ class OscampusRouter
                 $query['Itemid'] = $menuQuery['Itemid'];
             }
 
-        } else {
+        } elseif (!empty($view) && in_array($view, $this->viewMap)) {
             // Default routing is for pathways/courses/lessons or root menus
             $menuQuery = $route->getQuery('pathways');
 
-            if (!empty($query['view'])) {
-                $view = $query['view'];
-                unset($query['view']);
-
-            } elseif (!empty($menuQuery['view'])) {
-                $view = $menuQuery['view'];
-
-            } else {
-                $view = 'pathways';
+            if (empty($view)) {
+                $view = empty($menuQuery['view']) ? 'pathways' : $menuQuery['view'];
             }
 
             $pathwayId   = isset($query['pid']) ? (int)$query['pid'] : null;
@@ -142,15 +142,22 @@ class OscampusRouter
             if (empty($query['Itemid'])) {
                 $query['Itemid'] = $menuQuery['Itemid'];
             }
+        } elseif (!empty($view)) {
+            // Default view handling if no other accomodations needed
+            $segments[] = $this->viewUnmanaged;
+            $segments[] = $view;
+            if (isset($query['Itemid']) && empty($query['Itemid'])) {
+                unset($query['Itemid']);
+            }
         }
 
         return $segments;
     }
 
     /**
-     * @param $segments
+     * @param string[] $segments
      *
-     * @return array
+     * @return mixed[]
      */
     public function parse($segments)
     {
@@ -166,7 +173,13 @@ class OscampusRouter
                 }
                 $vars['format'] = 'pdf';
 
+            } elseif ($segments[0] == $this->viewUnmanaged) {
+                // Default handling of unmanaged views
+                $vars['option'] = 'com_oscampus';
+                $vars['view'] = empty($segments[1]) ? 'pathways' : $segments[1];
+
             } else {
+                // We must be in a pathways tree
                 $viewIndex    = min(2, count($segments) - 1);
                 $vars['view'] = $this->viewMap[$viewIndex];
 
