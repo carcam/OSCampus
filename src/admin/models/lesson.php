@@ -47,6 +47,13 @@ class OscampusModelLesson extends OscampusModelAdmin
             $fixedData = $data instanceof JObject ? $data->getProperties() : $data;
             $fixedData = new JRegistry($fixedData);
 
+            if (!$fixedData->get('courses_id')) {
+                $app      = OscampusFactory::getApplication();
+                $courseId = $app->getUserState('com_oscampus.lessons.filter.course');
+
+                $fixedData->set('courses_id', $courseId);
+            }
+
             OscampusFactory::getContainer()
                 ->lesson
                 ->loadAdminForm($form, $fixedData);
@@ -76,8 +83,6 @@ class OscampusModelLesson extends OscampusModelAdmin
 
     public function save($data)
     {
-        unset($data['courses_id'], $data['module_title']);
-
         if ($module = $this->getModule($data)) {
             if (!$module->store()) {
                 $this->setError($module->getError());
@@ -87,8 +92,9 @@ class OscampusModelLesson extends OscampusModelAdmin
             $data['modules_id'] = $module->id;
         }
 
-
         try {
+            unset($data['courses_id'], $data['module_title']);
+
             $fixedData = new JRegistry($data);
 
             OscampusFactory::getContainer()
