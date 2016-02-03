@@ -9,6 +9,7 @@
         $('[class*=osc-add-],[class*=osc-delete-]')
             .css('cursor', 'pointer')
             .on('click', function(evt) {
+                evt.preventDefault();
                 alert('Under Construction');
             });
     };
