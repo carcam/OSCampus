@@ -31,10 +31,12 @@ if ($this->activity->data && !$retry) {
 }
 ?>
 <div class="osc-container oscampus-quiz" id="oscampus">
-    <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
-        <?php
+    <?php
+    if ($this->lesson->isAuthorised()) {
         echo $this->loadTemplate($quizTemplate);
         echo $this->loadDefaultTemplate('files');
-        ?>
-    </div>
+    } else {
+        echo '<div class="osc-section oscampus-lesson-content osc-signup-box"></div>';
+    }
+    ?>
 </div>
