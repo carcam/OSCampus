@@ -51,7 +51,7 @@ $questions = $quiz->getQuestions();
 <?php echo $this->loadDefaultTemplate('header'); ?>
 
 <form id="formQuiz" name="formQuiz" method="post" action="">
-    <div class="osc-section oscampus-lesson-content">
+    <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
         <?php
         $qn = 0;
         foreach ($questions as $qkey => $question):

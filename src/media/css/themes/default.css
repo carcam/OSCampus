@@ -637,6 +637,41 @@
     color: #fff;
 }
 
+/* Signup
+ ========================================================================== */
+#oscampus .osc-signup-box {
+    background: #000;
+    position: relative;
+}
+
+#oscampus .osc-signup-box img {
+    opacity: 0.5;
+    width: 100%;
+    height: auto;
+}
+
+#oscampus .osc-signup-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#oscampus #signup-overlay {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 90%;
+}
+
+#oscampus .osc-overlay-inner {
+    background: #fff;
+    padding: 30px;
+    width: 60%;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
 /* Wistia
  ========================================================================== */
 #oscampus.osc-container .osc-wistia-overlay {

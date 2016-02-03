@@ -19,36 +19,6 @@ if ($itemid = (int)$this->getParams()->get($signupType)) {
 }
 
 ?>
-<style>
-    #oscampus .oscampus-lesson-content {
-        background: #000;
-        position: relative;
-    }
-    #oscampus .oscampus-lesson-content img {
-        opacity: 0.5;
-        width: 100%;
-        height: auto;
-    }
-    #oscampus .oscampus-lesson-content h3 {
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-    #oscampus #signup-overlay {
-        position: absolute;
-        top: 30px;
-        left: 30px;
-        width: 90%;
-    }
-    #oscampus .osc-overlay-inner {
-        background: #fff;
-        padding: 30px;
-        width: 60%;
-        border-radius: 4px;
-        -moz-border-radius: 4px;
-        -webkit-border-radius: 4px;
-        -o-border-radius: 4px;
-    }
-</style>
 
 <div id="signup-overlay">
     <div class="osc-overlay-inner">
@@ -65,6 +35,6 @@ if ($itemid = (int)$this->getParams()->get($signupType)) {
 
 <script>
     (function($) {
-        $('#signup-overlay').appendTo('.oscampus-lesson-content');
+        $('#signup-overlay').appendTo('.osc-signup-box');
     })(jQuery);
 </script>

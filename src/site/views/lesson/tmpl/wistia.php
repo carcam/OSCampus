@@ -29,7 +29,7 @@ endif;
 
     <?php echo $this->loadDefaultTemplate('header'); ?>
 
-    <div class="osc-section oscampus-lesson-content">
+    <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
         <?php echo $this->lesson->render(); ?>
     </div>
 <?php
