@@ -52,11 +52,11 @@ if ($itemid = (int)$this->getParams()->get($signupType)) {
 
 <div id="signup-overlay">
     <div class="osc-overlay-inner">
-        <h3>Become a member to view this session</h3>
+        <h3><?php echo JText::_('COM_OSCAMPUS_LESSON_BECOME_A_MEMBER_TO_VIEW_LESSON'); ?></h3>
         <?php
         if (!empty($signupPage)) :
             ?>
-            <div><?php echo JHtml::_('link', $signupPage, 'Signup here!', 'class="osc-btn osc-btn-main"'); ?></div>
+            <div><?php echo JHtml::_('link', $signupPage, JText::_('COM_OSCAMPUS_LESSON_SIGNUP_HERE'), 'class="osc-btn osc-btn-main"'); ?></div>
             <?php
         endif;
         ?>
