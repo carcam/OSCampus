@@ -104,14 +104,8 @@ class OscampusModelLesson extends OscampusModelAdmin
             $data = $fixedData->toArray();
 
         } catch (Exception $e) {
-            // @TODO: we can't fail properly yet
-
-            if ($_SERVER['REMOTE_ADDR'] == '71.236.165.244') {
-                $this->setError($e->getMessage());
-                return false;
-            }
-
-            OscampusFactory::getApplication()->enqueueMessage('Partial save with error: ' . $e->getMessage(), 'notice');
+            $this->setError($e->getMessage());
+            return false;
         }
 
         return parent::save($data);
