@@ -13,11 +13,11 @@ defined('_JEXEC') or die();
  */
 $pathwayId = $this->model->getState('pathway.id');
 $courseId  = $this->model->getState('course.id');
-if ($previous = $this->lesson->previous) {
-    $previousLink = JHtml::_('osc.lesson.link', $previous, null, null, true);
+if ($this->lesson->previous->id) {
+    $previousLink = JHtml::_('osc.lesson.link', $this->lesson->previous, null, null, true);
 }
-if ($next = $this->lesson->next) {
-    $nextLink = JHtml::_('osc.lesson.link', $next, null, null, true);
+if ($this->lesson->next->id) {
+    $nextLink = JHtml::_('osc.lesson.link', $this->lesson->next, null, null, true);
 }
 
 JHtml::_('osc.lesson.navigation', $this->lesson);
