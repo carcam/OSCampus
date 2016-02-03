@@ -36,7 +36,7 @@ if ($this->activity->data && !$retry) {
         echo $this->loadTemplate($quizTemplate);
         echo $this->loadDefaultTemplate('files');
     } else {
-        echo '<div class="osc-section oscampus-lesson-content osc-signup-box"></div>';
+        echo '<div class="osc-section oscampus-lesson-content osc-signup-box"><img src="' . Juri::base() . 'media/com_oscampus/images/quiz-bg.jpg" alt="OSCampus Quiz" /></div>';
     }
     ?>
 </div>
