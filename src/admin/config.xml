@@ -6,7 +6,7 @@
 
         <fields name="signup">
             <field
-                name="trial"
+                name="new"
                 type="menuitem"
                 label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_LABEL"
                 description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_DESC">
