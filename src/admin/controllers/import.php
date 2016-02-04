@@ -293,10 +293,13 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadWistiaDownloadLog();
         $this->log['Load Wistia Log'] = microtime(true);
 
-        echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
-        echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
-        echo '<li>' . number_format($this->viewQuizCount) . ' Quizzes Taken';
-        echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
+        $reports = array(
+            number_format(count($this->certificates)) . ' Certificates</li>',
+            number_format($this->viewCount) . ' Viewed</li>',
+            number_format($this->viewQuizCount) . ' Quizzes Taken',
+            number_format($this->downloadCount) . ' Wistia Download Logs'
+        );
+        $this->displayResults($reports);
 
         $log = ob_get_contents();
         file_put_contents(JPATH_SITE . '/logs/oscampus.import.users.log', $log);
@@ -314,17 +317,18 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         echo '<p><a href="index.php?option=com_oscampus&view=dashboard">Back to main  screen</a></p>';
 
-        $path = JPATH_SITE . '/logs/oscampus.import.log';
+        $this->showLogFromFile(JPATH_SITE . '/logs/oscampus.import.log');
+        $this->showLogFromFile(JPATH_SITE . '/logs/oscampus.import.users.log');
+    }
 
+    protected function showLogFromFile($path)
+    {
         if (is_file($path)) {
             $modified = OscampusFactory::getDate();
             $modified->setTimestamp(filemtime($path));
             echo '<p>Last Import finished at: ' . $modified->format('Y-m-d H:i:s T (P)') . '</p>';
 
             echo file_get_contents($path);
-
-        } else {
-            echo '<p>Log file was not found</p>';
         }
     }
 
@@ -901,6 +905,17 @@ class OscampusControllerImport extends OscampusControllerBase
         );
 
         $this->loadLessonMedia();
+
+        // Save ID conversions
+        $translate = array();
+        foreach ($this->lessons as $oldId => $lesson) {
+            $translate[$oldId] = (object)array(
+                'id'      => $lesson->id,
+                'content' => $lesson->content,
+                'type'    => $lesson->type
+            );
+        }
+        file_put_contents(JPATH_SITE . '/logs/oscampus.ids.lessons.txt', json_encode($translate));
     }
 
     /**
@@ -1153,6 +1168,13 @@ class OscampusControllerImport extends OscampusControllerBase
                 }
             }
         }
+
+        // Save ID Conversions
+        $translate = array();
+        foreach ($this->courses as $oldId => $course) {
+            $translate[$oldId] = (object)array('id' => $course->id);
+        }
+        file_put_contents(JPATH_SITE . '/logs/oscampus.ids.courses.txt', json_encode($translate));
     }
 
     /**
@@ -1198,7 +1220,6 @@ class OscampusControllerImport extends OscampusControllerBase
             }
             $this->downloadCount += count($segment);
         }
-
     }
 
     /**
