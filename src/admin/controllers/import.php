@@ -249,7 +249,22 @@ class OscampusControllerImport extends OscampusControllerBase
         echo 'Peak Memory: ' . number_format(memory_get_peak_usage(true) / 1024 / 1024) . 'M<br/>';
         echo 'Total Time: ' . number_format((microtime(true) - $this->log['Start']) / 60, 2) . ' Minutes</p>';
 
-        $this->displayResults();
+        $reports = array(
+            number_format(count($this->pathways)) . ' Pathways</li>',
+            number_format(count($this->courses)) . ' Courses</li>',
+            number_format(count($this->modules)) . ' Modules</li>',
+            number_format(count($this->teachers)) . ' Teachers</li>',
+            number_format(count($this->lessons)) . ' Lessons</li>',
+            number_format($this->mediaCount) . ' Media processed</li>',
+            number_format($this->mediaSkipped) . ' Media Skipped</li>',
+            number_format(count($this->files)) . ' Files</li>',
+            number_format($this->filesSkipped) . ' Files Skipped</li>'
+        );
+        foreach ($this->images as $imageFolder => $images) {
+            $reports[] = number_format(count($images)) . ' ' . $imageFolder;
+        }
+
+        $this->displayResults($reports);
 
         $log = ob_get_contents();
         file_put_contents(JPATH_SITE . '/logs/oscampus.import.log', $log);
@@ -284,7 +299,7 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
 
         $log = ob_get_contents();
-        file_put_contents(JPATH_SITE . '/logs/oscampus.import.log', $log, FILE_APPEND);
+        file_put_contents(JPATH_SITE . '/logs/oscampus.import.users.log', $log);
 
         ob_clean();
 
@@ -1304,22 +1319,13 @@ class OscampusControllerImport extends OscampusControllerBase
         }
     }
 
-    protected function displayResults()
+    protected function displayResults(array $reports)
     {
         echo '<div style="float: left; width:40%">';
 
         echo '<ul>';
-        echo '<li>' . number_format(count($this->pathways)) . ' Pathways</li>';
-        echo '<li>' . number_format(count($this->courses)) . ' Courses</li>';
-        echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
-        echo '<li>' . number_format(count($this->teachers)) . ' Teachers</li>';
-        echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
-        echo '<li>' . number_format($this->mediaCount) . ' Media processed</li>';
-        echo '<li>' . number_format($this->mediaSkipped) . ' Media Skipped</li>';
-        echo '<li>' . number_format(count($this->files)) . ' Files</li>';
-        echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
-        foreach ($this->images as $imageFolder => $images) {
-            echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
+        foreach ($reports as $report) {
+            echo '<li>' . $report . '</li>';
         }
         echo '</ul>';
 
@@ -1658,7 +1664,7 @@ class OscampusControllerImport extends OscampusControllerBase
         );
 
         $inserts = array();
-        $total = 0;
+        $total   = 0;
         foreach ($courses as $courseId) {
             $query->clear('where')->where('course.id = ' . $courseId);
 
