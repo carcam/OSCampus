@@ -20,6 +20,7 @@ use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\Wistia\Api;
 use OscampusComponentHelper;
 use OscampusFactory;
+use OscampusHelper;
 use OscampusUtilitiesArray;
 use SimpleXMLElement;
 
@@ -132,15 +133,14 @@ class Wistia extends AbstractType
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
-        $menuId      = $config->get('signup.download');
-        $upgradeUrl = $menuId ? JRoute::_('index.php?Itemid=' . $menuId) : null;
+        $downloadUrl = OscampusHelper::normalizeUrl($config->get('signup.download'));
 
         $options = json_encode(
             array(
-                'mobile'      => $device->isMobile(),
-                'formToken'   => JSession::getFormToken(),
-                'upgradeUrl' => $upgradeUrl,
-                'authorised'  => array(
+                'mobile'     => $device->isMobile(),
+                'formToken'  => JSession::getFormToken(),
+                'upgradeUrl' => $downloadUrl,
+                'authorised' => array(
                     'download' => $authoriseDownload,
                     'controls' => $controls
                 )

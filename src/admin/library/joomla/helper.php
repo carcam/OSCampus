@@ -94,4 +94,23 @@ abstract class OscampusHelper
             }
         }
     }
+
+    /**
+     * Check a potentially local, relative url and make sure
+     * it will
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function normalizeUrl($url)
+    {
+        if (!preg_match('#https?://#', $url)) {
+            $root = OscampusFactory::getURI()->root(true);
+
+            return rtrim($root, '/') . '/' . ltrim($url, '/');
+        }
+
+        return $url;
+    }
 }

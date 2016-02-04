@@ -7,7 +7,7 @@
         <fields name="signup">
             <field
                 name="new"
-                type="menuitem"
+                type="text"
                 label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_LABEL"
                 description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_DESC">
                 <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
@@ -15,7 +15,7 @@
 
             <field
                 name="upgrade"
-                type="menuitem"
+                type="text"
                 label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_LABEL"
                 description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_DESC">
                 <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
@@ -57,7 +57,7 @@
         <fields name="signup">
             <field
                 name="download"
-                type="menuitem"
+                type="text"
                 label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_LABEL"
                 description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_DESC">
                 <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>

@@ -13,10 +13,7 @@ defined('_JEXEC') or die();
 $user = OscampusFactory::getUser();
 
 $signupType = $user->guest ? 'signup.new' : 'signup.upgrade';
-
-if ($itemid = (int)$this->getParams()->get($signupType)) {
-    $signupPage = JRoute::_('index.php?Itemid=' . $itemid);
-}
+$signupPage = OscampusHelper::normalizeUrl($this->getParams()->get($signupType));
 
 ?>
 
