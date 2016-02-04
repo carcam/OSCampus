@@ -172,7 +172,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->customBackup = JPATH_SITE . $this->customBackup;
     }
 
-    public function import()
+    protected function importInit()
     {
         error_reporting(-1);
         ini_set('display_errors', 1);
@@ -186,7 +186,12 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<p>Max Execution Time: ' . ini_get('max_execution_time') . '<br/>';
         echo 'Memory Limit: ' . ini_get('memory_limit') . '</p>';
 
-        $this->log['Start'] = microtime(true);
+        $this->log = array('Start' => microtime(true));
+    }
+
+    public function import()
+    {
+        $this->importInit();
 
         $this->saveCustomPaths();
 
@@ -228,18 +233,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->loadExerciseFiles();
         $this->log['Load Files'] = microtime(true);
 
-        $this->loadCertificates();
-        $this->log['Load Certificates'] = microtime(true);
-
-        $this->loadViewed();
-        $this->log['Load Viewed'] = microtime(true);
-
-        $this->loadViewedQuizzes();
-        $this->log['Load Viewed Quizzes'] = microtime(true);
-
-        $this->loadWistiaDownloadLog();
-        $this->log['Load Wistia Log'] = microtime(true);
-
         $this->images['Teacher Images']   = $this->copyImages('#__oscampus_teachers', 'teachers');
         $this->log['Load Teacher Images'] = microtime(true);
 
@@ -267,6 +260,27 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('display_errors', 0);
 
         JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
+    }
+
+    public function importUser()
+    {
+        $this->loadCertificates();
+        $this->log['Load Certificates'] = microtime(true);
+
+        $this->loadViewed();
+        $this->log['Load Viewed'] = microtime(true);
+
+        $this->loadViewedQuizzes();
+        $this->log['Load Viewed Quizzes'] = microtime(true);
+
+        $this->loadWistiaDownloadLog();
+        $this->log['Load Wistia Log'] = microtime(true);
+
+        echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
+        echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
+        echo '<li>' . number_format($this->viewQuizCount) . ' Quizzes Taken';
+        echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
+
     }
 
     public function showlog()
@@ -1289,15 +1303,11 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format(count($this->courses)) . ' Courses</li>';
         echo '<li>' . number_format(count($this->modules)) . ' Modules</li>';
         echo '<li>' . number_format(count($this->teachers)) . ' Teachers</li>';
-        echo '<li>' . number_format(count($this->certificates)) . ' Certificates</li>';
         echo '<li>' . number_format(count($this->lessons)) . ' Lessons</li>';
         echo '<li>' . number_format($this->mediaCount) . ' Media processed</li>';
         echo '<li>' . number_format($this->mediaSkipped) . ' Media Skipped</li>';
         echo '<li>' . number_format(count($this->files)) . ' Files</li>';
         echo '<li>' . number_format($this->filesSkipped) . ' Files Skipped</li>';
-        echo '<li>' . number_format($this->viewCount) . ' Viewed</li>';
-        echo '<li>' . number_format($this->viewQuizCount) . ' Quizzes Taken';
-        echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
         foreach ($this->images as $imageFolder => $images) {
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }

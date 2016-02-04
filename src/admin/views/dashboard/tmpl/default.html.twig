@@ -8,11 +8,12 @@
 {% extends "admin_list.html.twig" %}
 
 {% block main_content %}
-    <h1>Guru Data Dashboard</h1>
+    <h1>Guru Data Imports</h1>
 
     <ol>
-        <li>Run the <a href="index.php?option=com_oscampus&task=import.import">current import</a></li>
-        <li><a href="index.php?option=com_oscampus&task=import.fixLessonViews">Fix lesson views</a></li>
+        <li><a href="index.php?option=com_oscampus&task=import.import">All Course Data</a></li>
+        <li><a href="index.php?option=com_oscampus&task=import.importUser">User Tracking Data</a></li>
+        <li><a href="index.php?option=com_oscampus&task=import.fixLessonViews">Fixes for User Tracking Data</a></li>
     </ol>
 
     <p>It's safe to run the full import whenever you want! But....</p>
