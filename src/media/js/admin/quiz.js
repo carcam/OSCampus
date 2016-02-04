@@ -19,7 +19,12 @@
             .on('click', function(evt) {
                 evt.preventDefault();
 
-                $(this).parent('li').remove();
+                var target = $(this).parent('li'),
+                    siblings = target.siblings();
+
+                if (siblings.length > 1) {
+                    target.remove();
+                }
             });
 
         // Create new answer

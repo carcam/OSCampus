@@ -22,6 +22,21 @@ class OscampusFormFieldQuestions extends JFormField
         JHtml::_('script', 'com_oscampus/admin/quiz.js', false, true);
         JHtml::_('osc.onready', '$.Oscampus.admin.quiz.init();');
 
+        // Make sure we have at least one question/answer to work with
+        if (empty($this->value)) {
+            $this->value = array(
+                array(
+                    'text'    => '',
+                    'answers' => array(
+                        array(
+                            'text'    => '',
+                            'correct' => 0
+                        )
+                    )
+                )
+            );
+        }
+
         $html = array(
             '<div class="clr"></div>',
             '<div class="osc-quiz-questions">',
