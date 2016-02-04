@@ -20,23 +20,25 @@ defined('_JEXEC') or die();
 $quiz  = $this->lesson->renderer;
 $retry = OscampusFactory::getApplication()->input->getInt('retry', 0);
 
-if ($this->activity->data && !$retry) {
-    if ($this->activity->score < $quiz->passingScore) {
-        $quizTemplate = 'failed';
+$quizTemplate = 'noauth';
+if ($this->lesson->isAuthorised()) {
+    if ($this->activity->data && !$retry) {
+        if ($this->activity->score < $quiz->passingScore) {
+            $quizTemplate = 'failed';
+        } else {
+            $quizTemplate = 'passed';
+        }
     } else {
-        $quizTemplate = 'passed';
+        $quizTemplate = 'form';
     }
-} else {
-    $quizTemplate = 'form';
 }
 ?>
 <div class="osc-container oscampus-quiz" id="oscampus">
     <?php
+    echo $this->loadTemplate($quizTemplate);
+
     if ($this->lesson->isAuthorised()) {
-        echo $this->loadTemplate($quizTemplate);
         echo $this->loadDefaultTemplate('files');
-    } else {
-        echo '<div class="osc-section oscampus-lesson-content osc-signup-box"><img src="' . Juri::base() . 'media/com_oscampus/images/quiz-bg.jpg" alt="OSCampus Quiz" /></div>';
     }
     ?>
 </div>
