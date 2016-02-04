@@ -9,6 +9,6 @@
 defined('_JEXEC') or die();
 ?>
 <div id="content-description" class="osc-course-tabs-content" style="display: none">
-    <?php echo $this->course->description; ?>
+    <?php echo $this->course->introtext . $this->course->description; ?>
 </div>
 <!-- #content-description -->
