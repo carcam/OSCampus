@@ -172,7 +172,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->customBackup = JPATH_SITE . $this->customBackup;
     }
 
-    protected function importInit()
+    protected function importInit($title)
     {
         error_reporting(-1);
         ini_set('display_errors', 1);
@@ -183,6 +183,13 @@ class OscampusControllerImport extends OscampusControllerBase
 
         ob_start();
 
+        echo '<div style="float: left; width:40%">';
+
+        echo '<h3>' . $title . '</h3>';
+
+        $date = new DateTime();
+        echo '<p>Last Import finished at: ' . $date->format('Y-m-d H:i:s T (P)') . '</p>';
+
         echo '<p>Max Execution Time: ' . ini_get('max_execution_time') . '<br/>';
         echo 'Memory Limit: ' . ini_get('memory_limit') . '</p>';
 
@@ -191,7 +198,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
     public function import()
     {
-        $this->importInit();
+        $this->importInit('Course Import');
 
         $this->saveCustomPaths();
 
@@ -279,19 +286,27 @@ class OscampusControllerImport extends OscampusControllerBase
 
     public function importUser()
     {
-        $this->importInit();
+        $this->importInit('User Tracking Import');
 
-        $this->loadViewed();
-        $this->log['Load Viewed'] = microtime(true);
+        $courses = JPATH_SITE . '/logs/oscampus.ids.courses.txt';
+        $lessons = JPATH_SITE . '/logs/oscampus.ids.lessons.txt';
+        //if (!is_file($courses) || !is_file($lessons)) {
+            $this->errors[] = 'One or both ID translation backups not found';
+        //}
 
-        $this->loadViewedQuizzes();
-        $this->log['Load Viewed Quizzes'] = microtime(true);
+        echo (int)is_file($courses) . (int)is_file($lessons);
 
-        $this->loadCertificates();
-        $this->log['Load Certificates'] = microtime(true);
+        //$this->loadViewed();
+        //$this->log['Load Viewed'] = microtime(true);
 
-        $this->loadWistiaDownloadLog();
-        $this->log['Load Wistia Log'] = microtime(true);
+        //$this->loadViewedQuizzes();
+        //$this->log['Load Viewed Quizzes'] = microtime(true);
+
+        //$this->loadCertificates();
+        //$this->log['Load Certificates'] = microtime(true);
+
+        //$this->loadWistiaDownloadLog();
+        //$this->log['Load Wistia Log'] = microtime(true);
 
         $reports = array(
             number_format(count($this->certificates)) . ' Certificates</li>',
@@ -324,10 +339,6 @@ class OscampusControllerImport extends OscampusControllerBase
     protected function showLogFromFile($path)
     {
         if (is_file($path)) {
-            $modified = OscampusFactory::getDate();
-            $modified->setTimestamp(filemtime($path));
-            echo '<p>Last Import finished at: ' . $modified->format('Y-m-d H:i:s T (P)') . '</p>';
-
             echo file_get_contents($path);
         }
     }
@@ -1342,17 +1353,13 @@ class OscampusControllerImport extends OscampusControllerBase
 
     protected function displayResults(array $reports)
     {
-        echo '<div style="float: left; width:40%">';
-
         echo '<ul>';
         foreach ($reports as $report) {
             echo '<li>' . $report . '</li>';
         }
         echo '</ul>';
 
-        echo '</div>';
-
-        echo '<div style="float: left; padding: 10px;">';
+        echo '<div>';
         echo '<h2>Time Log</h2>';
         $start = null;
         $last  = null;
@@ -1374,11 +1381,14 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '</div>';
 
         if ($this->errors) {
-            echo '<div style="float: left;">';
+            echo '<div>';
             echo '<h2>Error Log</h2>';
             echo join('<br/>', $this->errors);
             echo '</div>';
         }
+
+        echo '</div>';
+        echo '</div>';
     }
 
     /**
