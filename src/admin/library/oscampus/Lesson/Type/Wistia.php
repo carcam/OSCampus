@@ -132,7 +132,7 @@ class Wistia extends AbstractType
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
-        $menuId      = $config->get('signup.upgrade');
+        $menuId      = $config->get('signup.download');
         $upgradeUrl = $menuId ? JRoute::_('index.php?Itemid=' . $menuId) : null;
 
         $options = json_encode(

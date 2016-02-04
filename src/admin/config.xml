@@ -30,10 +30,10 @@
 
     </fieldset>
 
-    <fields name="videos">
-        <fieldset
-            name="videos"
-            label="COM_OSCAMPUS_CONFIGURATION_VIDEOS">
+    <fieldset
+        name="videos"
+        label="COM_OSCAMPUS_CONFIGURATION_VIDEOS">
+        <fields name="videos">
 
             <field
                 name="downloadLimit"
@@ -52,9 +52,20 @@
                 description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_PERIOD_DESC"
                 default="7"
                 size="5"/>
+        </fields>
 
-        </fieldset>
-    </fields>
+        <fields name="signup">
+            <field
+                name="download"
+                type="menuitem"
+                label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_DESC">
+                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
+            </field>
+        </fields>
+
+
+    </fieldset>
 
     <fields name="wistia">
         <fieldset
