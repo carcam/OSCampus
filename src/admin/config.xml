@@ -9,17 +9,13 @@
                 name="new"
                 type="text"
                 label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_LABEL"
-                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_DESC">
-                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
-            </field>
+                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_NEW_DESC"/>
 
             <field
                 name="upgrade"
                 type="text"
                 label="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_LABEL"
-                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_DESC">
-                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
-            </field>
+                description="COM_OSCAMPUS_CONFIGURATION_MAIN_SIGNUP_UPGRADE_DESC"/>
         </fields>
 
         <field
@@ -52,18 +48,22 @@
                 description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_LIMIT_PERIOD_DESC"
                 default="7"
                 size="5"/>
-        </fields>
 
-        <fields name="signup">
-            <field
-                name="download"
-                type="text"
-                label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_LABEL"
-                description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_SIGNUP_DOWNLOAD_DESC">
-                <option value="">COM_OSCAMPUS_OPTION_SELECT_MENUITEM</option>
-            </field>
-        </fields>
+            <fields name="download">
+                <field
+                    name="new"
+                    type="text"
+                    label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_NEW_LABEL"
+                    description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_NEW_DESC"/>
 
+                <field
+                    name="upgrade"
+                    type="text"
+                    label="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_UPGRADE_LABEL"
+                    description="COM_OSCAMPUS_CONFIGURATION_VIDEOS_DOWNLOAD_UPGRADE_DESC"/>
+
+            </fields>
+        </fields>
 
     </fieldset>
 

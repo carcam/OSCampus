@@ -133,7 +133,8 @@ class Wistia extends AbstractType
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
-        $downloadUrl = OscampusHelper::normalizeUrl($config->get('signup.download'));
+        $signupType  = 'videos.download.' . ($user->guest ? 'new' : 'upgrade');
+        $downloadUrl = OscampusHelper::normalizeUrl($config->get($signupType));
 
         $options = json_encode(
             array(
