@@ -252,10 +252,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $this->fixOrdering('#__oscampus_pathways');
         $this->log['Fix Ordering Fields'] = microtime(true);
 
-        echo '<p>Memory: ' . number_format(memory_get_usage(true) / 1024 / 1024) . 'M<br/>';
-        echo 'Peak Memory: ' . number_format(memory_get_peak_usage(true) / 1024 / 1024) . 'M<br/>';
-        echo 'Total Time: ' . number_format((microtime(true) - $this->log['Start']) / 60, 2) . ' Minutes</p>';
-
         $reports = array(
             number_format(count($this->pathways)) . ' Pathways</li>',
             number_format(count($this->courses)) . ' Courses</li>',
@@ -288,32 +284,33 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         $this->importInit('User Tracking Import');
 
-        $courses = JPATH_SITE . '/logs/oscampus.ids.courses.txt';
-        $lessons = JPATH_SITE . '/logs/oscampus.ids.lessons.txt';
-        //if (!is_file($courses) || !is_file($lessons)) {
-            $this->errors[] = 'One or both ID translation backups not found';
-        //}
+        if ($this->restoreTranslation(JPATH_SITE . '/logs/oscampus.ids.courses.txt', 'courses')
+            && $this->restoreTranslation(JPATH_SITE . '/logs/oscampus.ids.lessons.txt', 'lessons')
+        ) {
 
-        echo (int)is_file($courses) . (int)is_file($lessons);
+            $this->clearTable('#__oscampus_users_lessons');
+            $this->clearTable('#__oscampus_certificates');
+            $this->clearTable('#__oscampus_wistia_downloads');
 
-        //$this->loadViewed();
-        //$this->log['Load Viewed'] = microtime(true);
+            //$this->loadViewed();
+            //$this->log['Load Viewed'] = microtime(true);
 
-        //$this->loadViewedQuizzes();
-        //$this->log['Load Viewed Quizzes'] = microtime(true);
+            //$this->loadViewedQuizzes();
+            //$this->log['Load Viewed Quizzes'] = microtime(true);
 
-        //$this->loadCertificates();
-        //$this->log['Load Certificates'] = microtime(true);
+            $this->loadCertificates();
+            $this->log['Load Certificates'] = microtime(true);
 
-        //$this->loadWistiaDownloadLog();
-        //$this->log['Load Wistia Log'] = microtime(true);
-
+            $this->loadWistiaDownloadLog();
+            $this->log['Load Wistia Log'] = microtime(true);
+        }
         $reports = array(
             number_format(count($this->certificates)) . ' Certificates</li>',
             number_format($this->viewCount) . ' Viewed</li>',
             number_format($this->viewQuizCount) . ' Quizzes Taken',
             number_format($this->downloadCount) . ' Wistia Download Logs'
         );
+
         $this->displayResults($reports);
 
         $log = ob_get_contents();
@@ -325,7 +322,6 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('display_errors', 0);
 
         JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
-
     }
 
     public function showlog()
@@ -1020,6 +1016,7 @@ class OscampusControllerImport extends OscampusControllerBase
                     'courses_id'  => $this->courses[$c->course_id]->id,
                     'date_earned' => $c->datecertificate
                 );
+
                 $dbCampus->insertObject('#__oscampus_certificates', $newCertificate, 'id');
                 if ($error = $dbCampus->getErrorMsg()) {
                     $this->errors[] = 'Certificate: ' . $error;
@@ -1028,11 +1025,18 @@ class OscampusControllerImport extends OscampusControllerBase
                     $this->certificates[$c->id] = $newCertificate;
                 }
             } else {
+                $message = array();
+                if (!isset($this->courses[$c->course_id])) {
+                    $message[] = 'Course';
+                }
+                if (!isset($users[$c->user_id])) {
+                    $message[] = 'User';
+                }
                 $this->errors[] = sprintf(
-                    'Skipped Certificate: %s (%s/%s/%s)',
+                    'Skipped Certificate [%s]: %s (%s/%s)',
+                    join(',', $message) ?: '??',
                     $c->datecertificate,
                     $c->course_id,
-                    $c->author_id,
                     $c->user_id
                 );
             }
@@ -1358,6 +1362,10 @@ class OscampusControllerImport extends OscampusControllerBase
             echo '<li>' . $report . '</li>';
         }
         echo '</ul>';
+
+        echo '<p>Memory: ' . number_format(memory_get_usage(true) / 1024 / 1024) . 'M<br/>';
+        echo 'Peak Memory: ' . number_format(memory_get_peak_usage(true) / 1024 / 1024) . 'M<br/>';
+        echo 'Total Time: ' . number_format((microtime(true) - $this->log['Start']) / 60, 2) . ' Minutes</p>';
 
         echo '<div>';
         echo '<h2>Time Log</h2>';
@@ -1749,5 +1757,26 @@ class OscampusControllerImport extends OscampusControllerBase
         } else {
             echo '<br/><br/>All User Activity records are consistent';
         }
+    }
+
+    protected function restoreTranslation($path, $property)
+    {
+        if (is_file($path)) {
+            if (property_exists($this, $property)) {
+                $array = (array)json_decode(file_get_contents($path));
+
+                $fixed = array();
+                foreach ($array as $id => $item) {
+                    $fixed[(int)$id] = $item;
+                }
+                $this->$property = $fixed;
+                return true;
+            }
+            $this->errors[] = 'Invalid restore property - ' . $property;
+            return false;
+        }
+
+        $this->errors[] = 'ID Translation not found - ' . $path;
+        return false;
     }
 }
