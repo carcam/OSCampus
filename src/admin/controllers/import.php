@@ -179,7 +179,7 @@ class OscampusControllerImport extends OscampusControllerBase
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
 
-        echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+        echo '<p><a href="index.php?option=com_oscampus&view=dashboard">Back to main  screen</a></p>';
 
         ob_start();
 
@@ -264,14 +264,16 @@ class OscampusControllerImport extends OscampusControllerBase
 
     public function importUser()
     {
-        $this->loadCertificates();
-        $this->log['Load Certificates'] = microtime(true);
+        $this->importInit();
 
         $this->loadViewed();
         $this->log['Load Viewed'] = microtime(true);
 
         $this->loadViewedQuizzes();
         $this->log['Load Viewed Quizzes'] = microtime(true);
+
+        $this->loadCertificates();
+        $this->log['Load Certificates'] = microtime(true);
 
         $this->loadWistiaDownloadLog();
         $this->log['Load Wistia Log'] = microtime(true);
@@ -281,11 +283,21 @@ class OscampusControllerImport extends OscampusControllerBase
         echo '<li>' . number_format($this->viewQuizCount) . ' Quizzes Taken';
         echo '<li>' . number_format($this->downloadCount) . ' Wistia Download Logs';
 
+        $log = ob_get_contents();
+        file_put_contents(JPATH_SITE . '/logs/oscampus.import.log', $log, FILE_APPEND);
+
+        ob_clean();
+
+        error_reporting(0);
+        ini_set('display_errors', 0);
+
+        JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
+
     }
 
     public function showlog()
     {
-        echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+        echo '<p><a href="index.php?option=com_oscampus&view=dashboard">Back to main  screen</a></p>';
 
         $path = JPATH_SITE . '/logs/oscampus.import.log';
 
@@ -1294,8 +1306,6 @@ class OscampusControllerImport extends OscampusControllerBase
 
     protected function displayResults()
     {
-        $db = JFactory::getDbo();
-
         echo '<div style="float: left; width:40%">';
 
         echo '<ul>';
@@ -1312,83 +1322,6 @@ class OscampusControllerImport extends OscampusControllerBase
             echo '<li>' . number_format(count($images)) . ' ' . $imageFolder . '</li>';
         }
         echo '</ul>';
-
-        $courseQuery = $db->getQuery(true)
-            ->select(
-                array(
-                    'cp.*',
-                    'l.modules_id',
-                    'p.title Pathway',
-                    'c.title Course',
-                    'm.title Module',
-                    'l.title Lesson',
-                    'u.username',
-                    't.links'
-                )
-            )
-            ->from('#__oscampus_courses c')
-            ->leftJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
-            ->leftJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
-            ->leftJoin('#__oscampus_teachers t ON t.id = c.teachers_id')
-            ->leftJoin('#__users u ON u.id = t.users_id')
-            ->leftJoin('#__oscampus_modules m ON m.courses_id = c.id')
-            ->leftJoin('#__oscampus_lessons l ON l.modules_id = m.id')
-            ->order('p.ordering, cp.ordering, m.ordering, l.ordering');
-
-        $rows = $db->setQuery($courseQuery)->loadObjectList();
-        if ($error = $db->getErrorMsg()) {
-            $this->errors[] = $error;
-        }
-
-        $display = array();
-        foreach ($rows as $row) {
-            $pid = $row->pathways_id;
-            $cid = $row->courses_id;
-            $mid = $row->modules_id;
-
-            if (!isset($display[$pid])) {
-                $display[$pid] = (object)array(
-                    'title' => $row->Pathway,
-                    'items' => array()
-                );
-            }
-            $path = $display[$pid];
-
-            if (!isset($path->items[$cid])) {
-                $path->items[$cid] = (object)array(
-                    'title' => $row->Course,
-                    'items' => array()
-                );
-            }
-            $course = $path->items[$cid];
-
-            if (!isset($course->items[$mid])) {
-                $course->items[$mid] = (object)array(
-                    'title' => $row->Module,
-                    'items' => array()
-                );
-            }
-            $module = $course->items[$mid];
-
-            $module->items[] = $row->Lesson;
-        }
-
-        foreach ($display as $path) {
-            echo '<h2>' . $path->title . '</h2>';
-            echo '<ol>';
-            foreach ($path->items as $course) {
-                echo '<li>' . $course->title . '<ol>';
-                foreach ($course->items as $module) {
-                    echo '<li>' . $module->title . '<ol>';
-                    foreach ($module->items as $lesson) {
-                        echo '<li>' . $lesson . '</li>';
-                    }
-                    echo '</li></ol>';
-                }
-                echo '<br/></li></ol>';
-            }
-            echo '</li></ol>';
-        }
 
         echo '</div>';
 
