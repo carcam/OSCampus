@@ -233,24 +233,26 @@ class Quiz extends AbstractType
 
         $questions = array();
         foreach ((array)$quiz->questions as $questionId => $question) {
-            $questionKey = md5($question['text']);
-            $correct     = $question['correct'];
+            if ($question['text']) {
+                $questionKey = md5($question['text']);
+                $correct     = $question['correct'];
 
-            $answers = array();
-            foreach ((array)$question['answers'] as $answerId => $answer) {
-                $answerKey = md5($answer);
+                $answers = array();
+                foreach ((array)$question['answers'] as $answerId => $answer) {
+                    $answerKey = md5($answer);
 
-                $answers[$answerKey] = array(
-                    'text'    => $answer,
-                    'correct' => (int)($correct == $answerId)
-                );
-            }
+                    $answers[$answerKey] = array(
+                        'text'    => $answer,
+                        'correct' => (int)($correct == $answerId)
+                    );
+                }
 
-            if ($answers = array_filter($answers)) {
-                $questions[$questionKey] = array(
-                    'text'    => $question['text'],
-                    'answers' => $answers
-                );
+                if ($answers = array_filter($answers)) {
+                    $questions[$questionKey] = array(
+                        'text'    => $question['text'],
+                        'answers' => $answers
+                    );
+                }
             }
         }
 
