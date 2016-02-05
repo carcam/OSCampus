@@ -1,7 +1,7 @@
 OSCampus
 =========
 
-OSTraining's in-house LMS
+This is the video LMS that we use at OSTraining.com
 
 ## Requirements
 
