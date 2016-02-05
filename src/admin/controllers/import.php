@@ -183,8 +183,6 @@ class OscampusControllerImport extends OscampusControllerBase
 
         ob_start();
 
-        echo '<div style="float: left; width:40%">';
-
         echo '<h3>' . $title . '</h3>';
 
         $date = new DateTime();
@@ -292,11 +290,8 @@ class OscampusControllerImport extends OscampusControllerBase
             $this->clearTable('#__oscampus_certificates');
             $this->clearTable('#__oscampus_wistia_downloads');
 
-            //$this->loadViewed();
-            //$this->log['Load Viewed'] = microtime(true);
-
-            //$this->loadViewedQuizzes();
-            //$this->log['Load Viewed Quizzes'] = microtime(true);
+            $this->loadViewed();
+            $this->log['Load Viewed'] = microtime(true);
 
             $this->loadCertificates();
             $this->log['Load Certificates'] = microtime(true);
@@ -307,7 +302,6 @@ class OscampusControllerImport extends OscampusControllerBase
         $reports = array(
             number_format(count($this->certificates)) . ' Certificates</li>',
             number_format($this->viewCount) . ' Viewed</li>',
-            number_format($this->viewQuizCount) . ' Quizzes Taken',
             number_format($this->downloadCount) . ' Wistia Download Logs'
         );
 
@@ -324,18 +318,48 @@ class OscampusControllerImport extends OscampusControllerBase
         JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
     }
 
+    public function importQuizzes()
+    {
+        $this->importInit('Quiz Tracking Import');
+
+        if ($this->restoreTranslation(JPATH_SITE . '/logs/oscampus.ids.courses.txt', 'courses')
+            && $this->restoreTranslation(JPATH_SITE . '/logs/oscampus.ids.lessons.txt', 'lessons')
+        ) {
+            $this->loadViewedQuizzes();
+            $this->log['Load Viewed Quizzes'] = microtime(true);
+        }
+        $reports = array(
+            number_format($this->viewQuizCount) . ' Quizzes Taken',
+        );
+
+        $this->displayResults($reports);
+
+        $log = ob_get_contents();
+        file_put_contents(JPATH_SITE . '/logs/oscampus.import.quizzes.log', $log);
+
+        ob_clean();
+
+        error_reporting(0);
+        ini_set('display_errors', 0);
+
+        JFactory::getApplication()->redirect('index.php?option=com_oscampus&task=import.showlog');
+    }
+
     public function showlog()
     {
         echo '<p><a href="index.php?option=com_oscampus&view=dashboard">Back to main  screen</a></p>';
 
         $this->showLogFromFile(JPATH_SITE . '/logs/oscampus.import.log');
         $this->showLogFromFile(JPATH_SITE . '/logs/oscampus.import.users.log');
+        $this->showLogFromFile(JPATH_SITE . '/logs/oscampus.import.quizzes.log');
     }
 
     protected function showLogFromFile($path)
     {
         if (is_file($path)) {
+            echo '<div style="float: left; width:30%">';
             echo file_get_contents($path);
+            echo '</div>';
         }
     }
 
@@ -743,7 +767,7 @@ class OscampusControllerImport extends OscampusControllerBase
             return $cleaned;
         };
 
-        $getAnswer = function ($quiz, $question, $answer, $correct) use ($cleanResults) {
+        $getAnswer = function ($quiz, $question, $answer, $correct) use ($cleanResults, $questionsQuery) {
             $pool   = $quiz->questions;
             $result = (object)array(
                 'text'     => null,
@@ -772,8 +796,9 @@ class OscampusControllerImport extends OscampusControllerBase
                         echo '<pre>';
                         print_r($correct);
                         print_r($answer);
-                        print_r($pool->$qkey);
+                        print_r($quiz);
                         echo '</pre>';
+                        echo OscampusFactory::getDbo()->replacePrefix($questionsQuery);
                         die('mismatch on correct answers');
                     }
                 }
@@ -787,6 +812,7 @@ class OscampusControllerImport extends OscampusControllerBase
 
             print_r($quiz);
             echo '</pre>';
+            echo OscampusFactory::getDbo()->replacePrefix($questionsQuery);
 
             die('bad question');
         };
@@ -794,7 +820,7 @@ class OscampusControllerImport extends OscampusControllerBase
         $activity = OscampusFactory::getContainer()->activity;
 
         $insertKeys = get_object_vars($activity->getStatus(0, 0));
-        unset($insertKeys['id']);
+        unset($insertKeys['id'], $insertKeys['courses_id'], $insertKeys['type']);
 
         $users = array();
         foreach ($this->lessons as $guruLessonId => $lesson) {
@@ -804,14 +830,19 @@ class OscampusControllerImport extends OscampusControllerBase
                 $questionsQuery->clear('where')->where('mr.type_id = ' . $guruLessonId);
 
                 $questions = $dbGuru->setQuery($questionsQuery)->loadObjectList();
+
                 foreach ($questions as $question) {
+
                     $userId = $question->user_id;
+                    $test[] = $userId;
+
                     if (isset($users[$userId])) {
                         $userStatus = $users[$userId];
 
                     } else {
-                        $userStatus = $activity->getStatus($lesson->id, $userId)->toObject();
-                        unset($userStatus->id);
+                        $userStatus = $activity->getStatus($lesson->id, null, $userId)->toObject();
+
+                        unset($userStatus->id, $userStatus->courses_id, $userStatus->type);
 
                         $userStatus->score       = $scoreCalc($question->score_quiz);
                         $userStatus->visits      = 1;
@@ -856,7 +887,6 @@ class OscampusControllerImport extends OscampusControllerBase
                     }
 
                     $segments = array_chunk($insertValues, $this->viewedQuizChunk);
-
                     foreach ($segments as $segment) {
                         $insertQuery = $dbCampus->getQuery(true)
                             ->insert('#__oscampus_users_lessons')
@@ -1132,6 +1162,8 @@ class OscampusControllerImport extends OscampusControllerBase
         $dbGuru   = $this->getGuruDbo();
         $dbCampus = JFactory::getDbo();
 
+        // Pre-emptively fix a couple guru duplicate questions
+
         $levels = array(
             0 => 'beginner',
             1 => 'intermediate',
@@ -1396,7 +1428,6 @@ class OscampusControllerImport extends OscampusControllerBase
         }
 
         echo '</div>';
-        echo '</div>';
     }
 
     /**
@@ -1648,7 +1679,7 @@ class OscampusControllerImport extends OscampusControllerBase
     {
         echo '<h3>User Activity Log Corrections</h3>';
 
-        echo '<p><a href="index.php?option=com_oscampus">Back to main  screen</a></p>';
+        echo '<p><a href="index.php?option=com_oscampus&view=dashboard">Back to main  screen</a></p>';
 
         $db = JFactory::getDbo();
 
@@ -1744,8 +1775,11 @@ class OscampusControllerImport extends OscampusControllerBase
                     ->values($inserts);
 
                 $db->setQuery($insertQuery)->execute();
-                echo '<br/>Fixed: ' . count($inserts);
-                echo '<br/>ERROR: ' . $db->getErrorMsg() . '<br/>';
+                echo '<p>Added: ' . count($inserts);
+                if ($error = $db->getErrorMsg()) {
+                    echo '<br/>ERROR: ' . $error;
+                }
+                echo '</p>';
 
                 $total += count($inserts);
                 $inserts = array();
@@ -1753,7 +1787,7 @@ class OscampusControllerImport extends OscampusControllerBase
         }
 
         if ($total) {
-            echo '<br/><br/>Total Corrections: ' . number_format($total);
+            echo '<br/><br/>Total Additions: ' . number_format($total);
         } else {
             echo '<br/><br/>All User Activity records are consistent';
         }
