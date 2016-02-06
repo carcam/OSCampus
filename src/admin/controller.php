@@ -134,4 +134,40 @@ class OscampusController extends OscampusControllerBase
 
         echo join("\n", $html);
     }
+
+    /**
+     * Check for duplicate lesson aliases within a course. Since we don't include the lesson ID
+     * in SEF URLs (and we don't want to do that for SEO!) lessons require unique aliases within
+     * a course.
+     */
+    public function aliasdups()
+    {
+        $db = OscampusFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'lesson.alias',
+                    'course.title AS course_title',
+                    'count(*) AS count'
+                )
+            )
+            ->from('#__oscampus_lessons AS lesson')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->group('lesson.alias, course.id')
+            ->having('count > 1');
+
+        if ($aliasDuplicates = $db->setQuery($query)->loadObjectList()) {
+            echo '<p>The following lessons have duplicated aliases within the same course. There will be problems viewing these lessons</p>';
+
+            echo '<ol>';
+            foreach ($aliasDuplicates as $duplicate) {
+                echo '<li>' . $duplicate->course_title . '/'. $duplicate->alias . ' (' . $duplicate->count . ')</li>';
+            }
+            echo '</ol>';
+        } else {
+            echo '<h3>YAY! No duplicate aliases were found!</h3>';
+        }
+    }
 }
