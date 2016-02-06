@@ -88,9 +88,13 @@ abstract class OscLesson
             'next'     => $lesson->next
         );
 
-        foreach ($lessons as $properties) {
-            unset($properties->content);
-            $properties->link = JRoute::_(static::link($properties, null, null, true));
+        foreach ($lessons as $key => $properties) {
+            $options = new Properties($properties);
+
+            unset($options->content);
+            $options->link = JRoute::_(static::link($properties, null, null, true));
+
+            $lessons[$key] = $options;
         }
 
         $lessons = json_encode($lessons);
