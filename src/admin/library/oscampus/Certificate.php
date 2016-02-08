@@ -28,24 +28,26 @@ class Certificate extends AbstractBase
      */
     public function award($courseId, UserActivity $activity)
     {
-        $summary = $activity->summary($courseId);
-        if ($summary->viewed == $summary->lessons) {
-            $lessons = $activity->getCourse($courseId);
-            foreach ($lessons as $lessonId => $lesson) {
-                if ($lesson->type == 'quiz') {
-                    if ($lesson->score < Quiz::PASSING_SCORE) {
-                        return;
+        if ($courseId) {
+            $summary = $activity->summary($courseId);
+            if ($summary->viewed == $summary->lessons) {
+                $lessons = $activity->getCourse($courseId);
+                foreach ($lessons as $lessonId => $lesson) {
+                    if ($lesson->type == 'quiz') {
+                        if ($lesson->score < Quiz::PASSING_SCORE) {
+                            return;
+                        }
                     }
                 }
-            }
 
-            // All requirements passed, award certificate
-            $certificate = (object)array(
-                'users_id'    => $summary->users_id,
-                'courses_id'  => $courseId,
-                'date_earned' => OscampusFactory::getDate()->toSql()
-            );
-            $this->dbo->insertObject('#__oscampus_certificates', $certificate);
+                // All requirements passed, award certificate
+                $certificate = (object)array(
+                    'users_id'    => $summary->users_id,
+                    'courses_id'  => $courseId,
+                    'date_earned' => OscampusFactory::getDate()->toSql()
+                );
+                $this->dbo->insertObject('#__oscampus_certificates', $certificate);
+            }
         }
     }
 
