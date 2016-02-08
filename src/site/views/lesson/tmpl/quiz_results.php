@@ -29,12 +29,15 @@ echo $this->loadDefaultTemplate('header');
             $correct = $selected && $question->answers[$selected]->correct;
             $icon    = $correct ? 'fa-check' : 'fa-times';
             ?>
-            <h4><i class="<?php echo 'fa ' . $icon; ?>"></i> <?php echo $i++ . '. ' . $question->text; ?></h4>
+            <h4>
+                <i class="<?php echo 'fa ' . $icon; ?>"></i>
+                <?php echo $i++ . '. ' . $this->escape($question->text); ?>
+            </h4>
             <ul class="osc-quiz-options">
                 <?php
                 foreach ($question->answers as $key => $answer) :
                     ?>
-                    <li><?php echo $answer->text; ?></li>
+                    <li><?php echo $this->escape($answer->text); ?></li>
                     <?php
                 endforeach;
                 ?>
