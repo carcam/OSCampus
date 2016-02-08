@@ -38,11 +38,17 @@ class OscampusModelCourse extends OscampusModelSite
             ->where(
                 array(
                     'c.id = ' . (int)$this->getState('course.id'),
-                    'p.id = ' . (int)$this->getState('pathway.id')
+                    'p.id = ' . (int)$this->getState('pathway.id'),
+                    'c.published = 1',
+                    'p.published = 1'
                 )
             );
 
         $course = $db->setQuery($query)->loadObject();
+        if (!$course) {
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
+        }
+
         return $course;
     }
 
@@ -113,7 +119,12 @@ class OscampusModelCourse extends OscampusModelSite
                 ->innerJoin('#__oscampus_courses AS course ON course.id = flink.courses_id')
                 ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = flink.lessons_id')
                 ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-                ->where('flink.courses_id = ' . $cid)
+                ->where(
+                    array(
+                        'flink.courses_id = ' . $cid,
+                        'file.published = 1'
+                    )
+                )
                 ->order('module.ordering, lesson.ordering, flink.ordering, file.title')
                 ->group('file.id');
 
