@@ -30,15 +30,27 @@ class OscampusTableLessons extends OscampusTable
             return false;
 
         } else {
-            $table = OscampusTable::getInstance('Lessons');
-            $table->load(
-                array(
-                    'alias' => $this->alias,
-                    'modules_id' => $this->modules_id
-                )
-            );
+            $db = $this->getDbo();
+            $subQuery = $db->getQuery(true)
+                ->select('courses_id')
+                ->from('#__oscampus_modules')
+                ->where('id = ' . (int)$this->modules_id);
 
-            if ($table->id && ($table->id != $this->id)) {
+            $query = $db->getQuery(true)
+                ->select('lesson.id')
+                ->from('#__oscampus_modules AS module')
+                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+                ->where(
+                    array(
+                        "module.courses_id IN ({$subQuery})",
+                        'lesson.alias = ' . $db->quote($this->alias),
+                        'lesson.id != ' . $this->id
+                    )
+                );
+
+            $duplicates = $db->setQuery($query)->loadColumn();
+
+            if ($duplicates) {
                 $this->setError('COM_OSCAMPUS_ERROR_LESSONS_DUPLICATE_ALIAS');
                 return false;
             }
