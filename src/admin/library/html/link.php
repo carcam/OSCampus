@@ -24,7 +24,6 @@ abstract class OscLink
     public static function course($pid, $cid, $text, $attribs = null, $uriOnly = false)
     {
         if ((int)$cid) {
-            $app   = JFactory::getApplication();
             $query = OscampusRoute::getInstance()->getQuery('pathway');
 
             $query['view'] = 'course';
