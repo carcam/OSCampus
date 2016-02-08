@@ -32,11 +32,6 @@ class OscampusModelNewcourses extends OscampusModelPathway
         return $query;
     }
 
-    protected function getStoreId($id = '')
-    {
-        return rand();
-    }
-
     /**
      * Get the current pathway information
      *
