@@ -26,7 +26,8 @@ class OscampusModelPathway extends OscampusModelList
                     'p.id = ' . $this->getState('pathway.id'),
                     'p.published = 1',
                     'c.published = 1',
-                    'c.access IN (' . join(',', $viewLevels) . ')'
+                    'c.access IN (' . join(',', $viewLevels) . ')',
+                    'c.released <= NOW()'
                 )
             )
             ->order('cp.ordering asc, c.title asc');

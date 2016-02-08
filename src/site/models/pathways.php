@@ -21,7 +21,8 @@ class OscampusModelPathways extends OscampusModelList
             ->where(
                 array(
                     'published = 1',
-                    'access IN (' . $levels . ')'
+                    'access IN (' . $levels . ')',
+                    'users_id IS NULL'
                 )
             )
             ->order('ordering asc');

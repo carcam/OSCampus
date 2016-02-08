@@ -40,7 +40,8 @@ class OscampusModelCourse extends OscampusModelSite
                     'c.id = ' . (int)$this->getState('course.id'),
                     'p.id = ' . (int)$this->getState('pathway.id'),
                     'c.published = 1',
-                    'p.published = 1'
+                    'p.published = 1',
+                    'c.released <= NOW()'
                 )
             );
 
