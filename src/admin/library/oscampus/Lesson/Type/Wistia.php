@@ -229,4 +229,16 @@ class Wistia extends AbstractType
 
         return $xml;
     }
+
+    /**
+     * @param JRegistry $data
+     */
+    public function saveAdminChanges(JRegistry $data)
+    {
+        $content = $data->get('content');
+        if (!is_string($content)) {
+            $content = json_encode($content);
+        }
+        $data->set('content', $content);
+    }
 }
