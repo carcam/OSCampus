@@ -45,19 +45,22 @@ class OscampusModelLessons extends OscampusModelList
                     'lesson.alias',
                     'lesson.type',
                     'lesson.published',
+                    'lesson.checked_out',
                     'lesson_view.title AS viewlevel_title',
                     'module.title AS module_title',
                     'course.title AS course_title',
                     'course.published AS course_published',
                     'course.released AS course_released',
-                    'course.difficulty AS course_difficulty'
+                    'course.difficulty AS course_difficulty',
+                    'editor_user.name AS editor'
                 )
             )
             ->from('#__oscampus_lessons lesson')
             ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->leftJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
             ->leftJoin('#__viewlevels AS lesson_view ON lesson_view.id = lesson.access')
-            ->leftJoin('#__viewlevels AS course_view ON course_view.id = course.access');
+            ->leftJoin('#__viewlevels AS course_view ON course_view.id = course.access')
+            ->leftJoin('#__users AS editor_user ON editor_user.id = lesson.checked_out');
 
         $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
 
