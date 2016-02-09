@@ -70,12 +70,12 @@
         <field
             name="header"
             type="editor"
-            filter="raw"/>
+            filter="safehtml"/>
 
         <field
             name="footer"
             type="editor"
-            filter="raw"/>
+            filter="safehtml"/>
     </fieldset>
 
 </form>
