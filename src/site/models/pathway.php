@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusModelPathway extends OscampusModelList
+class OscampusModelPathway extends OscampusModelSiteList
 {
     protected function getListQuery()
     {

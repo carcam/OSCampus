@@ -14,9 +14,15 @@ class OscampusModelNewcourses extends OscampusModelPathway
 {
     protected function getListQuery()
     {
-        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+        /**
+         * @var JDate $cutoff
+         */
 
-        $query = $this->getDbo()->getQuery(true)
+        $db = $this->getDbo();
+        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+        $cutoff = $this->getState('cutoff');
+
+        $query = $db->getQuery(true)
             ->select('u.name teacher, c.*')
             ->from('#__oscampus_courses c')
             ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
@@ -25,10 +31,11 @@ class OscampusModelNewcourses extends OscampusModelPathway
                 array(
                     'c.published = 1',
                     'c.access IN (' . join(',', $viewLevels) . ')',
-                    'c.released > ' . $this->getDbo()->quote('2016-01-01'),
+                    'c.released >= ' . $db->quote($cutoff->toSql())
                 )
             )
             ->order('c.released desc');
+
         return $query;
     }
 
@@ -44,5 +51,10 @@ class OscampusModelNewcourses extends OscampusModelPathway
 
     protected function populateState($ordering = null, $direction = null)
     {
+        $params = OscampusFactory::getApplication()->getParams();
+
+        $releasePeriod = $params->get('releasePeriod', '1 month');
+        $cutoff = OscampusFactory::getDate('now - ' . $releasePeriod);
+        $this->setState('cutoff', $cutoff);
     }
 }

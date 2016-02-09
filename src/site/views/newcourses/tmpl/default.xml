@@ -5,4 +5,17 @@
             <![CDATA[COM_OSCAMPUS_VIEW_NEWCOURSES_DEFAULT_DESC]]>
         </message>
     </layout>
+
+    <fields name="params">
+        <fieldset
+            name="params"
+            label="COM_OSCAMPUS_VIEW_NEWCOURSES_PARAMS_LABEL">
+            <field
+                name="releasePeriod"
+                label="COM_OSCAMPUS_VIEW_NEWCOURSES_PARAMS_RELEASE_PERIOD_LABEL"
+                description="COM_OSCAMPUS_VIEW_NEWCOURSES_PARAMS_RELEASE_PERIOD_DESC"
+                type="text"/>
+        </fieldset>
+    </fields>
+
 </metadata>
