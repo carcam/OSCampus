@@ -16,6 +16,10 @@ class OscampusTableLessons extends OscampusTable
     public function __construct(&$db)
     {
         parent::__construct('#__oscampus_lessons', 'id', $db);
+
+        // Override Joomla global access defaulting
+        $defaultAccess = OscampusComponentHelper::getParams()->get('access.lesson');
+        $this->access = $defaultAccess;
     }
 
     public function check()
