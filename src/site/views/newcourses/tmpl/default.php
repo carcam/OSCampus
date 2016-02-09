@@ -30,18 +30,24 @@ defined('_JEXEC') or die();
                 <div class="block8 osc-course-description">
                     <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
                     <?php echo $item->introtext ?: $item->description; ?>
-                    <div class="osc-course-start">
-                        <?php
-                        echo JHtml::_(
-                            'osc.link.lesson',
-                            $item->pathways_id,
-                            $item->id,
-                            0,
-                            JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
-                            'class="osc-btn"'
-                        );
+                    <?php
+                    if (!OscampusFactory::getUser()->guest) :
                         ?>
-                    </div>
+                        <div class="osc-course-start">
+                            <?php
+                            echo JHtml::_(
+                                'osc.link.lesson',
+                                $item->pathways_id,
+                                $item->id,
+                                0,
+                                JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                                'class="osc-btn"'
+                            );
+                            ?>
+                        </div>
+                        <?php
+                    endif;
+                    ?>
                 </div>
             </div>
             <!-- .osc-section -->
