@@ -24,6 +24,16 @@
             label="COM_OSCAMPUS_CONFIGURATION_CERTIFICATE_IMAGE_LABEL"
             description="COM_OSCAMPUS_CONFIGURATION_CERTIFICATE_IMAGE_DESC"/>
 
+        <fields name="access">
+            <field
+                name="lesson"
+                type="accesslevel"
+                label="COM_OSCAMPUS_CONFIGURATION_ACCESS_LESSON_LABEL"
+                description="COM_OSCAMPUS_CONFIGURATION_ACCESS_LESSON_DESC">
+                <option value="">COM_OSCAMPUS_OPTION_SELECT_ACCESS</option>
+            </field>
+        </fields>
+
     </fieldset>
 
     <fieldset

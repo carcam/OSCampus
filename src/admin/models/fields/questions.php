@@ -97,7 +97,7 @@ class OscampusFormFieldQuestions extends JFormField
             'id'    => $id,
             'type'  => 'text',
             'name'  => $name,
-            'value' => $value,
+            'value' => htmlspecialchars($value),
             'size'  => 75
         );
 

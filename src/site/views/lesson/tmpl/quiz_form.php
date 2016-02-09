@@ -59,7 +59,7 @@ $questions = $quiz->getQuestions();
             ?>
             <div class="<?php echo 'question' . ($qn++ % 2); ?> osc-quiz-question">
                 <input type="hidden" name="<?php echo $name; ?>" value=""/>
-                <h4><?php echo sprintf('Q%s: %s', $qn, $question->text); ?></h4>
+                <h4><?php echo sprintf('Q%s: %s', $qn, $this->escape($question->text)); ?></h4>
                 <ul class="osc-quiz-options">
                     <?php
                     $an = 0;
@@ -72,7 +72,7 @@ $questions = $quiz->getQuestions();
                                 type="radio"
                                 name="<?php echo $name; ?>"
                                 value="<?php echo $akey; ?>"/>
-                            <?php echo $answer->text; ?>
+                            <?php echo $this->escape($answer->text); ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

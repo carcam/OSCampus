@@ -21,7 +21,7 @@ class OscampusFormFieldPathways extends JFormFieldCheckboxes
                 $row->disable  = false;
                 return $row;
             },
-            JHtml::_('osc.options.pathways')
+            JHtml::_('osc.options.pathways', false)
         );
 
         return array_merge(parent::getOptions(), $options);

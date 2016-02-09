@@ -63,17 +63,21 @@
             name="access"
             type="accesslevel"
             label="COM_OSCAMPUS_ACCESS_LEVEL"
-            required="true"/>
+            required="true">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_ACCESS</option>
+        </field>
     </fieldset>
 
     <fieldset name="extras">
         <field
             name="header"
-            type="editor"/>
+            type="editor"
+            filter="safehtml"/>
 
         <field
             name="footer"
-            type="editor"/>
+            type="editor"
+            filter="safehtml"/>
     </fieldset>
 
 </form>

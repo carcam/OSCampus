@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusModelPathway extends OscampusModelList
+class OscampusModelPathway extends OscampusModelSiteList
 {
     protected function getListQuery()
     {
@@ -25,9 +25,9 @@ class OscampusModelPathway extends OscampusModelList
                 array(
                     'p.id = ' . $this->getState('pathway.id'),
                     'p.published = 1',
-                    'p.users_id IS NULL',
-                    'c.published',
-                    'c.access IN (' . join(',', $viewLevels) . ')'
+                    'c.published = 1',
+                    'c.access IN (' . join(',', $viewLevels) . ')',
+                    'c.released <= NOW()'
                 )
             )
             ->order('cp.ordering asc, c.title asc');

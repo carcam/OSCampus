@@ -43,11 +43,13 @@ class OscampusViewCourse extends OscampusViewSite
         /** @var OscampusModelCourse $model */
         $model = $this->getModel();
 
-        $this->course  = $model->getCourse();
-        $this->teacher = $model->getTeacher();
-        $this->lessons = $model->getLessons();
-        $this->files   = $model->getFiles();
-        $this->viewed  = $model->getViewedLessons();
+        $this->course = $model->getCourse();
+        if ($this->course) {
+            $this->teacher = $model->getTeacher();
+            $this->lessons = $model->getLessons();
+            $this->files   = $model->getFiles();
+            $this->viewed  = $model->getViewedLessons();
+        }
 
         $pathway = JFactory::getApplication()->getPathway();
 
