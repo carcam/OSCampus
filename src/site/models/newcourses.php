@@ -18,9 +18,9 @@ class OscampusModelNewcourses extends OscampusModelPathway
          * @var JDate $cutoff
          */
 
-        $db = $this->getDbo();
+        $db         = $this->getDbo();
         $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
-        $cutoff = $this->getState('cutoff');
+        $cutoff     = $this->getState('cutoff');
 
         $query = $db->getQuery(true)
             ->select('u.name teacher, c.*')
@@ -54,7 +54,7 @@ class OscampusModelNewcourses extends OscampusModelPathway
         $params = OscampusFactory::getApplication()->getParams();
 
         $releasePeriod = $params->get('releasePeriod', '1 month');
-        $cutoff = OscampusFactory::getDate('now - ' . $releasePeriod);
+        $cutoff        = OscampusFactory::getDate('now - ' . $releasePeriod);
         $this->setState('cutoff', $cutoff);
     }
 }
