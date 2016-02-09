@@ -14,7 +14,8 @@
                 name="releasePeriod"
                 label="COM_OSCAMPUS_VIEW_NEWCOURSES_PARAMS_RELEASE_PERIOD_LABEL"
                 description="COM_OSCAMPUS_VIEW_NEWCOURSES_PARAMS_RELEASE_PERIOD_DESC"
-                type="text"/>
+                type="text"
+                default="1 month"/>
         </fieldset>
     </fields>
 
