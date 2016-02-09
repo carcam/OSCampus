@@ -19,22 +19,27 @@ class OscampusModelNewcourses extends OscampusModelPathway
          */
 
         $db         = $this->getDbo();
-        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+        $viewLevels = join(',', JFactory::getUser()->getAuthorisedViewLevels());
         $cutoff     = $this->getState('cutoff');
 
         $query = $db->getQuery(true)
-            ->select('u.name teacher, c.*')
-            ->from('#__oscampus_courses c')
-            ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
-            ->leftJoin('#__users u ON u.id = i.users_id')
+            ->select('user.name AS teacher, course.*, cp.pathways_id')
+            ->from('#__oscampus_courses AS course')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+            ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
+            ->leftJoin('#__users user ON user.id = teacher.users_id')
             ->where(
                 array(
-                    'c.published = 1',
-                    'c.access IN (' . join(',', $viewLevels) . ')',
-                    'c.released >= ' . $db->quote($cutoff->toSql())
+                    'course.published = 1',
+                    'course.access IN (' . $viewLevels . ')',
+                    'course.released >= ' . $db->quote($cutoff->toSql()),
+                    'pathway.access IN (' . $viewLevels . ')',
+                    'pathway.published = 1'
                 )
             )
-            ->order('c.released desc');
+            ->group('course.id')
+            ->order('course.released desc');
 
         return $query;
     }

@@ -20,7 +20,7 @@ defined('_JEXEC') or die();
     <?php
     if ($this->items) :
         foreach ($this->items as $item) :
-            $link = JRoute::_(JHtml::_('osc.link.course', null, $item->id, $item->title, null, true));
+            $link = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
             $image = JHtml::_('image', $item->image, $item->title);
             ?>
             <div class="osc-section osc-course-item">
