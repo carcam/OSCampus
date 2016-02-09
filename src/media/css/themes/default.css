@@ -637,6 +637,14 @@
     color: #fff;
 }
 
+#oscampus.osc-container .oscampus-lesson-footer {
+    margin-top: 20px;
+}
+
+#oscampus.osc-container .oscampus-lesson-header {
+    margin-bottom: 20px;
+}
+
 /* Signup
  ========================================================================== */
 #oscampus .osc-signup-box {
