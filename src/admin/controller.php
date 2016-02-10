@@ -13,62 +13,91 @@ class OscampusController extends OscampusControllerBase
     protected $default_view = 'courses';
 
     /**
-     * Temporary task to update old guru URLs to new OSCampus URLs
+     * Task for seeking and changing text in any text blob in the database
      */
-    public function dbfix()
+    protected function textUpdate()
     {
+        // The text we're looking for and how to do the replacement
+        $regex   = '{info.*{/info}';
+        $replace = array(
+            'regex'   => '#{info.*{/info}#ms',
+            'replace' => '{oscampus videos}'
+        );
+
         $db = OscampusFactory::getDbo();
 
         $start = microtime(true);
 
-        $tables = $db->setQuery('show tables')->loadColumn();
+        $html   = array('<ul>');
+        $tables = $db->setQuery('SHOW TABLES')->loadColumn();
         foreach ($tables as $table) {
-            $idField = $db->setQuery("show columns from {$table} where `Key` = 'PRI' AND `Extra` = 'auto_increment'")
-                ->loadColumn();
+            // Look for tables that have a single auto increment primary key
+            $query   = "SHOW COLUMNS FROM {$table} WHERE `Key` = 'PRI' AND `Extra` = 'auto_increment'";
+            $idField = $db->setQuery($query)->loadColumn();
             if ($error = $db->getErrorMsg()) {
                 echo 'ERROR: ' . $error;
                 return;
             }
 
             if (count($idField) == 1) {
-                $fields = $db->setQuery("show columns from {$table} where type = 'text'")->loadColumn();
+                $query  = "SHOW COLUMNS FROM {$table} WHERE type = 'text'";
+                if ($fields = $db->setQuery($query)->loadColumn()) {
+                    $idField = $idField[0];
+                    array_unshift($fields, $idField);
 
-                $idField = $idField[0];
-                array_unshift($fields, $idField);
+                    $where = array();
+                    foreach ($fields as $field) {
+                        $where[] = $db->quoteName($field) . ' RLIKE ' . $db->quote($regex);
+                    }
+                    $query = $db->getQuery(true)
+                        ->select($fields)
+                        ->from($table)
+                        ->where($where, 'OR');
 
+                    if ($rows = $db->setQuery($query)->loadAssocList()) {
+                        $html[] = '<li>' . $table . ' (' . number_format(count($rows)) . ')<ul>';
+                        foreach ($rows as $row) {
+                            // Report
+                            $fields = array_keys($row);
+                            array_shift($fields);
+                            $html[] = sprintf(
+                                '<li>%s: %s (%s)</li>',
+                                $idField,
+                                $row[$idField],
+                                join(', ', $fields)
+                            );
 
-                $where = array();
-                foreach ($fields as $field) {
-                    $where[] = $db->quoteName($field) . ' RLIKE ' . $db->quote('/?courses/(categories|class|session)/');
-                }
-                $query = $db->getQuery(true)
-                    ->select($fields)
-                    ->from($table)
-                    ->where($where, 'OR');
+                            if (true) {
+                                // Apply changes
+                                foreach ($row as $fieldName => $value) {
+                                    // apply fix
+                                    if ($fieldName != $idField && $value) {
+                                        $row[$fieldName] = preg_replace($replace['regex'], $replace['replace'], $value);
+                                    }
+                                }
+                                $update = (object)$row;
 
-                if ($rows = $db->setQuery($query)->loadAssocList()) {
-                    echo '<br/>FIXING: ' . $table . ' - ' . count($rows) . ' Rows';
-                    foreach ($rows as $row) {
-                        foreach ($row as $fieldName => $value) {
-                            if ($fieldName != $idField && $value) {
-                                $row[$fieldName] = preg_replace('#/?(courses/)(categories|class|session)/#ms', '/classes/',
-                                    $value);
-                            }
-                            $update = (object)$row;
-
-                            $db->updateObject($table, $update, $idField);
-                            if ($error = $db->getErrorMsg()) {
-                                echo 'ERROR: ' . $error;
-                                return;
+                                $db->updateObject($table, $update, $idField);
+                                if ($error = $db->getErrorMsg()) {
+                                    echo 'ERROR: ' . $error;
+                                    return;
+                                }
                             }
                         }
+                        $html[] = '</ul></li>';
                     }
-
                 }
             }
         }
 
+        $html[] = '</ul>';
+
+        echo join("\n", $html);
         echo '<p>Total Runtime: ' . number_format((microtime(true) - $start), 1) . '</p>';
+
+        error_reporting(0);
+        ini_set('display_errors', 0);
+
     }
 
     /**
@@ -76,7 +105,7 @@ class OscampusController extends OscampusControllerBase
      * in SEF URLs (and we don't want to do that for SEO!) lessons require unique aliases within
      * a course.
      */
-    public function aliasdups()
+    protected function aliasdups()
     {
         $db = OscampusFactory::getDbo();
 
@@ -99,7 +128,7 @@ class OscampusController extends OscampusControllerBase
 
             echo '<ol>';
             foreach ($aliasDuplicates as $duplicate) {
-                echo '<li>' . $duplicate->course_title . '/'. $duplicate->alias . ' (' . $duplicate->count . ')</li>';
+                echo '<li>' . $duplicate->course_title . '/' . $duplicate->alias . ' (' . $duplicate->count . ')</li>';
             }
             echo '</ol>';
         } else {
