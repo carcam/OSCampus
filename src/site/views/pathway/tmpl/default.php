@@ -34,7 +34,7 @@ defined('_JEXEC') or die();
                         $item->pathways_id,
                         $item->id,
                         0,
-                        JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                        '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
                         'class="osc-btn"'
                     );
                     ?>
