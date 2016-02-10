@@ -142,7 +142,6 @@ class com_oscampusInstallerScript extends AbstractScript
             '#__oscampus_pathways',
             '#__oscampus_teachers',
             '#__oscampus_courses',
-            '#__oscampus_modules',
             '#__oscampus_lessons'
         );
 
