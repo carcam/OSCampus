@@ -129,7 +129,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
 
         $hide = $app->input->getBool('hidemainmenu', false);
         if (!$hide) {
-            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
+            //$this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses', $this->_name == 'courses');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_LESSONS', 'lessons', $this->_name == 'lessons');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_PATHWAYS', 'pathways', $this->_name == 'pathways');
