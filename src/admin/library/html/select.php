@@ -34,7 +34,7 @@ abstract class OscSelect
     }
 
     /**
-     * Create a publishing dropdwon selector
+     * Create a publishing dropdown selector
      *
      * @param string $name
      * @param mixed  $selected
