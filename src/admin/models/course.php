@@ -35,6 +35,9 @@ class OscampusModelCourse extends OscampusModelAdmin
         } else {
             $item->pathways = $this->getPathways($item->id);
             $item->tags     = $this->getTags($item->id);
+
+            $metadata = new JRegistry($item->metadata);
+            $item->metadata = $metadata->toArray();
         }
 
         return $item;
