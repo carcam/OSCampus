@@ -123,7 +123,9 @@ class Quiz extends AbstractType
 
         } else {
             $length = (int)$this->quizLength ?: (int)count($this->questions);
-            $keys   = array_rand($this->questions, $length);
+            $length = min(count($this->questions), $length);
+
+            $keys = array_rand($this->questions, $length);
             shuffle($keys);
 
             $this->setUserState($cookieStore, base64_encode(json_encode($keys)));
