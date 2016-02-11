@@ -20,7 +20,11 @@ class OscampusModelPathway extends OscampusModelAdmin
             $item->published = 1;
             $item->image     = \Oscampus\Course::DEFAULT_IMAGE;
 
+        } else {
+            $metadata = new JRegistry($item->metadata);
+            $item->metadata = $metadata->toArray();
         }
+
         return $item;
     }
 }

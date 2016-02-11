@@ -8,3 +8,8 @@
 {% extends 'admin_form.html.twig' %}
 
 {% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_PATHWAY_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
+
+{% block form_body %}
+    {{ html('osc.render.adminfieldset', form, 'main', main_legend, 9)|raw }}
+    {{ html('osc.render.adminfieldset', form, 'metadata', true, 3)|raw }}
+{% endblock %}
