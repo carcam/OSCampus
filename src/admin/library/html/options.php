@@ -215,8 +215,9 @@ abstract class OscOptions
             $db = OscampusFactory::getDbo();
             $query = $db->getQuery(true)
                 ->select('user.id, user.name, user.username')
-                ->from('#__users user')
-                ->innerJoin('#__oscampus_pathways pathway ON pathway.users_id = user.id')
+                ->from('#__users AS user')
+                ->innerJoin('#__oscampus_pathways AS pathway ON pathway.users_id = user.id')
+                ->group('user.id')
                 ->order('user.name ASC');
 
             $users = $db->setQuery($query)->loadObjectList();
