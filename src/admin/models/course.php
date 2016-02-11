@@ -207,6 +207,9 @@ class OscampusModelCourse extends OscampusModelAdmin
                             (int)$ordering[$pid]->lastOrder + 1
                         )
                     );
+                } else {
+                    $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
+                    return false;
                 }
             }
 
