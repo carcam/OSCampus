@@ -171,13 +171,13 @@ class OscampusModelCourse extends OscampusModelAdmin
         $newPathways = array_flip($pathways);
 
         // Remove from unselected pathways
-        if ($remove = array_diff_key($oldPathways, $newPathways)) {
+        if ($removePathways = array_diff_key($oldPathways, $newPathways)) {
             $query = $db->getQuery(true)
                 ->delete('#__oscampus_courses_pathways')
                 ->where(
                     array(
                         'courses_id = ' . (int)$courseId,
-                        'pathways_id IN (' . join(',', array_keys($remove)) . ')'
+                        'pathways_id IN (' . join(',', array_keys($removePathways)) . ')'
                     )
                 );
             $db->setQuery($query)->execute();
@@ -188,22 +188,32 @@ class OscampusModelCourse extends OscampusModelAdmin
         }
 
         // Add to new pathways at bottom of list
-        if ($add = array_diff_key($newPathways, $oldPathways)) {
+        if ($addPathways = array_diff_key($newPathways, $oldPathways)) {
             $query = $db->getQuery(true)
                 ->select('pathways_id, max(ordering) AS lastOrder')
                 ->from('#__oscampus_courses_pathways')
-                ->where('pathways_id IN (' . join(',', array_keys($add)) . ')')
+                ->where('pathways_id IN (' . join(',', array_keys($addPathways)) . ')')
                 ->group('pathways_id');
 
+            // Find last ordering # and verify pathway exists
             $ordering = $db->setQuery($query)->loadObjectList('pathways_id');
-            foreach ($add as $pid => $null) {
-                $add[$pid] = join(',', array((int)$courseId, (int)$pid, (int)$ordering[$pid]->lastOrder + 1));
+
+            $insertValues = array();
+            foreach ($addPathways as $pid => $null) {
+                if (isset($ordering[$pid])) {
+                    $insertValues[] = join(',', array(
+                            (int)$courseId,
+                            (int)$pid,
+                            (int)$ordering[$pid]->lastOrder + 1
+                        )
+                    );
+                }
             }
 
             $query = $db->getQuery(true)
                 ->insert('#__oscampus_courses_pathways')
                 ->columns(array('courses_id', 'pathways_id', 'ordering'))
-                ->values($add);
+                ->values($insertValues);
 
             $db->setQuery($query)->execute();
             if ($error = $db->getErrorMsg()) {
