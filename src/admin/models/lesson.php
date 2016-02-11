@@ -19,11 +19,11 @@ class OscampusModelLesson extends OscampusModelAdmin
                 ->select('module.courses_id, module.title')
                 ->from('#__oscampus_modules AS module')
                 ->where('module.id = ' . (int)$item->modules_id);
-            $extra = $db->setQuery($query)->loadObject();
-            echo 'ERROR: ' . $db->getErrorMsg();
 
-            $item->courses_id   = $extra->courses_id;
-            $item->module_title = $extra->title;
+            $extra = $db->setQuery($query)->loadObject();
+
+            $item->courses_id   = empty($extra) ? null : $extra->courses_id;
+            $item->module_title = empty($extra) ? null : $extra->title;
         }
 
         return $item;

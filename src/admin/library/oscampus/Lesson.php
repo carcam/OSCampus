@@ -243,10 +243,8 @@ class Lesson extends AbstractBase
             $xml = null;
         }
 
-        if ($xml) {
-            if ($subForm = array_shift($xml->xpath('form'))) {
-                $form->load($subForm[0]);
-            };
+        if ($xml && $subForm = $xml->xpath('form')) {
+            $form->load($subForm[0]);
         }
     }
 
