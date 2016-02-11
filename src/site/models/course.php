@@ -69,6 +69,9 @@ class OscampusModelCourse extends OscampusModelSite
         $db  = JFactory::getDbo();
         $cid = (int)$this->getState('course.id');
 
+        $user   = OscampusFactory::getUser();
+        $levels = join(',', $user->getAuthorisedViewLevels());
+
         $query = $db->getQuery(true)
             ->select(
                 array(
@@ -95,10 +98,15 @@ class OscampusModelCourse extends OscampusModelSite
                 ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
                 ->where(
                     array(
+                        'course.published = 1',
+                        'course.released <= CURDATE()',
+                        'pathway.published = 1',
+                        'pathway.access IN (' . $levels . ')',
                         'course.id != ' . $cid,
-                        'teacher.id = ' . $teacher->id
+                        'teacher.id = ' . $teacher->id,
                     )
                 )
+                ->group('course.id')
                 ->order('pathway.ordering ASC, cp.ordering ASC, course.title ASC');
 
             $teacher->courses = $db->setQuery($queryCourses)->loadObjectList();
