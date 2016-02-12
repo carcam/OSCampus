@@ -24,6 +24,9 @@ class OscampusModelLesson extends OscampusModelAdmin
 
             $item->courses_id   = empty($extra) ? null : $extra->courses_id;
             $item->module_title = empty($extra) ? null : $extra->title;
+
+            $metadata = new JRegistry($item->metadata);
+            $item->metadata = $metadata->toArray();
         }
 
         return $item;
