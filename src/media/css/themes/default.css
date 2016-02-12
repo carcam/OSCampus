@@ -878,6 +878,20 @@
 }
 
 @media (max-width: 768px) {
+    /* general */
+    #oscampus.osc-container h3 {
+        font-size: 18px;
+        line-height: 23px;
+    }
+    /* signup */
+    #oscampus .osc-overlay-inner {
+        padding: 20px;
+        width: 75%;
+    }
+    #oscampus #signup-overlay {
+        left: 20px;
+        top: 20px;
+    }
     /* form elements */
     #oscampus.osc-container input[type="text"],
     #oscampus.osc-container input[type="email"],
