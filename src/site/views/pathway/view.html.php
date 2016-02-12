@@ -31,6 +31,17 @@ class OscampusViewPathway extends OscampusViewSite
         $pathway = JFactory::getApplication()->getPathway();
         $pathway->addItem($this->pathway->title);
 
+        // Set title and meta-description
+        $doc = OscampusFactory::getDocument();
+        $metadata = $this->pathway->metadata;
+
+        $title = $metadata->get('title') ?: $this->pathway->title;
+        $doc->setTitle($title);
+
+        if ($description = $metadata->get('description')) {
+            $doc->setMetaData('description', $description);
+        }
+
         parent::display($tpl);
     }
 }

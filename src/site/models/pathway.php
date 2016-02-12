@@ -96,6 +96,9 @@ class OscampusModelPathway extends OscampusModelSiteList
             if ($pid = (int)$this->getState('pathway.id')) {
                 $db      = $this->getDbo();
                 $pathway = $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pid)->loadObject();
+
+                $pathway->metadata = new JRegistry($pathway->metadata);
+
                 $this->setState('pathway', $pathway);
             }
         }
