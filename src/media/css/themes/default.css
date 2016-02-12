@@ -878,11 +878,6 @@
 }
 
 @media (max-width: 768px) {
-    /* general */
-    #oscampus.osc-container h3 {
-        font-size: 18px;
-        line-height: 23px;
-    }
     /* signup */
     #oscampus .osc-overlay-inner {
         padding: 20px;
@@ -968,6 +963,23 @@
 }
 
 @media (max-width: 480px) {
+    /* general */
+    #oscampus.osc-container h1 {
+        font-size: 30px;
+        line-height: 40px;
+    }
+    #oscampus.osc-container h2 {
+        font-size: 25px;
+        line-height: 30px;
+    }
+    #oscampus.osc-container h3 {
+        font-size: 20px;
+        line-height: 24px
+    }
+    #oscampus.osc-container h4 {
+        font-size: 13px;
+        line-height: 19px;
+    }
     /* form elements */
     #oscampus.osc-container input[type="text"],
     #oscampus.osc-container input[type="email"],
