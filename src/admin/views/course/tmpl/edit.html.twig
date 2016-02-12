@@ -38,11 +38,11 @@
 
     {{ form_macro.render_field(form, 'lessons', true) }}
     <button type="button" class="reset-lesson-order">{{ 'COM_OSCAMPUS_COURSE_LESSONS_ORDER_RESET'|lang }}</button>
-    {{ form_macro.tabs_panel_end() }}
+    {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'metadata') }}
     {{ html('osc.render.adminfieldset', form, 'metadata', true)|raw }}
-    {{ form_macro.tabs_panel_end() }}
-
     {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_endset() }}
 {% endblock %}
