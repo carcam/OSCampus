@@ -54,7 +54,7 @@ class OscampusViewLesson extends OscampusViewSite
 
         $this->setMetadata(
             $this->lesson->metadata,
-            $this->lesson->title
+            $this->lesson->title . ' - ' . $this->lesson->courseTitle
         );
 
         parent::display($tmpl);
