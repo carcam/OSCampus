@@ -56,13 +56,11 @@ class OscampusViewCourse extends OscampusViewSite
         $link = JHtml::_('osc.link.pathway', $this->course->pathways_id, null, null, true);
         $pathway->addItem($this->course->pathway_title, $link);
 
-        $pathway->addItem($this->course->title);
-
-        $doc = OscampusFactory::getDocument();
-        $title = $this->course->metadata->get('title') ?: $this->course->title;
-
-        $doc->setTitle($title);
-        $doc->setMetaData('descripton', $this->course->metadata->get('description'));
+        $this->setMetadata(
+            $this->course->metadata,
+            $this->course->title,
+            $this->course->introtext ?: $this->course->description
+        );
 
         parent::display($tpl);
     }
