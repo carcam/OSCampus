@@ -52,6 +52,18 @@ class OscampusViewLesson extends OscampusViewSite
 
         $this->setLayout($this->lesson->type);
 
+        // Set title and meta description
+        $doc      = OscampusFactory::getDocument();
+        $metadata = $this->lesson->metadata;
+
+        $title = $metadata->get('title') ?: $this->lesson->courseTitle . ' - ' . $this->lesson->title;
+        $doc->setTitle($title);
+
+        // @TODO: default to course data?
+        if ($description = $metadata->get('description')) {
+            $doc->setMetaData('description', $description);
+        }
+
         parent::display($tmpl);
 
         if (!$this->lesson->isAuthorised()) {
