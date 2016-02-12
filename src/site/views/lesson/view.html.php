@@ -52,6 +52,11 @@ class OscampusViewLesson extends OscampusViewSite
 
         $this->setLayout($this->lesson->type);
 
+        $this->setMetadata(
+            $this->lesson->metadata,
+            $this->lesson->title
+        );
+
         parent::display($tmpl);
 
         if (!$this->lesson->isAuthorised()) {

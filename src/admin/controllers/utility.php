@@ -38,7 +38,7 @@ class OscampusControllerUtility extends OscampusControllerBase
             }
 
             if (count($idField) == 1) {
-                $query  = "SHOW COLUMNS FROM {$table} WHERE type = 'text'";
+                $query = "SHOW COLUMNS FROM {$table} WHERE type = 'text'";
                 if ($fields = $db->setQuery($query)->loadColumn()) {
                     $idField = $idField[0];
                     array_unshift($fields, $idField);

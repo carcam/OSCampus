@@ -33,5 +33,9 @@
     {{ form_macro.render_field(form, 'footer', false) }}
     {{ form_macro.tabs_end() }}
 
+    {{ form_macro.tabs_add(form, 'metadata') }}
+    {{ html('osc.render.adminfieldset', form, 'metadata', true)|raw }}
     {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_endset() }}
 {% endblock %}

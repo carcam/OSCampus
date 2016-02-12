@@ -56,7 +56,11 @@ class OscampusViewCourse extends OscampusViewSite
         $link = JHtml::_('osc.link.pathway', $this->course->pathways_id, null, null, true);
         $pathway->addItem($this->course->pathway_title, $link);
 
-        $pathway->addItem($this->course->title);
+        $this->setMetadata(
+            $this->course->metadata,
+            $this->course->title,
+            $this->course->introtext ?: $this->course->description
+        );
 
         parent::display($tpl);
     }

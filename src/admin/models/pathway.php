@@ -21,6 +21,7 @@ class OscampusModelPathway extends OscampusModelAdmin
             $item->image     = \Oscampus\Course::DEFAULT_IMAGE;
 
         }
+
         return $item;
     }
 }

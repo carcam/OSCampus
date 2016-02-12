@@ -15,22 +15,32 @@ class OscampusModelPathway extends OscampusModelSiteList
         $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
 
         $query = parent::getListQuery()
-            ->select('cp.*, p.title pathway, u.name teacher, c.*')
-            ->from('#__oscampus_pathways p')
-            ->innerJoin('#__oscampus_courses_pathways cp ON cp.pathways_id = p.id')
-            ->innerJoin('#__oscampus_courses c ON c.id = cp.courses_id')
-            ->leftJoin('#__oscampus_teachers i ON i.id = c.teachers_id')
-            ->leftJoin('#__users u ON u.id = i.users_id')
-            ->where(
+            ->select(
                 array(
-                    'p.id = ' . $this->getState('pathway.id'),
-                    'p.published = 1',
-                    'c.published = 1',
-                    'c.access IN (' . join(',', $viewLevels) . ')',
-                    'c.released <= NOW()'
+                    'cp.*',
+                    'pathway.title AS pathway',
+                    'user.name AS teacher',
+                    'course.*'
                 )
             )
-            ->order('cp.ordering asc, c.title asc');
+            ->from('#__oscampus_pathways AS pathway')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
+            ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
+            ->leftJoin('#__users AS user ON user.id = teacher.users_id')
+            ->where(
+                array(
+                    'pathway.id = ' . $this->getState('pathway.id'),
+                    'pathway.published = 1',
+                    'course.published = 1',
+                    'course.access IN (' . join(',', $viewLevels) . ')',
+                    'course.released <= NOW()'
+                )
+            );
+
+        $order = $this->getState('list.order', 'cp.ordering');
+        $direction = $this->getState('list.direction', 'ASC');
+            $query->order($order . ' ' . $direction . ', course.title ' . $direction);
 
         return $query;
     }
@@ -55,11 +65,11 @@ class OscampusModelPathway extends OscampusModelSiteList
         // @TODO: This is a pretty brain-dead way to handle tags
         $db       = $this->getDbo();
         $tagQuery = $db->getQuery(true)
-            ->select('ct.*, t.title')
-            ->from('#__oscampus_courses_tags ct')
-            ->innerJoin('#__oscampus_tags t ON t.id = ct.tags_id')
-            ->innerJoin('#__oscampus_courses c ON c.id = ct.courses_id')
-            ->where('c.id IN (' . join(',', array_keys($courses)) . ')');
+            ->select('ct.*, tag.title')
+            ->from('#__oscampus_courses_tags AS ct')
+            ->innerJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
+            ->where('course.id IN (' . join(',', array_keys($courses)) . ')');
         $tags     = $db->setQuery($tagQuery)->loadObjectList();
         foreach ($tags as $tag) {
             if (isset($courses[$tag->courses_id])) {
@@ -86,6 +96,9 @@ class OscampusModelPathway extends OscampusModelSiteList
             if ($pid = (int)$this->getState('pathway.id')) {
                 $db      = $this->getDbo();
                 $pathway = $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pid)->loadObject();
+
+                $pathway->metadata = new JRegistry($pathway->metadata);
+
                 $this->setState('pathway', $pathway);
             }
         }

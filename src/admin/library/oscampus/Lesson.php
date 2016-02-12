@@ -64,6 +64,11 @@ class Lesson extends AbstractBase
     public $pathwayTitle = null;
 
     /**
+     * @var JRegistry
+     */
+    public $metadata = null;
+
+    /**
      * @var int
      */
     protected $index = null;
@@ -306,6 +311,7 @@ class Lesson extends AbstractBase
         $this->courseTitle  = $currentValues->course_title;
         $this->moduleTitle  = $currentValues->module_title;
         $this->pathwayTitle = $currentValues->pathway_title;
+        $this->metadata     = new JRegistry($currentValues->metadata);
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);
