@@ -58,6 +58,12 @@ class OscampusViewCourse extends OscampusViewSite
 
         $pathway->addItem($this->course->title);
 
+        $doc = OscampusFactory::getDocument();
+        $title = $this->course->metadata->get('title') ?: $this->course->title;
+
+        $doc->setTitle($title);
+        $doc->setMetaData('descripton', $this->course->metadata->get('description'));
+
         parent::display($tpl);
     }
 }

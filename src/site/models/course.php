@@ -56,6 +56,8 @@ class OscampusModelCourse extends OscampusModelSite
             throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
         }
 
+        $course->metadata = new JRegistry($course->metadata);
+
         return $course;
     }
 
