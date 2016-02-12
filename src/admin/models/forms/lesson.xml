@@ -70,12 +70,7 @@
 
     <fieldset name="extras">
         <field
-            name="header"
-            type="editor"
-            filter="safehtml"/>
-
-        <field
-            name="footer"
+            name="description"
             type="editor"
             filter="safehtml"/>
     </fieldset>

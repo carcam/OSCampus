@@ -31,9 +31,8 @@ defined('_JEXEC') or die();
  * @property-read string       $type
  * @property-read string       $title
  * @property-read string       $alias
- * @property-read string       $header
  * @property-read mixed        $content
- * @property-read string       $footer
+ * @property-read string       $description
  * @property-read int          $access
  * @property-read bool         $published
  * @property-read bool         $authorised

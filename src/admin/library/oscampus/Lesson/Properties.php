@@ -51,11 +51,6 @@ class Properties
     public $alias = null;
 
     /**
-     * @var string
-     */
-    public $header = null;
-
-    /**
      * @var mixed
      */
     public $content = null;
@@ -63,7 +58,7 @@ class Properties
     /**
      * @var string
      */
-    public $footer = null;
+    public $description = null;
 
     /**
      * @var int

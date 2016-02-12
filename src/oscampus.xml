@@ -7,7 +7,7 @@
     <license>GPL v3</license>
     <authorEmail>info@ostraining.com</authorEmail>
     <authorUrl>https://www.ostraining.com</authorUrl>
-    <version>1.0.2b1</version>
+    <version>1.0.2b2</version>
     <description>COM_OSCAMPUS_COMPONENT_DESCRIPTION</description>
 
     <scriptfile>script.install.php</scriptfile>
@@ -75,7 +75,9 @@
 
         <obsolete>
             <folder>/components/com_oscampus/views/dashboard</folder>
-            <filename>/components/com_oscampus/model/dashboard.php</filename>
+            <file>/components/com_oscampus/model/dashboard.php</file>
+            <file>/components/com_oscampus/views/lesson/tmpl/default_footer.php</file>
+            <file>/components/com_oscampus/views/lesson/tmpl/default_header.php</file>
         </obsolete>
     </alledia>
 </extension>

@@ -21,16 +21,12 @@
     {{ form_macro.render_fieldset(form, 'main') }}
     {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_add(form, 'header', 'COM_OSCAMPUS_LESSON_TAB_HEADER_LABEL'|lang) }}
-    {{ form_macro.render_field(form, 'header', false) }}
-    {{ form_macro.tabs_end() }}
-
     {{ form_macro.tabs_add(form, 'content', 'COM_OSCAMPUS_LESSON_TAB_CONTENT_LABEL'|lang) }}
     {{ form_macro.render_fieldset(form, 'content') }}
     {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_add(form, 'footer', 'COM_OSCAMPUS_LESSON_TAB_FOOTER_LABEL'|lang) }}
-    {{ form_macro.render_field(form, 'footer', false) }}
+    {{ form_macro.tabs_add(form, 'description', 'COM_OSCAMPUS_LESSON_TAB_DESCRIPTION_LABEL'|lang) }}
+    {{ form_macro.render_field(form, 'description', false) }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'metadata') }}

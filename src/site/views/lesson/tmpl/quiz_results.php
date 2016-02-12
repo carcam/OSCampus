@@ -19,7 +19,6 @@ defined('_JEXEC') or die();
 $quiz     = $this->lesson->renderer;
 $attempt  = $quiz->getLastAttempt($this->activity);
 
-echo $this->loadDefaultTemplate('header');
 ?>
     <div class="osc-quiz-question">
         <?php
@@ -47,4 +46,4 @@ echo $this->loadDefaultTemplate('header');
     <!-- .osc-section -->
 
 <?php
-echo $this->loadDefaultTemplate('footer');
+echo $this->loadDefaultTemplate('description');
