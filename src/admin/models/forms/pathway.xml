@@ -73,6 +73,7 @@
                 name="description"
                 type="textarea"
                 label="COM_OSCAMPUS_METADATA_DESCRIPTION_LABEL"
+                description="COM_OSCAMPUS_PATHWAY_METADATA_DESCRIPTION_DESC"
                 rows="10"/>
         </fields>
     </fieldset>
