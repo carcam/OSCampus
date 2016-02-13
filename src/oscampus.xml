@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="search" method="upgrade">
+    <name>plg_search_oscampus</name>
+    <author>OSTraining</author>
+    <creationDate>February 12, 2016</creationDate>
+    <copyright>Copyright (C) 2016 OSTraining.com</copyright>
+    <license>GPL v3</license>
+    <authorEmail>info@ostraining.com</authorEmail>
+    <authorUrl>http://www.ostraining.com</authorUrl>
+    <version>1.0.0b1</version>
+    <description>plg_search_oscampus_description</description>
+
+    <files>
+        <folder>language</folder>
+        <filename plugin="oscampus">oscampus.php</filename>
+    </files>
+</extension>
