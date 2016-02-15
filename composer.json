@@ -1,0 +1,28 @@
+{
+    "name"             : "ostraining/oscampus-search",
+    "description"      : "OSCampus Search Plugin",
+    "minimum-stability": "stable",
+    "license"          : "GPL-2+",
+    "type"             : "joomla.plugin",
+    "extra"            : {
+        "element"        : "plg_search_oscampus",
+        "element-short"  : "oscampus",
+        "name"           : "OSCampus Search Plugin",
+        "folder"         : "search",
+        "client"         : "site",
+        "package-license": "free"
+    },
+    "authors"          : [
+        {
+            "name" : "OSTraining",
+            "email": "support@ostraining.com"
+        },
+        {
+            "name" : "Bill Tomczak",
+            "email": "bill@ostraining.com"
+        }
+    ],
+    "require"          : {
+        "php": ">= 5.3"
+    }
+}
