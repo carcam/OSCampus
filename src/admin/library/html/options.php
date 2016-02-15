@@ -107,7 +107,7 @@ abstract class OscOptions
                 ->order('pathway.title');
 
             if ($coreOnly) {
-                $query->where('IFNULL(pathway.users_id, 0) = 0');
+                $query->where('pathway.users_id = 0');
             }
 
             static::$cache[$key] = array_map(function ($row) use ($showAccess) {

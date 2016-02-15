@@ -22,7 +22,7 @@ class OscampusModelPathways extends OscampusModelList
                 array(
                     'published = 1',
                     'access IN (' . $levels . ')',
-                    'users_id IS NULL'
+                    'users_id = 0'
                 )
             )
             ->order('ordering asc');

@@ -53,7 +53,7 @@ class OscampusModelPathways extends OscampusModelList
 
         $owner = $this->getState('filter.owner');
         if ($owner != '') {
-            $query->where('IFNULL(pathway.users_id, 0) = ' . (int)$owner);
+            $query->where('pathway.users_id = ' . (int)$owner);
         }
 
         if ($access = (int)$this->getState('filter.access')) {
