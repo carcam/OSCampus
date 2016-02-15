@@ -24,8 +24,6 @@ abstract class OscampusTable extends JTable
     }
 
     /**
-     * Automatically set create/modified dates
-     *
      * @param boolean $updateNulls [optional]
      *
      * @return boolean
@@ -76,4 +74,25 @@ abstract class OscampusTable extends JTable
 
         return parent::store($updateNulls);
     }
+
+    /**
+     * Customised handling for special cases
+     *
+     * @param array $array
+     * @param string $ignore
+     *
+     * @return bool
+     */
+    public function bind($array, $ignore = '')
+    {
+        if (property_exists($this, 'metadata')) {
+            if (isset($array['metadata']) && !is_string($array['metadata'])) {
+                $registry = new JRegistry($array['metadata']);
+                $array['metadata'] = $registry->toString();
+            }
+        }
+
+        return parent::bind($array, $ignore);
+    }
+
 }

@@ -88,4 +88,37 @@ abstract class OscampusViewSite extends OscampusView
         $suffix = $this->getParams()->get('pageclass_sfx');
         return trim($base . ' ' . $suffix);
     }
+
+    /**
+     * Set document title and metadata
+     *
+     * @param array|object|JRegistry $metadata
+     * @param string                 $defaultTitle
+     * @param string                 $defaultDescription
+     */
+    protected function setMetadata($metadata, $defaultTitle = null, $defaultDescription = null)
+    {
+        if (!$metadata instanceof JRegistry) {
+            $metadata = new JRegistry($metadata);
+        }
+        $doc = OscampusFactory::getDocument();
+
+        $title = $metadata->get('title') ?: $defaultTitle;
+        if ($title) {
+            $doc->setTitle($title);
+        }
+
+        $description = $metadata->get('description');
+        if (!$description && $defaultDescription) {
+            $filter = JFilterInput::getInstance();
+
+            $description = $filter->clean($defaultDescription);
+            if (strlen($description) > 150) {
+                $description = preg_replace('/\s*\w*$/', '', substr($description, 0, 160)) . '...';
+            }
+        }
+        if ($description) {
+            $doc->setMetaData('description', $description);
+        }
+    }
 }

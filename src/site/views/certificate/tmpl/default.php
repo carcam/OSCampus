@@ -39,7 +39,7 @@ try {
 
     // Student Name
     $pdf->SetXY(0, 2.24 + $adjust);
-    $pdf->Write(1, $name, null, false, 'C');
+    $pdf->Write(1, $this->certificate->name, null, false, 'C');
 
     // Course Title
     $pdf->SetXY(0, 3.02 + $adjust);

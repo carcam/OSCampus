@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
 
     <?php
     foreach ($this->items as $item) :
-        $link  = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
+        $link = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
         $image = JHtml::_('image', $item->image, $item->title);
         ?>
         <div class="osc-section osc-course-item">
@@ -34,7 +34,7 @@ defined('_JEXEC') or die();
                         $item->pathways_id,
                         $item->id,
                         0,
-                        JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                        '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
                         'class="osc-btn"'
                     );
                     ?>
@@ -45,10 +45,16 @@ defined('_JEXEC') or die();
 
         <div class="osc-section osc-course-list">
             <div class="block12">
-            <span class="osc-label">
+                <?php
+                if ($item->tags) :
+                    ?>
+                    <span class="osc-label">
                 <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
             </span>
-            <span class="osc-label">
+                    <?php
+                endif;
+                ?>
+                <span class="osc-label">
                 <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
             </span>
             <span class="osc-label">
@@ -61,7 +67,7 @@ defined('_JEXEC') or die();
             </div>
         </div>
         <!-- .osc-section -->
-    <?php
+        <?php
     endforeach;
     ?>
 

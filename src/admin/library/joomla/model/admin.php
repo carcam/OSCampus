@@ -14,6 +14,17 @@ jimport('joomla.application.component.modeladmin');
 
 abstract class OscampusModelAdmin extends JModelAdmin
 {
+    public function getItem($pk = null)
+    {
+        if ($item = parent::getItem($pk)) {
+            if (!empty($item->metadata)) {
+                $metadata = new JRegistry($item->metadata);
+                $item->metadata = $metadata->toArray();
+            }
+        }
+        return $item;
+    }
+
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {
         if (empty($type)) {

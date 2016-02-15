@@ -13,16 +13,18 @@ class OscampusModelLesson extends OscampusModelAdmin
 {
     public function getItem($pk = null)
     {
-        $item  = parent::getItem($pk);
-        $db    = $this->getDbo();
-        $query = $db->getQuery(true)
-            ->select('module.courses_id, module.title')
-            ->from('#__oscampus_modules AS module')
-            ->where('module.id = ' . $item->modules_id);
-        $extra = $db->setQuery($query)->loadObject();
+        if ($item  = parent::getItem($pk)) {
+            $db    = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('module.courses_id, module.title')
+                ->from('#__oscampus_modules AS module')
+                ->where('module.id = ' . (int)$item->modules_id);
 
-        $item->courses_id   = $extra->courses_id;
-        $item->module_title = $extra->title;
+            $extra = $db->setQuery($query)->loadObject();
+
+            $item->courses_id   = empty($extra) ? null : $extra->courses_id;
+            $item->module_title = empty($extra) ? null : $extra->title;
+        }
 
         return $item;
     }

@@ -104,6 +104,39 @@ abstract class OscLink
     }
 
     /**
+     * Build link to a lesson using lesson ID
+     *
+     * @param int    $pid
+     * @param int    $cid
+     * @param int    $lid
+     * @param string $text
+     * @param mixed  $attribs
+     * @param bool   $uriOnly
+     *
+     * @return string
+     */
+    public static function lessonid($pid, $cid, $lid, $text, $attribs = null, $uriOnly = false)
+    {
+        if ((int)$cid) {
+            $query = OscampusRoute::getInstance()->getQuery('course');
+
+            $query['view'] = 'lesson';
+            $query['pid']  = $pid;
+            $query['cid']  = (int)$cid;
+            $query['lid']  = (int)$lid;
+
+            $link = 'index.php?' . http_build_query($query);
+            if ($uriOnly) {
+                return $link;
+            }
+
+            return JHtml::_('link', JRoute::_($link), $text, $attribs);
+        }
+
+        return '';
+    }
+
+    /**
      * Create link to a single certificate
      *
      * @param int          $id

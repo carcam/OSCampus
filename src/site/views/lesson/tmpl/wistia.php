@@ -27,14 +27,12 @@ endif;
     </div>
     <!-- .osc-lesson-links -->
 
-    <?php echo $this->loadDefaultTemplate('header'); ?>
-
     <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
         <?php echo $this->lesson->render(); ?>
     </div>
 <?php
 
-echo $this->loadDefaultTemplate('footer');
+echo $this->loadDefaultTemplate('description');
 echo $this->loadDefaultTemplate('files');
 
 if (!$component):

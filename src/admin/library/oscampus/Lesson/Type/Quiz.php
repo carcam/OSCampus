@@ -122,8 +122,10 @@ class Quiz extends AbstractType
             $keys = json_decode(base64_decode($keys));
 
         } else {
-            $length = $this->quizLength ?: (int)count($this->questions);
-            $keys   = array_rand($this->questions, $length);
+            $length = (int)$this->quizLength ?: (int)count($this->questions);
+            $length = min(count($this->questions), $length);
+
+            $keys = array_rand($this->questions, $length);
             shuffle($keys);
 
             $this->setUserState($cookieStore, base64_encode(json_encode($keys)));

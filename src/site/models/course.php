@@ -31,17 +31,23 @@ class OscampusModelCourse extends OscampusModelSite
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select('c.*, cp.pathways_id, p.title pathway_title')
-            ->from('#__oscampus_courses c')
-            ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
-            ->innerJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+            ->select(
+                array(
+                    'course.*',
+                    'cp.pathways_id',
+                    'pathway.title AS pathway_title'
+                )
+            )
+            ->from('#__oscampus_courses AS course')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
-                    'c.id = ' . (int)$this->getState('course.id'),
-                    'p.id = ' . (int)$this->getState('pathway.id'),
-                    'c.published = 1',
-                    'p.published = 1',
-                    'c.released <= NOW()'
+                    'course.id = ' . (int)$this->getState('course.id'),
+                    'pathway.id = ' . (int)$this->getState('pathway.id'),
+                    'course.published = 1',
+                    'pathway.published = 1',
+                    'course.released <= NOW()'
                 )
             );
 
@@ -49,6 +55,8 @@ class OscampusModelCourse extends OscampusModelSite
         if (!$course) {
             throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
         }
+
+        $course->metadata = new JRegistry($course->metadata);
 
         return $course;
     }
@@ -63,29 +71,45 @@ class OscampusModelCourse extends OscampusModelSite
         $db  = JFactory::getDbo();
         $cid = (int)$this->getState('course.id');
 
+        $user   = OscampusFactory::getUser();
+        $levels = join(',', $user->getAuthorisedViewLevels());
+
         $query = $db->getQuery(true)
-            ->select('i.*, u.username, u.name, u.email')
-            ->from('#__oscampus_teachers i')
-            ->innerJoin('#__oscampus_courses c ON c.teachers_id = i.id')
-            ->leftJoin(('#__users u ON u.id = i.users_id'))
-            ->where('c.id = ' . $cid);
+            ->select(
+                array(
+                    'teacher.*',
+                    'user.username',
+                    'user.name',
+                    'user.email'
+                )
+            )
+            ->from('#__oscampus_teachers AS teacher')
+            ->innerJoin('#__oscampus_courses AS course ON course.teachers_id = teacher.id')
+            ->leftJoin(('#__users AS user ON user.id = teacher.users_id'))
+            ->where('course.id = ' . $cid);
+
         if ($teacher = $db->setQuery($query)->loadObject()) {
             $teacher->links = json_decode($teacher->links);
 
             // Get other courses for this teacher
             $queryCourses = $db->getQuery(true)
-                ->select('p.title pathway_title, c.*')
-                ->from('#__oscampus_teachers t')
-                ->innerJoin('#__oscampus_courses c ON c.teachers_id = t.id')
-                ->innerJoin('#__oscampus_courses_pathways cp ON cp.courses_id = c.id')
-                ->innerJoin('#__oscampus_pathways p ON p.id = cp.pathways_id')
+                ->select('pathway.title pathway_title, course.*')
+                ->from('#__oscampus_teachers AS teacher')
+                ->innerJoin('#__oscampus_courses AS course ON course.teachers_id = teacher.id')
+                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+                ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
                 ->where(
                     array(
-                        'c.id != ' . $cid,
-                        't.id = ' . $teacher->id
+                        'course.published = 1',
+                        'course.released <= CURDATE()',
+                        'pathway.published = 1',
+                        'pathway.access IN (' . $levels . ')',
+                        'course.id != ' . $cid,
+                        'teacher.id = ' . $teacher->id,
                     )
                 )
-                ->order('p.ordering ASC, cp.ordering ASC, c.title ASC');
+                ->group('course.id')
+                ->order('pathway.ordering ASC, cp.ordering ASC, course.title ASC');
 
             $teacher->courses = $db->setQuery($queryCourses)->loadObjectList();
         }
@@ -156,16 +180,23 @@ class OscampusModelCourse extends OscampusModelSite
 
         if ($cid > 0) {
             $query = $db->getQuery(true)
-                ->select('m.courses_id, l.modules_id, m.title module_title, l.*')
-                ->from('#__oscampus_modules m')
-                ->innerJoin('#__oscampus_lessons l ON l.modules_id = m.id')
-                ->where(
+                ->select(
                     array(
-                        'm.courses_id = ' . (int)$this->getState('course.id'),
-                        'l.published = 1'
+                        'module.courses_id',
+                        'lesson.modules_id',
+                        'module.title AS module_title',
+                        'lesson.*'
                     )
                 )
-                ->order('m.ordering ASC, l.ordering ASC');
+                ->from('#__oscampus_modules AS module')
+                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+                ->where(
+                    array(
+                        'module.courses_id = ' . (int)$this->getState('course.id'),
+                        'lesson.published = 1'
+                    )
+                )
+                ->order('module.ordering ASC, lesson.ordering ASC');
 
             $list = $db->setQuery($query)->loadObjectList();
 

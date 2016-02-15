@@ -40,7 +40,7 @@ defined('_JEXEC') or die();
                                 $item->pathways_id,
                                 $item->id,
                                 0,
-                                JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                                '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
                                 'class="osc-btn"'
                             );
                             ?>
@@ -54,19 +54,25 @@ defined('_JEXEC') or die();
 
             <div class="osc-section osc-course-list">
                 <div class="block12">
-            <span class="osc-label">
-                <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
-                    $item->length); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
-            </span>
+                    <?php
+                    if ($item->tags) :
+                        ?>
+                        <span class="osc-label"><i class="fa fa-tag"></i>
+                            <?php echo $item->tags; ?>
+                        </span>
+                        <?php
+                    endif;
+                    ?>
+                    <span class="osc-label">
+                        <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
+                    </span>
+                    <span class="osc-label">
+                        <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
+                            $item->length); ?>
+                    </span>
+                    <span class="osc-label">
+                        <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
+                    </span>
                 </div>
             </div>
             <!-- .osc-section -->
@@ -75,7 +81,10 @@ defined('_JEXEC') or die();
 
     else:
         ?>
-        <p><?php echo JText::sprintf('COM_OSCAMPUS_NO_NEW_COURSES'); ?></p>
+        <p><?php
+            $cutoff = $this->getState('cutoff');
+            echo JText::sprintf('COM_OSCAMPUS_NO_NEW_COURSES', $cutoff->format('F j, Y'));
+            ?></p>
         <?php
     endif;
     ?>

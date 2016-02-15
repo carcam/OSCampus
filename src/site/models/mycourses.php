@@ -37,8 +37,11 @@ class OscampusModelMycourses extends OscampusModelList
                     'pathway.published = 1'
                 )
             )
-            ->group('course.id')
-            ->order('course.title ASC');
+            ->group('course.id');
+
+        $ordering = $this->getState('list.ordering', 'course.title');
+        $direction = $this->getState('list.direction', 'ASC');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }
@@ -54,5 +57,11 @@ class OscampusModelMycourses extends OscampusModelList
         }
 
         return $items;
+    }
+
+    protected function populateState($ordering = 'course.title', $direction = 'ASC')
+    {
+        $this->setState('list.limit', 0);
+        $this->setState('list.start', 0);
     }
 }

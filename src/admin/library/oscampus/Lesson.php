@@ -31,9 +31,8 @@ defined('_JEXEC') or die();
  * @property-read string       $type
  * @property-read string       $title
  * @property-read string       $alias
- * @property-read string       $header
  * @property-read mixed        $content
- * @property-read string       $footer
+ * @property-read string       $description
  * @property-read int          $access
  * @property-read bool         $published
  * @property-read bool         $authorised
@@ -62,6 +61,11 @@ class Lesson extends AbstractBase
      * @var string
      */
     public $pathwayTitle = null;
+
+    /**
+     * @var JRegistry
+     */
+    public $metadata = null;
 
     /**
      * @var int
@@ -243,10 +247,8 @@ class Lesson extends AbstractBase
             $xml = null;
         }
 
-        if ($xml) {
-            if ($subForm = array_shift($xml->xpath('form'))) {
-                $form->load($subForm[0]);
-            };
+        if ($xml && $subForm = $xml->xpath('form')) {
+            $form->load($subForm[0]);
         }
     }
 
@@ -308,6 +310,7 @@ class Lesson extends AbstractBase
         $this->courseTitle  = $currentValues->course_title;
         $this->moduleTitle  = $currentValues->module_title;
         $this->pathwayTitle = $currentValues->pathway_title;
+        $this->metadata     = new JRegistry($currentValues->metadata);
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);

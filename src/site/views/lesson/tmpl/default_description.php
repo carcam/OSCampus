@@ -8,9 +8,13 @@
 
 defined('_JEXEC') or die();
 
-if ($this->lesson->header) : ?>
-    <div class="osc-section oscampus-lesson-header">
-        <?php echo $this->lesson->header; ?>
+/** @var OscampusViewLesson $this  */
+
+if ($this->lesson->description) :
+    ?>
+    <div class="osc-section oscampus-lesson-description">
+        <?php echo $this->lesson->description; ?>
     </div>
     <?php
 endif;
+

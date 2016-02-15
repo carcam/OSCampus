@@ -48,8 +48,6 @@ $questions = $quiz->getQuestions();
     </div>
 </div>
 
-<?php echo $this->loadDefaultTemplate('header'); ?>
-
 <form id="formQuiz" name="formQuiz" method="post" action="">
     <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
         <?php
@@ -94,4 +92,4 @@ $questions = $quiz->getQuestions();
 </form>
 
 <?php
-echo $this->loadDefaultTemplate('footer');
+echo $this->loadDefaultTemplate('description');

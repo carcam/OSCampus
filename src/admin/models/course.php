@@ -100,7 +100,7 @@ class OscampusModelCourse extends OscampusModelAdmin
     {
         $app = OscampusFactory::getApplication();
         if ($pathwayId = $app->input->getInt('filter_pathway')) {
-            $db = $this->getDbo();
+            $db  = $this->getDbo();
             $sql = 'UPDATE #__oscampus_courses_pathways SET ordering = %s WHERE courses_id = %s AND pathways_id = ' . $pathwayId;
             foreach ($pks as $index => $courseId) {
                 $db->setQuery(sprintf($sql, $order[$index], $courseId))->execute();
@@ -137,12 +137,7 @@ class OscampusModelCourse extends OscampusModelAdmin
             $tags     = empty($data['tags']) ? array() : $data['tags'];
             $ordering = empty($data['lessons']) ? array() : $data['lessons'];
 
-            return $this->updateJunctionTable(
-                '#__oscampus_courses_pathways.courses_id',
-                $courseId,
-                'pathways_id',
-                $pathways
-            )
+            return $this->updatePathways($courseId, $pathways)
             && $this->updateJunctionTable(
                 '#__oscampus_courses_tags.courses_id',
                 $courseId,
@@ -153,6 +148,84 @@ class OscampusModelCourse extends OscampusModelAdmin
         }
 
         return false;
+    }
+
+    /**
+     * Special handling for pathways junction due to ordering being stored there
+     *
+     * @param int   $courseId
+     * @param int[] $pathways
+     *
+     * @return bool
+     */
+    protected function updatePathways($courseId, array $pathways)
+    {
+        $db = $this->getDbo();
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from('#__oscampus_courses_pathways')
+            ->where('courses_id = ' . (int)$courseId);
+
+        $oldPathways = $db->setQuery($query)->loadObjectList('pathways_id');
+        $newPathways = array_flip($pathways);
+
+        // Remove from unselected pathways
+        if ($removePathways = array_diff_key($oldPathways, $newPathways)) {
+            $query = $db->getQuery(true)
+                ->delete('#__oscampus_courses_pathways')
+                ->where(
+                    array(
+                        'courses_id = ' . (int)$courseId,
+                        'pathways_id IN (' . join(',', array_keys($removePathways)) . ')'
+                    )
+                );
+            $db->setQuery($query)->execute();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+                return false;
+            }
+        }
+
+        // Add to new pathways at bottom of list
+        if ($addPathways = array_diff_key($newPathways, $oldPathways)) {
+            $query = $db->getQuery(true)
+                ->select('pathways_id, max(ordering) AS lastOrder')
+                ->from('#__oscampus_courses_pathways')
+                ->where('pathways_id IN (' . join(',', array_keys($addPathways)) . ')')
+                ->group('pathways_id');
+
+            // Find last ordering # and verify pathway exists
+            $ordering = $db->setQuery($query)->loadObjectList('pathways_id');
+
+            $insertValues = array();
+            foreach ($addPathways as $pid => $null) {
+                if (isset($ordering[$pid])) {
+                    $insertValues[] = join(',', array(
+                            (int)$courseId,
+                            (int)$pid,
+                            (int)$ordering[$pid]->lastOrder + 1
+                        )
+                    );
+                } else {
+                    $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
+                    return false;
+                }
+            }
+
+            $query = $db->getQuery(true)
+                ->insert('#__oscampus_courses_pathways')
+                ->columns(array('courses_id', 'pathways_id', 'ordering'))
+                ->values($insertValues);
+
+            $db->setQuery($query)->execute();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
