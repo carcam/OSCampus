@@ -50,6 +50,10 @@ class PlgSearchOscampus extends JPlugin
 
     public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
     {
+        if (!$this->oscampusInstalled()) {
+            return array();
+        }
+
         // See if we've been selected for searching
         if (is_array($areas)) {
             if (!array_intersect($areas, array_keys($this->onContentSearchAreas()))) {
@@ -62,33 +66,39 @@ class PlgSearchOscampus extends JPlugin
         $lessonQuery = $db->getQuery(true)
             ->select(
                 array(
-                    'lesson.id AS lessons_id',
+                    'cp.pathways_id',
                     'module.courses_id',
+                    'lesson.id AS lessons_id',
                     'lesson.title',
-                    $db->quote('lesson') . ' AS section',
+                    'lesson.type AS section',
                     'lesson.created',
-                    $db->quote('') . ' AS introtext',
-                    'lesson.description'
+                    'course.introtext',
+                    'course.description'
                 )
             )
             ->from('#__oscampus_lessons AS lesson')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
                     'lesson.published = 1',
                     'course.published = 1',
                     'course.released <= CURDATE()',
+                    'pathway.users_id = 0',
                     $this->getSearchAtom($text, $phrase, array('lesson.title', 'lesson.description'))
                 )
-            );
+            )
+            ->group('lesson.id');
 
 
         $courseQuery = $db->getQuery(true)
             ->select(
                 array(
-                    '0',
+                    'pathway.id',
                     'course.id',
+                    '0',
                     'course.title',
                     $db->quote('course'),
                     'course.created',
@@ -97,14 +107,18 @@ class PlgSearchOscampus extends JPlugin
                 )
             )
             ->from('#__oscampus_courses AS course')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
+                    'pathway.users_id = 0',
                     'course.published = 1',
                     'course.released <= CURDATE()',
                     $this->getSearchAtom($text, $phrase,
                         array('course.title', 'course.introtext', 'course.description'))
                 )
-            );
+            )
+            ->group('course.id');
 
         $query = sprintf('(%s) UNION (%s)', $lessonQuery, $courseQuery);
 
@@ -129,12 +143,32 @@ class PlgSearchOscampus extends JPlugin
         }
         $query .= ' ORDER BY ' . $order;
 
-        $limit = $this->params->get('limit', 10);
+        $limit = $this->params->get('limit', 50);
         $items = $db->setQuery($query, 0, $limit)->loadObjectList();
 
         foreach ($items as $item) {
-            $item->href       = 'javascript:alert(\'Under Construction\');';
-            $item->text       = ($item->introtext ?: $item->description) ?: 'What to use for empty descriptions?';
+            if ($item->lessons_id > 0) {
+                $item->href = JHtml::_('osc.link.lessonid',
+                    $item->pathways_id,
+                    $item->courses_id,
+                    $item->lessons_id,
+                    null,
+                    null,
+                    true
+                );
+            } else {
+                $item->href = JHtml::_(
+                    'osc.link.course',
+                    $item->pathways_id,
+                    $item->courses_id,
+                    null,
+                    null,
+                    true
+                );
+            }
+
+            $item->title      = JText::sprintf('PLG_SEARCH_OSCAMPUS_SECTION_' . $item->section, $item->title);
+            $item->text       = ($item->introtext ?: $item->description);
             $item->browsernav = 0;
 
             unset($item->introtext, $item->description);
@@ -194,5 +228,24 @@ class PlgSearchOscampus extends JPlugin
         }
 
         return $where;
+    }
+
+    /**
+     * Verify loading of OSCampus
+     *
+     * @return bool
+     */
+    protected function oscampusInstalled()
+    {
+        if (!defined('OSCAMPUS_LOADED') || !OSCAMPUS_LOADED) {
+            $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
+            if (!is_file($path)) {
+                return false;
+            }
+
+            require_once $path;
+        }
+
+        return true;
     }
 }
