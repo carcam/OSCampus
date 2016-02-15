@@ -143,7 +143,7 @@ class PlgSearchOscampus extends JPlugin
         }
         $query .= ' ORDER BY ' . $order;
 
-        $limit = $this->params->get('limit', 50);
+        $limit = $this->params->get('searchLimit', 50);
         $items = $db->setQuery($query, 0, $limit)->loadObjectList();
 
         foreach ($items as $item) {

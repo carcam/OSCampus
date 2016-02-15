@@ -14,4 +14,18 @@
         <folder>language</folder>
         <filename plugin="oscampus">oscampus.php</filename>
     </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="searchLimit"
+                    label="PLG_SEARCH_OSCAMPUS_PARAMS_SEARCH_LIMIT_LABEL"
+                    description="PLG_SEARCH_OSCAMPUS_PARAMS_SEARCH_LIMIT_DESC"
+                    type="text"
+                    filter="integer"
+                    default="50"/>
+            </fieldset>
+        </fields>
+    </config>
 </extension>
