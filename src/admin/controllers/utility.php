@@ -98,6 +98,68 @@ class OscampusControllerUtility extends OscampusControllerBase
 
     }
 
+    public function searchdb()
+    {
+        // The text we're looking for
+        $regex   = 'my-quizzes';
+
+        echo '<h3>Search: ' . $regex . '</h3>';
+
+        $db = OscampusFactory::getDbo();
+
+        $start = microtime(true);
+
+        $html   = array('<ul>');
+        $tables = $db->setQuery('SHOW TABLES')->loadColumn();
+        foreach ($tables as $table) {
+            // Look for tables that have a single auto increment primary key
+            $query   = "SHOW COLUMNS FROM {$table} WHERE `Key` = 'PRI' AND `Extra` = 'auto_increment'";
+            $idField = $db->setQuery($query)->loadColumn();
+            if ($error = $db->getErrorMsg()) {
+                echo 'ERROR: ' . $error;
+                return;
+            }
+
+            if (count($idField) == 1) {
+                $query = "SHOW COLUMNS FROM {$table} WHERE type = 'text' OR type like 'varchar%'";
+                if ($fields = $db->setQuery($query)->loadColumn()) {
+                    $idField = $idField[0];
+                    array_unshift($fields, $idField);
+
+                    $where = array();
+                    foreach ($fields as $field) {
+                        $where[] = $db->quoteName($field) . ' RLIKE ' . $db->quote($regex);
+                    }
+                    $query = $db->getQuery(true)
+                        ->select($fields)
+                        ->from($table)
+                        ->where($where, 'OR');
+
+                    if ($rows = $db->setQuery($query)->loadAssocList()) {
+                        $html[] = '<li>' . $table . ' (' . number_format(count($rows)) . ')<ul>';
+                        foreach ($rows as $row) {
+                            // Report
+                            $fields = array_keys($row);
+                            array_shift($fields);
+                            $html[] = sprintf(
+                                '<li>%s: %s (%s)</li>',
+                                $idField,
+                                $row[$idField],
+                                join(', ', $fields)
+                            );
+                        }
+                        $html[] = '</ul></li>';
+                    }
+                }
+            }
+        }
+
+        $html[] = '</ul>';
+
+        echo join("\n", $html);
+        echo '<p>Total Runtime: ' . number_format((microtime(true) - $start), 1) . '</p>';
+    }
+
     /**
      * Check for duplicate lesson aliases within a course. Since we don't include the lesson ID
      * in SEF URLs (and we don't want to do that for SEO!) lessons require unique aliases within
