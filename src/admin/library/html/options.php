@@ -82,18 +82,16 @@ abstract class OscOptions
      * Create options list of available pathways
      *
      * @param bool $coreOnly
-     * @param bool $showAccess
      *
      * @return object[]
      */
-    public static function pathways($coreOnly = true, $showAccess = true)
+    public static function pathways($coreOnly = false)
     {
         $key = md5(
             json_encode(
                 array(
-                    'base'   => 'pathways',
-                    'core'   => $coreOnly,
-                    'access' => $showAccess
+                    'base' => 'pathways',
+                    'core' => $coreOnly
                 )
             )
         );
@@ -101,21 +99,21 @@ abstract class OscOptions
         if (empty(static::$cache[$key])) {
             $db    = OscampusFactory::getDbo();
             $query = $db->getQuery(true)
-                ->select('pathway.id, pathway.title, access.title level')
+                ->select('pathway.id, pathway.title, pathway.alias')
                 ->from('#__oscampus_pathways pathway')
-                ->innerJoin('#__viewlevels access ON access.id = pathway.access')
-                ->order('pathway.title');
+                ->order('pathway.title ASC, pathway.alias ASC');
 
             if ($coreOnly) {
                 $query->where('pathway.users_id = 0');
             }
 
-            static::$cache[$key] = array_map(function ($row) use ($showAccess) {
-                return (object)array(
-                    'value' => $row->id,
-                    'text'  => $showAccess ? sprintf('%s (%s)', $row->title, $row->level) : $row->title
-                );
-            },
+            static::$cache[$key] = array_map(
+                function ($row) {
+                    return (object)array(
+                        'value' => $row->id,
+                        'text'  => sprintf('%s (%s)', $row->title, $row->alias)
+                    );
+                },
                 $db->setQuery($query)->loadObjectList()
             );
 
@@ -177,6 +175,7 @@ abstract class OscOptions
 
     /**
      * Option list of available Lesson Types
+     *
      * @TODO: This should not be hardcoded and needs to use the eventual lesson classes to get its list
      *
      * @return object[]
@@ -212,7 +211,7 @@ abstract class OscOptions
     public static function pathwayowners()
     {
         if (!isset(static::$cache['pathwayOwners'])) {
-            $db = OscampusFactory::getDbo();
+            $db    = OscampusFactory::getDbo();
             $query = $db->getQuery(true)
                 ->select('user.id, user.name, user.username')
                 ->from('#__users AS user')
@@ -248,7 +247,7 @@ abstract class OscOptions
     {
         $key = md5('module-' . $courseId);
         if (!isset(static::$cache[$key])) {
-            $db = OscampusFactory::getDbo();
+            $db    = OscampusFactory::getDbo();
             $query = $db->getQuery(true)
                 ->select(
                     array(
