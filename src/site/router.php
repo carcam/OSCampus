@@ -51,11 +51,6 @@ function OscampusParseRoute($segments)
 class OscampusRouter
 {
     /**
-     * @var string
-     */
-    protected $viewUnmanaged = 'osc_view';
-
-    /**
      * @param mixed[] $query
      *
      * @return string[]
@@ -142,13 +137,6 @@ class OscampusRouter
                 $menuQuery       = $route->getQuery('pathways');
                 $query['Itemid'] = $menuQuery['Itemid'];
 
-            } else {
-                // Default view handling if no other accommodations needed
-                $segments[] = $this->viewUnmanaged;
-                $segments[] = $view;
-                if (isset($query['Itemid']) && empty($query['Itemid'])) {
-                    unset($query['Itemid']);
-                }
             }
         }
 
@@ -195,10 +183,6 @@ class OscampusRouter
                 $vars['view'] = 'pathway';
                 $vars['pid'] = $route->getPathwayFromSlug($segments[0]);
 
-            } elseif ($segments[0] == $this->viewUnmanaged) {
-                // Default handling of unmanaged views
-                $vars['option'] = 'com_oscampus';
-                $vars['view']   = empty($segments[1]) ? 'pathways' : $segments[1];
             }
         }
 
