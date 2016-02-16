@@ -40,28 +40,32 @@ class OscampusViewCourse extends OscampusViewSite
 
     public function display($tpl = null)
     {
-        /** @var OscampusModelCourse $model */
-        $model = $this->getModel();
+        try {
+            /** @var OscampusModelCourse $model */
+            $model = $this->getModel();
 
-        $this->course = $model->getCourse();
-        if ($this->course) {
-            $this->teacher = $model->getTeacher();
-            $this->lessons = $model->getLessons();
-            $this->files   = $model->getFiles();
-            $this->viewed  = $model->getViewedLessons();
+            $this->course = $model->getCourse();
+            if ($this->course) {
+                $this->teacher = $model->getTeacher();
+                $this->lessons = $model->getLessons();
+                $this->files   = $model->getFiles();
+                $this->viewed  = $model->getViewedLessons();
+            }
+
+            $pathway = JFactory::getApplication()->getPathway();
+
+            $link = JHtml::_('osc.link.pathway', $this->course->pathways_id, null, null, true);
+            $pathway->addItem($this->course->pathway_title, $link);
+
+            $this->setMetadata(
+                $this->course->metadata,
+                $this->course->title,
+                $this->course->introtext ?: $this->course->description
+            );
+
+            parent::display($tpl);
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
-
-        $pathway = JFactory::getApplication()->getPathway();
-
-        $link = JHtml::_('osc.link.pathway', $this->course->pathways_id, null, null, true);
-        $pathway->addItem($this->course->pathway_title, $link);
-
-        $this->setMetadata(
-            $this->course->metadata,
-            $this->course->title,
-            $this->course->introtext ?: $this->course->description
-        );
-
-        parent::display($tpl);
     }
 }

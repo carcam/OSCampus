@@ -161,18 +161,11 @@ abstract class OscLesson
             return null;
         }
 
-        $query = OscampusRoute::getInstance()->getQuery('pathways');
+        $query = OscampusRoute::getInstance()->getQuery('`course`');
 
         $query['view'] = 'lesson';
         $query['cid']  = $properties->courses_id;
         $query['lid']  = $properties->id;
-
-        if (!empty($properties->pathways_id)) {
-            $query['pid'] = $properties->pathways_id;
-
-        } elseif ($pid = JFactory::getApplication()->input->getInt('pid')) {
-            $query['pid'] = $pid;
-        }
 
         return $query;
     }

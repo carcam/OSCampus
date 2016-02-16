@@ -12,7 +12,8 @@ class OscampusModelPathway extends OscampusModelSiteList
 {
     protected function getListQuery()
     {
-        $viewLevels = JFactory::getUser()->getAuthorisedViewLevels();
+        $user       = OscampusFactory::getUser();
+        $viewLevels = join(',', $user->getAuthorisedViewLevels());
 
         $query = parent::getListQuery()
             ->select(
@@ -33,14 +34,14 @@ class OscampusModelPathway extends OscampusModelSiteList
                     'pathway.id = ' . $this->getState('pathway.id'),
                     'pathway.published = 1',
                     'course.published = 1',
-                    'course.access IN (' . join(',', $viewLevels) . ')',
+                    'course.access IN (' . $viewLevels . ')',
                     'course.released <= NOW()'
                 )
             );
 
-        $order = $this->getState('list.order', 'cp.ordering');
+        $order     = $this->getState('list.order', 'cp.ordering');
         $direction = $this->getState('list.direction', 'ASC');
-            $query->order($order . ' ' . $direction . ', course.title ' . $direction);
+        $query->order($order . ' ' . $direction . ', course.title ' . $direction);
 
         return $query;
     }

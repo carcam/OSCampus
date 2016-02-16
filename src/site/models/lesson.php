@@ -38,16 +38,15 @@ class OscampusModelLesson extends OscampusModelSite
     {
         if ($this->lesson === null) {
             $this->lesson = OscampusFactory::getContainer()->lesson;
-            $pathwayId    = (int)$this->getState('pathway.id');
 
             if ($lessonId = (int)$this->getState('lesson.id')) {
-                $this->lesson->loadById($lessonId, $pathwayId);
+                $this->lesson->loadById($lessonId);
 
             } else {
                 $courseId = (int)$this->getState('course.id');
                 $index    = (int)$this->getState('lesson.index');
 
-                $this->lesson->loadByIndex($index, $courseId, $pathwayId);
+                $this->lesson->loadByIndex($index, $courseId);
             }
         }
 
@@ -102,9 +101,6 @@ class OscampusModelLesson extends OscampusModelSite
     protected function populateState()
     {
         $app = JFactory::getApplication();
-
-        $pid = $app->input->getInt('pid');
-        $this->setState('pathway.id', $pid);
 
         $cid = $app->input->getInt('cid');
         $this->setState('course.id', $cid);

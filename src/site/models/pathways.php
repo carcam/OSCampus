@@ -13,7 +13,7 @@ class OscampusModelPathways extends OscampusModelList
     protected function getListQuery()
     {
         $user = JFactory::getUser();
-        $levels  = join(',', $user->getAuthorisedViewLevels());
+        $viewLevels  = join(',', $user->getAuthorisedViewLevels());
 
         $query = parent::getListQuery()
             ->select('*')
@@ -21,7 +21,7 @@ class OscampusModelPathways extends OscampusModelList
             ->where(
                 array(
                     'published = 1',
-                    'access IN (' . $levels . ')',
+                    'access IN (' . $viewLevels . ')',
                     'users_id = 0'
                 )
             )

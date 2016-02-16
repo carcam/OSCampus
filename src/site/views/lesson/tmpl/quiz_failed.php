@@ -66,7 +66,6 @@ $activity = $this->activity;
                             </button><?php
                             echo JHtml::_(
                                 'osc.link.course',
-                                $this->lesson->pathways_id,
                                 $this->lesson->courses_id,
                                 JText::_('COM_OSCAMPUS_LATER'),
                                 'class="osc-btn"'

@@ -19,7 +19,8 @@ class OscampusModelNewcourses extends OscampusModelPathway
          */
 
         $db         = $this->getDbo();
-        $viewLevels = join(',', JFactory::getUser()->getAuthorisedViewLevels());
+        $user       = OscampusFactory::getUser();
+        $viewLevels = join(',', $user->getAuthorisedViewLevels());
         $cutoff     = $this->getState('cutoff');
 
         $query = $db->getQuery(true)

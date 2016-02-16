@@ -31,23 +31,13 @@ class OscampusModelCourse extends OscampusModelSite
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'course.*',
-                    'cp.pathways_id',
-                    'pathway.title AS pathway_title'
-                )
-            )
+            ->select('course.*')
             ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
                     'course.id = ' . (int)$this->getState('course.id'),
-                    'pathway.id = ' . (int)$this->getState('pathway.id'),
                     'course.published = 1',
-                    'pathway.published = 1',
-                    'course.released <= NOW()'
+                    'course.released <= CURDATE()'
                 )
             );
 
@@ -72,7 +62,6 @@ class OscampusModelCourse extends OscampusModelSite
         $cid = (int)$this->getState('course.id');
 
         $user   = OscampusFactory::getUser();
-        $levels = join(',', $user->getAuthorisedViewLevels());
 
         $query = $db->getQuery(true)
             ->select(
@@ -93,23 +82,19 @@ class OscampusModelCourse extends OscampusModelSite
 
             // Get other courses for this teacher
             $queryCourses = $db->getQuery(true)
-                ->select('pathway.title pathway_title, course.*')
+                ->select('course.*')
                 ->from('#__oscampus_teachers AS teacher')
                 ->innerJoin('#__oscampus_courses AS course ON course.teachers_id = teacher.id')
-                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-                ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
                 ->where(
                     array(
                         'course.published = 1',
                         'course.released <= CURDATE()',
-                        'pathway.published = 1',
-                        'pathway.access IN (' . $levels . ')',
                         'course.id != ' . $cid,
                         'teacher.id = ' . $teacher->id,
                     )
                 )
                 ->group('course.id')
-                ->order('pathway.ordering ASC, cp.ordering ASC, course.title ASC');
+                ->order('course.title ASC');
 
             $teacher->courses = $db->setQuery($queryCourses)->loadObjectList();
         }
@@ -153,16 +138,7 @@ class OscampusModelCourse extends OscampusModelSite
                 ->order('module.ordering, lesson.ordering, flink.ordering, file.title')
                 ->group('file.id');
 
-            error_reporting(-1);
-            ini_set('display_errors', 1);
-
             $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
-
-            echo $db->getErrorMsg();
-            error_reporting(0);
-            ini_set('display_errors', 0);
-
-
         }
         return $files;
     }
@@ -247,9 +223,6 @@ class OscampusModelCourse extends OscampusModelSite
     protected function populateState()
     {
         $app = JFactory::getApplication();
-
-        $pid = $app->input->getInt('pid');
-        $this->setState('pathway.id', $pid);
 
         $cid = $app->input->getInt('cid');
         $this->setState('course.id', $cid);
