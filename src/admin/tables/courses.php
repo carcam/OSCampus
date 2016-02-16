@@ -18,6 +18,34 @@ class OscampusTableCourses extends OscampusTable
         parent::__construct('#__oscampus_courses', 'id', $db);
     }
 
+    public function check()
+    {
+        if (!$this->alias) {
+            $this->setError(JText::_(''));
+            return false;
+        } else {
+            $db = $this->getDbo();
+
+            $query = $db->getQuery(true)
+                ->select('course.id')
+                ->from('#__oscampus_courses AS course')
+                ->where(
+                    array(
+                        'course.alias = ' . $db->quote($this->alias),
+                        'course.id != ' . (int)$this->id
+                    )
+                );
+
+            $duplicates = $db->setQuery($query)->loadColumn();
+            if ($duplicates) {
+                $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_COURSES_DUPLICATE_ALIAS', $this->alias));
+                return false;
+            }
+
+        }
+
+    }
+
     /**
      * Individual nudges require special handling due to m:m courses/pathways relationship
      *

@@ -55,7 +55,7 @@ class OscampusTableLessons extends OscampusTable
             $duplicates = $db->setQuery($query)->loadColumn();
 
             if ($duplicates) {
-                $this->setError('COM_OSCAMPUS_ERROR_LESSONS_DUPLICATE_ALIAS');
+                $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_LESSONS_DUPLICATE_ALIAS', $this->alias));
                 return false;
             }
         }
