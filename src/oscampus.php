@@ -66,7 +66,6 @@ class PlgSearchOscampus extends JPlugin
         $lessonQuery = $db->getQuery(true)
             ->select(
                 array(
-                    'cp.pathways_id',
                     'module.courses_id',
                     'lesson.id AS lessons_id',
                     'lesson.title',
@@ -79,14 +78,11 @@ class PlgSearchOscampus extends JPlugin
             ->from('#__oscampus_lessons AS lesson')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
                     'lesson.published = 1',
                     'course.published = 1',
                     'course.released <= CURDATE()',
-                    'pathway.users_id = 0',
                     $this->getSearchAtom($text, $phrase, array('lesson.title', 'lesson.description'))
                 )
             )
@@ -96,7 +92,6 @@ class PlgSearchOscampus extends JPlugin
         $courseQuery = $db->getQuery(true)
             ->select(
                 array(
-                    'pathway.id',
                     'course.id',
                     '0',
                     'course.title',
@@ -107,11 +102,8 @@ class PlgSearchOscampus extends JPlugin
                 )
             )
             ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
-                    'pathway.users_id = 0',
                     'course.published = 1',
                     'course.released <= CURDATE()',
                     $this->getSearchAtom($text, $phrase,
@@ -149,7 +141,6 @@ class PlgSearchOscampus extends JPlugin
         foreach ($items as $item) {
             if ($item->lessons_id > 0) {
                 $item->href = JHtml::_('osc.link.lessonid',
-                    $item->pathways_id,
                     $item->courses_id,
                     $item->lessons_id,
                     null,
@@ -159,7 +150,6 @@ class PlgSearchOscampus extends JPlugin
             } else {
                 $item->href = JHtml::_(
                     'osc.link.course',
-                    $item->pathways_id,
                     $item->courses_id,
                     null,
                     null,
