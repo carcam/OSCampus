@@ -12,8 +12,7 @@ defined('_JEXEC') or die();
  */
 $routing = OscampusRoute::getInstance();
 
-$pathwayId      = OscampusFactory::getApplication()->input->getInt('pid');
-$courseLinkBase = $routing->get('courses') . '&view=course&pid=' . $pathwayId;
+$courseLinkBase = $routing->get('course');
 
 ?>
 <div id="content-teacher" class="osc-course-tabs-content" style="display: none">

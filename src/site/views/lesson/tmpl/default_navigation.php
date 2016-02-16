@@ -24,7 +24,7 @@ JHtml::_('osc.lesson.navigation', $this->lesson);
 
 ?>
 <div class="osc-btn-group hidden osc-lesson-navigation" id="course-navigation">
-    <a href="<?php echo JHtml::_('osc.link.course', $pathwayId, $courseId, null, null, true); ?>" class="osc-btn">
+    <a href="<?php echo JHtml::_('osc.link.course', $courseId, null, null, true); ?>" class="osc-btn">
         <i class="fa fa-bars"></i>
         <span class="osc-hide-tablet">
             <?php echo JText::_('COM_OSCAMPUS_HOME'); ?>

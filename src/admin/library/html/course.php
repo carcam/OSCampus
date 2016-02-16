@@ -24,14 +24,6 @@ abstract class OscCourse
         $query        = OscampusRoute::getInstance()->getQuery('course');
         $query['cid'] = isset($course->courses_id) ? $course->courses_id : $course->id;
 
-        if (!empty($course->pathways_id)) {
-            $query['pid'] = $course->pathways_id;
-        } elseif ($pid = OscampusFactory::getApplication()->input->getInt('pid')) {
-            $query['pid'] = $pid;
-        } else {
-            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_PATHWAY_REQUIRED', __METHOD__), 500);
-        }
-
         $link = 'index.php?' . http_build_query($query);
 
         if ($uriOnly) {

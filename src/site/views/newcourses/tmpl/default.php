@@ -37,7 +37,6 @@ defined('_JEXEC') or die();
                             <?php
                             echo JHtml::_(
                                 'osc.link.lesson',
-                                $item->pathways_id,
                                 $item->id,
                                 0,
                                 '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
