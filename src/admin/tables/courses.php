@@ -21,7 +21,7 @@ class OscampusTableCourses extends OscampusTable
     public function check()
     {
         if (!$this->alias) {
-            $this->setError(JText::_(''));
+            $this->setError(JText::_('COM_OSCAMPUS_ERROR_COURSES_REQUIRED_ALIAS'));
             return false;
         } else {
             $db = $this->getDbo();
