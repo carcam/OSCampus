@@ -27,7 +27,6 @@ defined('_JEXEC') or die();
  * @property-read int          $id
  * @property-read int          $modules_id
  * @property-read int          $courses_id
- * @property-read int          $pathways_id
  * @property-read string       $type
  * @property-read string       $title
  * @property-read string       $alias
@@ -56,11 +55,6 @@ class Lesson extends AbstractBase
      * @var string
      */
     public $moduleTitle = null;
-
-    /**
-     * @var string
-     */
-    public $pathwayTitle = null;
 
     /**
      * @var JRegistry
@@ -123,20 +117,14 @@ class Lesson extends AbstractBase
      *
      * @param int          $index
      * @param int          $courseId
-     * @param int          $pathwayId
      * @param AbstractType $renderer
      *
      * @return Lesson
      */
-    public function loadByIndex($index, $courseId, $pathwayId, AbstractType $renderer = null)
+    public function loadByIndex($index, $courseId, AbstractType $renderer = null)
     {
         $query = $this->getQuery()
-            ->where(
-                array(
-                    'course.id = ' . (int)$courseId,
-                    'pathway.id = ' . (int)$pathwayId
-                )
-            );
+            ->where('course.id = ' . (int)$courseId);
 
         $offset = max(0, $index - 1);
         $limit  = $index ? 3 : 2;
@@ -164,45 +152,31 @@ class Lesson extends AbstractBase
     }
 
     /**
-     * Load lesson using its ID. Note that if the pathway is not
-     * specified, the first in pathway order will be selected
+     * Load lesson using its ID.
      *
      * @param int          $lessonId
-     * @param int          $pathwayId
      * @param AbstractType $renderer
      *
      * @return Lesson
      */
-    public function loadById($lessonId, $pathwayId = null, AbstractType $renderer = null)
+    public function loadById($lessonId, AbstractType $renderer = null)
     {
         $query = $this->dbo->getQuery(true)
-            ->select('cp.pathways_id, cp.courses_id')
+            ->select('course.id')
             ->from('#__oscampus_lessons AS lesson')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
                     'lesson.id = ' . (int)$lessonId,
                     'lesson.published = 1',
                     'course.published = 1'
                 )
-            )
-            ->order('cp.ordering ASC');
-
-        $result = $this->dbo->setQuery($query)->loadObject();
-
-        $courseId  = $result->courses_id;
-        $pathwayId = (int)$pathwayId ?: $result->pathways_id;
-
-        $query = $this->getQuery()
-            ->where(
-                array(
-                    'course.id = ' . $courseId,
-                    'pathway.id = ' . $pathwayId
-                )
             );
+
+        $courseId = $this->dbo->setQuery($query)->loadResult();
+
+        $query = $this->getQuery()->where('course.id = ' . $courseId);
 
         $lessons = $this->dbo->setQuery($query)->loadObjectList();
         foreach ($lessons as $index => $lesson) {
@@ -288,23 +262,19 @@ class Lesson extends AbstractBase
                     'lesson.*',
                     'module.courses_id',
                     'module.title AS module_title',
-                    'course.title AS course_title',
-                    'cp.pathways_id',
-                    'pathway.title AS pathway_title'
+                    'course.title AS course_title'
                 )
             )
             ->from('#__oscampus_lessons AS lesson')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
             ->where(
                 array(
                     'lesson.published = 1',
                     'course.published = 1'
                 )
             )
-            ->order('pathway.ordering, cp.ordering, module.ordering, lesson.ordering');
+            ->order('module.ordering, lesson.ordering');
 
         return $query;
     }
@@ -321,7 +291,6 @@ class Lesson extends AbstractBase
         $currentValues      = (object)$data[1];
         $this->courseTitle  = $currentValues->course_title;
         $this->moduleTitle  = $currentValues->module_title;
-        $this->pathwayTitle = $currentValues->pathway_title;
         $this->metadata     = new JRegistry($currentValues->metadata);
 
         $this->previous->load($data[0]);

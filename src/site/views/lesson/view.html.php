@@ -42,9 +42,6 @@ class OscampusViewLesson extends OscampusViewSite
 
         $pathway = JFactory::getApplication()->getPathway();
 
-        $link = JHtml::_('osc.link.pathway', $this->lesson->pathways_id, null, null, true);
-        $pathway->addItem($this->lesson->pathwayTitle, $link);
-
         $link = JHtml::_('osc.link.course', $this->lesson->courses_id, null, null, true);
         $pathway->addItem($this->lesson->courseTitle, $link);
 

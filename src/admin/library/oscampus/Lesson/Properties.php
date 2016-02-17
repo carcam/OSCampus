@@ -31,11 +31,6 @@ class Properties
     public $courses_id = null;
 
     /**
-     * @var int
-     */
-    public $pathways_id = null;
-
-    /**
      * @var string
      */
     public $type = null;
