@@ -182,7 +182,13 @@ class Lesson extends AbstractBase
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
             ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
             ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
-            ->where('lesson.id = ' . (int)$lessonId)
+            ->where(
+                array(
+                    'lesson.id = ' . (int)$lessonId,
+                    'lesson.published = 1',
+                    'course.published = 1'
+                )
+            )
             ->order('cp.ordering ASC');
 
         $result = $this->dbo->setQuery($query)->loadObject();
@@ -292,6 +298,12 @@ class Lesson extends AbstractBase
             ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
             ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
             ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+            ->where(
+                array(
+                    'lesson.published = 1',
+                    'course.published = 1'
+                )
+            )
             ->order('pathway.ordering, cp.ordering, module.ordering, lesson.ordering');
 
         return $query;

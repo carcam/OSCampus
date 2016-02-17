@@ -50,7 +50,10 @@ class OscampusModelLesson extends OscampusModelSite
             }
         }
 
-        if ($this->lesson->id && ($uid = (int)$this->getState('user.id'))) {
+        if (!$this->lesson->id) {
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_LESSON_NOT_FOUND', 404));
+
+        } elseif ($uid = (int)$this->getState('user.id')) {
             $this->activity->setUser($uid);
             $this->activity->visitLesson($this->lesson->id);
         }
