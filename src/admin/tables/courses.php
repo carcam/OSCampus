@@ -44,6 +44,7 @@ class OscampusTableCourses extends OscampusTable
 
         }
 
+        return true;
     }
 
     /**
