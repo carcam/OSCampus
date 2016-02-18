@@ -37,7 +37,7 @@ defined('_JEXEC') or die();
                     <?php echo JHtml::_('osc.course.link', $item); ?>
                 </div>
                 <div class="block3">
-                    <?php echo $item->date_earned->format('Y-m-d'); ?>
+                    <?php echo $item->date_earned->format('F j, Y'); ?>
                 </div>
                 <div class="block3">
                     <?php echo JHtml::_('osc.link.certificate', $item->id); ?>
