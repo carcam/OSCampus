@@ -190,13 +190,14 @@ class OscampusModelCourse extends OscampusModelAdmin
         // Add to new pathways at bottom of list
         if ($addPathways = array_diff_key($newPathways, $oldPathways)) {
             $query = $db->getQuery(true)
-                ->select('pathways_id, max(ordering) AS lastOrder')
-                ->from('#__oscampus_courses_pathways')
-                ->where('pathways_id IN (' . join(',', array_keys($addPathways)) . ')')
-                ->group('pathways_id');
+                ->select('pathway.id, max(cp.ordering) AS lastOrder')
+                ->from('#__oscampus_pathways AS pathway')
+                ->leftJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
+                ->where('pathway.id IN (' . join(',', array_keys($addPathways)) . ')')
+                ->group('pathway.id');
 
             // Find last ordering # and verify pathway exists
-            $ordering = $db->setQuery($query)->loadObjectList('pathways_id');
+            $ordering = $db->setQuery($query)->loadObjectList('id');
 
             $insertValues = array();
             foreach ($addPathways as $pid => $null) {
