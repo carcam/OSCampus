@@ -30,14 +30,6 @@ abstract class OscampusTable extends JTable
      */
     public function store($updateNulls = false)
     {
-        // If a table has both alias and title fields, auto-fill an empty alias from the title
-        if (property_exists($this, 'alias') && property_exists($this, 'title')) {
-            if (empty($this->alias) && !empty($this->title)) {
-                $this->alias = $this->title;
-            }
-            $this->alias = OscampusApplicationHelper::stringURLSafe($this->alias);
-        }
-
         $date = JFactory::getDate()->toSql();
         $user = JFactory::getUser();
 
@@ -92,7 +84,18 @@ abstract class OscampusTable extends JTable
             }
         }
 
-        return parent::bind($array, $ignore);
+        if (parent::bind($array, $ignore)) {
+            // If a table has both alias and title fields, auto-fill an empty alias from the title
+            if (property_exists($this, 'alias') && property_exists($this, 'title')) {
+                if (empty($this->alias) && !empty($this->title)) {
+                    $this->alias = $this->title;
+                }
+                $this->alias = OscampusApplicationHelper::stringURLSafe($this->alias);
+            }
+            return true;
+        }
+
+        return false;
     }
 
 }
