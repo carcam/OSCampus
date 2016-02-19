@@ -97,13 +97,23 @@ class OscampusControllerUtility extends OscampusControllerBase
         ini_set('display_errors', 0);
 
     }
-
+    
+    /**
+     * search all text/varchar fields in db for desired string
+     */
     public function searchdb()
     {
         // The text we're looking for
-        $regex   = 'my-quizzes';
+        $app = OscampusFactory::getApplication();
 
-        echo '<h3>Search: ' . $regex . '</h3>';
+        $regex = $app->input->getString('search', null);
+        if (!$regex) {
+            echo '<h3>DB Search</h3>';
+            echo '<p>Use ?search to specify the string to search for</p>';
+            return;
+        }
+
+        echo '<h3>DB Search: ' . $regex . '</h3>';
 
         $db = OscampusFactory::getDbo();
 
