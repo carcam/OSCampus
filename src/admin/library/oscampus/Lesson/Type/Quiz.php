@@ -148,7 +148,7 @@ class Quiz extends AbstractType
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
     {
         if (is_array($data)) {
             $status->score = 0;

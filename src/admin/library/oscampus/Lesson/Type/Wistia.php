@@ -193,18 +193,22 @@ class Wistia extends AbstractType
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
     {
-        if ($status->score < $score) {
+        if ($score !== null && $status->score < $score) {
             $status->score = $score;
         }
+        // Ensure we never get more than 100%
+        $status->score = min(100, $status->score);
+
 
         $now = OscampusFactory::getDate();
-        if ($status->score >= 100) {
-            $status->score     = 100;
+
+        $status->last_visit = $now;
+
+        if (!$status->completed) {
             $status->completed = $now;
         }
-        $status->last_visit = $now;
 
         $status->data = $data;
     }

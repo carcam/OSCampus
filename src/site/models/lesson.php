@@ -33,6 +33,7 @@ class OscampusModelLesson extends OscampusModelSite
 
     /**
      * @return Lesson
+     * @throws Exception
      */
     public function getItem()
     {
@@ -55,7 +56,7 @@ class OscampusModelLesson extends OscampusModelSite
 
         } elseif ($uid = (int)$this->getState('user.id')) {
             $this->activity->setUser($uid);
-            $this->activity->visitLesson($this->lesson->id);
+            $this->activity->visitLesson($this->lesson);
         }
 
         return $this->lesson;

@@ -79,7 +79,7 @@ abstract class AbstractType
      *
      * @return void
      */
-    abstract public function prepareActivityProgress(ActivityStatus $status, $score, $data);
+    abstract public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null);
 
     /**
      * Prepare data and provide XML for use in lesson admin UI.

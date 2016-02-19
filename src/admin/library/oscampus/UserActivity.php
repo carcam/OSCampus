@@ -135,26 +135,26 @@ class UserActivity extends AbstractBase
     /**
      * Update last visit date and number of visits
      *
-     * @param int $lessonId
+     * @param Lesson $lesson
      */
-    public function visitLesson($lessonId)
+    public function visitLesson($lesson)
     {
         if ($this->user->id) {
             $app = OscampusFactory::getApplication();
 
-            $status = $this->getStatus($lessonId);
+            $status = $this->getStatus($lesson->id);
 
             // Always record the current time
             $status->last_visit = OscampusFactory::getDate()->toSql();
 
             // Don't bump the visit count if the page is only refreshing
             $visited = $app->getUserState('oscampus.lesson.visited');
-            if ($status->id && $visited != $lessonId) {
+            if ($status->id && $visited != $lesson->id) {
                 $status->visits++;
             }
 
-            $this->setStatus($status);
-            $app->setUserState('oscampus.lesson.visited', $lessonId);
+            $this->recordProgress($lesson);
+            $app->setUserState('oscampus.lesson.visited', $lesson->id);
         }
     }
 
@@ -164,24 +164,19 @@ class UserActivity extends AbstractBase
      * @param Lesson $lesson
      * @param int    $score
      * @param null   $data
-     * @param bool   $clearCompleted
      */
-    public function recordProgress(Lesson $lesson, $score = 100, $data = null, $clearCompleted = false)
+    public function recordProgress(Lesson $lesson, $score = null, $data = null)
     {
-        $status = $this->getStatus($lesson->id);
+        $status    = $this->getStatus($lesson->id);
+        $completed = $status->completed;
 
-        if ($clearCompleted) {
-            $status->completed = null;
+        $lesson->renderer->prepareActivityProgress($status, $score, $data);
+        $this->setStatus($status);
+
+        if (!$completed) {
+            $this->certificate->award($status->courses_id, $this);
         }
 
-        if (!$status->completed) {
-            $lesson->renderer->prepareActivityProgress($status, $score, $data);
-
-            $this->setStatus($status);
-            if ($status->completed) {
-                $this->certificate->award($status->courses_id, $this);
-            }
-        }
     }
 
     /**

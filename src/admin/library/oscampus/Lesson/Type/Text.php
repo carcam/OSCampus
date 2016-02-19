@@ -31,10 +31,12 @@ class Text extends AbstractType
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
     {
         $status->score = 100;
-        $status->completed = OscampusFactory::getDate();
+        if (!$status->completed) {
+            $status->completed = OscampusFactory::getDate();
+        }
     }
 
     /**
