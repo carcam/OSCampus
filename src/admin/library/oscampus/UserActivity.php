@@ -173,7 +173,8 @@ class UserActivity extends AbstractBase
         $lesson->renderer->prepareActivityProgress($status, $score, $data);
         $this->setStatus($status);
 
-        if (!$completed) {
+        // On transition to completed, check to see if they earned a certificate
+        if (!$completed && $status->completed) {
             $this->certificate->award($status->courses_id, $this);
         }
 
