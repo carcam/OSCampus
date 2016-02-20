@@ -118,7 +118,7 @@ class Api
      * Gets the Still Image version of the video
      * @TODO: Possibly need a strategy to extract thumbnail from video asset
      *
-     * @param string     $id
+     * @param string $id
      *
      * @return null|Video
      */
@@ -128,6 +128,16 @@ class Api
             foreach ($media->assets as $index => $asset) {
                 if ($asset->type == 'StillImageFile') {
                     $thumb = new Video($media, $index);
+
+                    // Convert to ssl when needed
+                    if (!empty($_SERVER['HTTPS'])) {
+                        $thumb->url = str_replace(
+                            array('http:', 'embed.wistia'),
+                            array('https:', 'embed-ssl.wistia'),
+                            $thumb->url
+                        );
+                    }
+
                     return $thumb;
                 }
             }
