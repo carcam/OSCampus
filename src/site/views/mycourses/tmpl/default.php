@@ -17,26 +17,41 @@ defined('_JEXEC') or die();
         </div>
     <?php endif; ?>
 
-    <div class="osc-table">
-        <div class="osc-section osc-row-heading osc-hide-tablet">
-            <div class="block8">
-                <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?>
-            </div>
-            <div class="block4">
-                <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?>
-            </div>
-        </div>
-
-        <?php foreach ($this->items as $item) : ?>
-            <div class="osc-section osc-row-one">
+    <?php
+    if ($this->items) :
+        ?>
+        <div class="osc-table">
+            <div class="osc-section osc-row-heading osc-hide-tablet">
                 <div class="block8">
-                    <?php echo JHtml::_('osc.course.link', $item); ?>
+                    <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?>
                 </div>
                 <div class="block4">
-                    <?php echo $item->last_lesson->format('F j, Y'); ?>
+                    <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?>
                 </div>
             </div>
-        <?php endforeach; ?>
 
-    </div>
+            <?php foreach ($this->items as $item) : ?>
+                <div class="osc-section osc-row-one">
+                    <div class="block8">
+                        <?php echo JHtml::_('osc.course.link', $item); ?>
+                    </div>
+                    <div class="block4">
+                        <?php echo $item->last_lesson->format('F j, Y'); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+        else :
+        ?>
+            <div class="osc-section">
+                <?php
+                $link = JRoute::_(OscampusRoute::getInstance()->get('courses'));
+                $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK'));
+                echo JText::sprintf('COM_OSCAMPUS_MYCOURSES_GET_STARTED', $link);
+                ?>
+            </div>
+        <?php
+    endif;
+    ?>
 </div>
