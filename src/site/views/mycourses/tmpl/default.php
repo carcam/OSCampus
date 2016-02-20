@@ -33,7 +33,7 @@ defined('_JEXEC') or die();
                     <?php echo JHtml::_('osc.course.link', $item); ?>
                 </div>
                 <div class="block4">
-                    <?php echo $item->last_lesson->format('Y-m-d'); ?>
+                    <?php echo $item->last_lesson->format('F j, Y'); ?>
                 </div>
             </div>
         <?php endforeach; ?>
