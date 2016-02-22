@@ -184,12 +184,11 @@ class UserActivity extends AbstractBase
      * Get an activity status record
      *
      * @param int $lessonId
-     * @param int $courseId
      * @param int $userId
      *
      * @return ActivityStatus
      */
-    public function getStatus($lessonId, $courseId = null, $userId = null)
+    public function getStatus($lessonId, $userId = null)
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {
