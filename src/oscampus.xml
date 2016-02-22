@@ -74,7 +74,9 @@
         <license>free</license>
 
         <obsolete>
+            <folder>/administrator/components/com_oscampus/views/dashboard</folder>
             <folder>/components/com_oscampus/views/dashboard</folder>
+            <file>/administrator/components/com_oscampus/controllers/import.php</file>
             <file>/components/com_oscampus/model/dashboard.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_footer.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_header.php</file>
