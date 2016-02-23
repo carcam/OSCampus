@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
+use JHtml;
 use JRegistry;
 use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
@@ -19,7 +20,7 @@ class Text extends AbstractType
 {
     public function render()
     {
-        return $this->lesson->content;
+        return JHtml::_('content.prepare', $this->lesson->content);
     }
 
     /**
