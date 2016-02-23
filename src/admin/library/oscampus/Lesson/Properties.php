@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson;
 
+use JHtml;
 use JUser;
 use OscampusFactory;
 
@@ -106,6 +107,10 @@ class Properties
                 if (property_exists($this, $property)) {
                     $this->$property = $value;
                 }
+            }
+
+            if ($this->description) {
+                $this->description = JHtml::_('content.prepare', $this->description);
             }
 
             $this->authorised = in_array($this->access, $user->getAuthorisedViewLevels());

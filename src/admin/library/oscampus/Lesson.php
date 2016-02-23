@@ -11,6 +11,7 @@ namespace Oscampus;
 use Exception;
 use JDatabase;
 use JForm;
+use JHtml;
 use JRegistry;
 use JUser;
 use Oscampus\Lesson\Properties;
@@ -215,7 +216,7 @@ class Lesson extends AbstractBase
      */
     public function render()
     {
-        return $this->renderer->render();
+        return JHtml::_('content.prepare', $this->renderer->render());
     }
 
     public function loadAdminForm(JForm $form, JRegistry $data)
