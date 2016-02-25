@@ -12,32 +12,45 @@ defined('_JEXEC') or die();
 class OscampusModelCourse extends OscampusModelAdmin
 {
     /**
+     * @var JObject
+     */
+    protected $item = null;
+
+    /**
      * @param int $pk
      *
      * @return object|false
      */
     public function getItem($pk = null)
     {
-        $item = parent::getItem($pk);
+        if ($this->item === null) {
+            $this->item = parent::getItem($pk);
 
-        if (!$item->id) {
-            $item->setProperties(
-                array(
-                    'released'  => date('Y-m-d'),
-                    'access'    => 1,
-                    'published' => 1,
-                    'image'     => \Oscampus\Course::DEFAULT_IMAGE,
-                    'pathways'  => array(),
-                    'tags'      => array()
-                )
-            );
+            if (!$this->item->id) {
+                $this->item->setProperties(
+                    array(
+                        'released'  => date('Y-m-d'),
+                        'access'    => 1,
+                        'published' => 1,
+                        'image'     => \Oscampus\Course::DEFAULT_IMAGE,
+                        'pathways'  => array(),
+                        'tags'      => array()
+                    )
+                );
 
-        } else {
-            $item->pathways = $this->getPathways($item->id);
-            $item->tags     = $this->getTags($item->id);
+            } else {
+                $this->item->pathways    = $this->getPathways($this->item->id);
+                $this->item->tags        = $this->getTags($this->item->id);
+
+                if ($this->item->introtext && $this->item->description) {
+                    $this->item->description = trim($this->item->introtext)
+                        . '<hr id="system-readmore" />'
+                        . trim($this->item->description);
+                }
+            }
         }
 
-        return $item;
+        return $this->item;
     }
 
     /**
@@ -126,6 +139,16 @@ class OscampusModelCourse extends OscampusModelAdmin
         }
 
         return array();
+    }
+
+    protected function prepareTable($table)
+    {
+        $descriptions = preg_split('#<.*?id=["\']system-readmore["\'].*?>#', $table->description, 2);
+
+        $table->description = trim(array_pop($descriptions));
+        $table->introtext   = trim(array_pop($descriptions));
+
+        parent::prepareTable($table);
     }
 
     public function save($data)

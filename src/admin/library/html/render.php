@@ -89,19 +89,19 @@ abstract class OscRender
      */
     public static function adminfield(JFormField $field, $legend = false, $span = 12)
     {
-        if ($legend === true) {
             if (version_compare(JVERSION, '3', 'lt')) {
                 // The only way to get what we want in J!2
                 $elementProperty = new ReflectionProperty($field, 'element');
                 $elementProperty->setAccessible(true);
 
-                $element = $elementProperty->getValue($field);
-                $legend  = JText::_($element['label']);
+                $element     = $elementProperty->getValue($field);
+                $legend      = $legend ? (string)$element['label'] : null;
+                $description = (string)$element['description'];
 
             } else {
-                $legend = JText::_($field->getAttribute('label'));
+                $legend      = $legend ? $field->getAttribute('label') : null;
+                $description = $field->getAttribute('description');
             }
-        }
 
         $joomla2 = version_compare(JVERSION, '3', 'lt');
 
@@ -116,6 +116,10 @@ abstract class OscRender
         if ($legend) {
             $html[] = '<legend>' . JText::_($legend) . '</legend>';
         }
+        if ($description) {
+            $html[] = '<p>' . JText::_($description) . '</p>';
+        }
+
         $html[] = $field->input;
         $html[] = '</fieldset>';
         $html[] = '</div>';

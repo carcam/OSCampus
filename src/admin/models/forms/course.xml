@@ -75,23 +75,19 @@
             required="true"/>
     </fieldset>
 
-    <fieldset name="descriptions" label="COM_OSCAMPUS_COURSE_TAB_DESCRIPTIONS_LABEL">
-        <field
-            name="introtext"
-            label="COM_OSCAMPUS_COURSE_INTROTEXT_LABEL"
-            type="editor"
-            filter="safehtml"
-            buttons="true"
-            hide="readmore,pagebreak"/>
-
+    <fieldset
+        name="description"
+        label="COM_OSCAMPUS_COURSE_TAB_DESCRIPTION_LABEL">
         <field
             name="description"
             label="COM_OSCAMPUS_COURSE_DESCRIPTION_LABEL"
+            description="COM_OSCAMPUS_COURSE_DESCRIPTION_DESC"
             type="editor"
             required="true"
             filter="safehtml"
+            height="500"
             buttons="true"
-            hide="readmore,pagebreak"/>
+            hide="pagebreak"/>
 
     </fieldset>
 
