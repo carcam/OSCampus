@@ -39,8 +39,9 @@ class OscampusModelCourse extends OscampusModelAdmin
                 );
 
             } else {
-                $this->item->pathways    = $this->getPathways($this->item->id);
-                $this->item->tags        = $this->getTags($this->item->id);
+                $this->item->pathways = $this->getPathways($this->item->id);
+                $this->item->tags     = $this->getTags($this->item->id);
+                $this->item->files    = $this->getFiles($this->item->id);
 
                 if ($this->item->introtext && $this->item->description) {
                     $this->item->description = trim($this->item->introtext)
@@ -54,10 +55,9 @@ class OscampusModelCourse extends OscampusModelAdmin
     }
 
     /**
-     * @param null $courseId
+     * @param int $courseId
      *
-     * @return array|mixed
-     * @throws Exception
+     * @return string[]
      */
     public function getPathways($courseId = null)
     {
@@ -80,6 +80,11 @@ class OscampusModelCourse extends OscampusModelAdmin
         return array();
     }
 
+    /**
+     * @param int $courseId
+     *
+     * @return string[]
+     */
     public function getTags($courseId = null)
     {
         if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
@@ -94,6 +99,48 @@ class OscampusModelCourse extends OscampusModelAdmin
                 $this->setError($error);
             } else {
                 return $tags;
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * @param int $courseId
+     *
+     * @return object[]
+     */
+    public function getFiles($courseId = null)
+    {
+        if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
+            $db    = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'file.id',
+                        'file.path',
+                        'file.title',
+                        'file.description',
+                        'flink.courses_id',
+                        'flink.lessons_id',
+                        'flink.ordering'
+                    )
+                )
+                ->from('#__oscampus_files AS file')
+                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
+                ->where('flink.courses_id = ' . $courseId)
+                ->order(
+                    array(
+                        'flink.ordering ASC',
+                        'file.title ASC'
+                    )
+                );
+
+            $files = $db->setQuery($query)->loadObjectList();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+            } else {
+                return $files;
             }
         }
 
