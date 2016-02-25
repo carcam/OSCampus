@@ -91,6 +91,13 @@
 
     </fieldset>
 
+    <fieldset name="files" label="COM_OSCAMPUS_ADMIN_TAB_FILES">
+        <field
+            name="files"
+            type="oscampus.files"
+            label="COM_OSCAMPUS_COURSE_FILES_LABEL"/>
+    </fieldset>
+
     <fieldset name="metadata" label="COM_OSCAMPUS_ADMIN_TAB_METADATA">
         <fields name="metadata">
             <field
