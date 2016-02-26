@@ -174,3 +174,9 @@ ul ul.ui-sortable {
     padding-top: 20px;
     border-top: 1px solid #ccc;
 }
+
+/* File assets
+ ========================================================================== */
+.osc-file-manager li.osc-file-block {
+    clear: left;
+}
