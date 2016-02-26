@@ -92,7 +92,7 @@ class OscampusFormFieldFiles extends JFormField
     protected function createButton($class, $icon, $text = null)
     {
         $button = sprintf(
-            '<button type="button" class="%s"><i class="fa %s"></i>%s</button>',
+            '<button type="button" class="%s"><i class="fa %s"></i> %s</button>',
             $class,
             $icon,
             ($text ? JText::_($text) : '')
