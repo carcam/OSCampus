@@ -51,7 +51,7 @@ class OscampusFormFieldQuestions extends JFormField
 
             $html[] = '<li class="osc-question">'
                 . $this->createInput($questionId . '_text', $questionName . '[text]', $question['text'])
-                . $this->createButton('osc-btn-warning-admin osc-delete-question', 'fa-times');
+                . $this->createButton('osc-btn-warning-admin osc-quiz-delete-question', 'fa-times');
 
             $questionCount++;
 
@@ -70,7 +70,7 @@ class OscampusFormFieldQuestions extends JFormField
             }
 
             $html[] = '<li'
-                . ' class="osc-add-answer">'
+                . ' class="osc-quiz-add-answer">'
                 . $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_QUIZ_ADD_ANSWER')
                 . '</li>';
             $html[] = '</ul>';
@@ -80,7 +80,7 @@ class OscampusFormFieldQuestions extends JFormField
         }
 
         $html[] = '<li'
-            . ' class="osc-add-question">'
+            . ' class="osc-quiz-add-question">'
             . $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_QUIZ_ADD_QUESTION')
             . '</li>';
         $html[] = '</ul>';
@@ -153,7 +153,7 @@ class OscampusFormFieldQuestions extends JFormField
         $html = '<li class="osc-answer">'
             . $answerCorrectInput
             . $answerTextInput
-            . $this->createButton('osc-btn-warning-admin osc-delete-answer', 'fa-times')
+            . $this->createButton('osc-btn-warning-admin osc-quiz-delete-answer', 'fa-times')
             . '</li>';
 
         return $html;

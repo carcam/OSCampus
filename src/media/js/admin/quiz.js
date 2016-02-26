@@ -14,7 +14,7 @@
     $.Oscampus.admin.quiz.init = function() {
 
         // Enable the delete buttons
-        $('[class*=osc-delete-]')
+        $('[class*=osc-quiz-delete-]')
             .css('cursor', 'pointer')
             .on('click', function(evt) {
                 evt.preventDefault();
@@ -28,7 +28,7 @@
             });
 
         // Create new answer
-        $('[class*=osc-add-answer]')
+        $('[class*=osc-quiz-add-answer]')
             .css('cursor', 'pointer')
             .on('click', function(evt) {
                 evt.preventDefault();
@@ -54,7 +54,7 @@
             });
 
         // Create new question
-        $('[class*=osc-add-question]')
+        $('[class*=osc-quiz-add-question]')
             .css('cursor', 'pointer')
             .on('click', function(evt) {
                 evt.preventDefault();
