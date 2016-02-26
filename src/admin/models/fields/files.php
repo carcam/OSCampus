@@ -39,7 +39,7 @@ class OscampusFormFieldFiles extends JFormField
         $html = array_merge(
             $html,
             array(
-                '<li class="osc-file-block osc-file-add">',
+                '<li class="osc-file-add">',
                 $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_FILES_ADD'),
                 '</li>',
                 '</ul>',
@@ -62,10 +62,9 @@ class OscampusFormFieldFiles extends JFormField
     protected function createUpload($subValue)
     {
         $html = array(
-            '<div class="fltlft">',
+            '<div class="ost-file-browse">',
             sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name),
-            '<br class="clr"/>',
-            $subValue,
+            '<span>' . $subValue . '</span>',
             '</div>'
         );
 
