@@ -166,7 +166,7 @@ ul ul.ui-sortable {
 
 .osc-quiz-questions ul li.osc-question > button,
 .osc-quiz-questions ul li.osc-add-question > button,
-.osc-file-manager ul li.osc-file-add > button {
+.osc-file-manager button.osc-file-add {
     font-size: 14px;
     padding: 8px 5px;
 }
@@ -195,15 +195,16 @@ ul ul.ui-sortable {
     padding-left: 62px;
 }
 
-.osc-quiz-questions ul li.osc-add-question,
-.osc-file-manager ul li.osc-file-add {
+.osc-quiz-questions ul li.osc-add-question {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #ccc;
 }
 
-.osc-file-manager li.osc-file-block {
-    clear: left;
+.osc-file-manager .ui-sortable {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 .osc-file-manager li.osc-file-block .osc-file-browse > span {
@@ -211,4 +212,17 @@ ul ul.ui-sortable {
     line-height: 25px;
     margin-left: 10px;
     color: #999;
+}
+
+.osc-file-manager li.osc-file-block button.osc-file-ordering {
+    background: #41a1d6;
+}
+
+.osc-file-manager li.osc-file-block button.osc-file-ordering:hover,
+.osc-file-manager li.osc-file-block button.osc-file-ordering:active {
+    background: #7ebce0;
+}
+
+.osc-file-manager li.osc-file-block {
+    clear: left;
 }
