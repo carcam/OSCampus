@@ -12,6 +12,7 @@ class OscampusFormFieldFiles extends JFormField
 {
     protected function getInput()
     {
+        JHtml::_('stylesheet', 'com_oscampus/admin.css', null, true);
         JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
         $this->addJavascript();
 
@@ -26,6 +27,7 @@ class OscampusFormFieldFiles extends JFormField
                 $html,
                 array(
                     '<li class="osc-file-block">',
+                    $this->createId($file->id),
                     $this->createButton('osc-file-ordering', 'fa-arrows'),
                     $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times'),
                     $this->createTitle($file->title),
@@ -50,33 +52,42 @@ class OscampusFormFieldFiles extends JFormField
         return join('', $html);
     }
 
-    protected function createTitle($value)
+    protected function createId($fileId)
+    {
+        return sprintf(
+            '<input type="hidden" name="%s[id][]" value="%s"/>',
+            $this->name,
+            $fileId
+        );
+    }
+
+    protected function createTitle($fileTitle)
     {
         return sprintf(
             '<input type="text" name="%s[title][]" value="%s" size="40"/><br class="clr"/>',
             $this->name,
-            htmlspecialchars($value)
+            htmlspecialchars($fileTitle)
         );
     }
 
-    protected function createUpload($subValue)
+    protected function createUpload($filePath)
     {
         $html = array(
-            '<div class="ost-file-browse">',
+            '<div class="osc-file-browse">',
             sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name),
-            '<span>' . $subValue . '</span>',
+            '<span class="osc-file-path">' . $filePath . '</span>',
             '</div>'
         );
 
         return join('', $html);
     }
 
-    protected function createDescription($value)
+    protected function createDescription($fileDescription)
     {
         return sprintf(
             '<textarea name="%s[description]">%s</textarea>',
             $this->name,
-            htmlspecialchars($value)
+            htmlspecialchars($fileDescription)
         );
     }
 

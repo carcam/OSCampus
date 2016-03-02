@@ -11,41 +11,65 @@
 
     $.Oscampus.admin = $.extend(true, {}, $.Oscampus.admin);
 
-    $.Oscampus.admin.files = {};
+    $.Oscampus.admin.files = {
+        options: {
+            container: '#file-manager',
+            button   : {
+                delete: '.osc-file-delete',
+                add   : '.osc-file-add',
+                order : '.osc-file-ordering'
+            },
+            path     : '.osc-file-path'
+        },
 
-    $.Oscampus.admin.files.init = function(options) {
-        options = $.extend(true, {}, this.options, options);
+        init: function(options) {
+            options = $.extend(true, {}, this.options, options);
 
-        // Enable the delete buttons
-        $(options.container)
-            .find('.osc-file-delete')
-            .css('cursor', 'pointer')
-            .on('click', function(evt) {
-                evt.preventDefault();
+            var container = $(options.container);
 
-                $(this).parent('li').remove();
+            // Enable the delete buttons
+            container
+                .find(options.button.delete)
+                .css('cursor', 'pointer')
+                .on('click', function(evt) {
+                    evt.preventDefault();
+
+                    $(this).parent('li').remove();
+                });
+
+            // Create new file block
+            container
+                .find(options.button.add)
+                .css('cursor', 'pointer')
+                .on('click', function(evt) {
+                    evt.preventDefault();
+
+                    var siblings = $(this).siblings();
+
+                    if (siblings[0]) {
+                        $.Oscampus.admin.files
+                            .clearBlock($(siblings[0]).clone(true))
+                            .insertBefore($(this));
+                    }
+                });
+
+            $(options.button.order).css('cursor', 'move');
+            container.find('ul').sortable({
+                handle: options.button.order,
+                cancel: ''
             });
+        },
 
-        // Create new file block
-        $(options.container)
-            .find('.osc-file-add')
-            .css('cursor', 'pointer')
-            .on('click', function(evt) {
-                evt.preventDefault();
+        clearBlock: function(fileBlock, options) {
+            options = $.extend(true, {}, this.options, options);
 
-                console.log(options);
+            fileBlock
+                .find('input, textarea')
+                .val('');
 
-                //var siblings = $(this).parent('ul').find('li.osc-file-block');
-                //if (siblings[0]) {
-                    alert('Under Construction');
-                //}
-            });
+            fileBlock.find(options.path).html('');
 
-        // init movable blocks
-        var container = $('.osc-file-manager');
-
-    };
-    $.Oscampus.admin.files.options = {
-        container: '#file-manager'
+            return fileBlock;
+        }
     };
 })(jQuery);
