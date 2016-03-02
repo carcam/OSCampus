@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 
 class OscampusFormFieldFiles extends JFormField
 {
+    protected $lessons = null;
+
     protected function getInput()
     {
         JHtml::_('stylesheet', 'com_oscampus/admin.css', null, true);
@@ -65,10 +67,18 @@ class OscampusFormFieldFiles extends JFormField
             empty($file->path) ? '' : $file->path
         );
 
-        $upload = '<div class="osc-file-browse">'
-            . sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name)
-            . '<br/>' . $filePath
-            . '</div>';
+        $upload = sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name);
+
+        $lesson = JHtml::_(
+            'select.genericlist',
+            $this->getLessonOptions(),
+            $this->name . '[lessons_id][]',
+            null,
+            'value',
+            'text',
+            empty($file->lessons_id) ? '' : $file->lessons_id,
+            ''
+        );
 
         $html = '<li class="osc-file-block">'
             . $id
@@ -76,7 +86,8 @@ class OscampusFormFieldFiles extends JFormField
             . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
             . $title
             . $description
-            . $upload
+            . '<div>' . $upload . $lesson . '</div>'
+            . $filePath
             . '</li>';
 
         return $html;
@@ -121,5 +132,14 @@ class OscampusFormFieldFiles extends JFormField
         );
 
         JHtml::_('osc.onready', "$.Oscampus.admin.files.init({$options});");
+    }
+
+    protected function getLessonOptions()
+    {
+        $options = array(
+            JHtml::_('select.option', 'Place holder for lesson selector', '')
+        );
+
+        return $options;
     }
 }
