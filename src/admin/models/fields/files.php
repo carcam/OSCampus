@@ -22,29 +22,16 @@ class OscampusFormFieldFiles extends JFormField
             '<ul>'
         );
 
-        foreach ((array)$this->value as $file) {
-            $html = array_merge(
-                $html,
-                array(
-                    '<li class="osc-file-block">',
-                    $this->createId($file->id),
-                    $this->createButton('osc-file-ordering', 'fa-arrows'),
-                    $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times'),
-                    $this->createTitle($file->title),
-                    $this->createDescription($file->description),
-                    $this->createUpload($file->path),
-                    '</li>'
-                )
-            );
+        $files = (array)$this->value ?: array(null);
+        foreach ($files as $file) {
+            $html[] = $this->createFileBlock($file);
         }
 
         $html = array_merge(
             $html,
             array(
-                '<li class="osc-file-add">',
-                $this->createButton('osc-btn-main-admin', 'fa-plus', 'COM_OSCAMPUS_FILES_ADD'),
-                '</li>',
                 '</ul>',
+                $this->createButton('osc-btn-main-admin osc-file-add', 'fa-plus', 'COM_OSCAMPUS_FILES_ADD'),
                 '</div>'
             )
         );
@@ -52,47 +39,51 @@ class OscampusFormFieldFiles extends JFormField
         return join('', $html);
     }
 
-    protected function createId($fileId)
+    protected function createFileBlock($file = null)
     {
-        return sprintf(
+        $id = sprintf(
             '<input type="hidden" name="%s[id][]" value="%s"/>',
             $this->name,
-            $fileId
+            empty($file->id) ? '' : $file->id
         );
-    }
 
-    protected function createTitle($fileTitle)
-    {
-        return sprintf(
+        $title = sprintf(
             '<input type="text" name="%s[title][]" value="%s" size="40"/><br class="clr"/>',
             $this->name,
-            htmlspecialchars($fileTitle)
-        );
-    }
-
-    protected function createUpload($filePath)
-    {
-        $html = array(
-            '<div class="osc-file-browse">',
-            sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name),
-            '<span class="osc-file-path">' . $filePath . '</span>',
-            '</div>'
+            empty($file->title) ? '' : htmlspecialchars($file->title)
         );
 
-        return join('', $html);
-    }
-
-    protected function createDescription($fileDescription)
-    {
-        return sprintf(
+        $description = sprintf(
             '<textarea name="%s[description]">%s</textarea>',
             $this->name,
-            htmlspecialchars($fileDescription)
+            empty($file->description) ? '' : htmlspecialchars($file->description)
         );
+
+        $filePath = sprintf(
+            '<input type="text" name="%s[path][]" value="%s" readonly="readonly" class="readonly"/>',
+            $this->name,
+            empty($file->path) ? '' : $file->path
+        );
+
+        $upload = '<div class="osc-file-browse">'
+            . sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name)
+            . '<br/>' . $filePath
+            . '</div>';
+
+        $html = '<li class="osc-file-block">'
+            . $id
+            . $this->createButton('osc-file-ordering', 'fa-arrows')
+            . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
+            . $title
+            . $description
+            . $upload
+            . '</li>';
+
+        return $html;
     }
 
     /**
-     * Create the standard add/delete buttons
+     * Create a standard button
      *
      * @param string $class
      * @param string $icon
@@ -130,7 +121,5 @@ class OscampusFormFieldFiles extends JFormField
         );
 
         JHtml::_('osc.onready', "$.Oscampus.admin.files.init({$options});");
-
-        JHtml::_('osc.onready', "$.Oscampus.admin.lesson.ordering({$options});");
     }
 }

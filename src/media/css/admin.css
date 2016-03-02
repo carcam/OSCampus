@@ -95,7 +95,7 @@ ul ul.ui-sortable {
 
 .osc-quiz-questions ul li.osc-answer > input[type="text"],
 .osc-file-manager ul li.osc-file-block > input[type="text"],
-.osc-file-manager ul li.osc-file-block > .osc-file-browse > input[type="file"],
+.osc-file-manager ul li.osc-file-block > .osc-file-browse > input,
 .osc-file-manager ul li.osc-file-block > textarea {
     width: 448px;
     font-size: 12px;
@@ -103,8 +103,8 @@ ul ul.ui-sortable {
     padding: 2px 8px;
 }
 
-.osc-file-manager ul li.osc-file-block > .osc-file-browse > input[type="file"] {
-    width: 150px;
+.osc-file-manager ul li.osc-file-block > .osc-file-browse > input.readonly {
+    background: transparent;
 }
 
 .osc-quiz-questions ul li.osc-answer > input[type="radio"] {

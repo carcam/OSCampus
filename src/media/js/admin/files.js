@@ -14,6 +14,7 @@
     $.Oscampus.admin.files = {
         options: {
             container: '#file-manager',
+            fileBlock: '.osc-file-block',
             button   : {
                 delete: '.osc-file-delete',
                 add   : '.osc-file-add',
@@ -34,7 +35,13 @@
                 .on('click', function(evt) {
                     evt.preventDefault();
 
-                    $(this).parent('li').remove();
+                    var target = $(this).parent('li');
+
+                    if (target.siblings().length > 0) {
+                        target.remove();
+                    } else {
+                        $.Oscampus.admin.files.clearBlock(target);
+                    }
                 });
 
             // Create new file block
@@ -44,12 +51,11 @@
                 .on('click', function(evt) {
                     evt.preventDefault();
 
-                    var siblings = $(this).siblings();
+                    var blocks = $(container).find(options.fileBlock);
 
-                    if (siblings[0]) {
-                        $.Oscampus.admin.files
-                            .clearBlock($(siblings[0]).clone(true))
-                            .insertBefore($(this));
+                    if (blocks[0]) {
+                        var newElement = $.Oscampus.admin.files.clearBlock($(blocks[0]).clone(true));
+                        $(container.find('ul')).append(newElement)
                     }
                 });
 
