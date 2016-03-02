@@ -8,7 +8,9 @@
 
 defined('_JEXEC') or die();
 
-class OscampusFormFieldFiles extends JFormField
+JFormHelper::loadFieldClass('List');
+
+class OscampusFormFieldFiles extends JFormFieldList
 {
     protected $lessons = null;
 
@@ -69,16 +71,7 @@ class OscampusFormFieldFiles extends JFormField
 
         $upload = sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name);
 
-        $lesson = JHtml::_(
-            'select.genericlist',
-            $this->getLessonOptions(),
-            $this->name . '[lessons_id][]',
-            null,
-            'value',
-            'text',
-            empty($file->lessons_id) ? '' : $file->lessons_id,
-            ''
-        );
+        $lessonId = empty($file->lessons_id) ? '' : $file->lessons_id;
 
         $html = '<li class="osc-file-block">'
             . $id
@@ -86,7 +79,10 @@ class OscampusFormFieldFiles extends JFormField
             . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
             . $title
             . $description
-            . '<div>' . $upload . $lesson . '</div>'
+            . '<div>'
+            . $upload
+            . $this->getLessonOptions($lessonId)
+            . '</div>'
             . $filePath
             . '</li>';
 
@@ -134,12 +130,67 @@ class OscampusFormFieldFiles extends JFormField
         JHtml::_('osc.onready', "$.Oscampus.admin.files.init({$options});");
     }
 
-    protected function getLessonOptions()
+    /**
+     * Get a select field for attaching to specific lesson
+     *
+     * @param int $selected
+     *
+     * @return string
+     */
+    protected function getLessonOptions($selected)
     {
-        $options = array(
-            JHtml::_('select.option', 'Place holder for lesson selector', '')
-        );
+        if ($this->lessons === null) {
+            $db = OscampusFactory::getDbo();
 
-        return $options;
+            $courseField = (string)$this->element['coursefield'];
+            if (!$courseField) {
+                OscampusFactory::getApplication()->enqueueMessage('Missing course ID field link', 'error');
+                $this->lessons = '';
+
+            } else {
+                $courseId = (int)$this->form->getField($courseField)->value;
+
+                $query = $db->getQuery(true)
+                    ->select(
+                        array(
+                            'lesson.id',
+                            'lesson.title',
+                            'module.title AS ' . $db->quoteName('module_title')
+                        )
+                    )
+                    ->from('#__oscampus_lessons AS lesson')
+                    ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                    ->where('module.courses_id = ' . $courseId)
+                    ->order('module.ordering ASC, lesson.ordering ASC');
+
+                $lessons = $db->setQuery($query)->loadObjectList();
+
+                $this->lessons = array();
+                foreach ($lessons as $lesson) {
+                    $key = $lesson->module_title;
+                    if (empty($this->lessons[$key])) {
+                        $this->lessons[$key] = array();
+                    }
+                    $this->lessons[$key][] = JHtml::_('select.option', $lesson->id, $lesson->title);
+                }
+
+                $this->lessons = array_merge(array(parent::getOptions()), $this->lessons);
+            }
+        }
+
+        if ($this->lessons) {
+            $options = array(
+                'id'                 => null,
+                'list.attr'          => null,
+                'list.select'        => $selected,
+                'group.items'        => null,
+                'option.key.toHtml'  => false,
+                'option.text.toHtml' => false
+            );
+
+            return JHtml::_('select.groupedlist', $this->lessons, $this->name . '[lessons_id][]', $options);
+        }
+
+        return '';
     }
 }

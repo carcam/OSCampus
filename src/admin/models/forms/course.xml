@@ -95,7 +95,10 @@
         <field
             name="files"
             type="oscampus.files"
-            label="COM_OSCAMPUS_COURSE_FILES_LABEL"/>
+            label="COM_OSCAMPUS_COURSE_FILES_LABEL"
+            coursefield="id">
+            <option value="">COM_OSCAMPUS_OPTION_SELECT_FILE_LESSON</option>
+        </field>
     </fieldset>
 
     <fieldset name="metadata" label="COM_OSCAMPUS_ADMIN_TAB_METADATA">

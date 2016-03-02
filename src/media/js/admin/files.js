@@ -70,7 +70,7 @@
             options = $.extend(true, {}, this.options, options);
 
             fileBlock
-                .find('input, textarea')
+                .find('input, textarea, select')
                 .val('');
 
             fileBlock.find(options.path).html('');
