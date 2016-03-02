@@ -16,6 +16,7 @@ class OscampusFormFieldQuestions extends JFormField
 {
     protected function getInput()
     {
+        JHtml::_('stylesheet', 'com_oscampus/admin.css', null, true);
         JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
 
         JHtml::_('osc.jquery');
