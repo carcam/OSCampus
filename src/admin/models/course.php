@@ -304,6 +304,7 @@ class OscampusModelCourse extends OscampusModelAdmin
      * @param array $data
      *
      * @return void
+     * @throws Exception
      */
     protected function updateFiles($courseId, array $data)
     {
@@ -312,21 +313,36 @@ class OscampusModelCourse extends OscampusModelAdmin
 
         $files = $this->collectFiles($data);
 
-        $uploadFields = $app->input->files->get('jform', array(), 'array');
-        $uploads      = empty($fileFields['files']['path']) ? array() : $uploadFields['files']['path'];
-
-        //$path = \Oscampus\Course::FILE_PATH . '/' . $upload['name'];
-        //echo (int)JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path);
+        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
 
         foreach ($files as $index => $file) {
-            if ($file->file->id) {
-                $db->updateObject('#__oscampus_files', $file->file, 'id');
-            } else {
+            // Check for new uploaded files
+            if (!empty($uploads[$index]['name'])) {
+                $upload = $uploads[$index];
+
+                $path = \Oscampus\Course::FILE_PATH . '/' . $upload['name'];
+                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
+                    throw new Exception('Problem with file upload of ' . $path);
+                }
+
+                $file->file->path = $path;
+            }
+            if (empty($file->file->path)) {
+                throw new Exception('The file must be entered');
+            }
+
+            // Update the file table
+            if (empty($file->file->id)) {
                 $db->insertObject('#__oscampus_files', $file->file, 'id');
                 $file->file->id = $db->insertid();
+            } else {
+                $db->updateObject('#__oscampus_files', $file->file, 'id');
             }
         }
         $this->updateFileLinks($courseId, $files);
+
+        $this->cleanupFiles();
     }
 
     /**
@@ -359,6 +375,14 @@ class OscampusModelCourse extends OscampusModelAdmin
         }
 
         return $files;
+    }
+
+    /**
+     * Routine garbage collection of file asset records
+     */
+    protected function cleanupFiles()
+    {
+        // @TODO: write this!
     }
 
     /**
