@@ -323,7 +323,7 @@ class OscampusModelCourse extends OscampusModelAdmin
 
                 $path = \Oscampus\Course::FILE_PATH . '/' . $upload['name'];
                 if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
-                    throw new Exception('Problem with file upload of ' . $path);
+                    throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_COURSE_FILE_UPLOAD', $path));
                 }
 
                 $file->path = $path;
@@ -338,7 +338,14 @@ class OscampusModelCourse extends OscampusModelAdmin
                 }
 
             } elseif ($file->id) {
-                throw new Exception('Title and file are required');
+                $message = array();
+                if (!$file->title) {
+                    $message[] = JText::_('COM_OSCAMPUS_ERROR_COURSE_FILE_TITLE_REQUIRED');
+                }
+                if (!$file->path) {
+                    $message[] = JText::_('COM_OSCAMPUS_ERROR_COURSE_FILE_PATH_REQUIRED');
+                }
+                throw new Exception(join(', ', $message));
             }
         }
 
