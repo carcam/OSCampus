@@ -66,7 +66,7 @@ class OscampusFormFieldFiles extends JFormFieldList
         );
 
         $title = sprintf(
-            '<input type="text" class="required" required="required" name="%s[title][]" value="%s" size="40"/>',
+            '<input type="text" name="%s[title][]" value="%s" size="40"/>',
             $this->name,
             empty($file->title) ? '' : htmlspecialchars($file->title)
         );
