@@ -106,22 +106,33 @@ class OscampusRouter
                     unset($query['cid']);
 
                     if ($view == 'lesson') {
-                        if ($lessonId) {
-                            $lesson = $route->getLessonSlug($lessonId);
-                            unset($query['lid']);
+                        try {
+                            if ($lessonId) {
+                                $lesson = $route->getLessonSlug($lessonId);
+                                unset($query['lid']);
+                                if (isset($query['index'])) {
+                                    unset($query['index']);
+                                }
+
+                            } elseif ($courseId) {
+                                $lesson = $route->getLessonSlug($courseId, $lessonIndex);
+                                unset($query['index']);
+                                if (isset($query['lid'])) {
+                                    unset($query['lid']);
+                                }
+                            }
+                            if (!empty($lesson)) {
+                                $segments[] = $lesson;
+                            }
+
+                        } catch (Exception $e) {
+                            // The selected lesson probably doesn't exist. This will take us to the course homepage
                             if (isset($query['index'])) {
                                 unset($query['index']);
                             }
-
-                        } elseif ($courseId) {
-                            $lesson = $route->getLessonSlug($courseId, $lessonIndex);
-                            unset($query['index']);
                             if (isset($query['lid'])) {
                                 unset($query['lid']);
                             }
-                        }
-                        if (!empty($lesson)) {
-                            $segments[] = $lesson;
                         }
                     }
                 }
