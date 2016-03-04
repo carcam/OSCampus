@@ -317,16 +317,17 @@ class OscampusModelCourse extends OscampusModelAdmin
 
                 $file->path = $path;
             }
-            if (empty($file->path)) {
-                throw new Exception('The file must be selected');
-            }
+            if ($file->title && $file->path) {
+                // Update the file table
+                if (empty($file->id)) {
+                    $db->insertObject('#__oscampus_files', $file, 'id');
+                    $file->id = $db->insertid();
+                } else {
+                    $db->updateObject('#__oscampus_files', $file, 'id');
+                }
 
-            // Update the file table
-            if (empty($file->id)) {
-                $db->insertObject('#__oscampus_files', $file, 'id');
-                $file->id = $db->insertid();
-            } else {
-                $db->updateObject('#__oscampus_files', $file, 'id');
+            } elseif ($file->id) {
+                throw new Exception('Title and file are required');
             }
         }
         $this->cleanupFiles();
