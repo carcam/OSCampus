@@ -33,7 +33,7 @@ class OscampusFormFieldFiles extends JFormFieldList
             '<ul>'
         );
 
-        $files = (array)$this->value ?: array(null);
+        $files = $this->getFilesFromValue();
         foreach ($files as $file) {
             $html[] = $this->createFileBlock($file);
         }
@@ -237,5 +237,30 @@ class OscampusFormFieldFiles extends JFormFieldList
         }
 
         return '';
+    }
+
+    /**
+     * Get consistently formatted array of files from $this->value
+     *
+     * @return object[]
+     */
+    protected function getFilesFromValue()
+    {
+        $files = (array)$this->value ?: array(null);
+
+        // If we've come back from a form failure, we need to reformat
+        if (isset($files['id'])) {
+            $values = $files;
+            $files = array();
+            foreach ($values['id'] as $index => $id) {
+                $file = array();
+                foreach ($values as $fieldName => $fieldValues) {
+                    $file[$fieldName] = $fieldValues[$index];
+                }
+                $files[] = (object)$file;
+            }
+        }
+
+        return $files;
     }
 }
