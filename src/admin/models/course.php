@@ -115,24 +115,13 @@ class OscampusModelCourse extends OscampusModelAdmin
         if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
             $db    = $this->getDbo();
             $query = $db->getQuery(true)
-                ->select(
-                    array(
-                        'file.id',
-                        'file.path',
-                        'file.title',
-                        'file.description',
-                        'flink.courses_id',
-                        'flink.lessons_id',
-                        'flink.ordering'
-                    )
-                )
+                ->select('*')
                 ->from('#__oscampus_files AS file')
-                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
-                ->where('flink.courses_id = ' . $courseId)
+                ->where('file.courses_id = ' . $courseId)
                 ->order(
                     array(
-                        'flink.ordering ASC',
-                        'file.title ASC'
+                        'file.ordering ASC',
+                        'file.path ASC'
                     )
                 );
 
@@ -311,7 +300,7 @@ class OscampusModelCourse extends OscampusModelAdmin
         $app = OscampusFactory::getApplication();
         $db  = OscampusFactory::getDbo();
 
-        $files = $this->collectFiles($data);
+        $files = $this->collectFiles($courseId, $data);
 
         $fileFields = $app->input->files->get('jform', array(), 'array');
         $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
@@ -326,51 +315,50 @@ class OscampusModelCourse extends OscampusModelAdmin
                     throw new Exception('Problem with file upload of ' . $path);
                 }
 
-                $file->file->path = $path;
+                $file->path = $path;
             }
-            if (empty($file->file->path)) {
-                throw new Exception('The file must be entered');
+            if (empty($file->path)) {
+                throw new Exception('The file must be selected');
             }
 
             // Update the file table
-            if (empty($file->file->id)) {
-                $db->insertObject('#__oscampus_files', $file->file, 'id');
-                $file->file->id = $db->insertid();
+            if (empty($file->id)) {
+                $db->insertObject('#__oscampus_files', $file, 'id');
+                $file->id = $db->insertid();
             } else {
-                $db->updateObject('#__oscampus_files', $file->file, 'id');
+                $db->updateObject('#__oscampus_files', $file, 'id');
             }
         }
-        $this->updateFileLinks($courseId, $files);
-
         $this->cleanupFiles();
     }
 
     /**
      * Gather the file inputs into an easier structure for processing
      *
+     * @param int   $courseId
      * @param array $data
      *
      * @return object[]
      */
-    protected function collectFiles(array $data)
+    protected function collectFiles($courseId, array $data)
     {
         $files = array();
         if ($rawFiles = empty($data['files']) ? array() : $data['files']) {
             foreach ($rawFiles['id'] as $index => $fileId) {
                 $file = (object)array(
+                    'courses_id'  => (int)$courseId,
+                    'lessons_id'  => (int)$rawFiles['lessons_id'][$index],
                     'title'       => $rawFiles['title'][$index],
                     'description' => $rawFiles['description'][$index],
-                    'path'        => $rawFiles['path'][$index]
+                    'path'        => $rawFiles['path'][$index],
+                    'ordering'    => (int)$index + 1
                 );
 
                 if ($fileId) {
-                    $file->id = $fileId;
+                    $file->id = (int)$fileId;
                 }
 
-                $files[] = (object)array(
-                    'file'     => $file,
-                    'lessonId' => $rawFiles['lessons_id'][$index]
-                );
+                $files[] = $file;
             }
         }
 
@@ -383,50 +371,6 @@ class OscampusModelCourse extends OscampusModelAdmin
     protected function cleanupFiles()
     {
         // @TODO: write this!
-    }
-
-    /**
-     * Updates the attached file links table
-     *
-     * @param int   $courseId
-     * @param array $files
-     */
-    protected function updateFileLinks($courseId, array $files)
-    {
-        $db = OscampusFactory::getDbo();
-
-        $deleteQuery = $db->getQuery(true)
-            ->delete('#__oscampus_files_links')
-            ->where('courses_id = ' . (int)$courseId);
-
-        $db->setQuery($deleteQuery)->execute();
-
-        $inserts = array();
-        foreach ($files as $index => $file) {
-            $inserts[] = join(
-                ',',
-                array(
-                    $file->file->id,
-                    (int)$courseId,
-                    (int)$file->lessonId,
-                    (int)$index + 1
-                )
-            );
-        }
-
-        $insertQuery = $db->getQuery(true)
-            ->insert('#__oscampus_files_links')
-            ->columns(
-                array(
-                    'files_id',
-                    'courses_id',
-                    'lessons_id',
-                    'ordering'
-                )
-            )
-            ->values($inserts);
-
-        $db->setQuery($insertQuery)->execute();
     }
 
     /**

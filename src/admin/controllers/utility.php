@@ -10,6 +10,71 @@ defined('_JEXEC') or die();
 
 class OscampusControllerUtility extends OscampusControllerBase
 {
+    public function fixFiles()
+    {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $db = OscampusFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'files_id AS id',
+                    'courses_id',
+                    'lessons_id',
+                    'ordering'
+                )
+            )
+            ->from('#__oscampus_files_links');
+
+        if ($flinks = $db->setQuery($query)->loadObjectList()) {
+            try {
+                $this->backupTable('#__oscampus_files_links');
+                $this->backupTable('#__oscampus_files');
+
+                $query = <<<TABLEFIX
+ALTER TABLE `#__oscampus_files`
+ADD COLUMN `courses_id` INT(11) NOT NULL AFTER `id`,
+ADD COLUMN `lessons_id` INT(11) NULL DEFAULT NULL AFTER `courses_id`,
+ADD COLUMN `ordering` INT(11) NOT NULL AFTER `description`,
+ADD COLUMN `modified` DATETIME NULL DEFAULT NULL AFTER `created_by_alias`,
+ADD COLUMN `modified_by` INT(11) NULL DEFAULT NULL AFTER `modified`,
+ADD INDEX `files_courses_idx` (`courses_id` ASC),
+ADD INDEX `files_lessons_idx` (`lessons_id` ASC);
+TABLEFIX;
+                $db->setQuery($query)->execute();
+
+                $ids = array();
+                foreach ($flinks as $flink) {
+                    if (in_array($flink->id, $ids)) {
+                        $file = $db->setQuery('SELECT * FROM #__oscampus_files WHERE id=' . $flink->id)->loadAssoc();
+
+                        $insertObject = (object)array_merge($file, (array)$flink);
+                        unset($insertObject->id);
+
+                        $db->insertObject('#__oscampus_files', $insertObject);
+                        echo '<br/>INSERT:';
+                        print_r($insertObject);
+
+                    } else {
+                        $ids[] = $flink->id;
+                        $db->updateObject('#__oscampus_files', $flink, 'id');
+                        echo '<br/>UPDATE:';
+                        print_r($flink);
+                    }
+                }
+
+                $db->setQuery('DROP TABLE #__oscampus_files_links')->execute();
+
+            } catch (Exception $e) {
+                echo '<br/><br/>ERROR: ' . $e->getMessage();
+            }
+        }
+
+        JError::$legacy = $errorLegacy;
+    }
+
     protected function backupTable($source)
     {
         $errorLegacy    = JError::$legacy;

@@ -78,7 +78,10 @@ class OscampusModelLesson extends OscampusModelSite
      */
     public function getFiles()
     {
-        if ($lessonId = $this->getState('lesson.id')) {
+        $courseId = (int)$this->getState('course.id');
+        $lessonId = (int)$this->getState('lesson.id');
+
+        if ($courseId && $lessonId) {
             $db = $this->getDbo();
             $query = $db->getQuery(true)
                 ->select(
@@ -90,9 +93,13 @@ class OscampusModelLesson extends OscampusModelSite
                     )
                 )
                 ->from('#__oscampus_files AS file')
-                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
-                ->where('flink.lessons_id = ' . (int)$lessonId)
-                ->order('flink.ordering ASC, file.title ASC');
+                ->where(
+                    array(
+                        'file.courses_id = ' . $courseId,
+                        'file.lessons_id = ' . $lessonId
+                    )
+                )
+                ->order('file.ordering ASC, file.title ASC');
 
             $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
 

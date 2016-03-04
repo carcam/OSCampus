@@ -125,17 +125,8 @@ class OscampusModelCourse extends OscampusModelSite
                     )
                 )
                 ->from('#__oscampus_files AS file')
-                ->innerJoin('#__oscampus_files_links AS flink ON flink.files_id = file.id')
-                ->innerJoin('#__oscampus_courses AS course ON course.id = flink.courses_id')
-                ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = flink.lessons_id')
-                ->leftJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-                ->where(
-                    array(
-                        'flink.courses_id = ' . $cid,
-                        'file.published = 1'
-                    )
-                )
-                ->order('module.ordering, lesson.ordering, flink.ordering, file.title')
+                ->where('file.courses_id = ' . $cid)
+                ->order('file.ordering ASC, file.title ASC')
                 ->group('file.id');
 
             $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
