@@ -10,6 +10,45 @@ defined('_JEXEC') or die();
 
 class OscampusControllerUtility extends OscampusControllerBase
 {
+    protected function backupTable($source)
+    {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $backup = $source . '_bak';
+
+        $db = OscampusFactory::getDbo();
+
+        $db->setQuery("DROP TABLE IF EXISTS {$backup}")->execute();
+        $db->setQuery("CREATE TABLE {$backup} LIKE {$source}")->execute();
+        $db->setQuery("INSERT {$backup} SELECT * FROM {$source}")->execute();
+
+        JError::$legacy = $errorLegacy;
+    }
+
+    protected function restoreTable($source)
+    {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $backup = $source . '_bak';
+
+        $db     = OscampusFactory::getDbo();
+        $tables = $db->getTableList();
+
+        $restored = false;
+        if (in_array($db->replacePrefix($backup), $tables)) {
+            $db->setQuery("DELETE FROM {$source}");
+            $db->setQuery("INSERT {$source} SELECT * FROM {$backup}");
+            $db->dropTable($backup);
+            $restore = true;
+        }
+
+        JError::$legacy = $errorLegacy;
+
+        return $restored;
+    }
+
     /**
      * Check all active users without certificates to verify they
      * have not passed the course. If they have passed, optionally
