@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Course;
+
 defined('_JEXEC') or die();
 
 class OscampusModelPathway extends OscampusModelSiteList
@@ -80,6 +82,9 @@ class OscampusModelPathway extends OscampusModelSiteList
         }
         array_walk($items, function ($item) {
             $item->tags = join(', ', $item->tags);
+            if (empty($item->image)) {
+                $item->image = Course::DEFAULT_IMAGE;
+            }
         });
 
         return $items;

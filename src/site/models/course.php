@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\Course;
 use Oscampus\File;
 use Oscampus\Lesson\Properties;
 use Oscampus\UserActivity;
@@ -46,6 +47,9 @@ class OscampusModelCourse extends OscampusModelSite
             throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
         }
 
+        if (empty($course->image)) {
+            $course->image = Course::DEFAULT_IMAGE;
+        }
         $course->metadata = new JRegistry($course->metadata);
 
         return $course;
