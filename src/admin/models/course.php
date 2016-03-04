@@ -299,15 +299,15 @@ class OscampusModelCourse extends OscampusModelAdmin
      */
     protected function updateFiles($courseId, array $data)
     {
-        $app = OscampusFactory::getApplication();
-        $db  = OscampusFactory::getDbo();
-        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $app   = OscampusFactory::getApplication();
+        $db    = OscampusFactory::getDbo();
 
-        $files   = $this->collectFiles($courseId, $data);
-        $uploads = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
+        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
+        $files      = $this->collectFiles($courseId, $data);
 
         // Load all currently attached files
-        $query = $db->getQuery(true)
+        $query      = $db->getQuery(true)
             ->select('id')
             ->from('#__oscampus_files')
             ->where('courses_id = ' . $courseId);
@@ -332,11 +332,11 @@ class OscampusModelCourse extends OscampusModelAdmin
             }
             if ($file->title && $file->path) {
                 // Update the file table
-                if (empty($file->id)) {
-                    $db->insertObject('#__oscampus_files', $file, 'id');
-                    $file->id = $db->insertid();
-                } else {
-                    $db->updateObject('#__oscampus_files', $file, 'id');
+                $table = OscampusTable::getInstance('Files');
+
+                $table->setProperties($file);
+                if (!$table->store()) {
+                    die($table->getError());
                 }
 
             } elseif ($file->id) {
@@ -359,8 +359,6 @@ class OscampusModelCourse extends OscampusModelAdmin
 
             $db->setQuery($deleteQuery)->execute();
         }
-
-        $this->cleanupFiles();
     }
 
     /**
@@ -394,14 +392,6 @@ class OscampusModelCourse extends OscampusModelAdmin
         }
 
         return $files;
-    }
-
-    /**
-     * Routine garbage collection of file asset records
-     */
-    protected function cleanupFiles()
-    {
-        // @TODO: write this!
     }
 
     /**
