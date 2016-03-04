@@ -12,14 +12,21 @@ JFormHelper::loadFieldClass('List');
 
 class OscampusFormFieldFiles extends JFormFieldList
 {
+    /**
+     * @var array
+     */
     protected $lessons = null;
+
+    /**
+     * @var string[]
+     */
+    protected $files = null;
 
     protected function getInput()
     {
         JHtml::_('stylesheet', 'com_oscampus/admin.css', null, true);
         JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
         $this->addJavascript();
-
 
         $html = array(
             sprintf('<div id="%s" class="osc-file-manager">', $this->id),
@@ -43,6 +50,13 @@ class OscampusFormFieldFiles extends JFormFieldList
         return join('', $html);
     }
 
+    /**
+     * Generate html for single file block
+     *
+     * @param object $file
+     *
+     * @return string
+     */
     protected function createFileBlock($file = null)
     {
         $id = sprintf(
@@ -52,25 +66,18 @@ class OscampusFormFieldFiles extends JFormFieldList
         );
 
         $title = sprintf(
-            '<input type="text" name="%s[title][]" value="%s" size="40"/><br class="clr"/>',
+            '<input type="text" class="required" required="required" name="%s[title][]" value="%s" size="40"/>',
             $this->name,
             empty($file->title) ? '' : htmlspecialchars($file->title)
         );
 
         $description = sprintf(
-            '<textarea name="%s[description]">%s</textarea>',
+            '<textarea name="%s[description][]">%s</textarea>',
             $this->name,
             empty($file->description) ? '' : htmlspecialchars($file->description)
         );
 
-        $filePath = sprintf(
-            '<input type="text" name="%s[path][]" value="%s" readonly="readonly" class="readonly"/>',
-            $this->name,
-            empty($file->path) ? '' : $file->path
-        );
-
-        $upload = sprintf('<input type="file" name="%s[path][]" value=""/>', $this->name);
-
+        $upload   = sprintf('<input type="file" name="%s[upload][]" value=""/>', $this->name);
         $lessonId = empty($file->lessons_id) ? '' : $file->lessons_id;
 
         $html = '<li class="osc-file-block">'
@@ -78,12 +85,10 @@ class OscampusFormFieldFiles extends JFormFieldList
             . $this->createButton('osc-file-ordering', 'fa-arrows')
             . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
             . $title
-            . $description
-            . '<div>'
-            . $upload
+            . '<br class="clr"/>' . $description
+            . '<br class="clr"/>' . $this->getFileList($file->path)
             . $this->getLessonOptions($lessonId)
-            . '</div>'
-            . $filePath
+            . '<br class="clr"/>' . $upload
             . '</li>';
 
         return $html;
@@ -131,6 +136,43 @@ class OscampusFormFieldFiles extends JFormFieldList
     }
 
     /**
+     * Get a select dropdown for a previously uploaded file
+     *
+     * @param string $selected
+     *
+     * @return mixed
+     */
+    protected function getFileList($selected)
+    {
+        if ($this->files === null) {
+            $files = JFolder::files(JPATH_SITE . '/' . \Oscampus\Course::FILE_PATH);
+
+            $this->files = array();
+            foreach ($files as $file) {
+                $path = \Oscampus\Course::FILE_PATH . '/' . $file;
+                $this->files[] = JHtml::_('select.option', $path, $file);
+            }
+
+            array_unshift(
+                $this->files,
+                JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_FILE_PATH'))
+            );
+        }
+
+        $html = JHtml::_(
+            'select.genericlist',
+            $this->files,
+            $this->name . '[path][]',
+            null,
+            'value',
+            'text',
+            $selected
+        );
+
+        return $html;
+    }
+
+    /**
      * Get a select field for attaching to specific lesson
      *
      * @param int $selected
@@ -174,7 +216,10 @@ class OscampusFormFieldFiles extends JFormFieldList
                     $this->lessons[$key][] = JHtml::_('select.option', $lesson->id, $lesson->title);
                 }
 
-                $this->lessons = array_merge(array(parent::getOptions()), $this->lessons);
+                $this->lessons = array_merge(
+                    array(array(JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_FILE_LESSON')))),
+                    $this->lessons
+                );
             }
         }
 

@@ -106,9 +106,6 @@ ul ul.ui-sortable {
 .osc-file-manager ul li.osc-file-block > .osc-file-browse > input[type="file"] {
     width: 220px;
 }
-.osc-file-manager ul li.osc-file-block > .osc-file-browse > input.readonly {
-    background: transparent;
-}
 
 .osc-quiz-questions ul li.osc-answer > input[type="radio"] {
     float: left;
@@ -205,13 +202,6 @@ ul ul.ui-sortable {
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #ccc;
-}
-
-.osc-file-manager li.osc-file-block .osc-file-browse > span {
-    display: inline-block;
-    line-height: 25px;
-    margin-left: 10px;
-    color: #999;
 }
 
 .osc-file-manager li.osc-file-block button.osc-file-ordering {
