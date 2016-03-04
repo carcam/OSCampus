@@ -299,13 +299,24 @@ class OscampusModelCourse extends OscampusModelAdmin
     {
         $app = OscampusFactory::getApplication();
         $db  = OscampusFactory::getDbo();
-
-        $files = $this->collectFiles($courseId, $data);
-
         $fileFields = $app->input->files->get('jform', array(), 'array');
-        $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
+
+        $files   = $this->collectFiles($courseId, $data);
+        $uploads = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
+
+        // Load all currently attached files
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__oscampus_files')
+            ->where('courses_id = ' . $courseId);
+        $deleteList = $db->setQuery($query)->loadColumn();
 
         foreach ($files as $index => $file) {
+            $deleteIndex = array_search($file->id, $deleteList);
+            if ($deleteIndex !== false) {
+                unset($deleteList[$deleteIndex]);
+            }
+
             // Check for new uploaded files
             if (!empty($uploads[$index]['name'])) {
                 $upload = $uploads[$index];
@@ -330,6 +341,16 @@ class OscampusModelCourse extends OscampusModelAdmin
                 throw new Exception('Title and file are required');
             }
         }
+
+        // Delete any files not referenced
+        if ($deleteList) {
+            $deleteQuery = $db->getQuery(true)
+                ->delete('#__oscampus_files')
+                ->where(sprintf('id IN (%s)', join(',', $deleteList)));
+
+            $db->setQuery($deleteQuery)->execute();
+        }
+
         $this->cleanupFiles();
     }
 
