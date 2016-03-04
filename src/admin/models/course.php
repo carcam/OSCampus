@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Course;
+
 defined('_JEXEC') or die();
 
 
@@ -32,7 +34,7 @@ class OscampusModelCourse extends OscampusModelAdmin
                         'released'  => date('Y-m-d'),
                         'access'    => 1,
                         'published' => 1,
-                        'image'     => \Oscampus\Course::DEFAULT_IMAGE,
+                        'image'     => Course::DEFAULT_IMAGE,
                         'pathways'  => array(),
                         'tags'      => array()
                     )
@@ -321,7 +323,7 @@ class OscampusModelCourse extends OscampusModelAdmin
             if (!empty($uploads[$index]['name'])) {
                 $upload = $uploads[$index];
 
-                $path = \Oscampus\Course::FILE_PATH . '/' . $upload['name'];
+                $path = Course::FILE_PATH . '/' . $upload['name'];
                 if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_COURSE_FILE_UPLOAD', $path));
                 }
