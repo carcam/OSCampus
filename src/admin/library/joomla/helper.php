@@ -97,7 +97,7 @@ abstract class OscampusHelper
 
     /**
      * Check a potentially local, relative url and make sure
-     * it will
+     * it is properly formed
      *
      * @param string $url
      *

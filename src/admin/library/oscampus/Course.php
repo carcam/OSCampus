@@ -17,6 +17,7 @@ abstract class Course extends AbstractBase
     const ADVANCED     = 'advanced';
 
     const DEFAULT_IMAGE = 'media/com_oscampus/images/default-course.jpg';
+    const FILE_PATH     = 'images/stories/oscampus/files';
 
     /**
      * Creates a snapshot of the selected course

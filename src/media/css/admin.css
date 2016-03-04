@@ -57,23 +57,27 @@ ul ul.ui-sortable {
     padding-top: 5px;
 }
 
-/* Quiz
+/* Quizzes & File assets
  ========================================================================== */
 
-.osc-quiz-questions > ul > li.osc-question {
+.osc-quiz-questions > ul > li.osc-question,
+.osc-file-manager > ul > li.osc-file-block {
     display: table;
 }
 
-.osc-quiz-questions ul li.osc-question {
+.osc-quiz-questions ul li.osc-question,
+.osc-file-manager ul li.osc-file-block {
     margin: 15px 0;
     padding: 15px;
 }
 
-.osc-quiz-questions ul li.osc-question:nth-child(2n+1) {
+.osc-quiz-questions ul li.osc-question:nth-child(2n+1),
+.osc-file-manager ul li.osc-file-block:nth-child(2n+1) {
     background: rgba(242,242,242,0.5);
 }
 
-.osc-quiz-questions ul li input[type="text"] {
+.osc-quiz-questions ul li input[type="text"],
+.osc-file-manager ul li input[type="text"] {
     float: none;
     line-height: 20px;
     margin-bottom: 0;
@@ -89,11 +93,18 @@ ul ul.ui-sortable {
     border-left-width: 5px;
 }
 
-.osc-quiz-questions ul li.osc-answer > input[type="text"] {
+.osc-quiz-questions ul li.osc-answer > input[type="text"],
+.osc-file-manager ul li.osc-file-block > input[type="text"],
+.osc-file-manager ul li.osc-file-block > .osc-file-browse > input,
+.osc-file-manager ul li.osc-file-block > textarea {
     width: 448px;
     font-size: 12px;
     margin: 0 0 4px 0;
     padding: 2px 8px;
+}
+
+.osc-file-manager ul li.osc-file-block > .osc-file-browse > input[type="file"] {
+    width: 220px;
 }
 
 .osc-quiz-questions ul li.osc-answer > input[type="radio"] {
@@ -101,7 +112,8 @@ ul ul.ui-sortable {
     margin-right: 5px;
 }
 
-.osc-quiz-questions button {
+.osc-quiz-questions button,
+.osc-file-manager button {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -112,42 +124,53 @@ ul ul.ui-sortable {
 }
 
 .osc-quiz-questions button:hover,
-.osc-quiz-questions button:focus {
+.osc-quiz-questions button:focus,
+.osc-file-manager button:hover,
+.osc-file-manager button:focus{
     border: none;
 }
 
-.osc-quiz-questions button.osc-btn-warning-admin {
+.osc-quiz-questions button.osc-btn-warning-admin,
+.osc-file-manager button.osc-btn-warning-admin {
     background: #ff0000;
 }
 
 .osc-quiz-questions button.osc-btn-warning-admin:hover,
-.osc-quiz-questions button.osc-btn-warning-admin:focus {
+.osc-quiz-questions button.osc-btn-warning-admin:focus,
+.osc-file-manager button.osc-btn-warning-admin:hover,
+.osc-file-manager button.osc-btn-warning-admin:focus {
     background: #FF4D4D;
 }
 
-.osc-quiz-questions button.osc-btn-main-admin {
+.osc-quiz-questions button.osc-btn-main-admin,
+.osc-file-manager button.osc-btn-main-admin {
     background: #8cc14c;
 }
 
 .osc-quiz-questions button.osc-btn-main-admin:hover,
-.osc-quiz-questions button.osc-btn-main-admin:focus {
+.osc-quiz-questions button.osc-btn-main-admin:hover,
+.osc-file-manager button.osc-btn-main-admin:hover,
+.osc-file-manager button.osc-btn-main-admin:hover {
     background: #99c85f;
 }
 
 .osc-quiz-questions ul li.osc-question > button,
-.osc-quiz-questions ul li.osc-answer > button {
+.osc-quiz-questions ul li.osc-answer > button,
+.osc-file-manager > ul li.osc-file-block > button {
     float: right;
     margin: 0 0 0 5px;
 }
 
 .osc-quiz-questions ul li.osc-question > button,
-.osc-quiz-questions ul li.osc-add-question > button {
+.osc-quiz-questions ul li.osc-add-question > button,
+.osc-file-manager button.osc-file-add {
     font-size: 14px;
     padding: 8px 5px;
 }
 
 .osc-quiz-questions ul li.osc-answer > button,
-.osc-quiz-questions ul li.osc-add-answer > button {
+.osc-quiz-questions ul li.osc-add-answer > button,
+.osc-file-manager ul li.osc-file-block > button {
     font-size: 12px;
     padding: 6px 6px;
 }
@@ -173,4 +196,23 @@ ul ul.ui-sortable {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #ccc;
+}
+
+.osc-file-manager .ui-sortable {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.osc-file-manager li.osc-file-block button.osc-file-ordering {
+    background: #41a1d6;
+}
+
+.osc-file-manager li.osc-file-block button.osc-file-ordering:hover,
+.osc-file-manager li.osc-file-block button.osc-file-ordering:active {
+    background: #7ebce0;
+}
+
+.osc-file-manager li.osc-file-block {
+    clear: left;
 }

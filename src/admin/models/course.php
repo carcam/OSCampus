@@ -39,8 +39,9 @@ class OscampusModelCourse extends OscampusModelAdmin
                 );
 
             } else {
-                $this->item->pathways    = $this->getPathways($this->item->id);
-                $this->item->tags        = $this->getTags($this->item->id);
+                $this->item->pathways = $this->getPathways($this->item->id);
+                $this->item->tags     = $this->getTags($this->item->id);
+                $this->item->files    = $this->getFiles($this->item->id);
 
                 if ($this->item->introtext && $this->item->description) {
                     $this->item->description = trim($this->item->introtext)
@@ -54,10 +55,9 @@ class OscampusModelCourse extends OscampusModelAdmin
     }
 
     /**
-     * @param null $courseId
+     * @param int $courseId
      *
-     * @return array|mixed
-     * @throws Exception
+     * @return string[]
      */
     public function getPathways($courseId = null)
     {
@@ -80,6 +80,11 @@ class OscampusModelCourse extends OscampusModelAdmin
         return array();
     }
 
+    /**
+     * @param int $courseId
+     *
+     * @return string[]
+     */
     public function getTags($courseId = null)
     {
         if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
@@ -94,6 +99,37 @@ class OscampusModelCourse extends OscampusModelAdmin
                 $this->setError($error);
             } else {
                 return $tags;
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * @param int $courseId
+     *
+     * @return object[]
+     */
+    public function getFiles($courseId = null)
+    {
+        if ($courseId = (int)($courseId ?: $this->getState($this->getName() . '.id'))) {
+            $db    = $this->getDbo();
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from('#__oscampus_files AS file')
+                ->where('file.courses_id = ' . $courseId)
+                ->order(
+                    array(
+                        'file.ordering ASC',
+                        'file.path ASC'
+                    )
+                );
+
+            $files = $db->setQuery($query)->loadObjectList();
+            if ($error = $db->getErrorMsg()) {
+                $this->setError($error);
+            } else {
+                return $files;
             }
         }
 
@@ -153,24 +189,32 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     public function save($data)
     {
-        if (parent::save($data)) {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $success = true;
+        try {
+            $success = parent::save($data);
+
             // Handle additional update tasks
             $courseId = (int)$this->getState($this->getName() . '.id');
             $pathways = empty($data['pathways']) ? array() : $data['pathways'];
             $tags     = empty($data['tags']) ? array() : $data['tags'];
             $ordering = empty($data['lessons']) ? array() : $data['lessons'];
 
-            return $this->updatePathways($courseId, $pathways)
-            && $this->updateJunctionTable(
-                '#__oscampus_courses_tags.courses_id',
-                $courseId,
-                'tags_id',
-                $tags
-            )
-            && $this->setLessonOrder($ordering);
+            $this->updatePathways($courseId, $pathways);
+            $this->updateJunctionTable('#__oscampus_courses_tags.courses_id', $courseId, 'tags_id', $tags);
+            $this->setLessonOrder($ordering);
+            $this->updateFiles($courseId, $data);
+
+        } catch (Exception $e) {
+            $this->setError($e->getMessage());
+            $success = false;
         }
 
-        return false;
+        JError::$legacy = $errorLegacy;
+
+        return $success;
     }
 
     /**
@@ -179,7 +223,8 @@ class OscampusModelCourse extends OscampusModelAdmin
      * @param int   $courseId
      * @param int[] $pathways
      *
-     * @return bool
+     * @return void
+     * @throws Exception
      */
     protected function updatePathways($courseId, array $pathways)
     {
@@ -204,10 +249,6 @@ class OscampusModelCourse extends OscampusModelAdmin
                     )
                 );
             $db->setQuery($query)->execute();
-            if ($error = $db->getErrorMsg()) {
-                $this->setError($error);
-                return false;
-            }
         }
 
         // Add to new pathways at bottom of list
@@ -232,8 +273,7 @@ class OscampusModelCourse extends OscampusModelAdmin
                         )
                     );
                 } else {
-                    $this->setError(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
-                    return false;
+                    throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
                 }
             }
 
@@ -243,13 +283,95 @@ class OscampusModelCourse extends OscampusModelAdmin
                 ->values($insertValues);
 
             $db->setQuery($query)->execute();
-            if ($error = $db->getErrorMsg()) {
-                $this->setError($error);
-                return false;
+        }
+    }
+
+    /**
+     * Process the attached files
+     *
+     * @param int   $courseId
+     * @param array $data
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function updateFiles($courseId, array $data)
+    {
+        $app = OscampusFactory::getApplication();
+        $db  = OscampusFactory::getDbo();
+
+        $files = $this->collectFiles($courseId, $data);
+
+        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
+
+        foreach ($files as $index => $file) {
+            // Check for new uploaded files
+            if (!empty($uploads[$index]['name'])) {
+                $upload = $uploads[$index];
+
+                $path = \Oscampus\Course::FILE_PATH . '/' . $upload['name'];
+                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
+                    throw new Exception('Problem with file upload of ' . $path);
+                }
+
+                $file->path = $path;
+            }
+            if ($file->title && $file->path) {
+                // Update the file table
+                if (empty($file->id)) {
+                    $db->insertObject('#__oscampus_files', $file, 'id');
+                    $file->id = $db->insertid();
+                } else {
+                    $db->updateObject('#__oscampus_files', $file, 'id');
+                }
+
+            } elseif ($file->id) {
+                throw new Exception('Title and file are required');
+            }
+        }
+        $this->cleanupFiles();
+    }
+
+    /**
+     * Gather the file inputs into an easier structure for processing
+     *
+     * @param int   $courseId
+     * @param array $data
+     *
+     * @return object[]
+     */
+    protected function collectFiles($courseId, array $data)
+    {
+        $files = array();
+        if ($rawFiles = empty($data['files']) ? array() : $data['files']) {
+            foreach ($rawFiles['id'] as $index => $fileId) {
+                $file = (object)array(
+                    'courses_id'  => (int)$courseId,
+                    'lessons_id'  => (int)$rawFiles['lessons_id'][$index],
+                    'title'       => $rawFiles['title'][$index],
+                    'description' => $rawFiles['description'][$index],
+                    'path'        => $rawFiles['path'][$index],
+                    'ordering'    => (int)$index + 1
+                );
+
+                if ($fileId) {
+                    $file->id = (int)$fileId;
+                }
+
+                $files[] = $file;
             }
         }
 
-        return true;
+        return $files;
+    }
+
+    /**
+     * Routine garbage collection of file asset records
+     */
+    protected function cleanupFiles()
+    {
+        // @TODO: write this!
     }
 
     /**
@@ -258,7 +380,8 @@ class OscampusModelCourse extends OscampusModelAdmin
      *
      * @param array $ordering
      *
-     * @return bool
+     * @return void
+     * @throws Exception
      */
     protected function setLessonOrder(array $ordering)
     {
@@ -271,10 +394,6 @@ class OscampusModelCourse extends OscampusModelAdmin
                 'ordering' => $moduleOrder++
             );
             $db->updateObject('#__oscampus_modules', $setModule, 'id');
-            if ($error = $db->getErrorMsg()) {
-                $this->setError($error);
-                return false;
-            }
 
             foreach ($lessons as $lessonOrder => $lessonId) {
                 $set = (object)array(
@@ -282,13 +401,7 @@ class OscampusModelCourse extends OscampusModelAdmin
                     'ordering' => $lessonOrder + 1
                 );
                 $db->updateObject('#__oscampus_lessons', $set, 'id');
-                if ($error = $db->getErrorMsg()) {
-                    $this->setError($error);
-                    return false;
-                }
             }
         }
-
-        return true;
     }
 }
