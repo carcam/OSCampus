@@ -136,7 +136,7 @@ class Download
         $insertRow = (object)array(
             'users_id'           => $user->id,
             'downloaded'         => OscampusFactory::getDate()->toSql(),
-            'ip'                 => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ?: null,
+            'ip'                 => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
             'media_hashed_id'    => $video->id,
             'media_project_name' => $video->project,
             'media_name'         => $video->name
