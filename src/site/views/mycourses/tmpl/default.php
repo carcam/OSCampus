@@ -22,21 +22,31 @@ defined('_JEXEC') or die();
         ?>
         <div class="osc-table">
             <div class="osc-section osc-row-heading osc-hide-tablet">
-                <div class="block8">
+                <div class="block6">
                     <i class="fa fa-bars"></i> <?php echo JText::_('COM_OSCAMPUS_COURSE_TITLE'); ?>
                 </div>
-                <div class="block4">
+                <div class="block3">
                     <i class="fa fa-calendar"></i> <?php echo JText::_('COM_OSCAMPUS_LAST_VISIT_DATE'); ?>
+                </div>
+                <div class="block3">
+                    <i class="fa fa-battery-3"></i> <?php echo JText::_('COM_OSCAMPUS_PROGRESS'); ?>
                 </div>
             </div>
 
             <?php foreach ($this->items as $item) : ?>
                 <div class="osc-section osc-row-one">
-                    <div class="block8">
+                    <div class="block6">
                         <?php echo JHtml::_('osc.course.link', $item); ?>
                     </div>
-                    <div class="block4">
+                    <div class="block3">
                         <?php echo $item->last_lesson->format('F j, Y'); ?>
+                    </div>
+                    <div class="block3">
+                        <span class="osc-progress-bar">
+                            <span style="width: 75%;">
+                                <span>75%</span>
+                            </span>
+                        </span>
                     </div>
                 </div>
             <?php endforeach; ?>
