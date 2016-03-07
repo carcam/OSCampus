@@ -27,42 +27,42 @@ defined('_JEXEC') or die();
             <div class="block8 osc-course-description">
                 <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
                 <?php echo $item->introtext ?: $item->description; ?>
-                <div class="osc-course-start">
-                    <?php
-                    echo JHtml::_(
-                        'osc.link.lesson',
-                        $item->id,
-                        0,
-                        '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
-                        'class="osc-btn"'
-                    );
-                    ?>
-                </div>
             </div>
         </div>
         <!-- .osc-section -->
 
         <div class="osc-section osc-course-list">
-            <div class="block12">
+            <div class="block9">
                 <?php
                 if ($item->tags) :
                     ?>
                     <span class="osc-label">
-                <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
-            </span>
+                        <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
+                    </span>
                     <?php
                 endif;
                 ?>
                 <span class="osc-label">
-                <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
+                    <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
+                </span>
+                <span class="osc-label">
+                    <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
                     $item->length); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
-            </span>
+                </span>
+                <span class="osc-label">
+                    <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
+                </span>
+            </div>
+            <div class="block3 osc-course-start">
+                <?php
+                echo JHtml::_(
+                    'osc.link.lesson',
+                    $item->id,
+                    0,
+                    '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
+                    'class="osc-btn"'
+                );
+                ?>
             </div>
         </div>
         <!-- .osc-section -->
