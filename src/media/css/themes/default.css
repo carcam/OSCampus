@@ -444,9 +444,14 @@
 }
 
 #oscampus.osc-container .osc-progress-bar {
-    display: inline-block;
+    display: block;
     width: 100%;
     background: #f2f2f2;
+    overflow: hidden;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
 }
 
 #oscampus.osc-container .osc-progress-bar > span {
