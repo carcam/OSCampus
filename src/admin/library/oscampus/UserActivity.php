@@ -142,7 +142,7 @@ class UserActivity extends AbstractBase
         if ($this->user->id) {
             $app = OscampusFactory::getApplication();
 
-            $status = $this->getStatus($lesson->id);
+            $status = $this->getLessonStatus($lesson->id);
 
             // Always record the current time
             $status->last_visit = OscampusFactory::getDate()->toSql();
@@ -167,7 +167,7 @@ class UserActivity extends AbstractBase
      */
     public function recordProgress(Lesson $lesson, $score = null, $data = null)
     {
-        $status    = $this->getStatus($lesson->id);
+        $status    = $this->getLessonStatus($lesson->id);
         $completed = $status->completed;
 
         $lesson->renderer->prepareActivityProgress($status, $score, $data);
@@ -188,7 +188,7 @@ class UserActivity extends AbstractBase
      *
      * @return LessonStatus
      */
-    public function getStatus($lessonId, $userId = null)
+    public function getLessonStatus($lessonId, $userId = null)
     {
         $userId = $userId ?: $this->user->id;
         if ($userId) {

@@ -70,7 +70,7 @@ class OscampusModelLesson extends OscampusModelSite
     public function getLessonStatus()
     {
         $lesson = $this->getItem();
-        return $this->activity->getStatus($lesson->id);
+        return $this->activity->getLessonStatus($lesson->id);
     }
 
     /**
