@@ -10,8 +10,8 @@ namespace Oscampus\Lesson\Type;
 
 use Exception;
 use JRegistry;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -71,15 +71,15 @@ abstract class AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    abstract public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null);
+    abstract public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null);
 
     /**
      * Prepare data and provide XML for use in lesson admin UI.

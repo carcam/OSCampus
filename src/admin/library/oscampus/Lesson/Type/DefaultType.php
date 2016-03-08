@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JRegistry;
-use Oscampus\Lesson\ActivityStatus;
+use Oscampus\Activity\LessonStatus;
 
 defined('_JEXEC') or die();
 
@@ -27,15 +27,15 @@ class DefaultType extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         // Nothing to do
     }

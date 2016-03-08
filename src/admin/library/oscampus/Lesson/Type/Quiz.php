@@ -11,8 +11,8 @@ namespace Oscampus\Lesson\Type;
 use JHtml;
 use JRegistry;
 use JText;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -90,11 +90,11 @@ class Quiz extends AbstractType
     }
 
     /**
-     * @param ActivityStatus $activity
+     * @param LessonStatus $activity
      *
      * @return object[]
      */
-    public function getLastAttempt(ActivityStatus $activity)
+    public function getLastAttempt(LessonStatus $activity)
     {
         if (isset($activity->data) && $activity->data) {
             $questions = json_decode($activity->data);
@@ -140,15 +140,15 @@ class Quiz extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         if (is_array($data)) {
             $status->score = 0;

@@ -15,8 +15,8 @@ use JRegistry;
 use JRoute;
 use JSession;
 use JText;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\Wistia\Api;
 use OscampusComponentHelper;
 use OscampusFactory;
@@ -185,15 +185,15 @@ class Wistia extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         if ($score !== null && $status->score < $score) {
             $status->score = $score;

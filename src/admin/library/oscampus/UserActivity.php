@@ -8,10 +8,10 @@
 
 namespace Oscampus;
 
-use JDatabaseQuery;
 use JDatabase;
+use JDatabaseQuery;
 use JUser;
-use Oscampus\Lesson\ActivityStatus;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson\ActivitySummary;
 use OscampusFactory;
 
@@ -25,7 +25,7 @@ class UserActivity extends AbstractBase
     protected $user = null;
 
     /**
-     * @var ActivityStatus
+     * @var LessonStatus
      */
     protected $status = null;
 
@@ -47,7 +47,7 @@ class UserActivity extends AbstractBase
     public function __construct(
         JDatabase $dbo,
         JUser $user,
-        ActivityStatus $activityStatus,
+        LessonStatus $activityStatus,
         ActivitySummary $activitySummary,
         Certificate $certificate
     ) {
@@ -81,7 +81,7 @@ class UserActivity extends AbstractBase
      *
      * @param $courseId
      *
-     * @return ActivityStatus[]
+     * @return LessonStatus[]
      */
     protected function get($courseId)
     {
@@ -124,7 +124,7 @@ class UserActivity extends AbstractBase
      *
      * @param int $courseId
      *
-     * @return ActivityStatus[]
+     * @return LessonStatus[]
      */
     public function getCourse($courseId)
     {
@@ -186,7 +186,7 @@ class UserActivity extends AbstractBase
      * @param int $lessonId
      * @param int $userId
      *
-     * @return ActivityStatus
+     * @return LessonStatus
      */
     public function getStatus($lessonId, $userId = null)
     {
@@ -237,11 +237,11 @@ class UserActivity extends AbstractBase
     /**
      * insert/update an activity status record
      *
-     * @param ActivityStatus $status
+     * @param LessonStatus $status
      *
      * @return bool
      */
-    public function setStatus(ActivityStatus $status)
+    public function setStatus(LessonStatus $status)
     {
         if (!empty($status->users_id) && !empty($status->lessons_id)) {
             $fields = $this->dbo->getTableColumns('#__oscampus_users_lessons');
