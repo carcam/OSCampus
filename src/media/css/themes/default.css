@@ -459,6 +459,10 @@
     background: #706560;
 }
 
+#oscampus.osc-container .osc-progress-bar > span.osc-progress-bar-completed {
+    background: #2184cd;
+}
+
 #oscampus.osc-container .osc-progress-bar > span > span {
     margin: 0 10px;
     color: #fff;

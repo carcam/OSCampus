@@ -50,7 +50,7 @@ defined('_JEXEC') or die();
                     </div>
                     <div class="block3">
                         <span class="osc-progress-bar">
-                            <span style="<?php echo sprintf('width: %s;', $progress); ?>">
+                            <span style="<?php echo sprintf('width: %s;', $progress); ?>" class="<?php echo ($progress == '100%') ? 'osc-progress-bar-completed' : ''; ?>">
                                 <span><?php echo $progress; ?></span>
                             </span>
                         </span>
