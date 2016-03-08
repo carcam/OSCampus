@@ -27,7 +27,7 @@ class UserActivity extends AbstractBase
     /**
      * @var LessonStatus
      */
-    protected $status = null;
+    protected $lessonStatus = null;
 
     /**
      * @var LessonSummary
@@ -54,7 +54,7 @@ class UserActivity extends AbstractBase
         parent::__construct($dbo);
 
         $this->user          = $user;
-        $this->status        = $lessonStatus;
+        $this->lessonStatus  = $lessonStatus;
         $this->lessonSummary = $lessonSummary;
         $this->certificate   = $certificate;
     }
@@ -92,7 +92,7 @@ class UserActivity extends AbstractBase
 
                 $this->lessons[$courseId] = $this->dbo
                     ->setQuery($query)
-                    ->loadObjectList('lessons_id', get_class($this->status));
+                    ->loadObjectList('lessons_id', get_class($this->lessonStatus));
             }
         }
 
@@ -142,15 +142,15 @@ class UserActivity extends AbstractBase
         if ($this->user->id) {
             $app = OscampusFactory::getApplication();
 
-            $status = $this->getLessonStatus($lesson->id);
+            $lessonStatus = $this->getLessonStatus($lesson->id);
 
             // Always record the current time
-            $status->last_visit = OscampusFactory::getDate()->toSql();
+            $lessonStatus->last_visit = OscampusFactory::getDate()->toSql();
 
             // Don't bump the visit count if the page is only refreshing
             $visited = $app->getUserState('oscampus.lesson.visited');
-            if ($status->id && $visited != $lesson->id) {
-                $status->visits++;
+            if ($lessonStatus->id && $visited != $lesson->id) {
+                $lessonStatus->visits++;
             }
 
             $this->recordProgress($lesson);
@@ -167,15 +167,15 @@ class UserActivity extends AbstractBase
      */
     public function recordProgress(Lesson $lesson, $score = null, $data = null)
     {
-        $status    = $this->getLessonStatus($lesson->id);
-        $completed = $status->completed;
+        $lessonStatus    = $this->getLessonStatus($lesson->id);
+        $completed = $lessonStatus->completed;
 
-        $lesson->renderer->prepareActivityProgress($status, $score, $data);
-        $this->setStatus($status);
+        $lesson->renderer->prepareActivityProgress($lessonStatus, $score, $data);
+        $this->setStatus($lessonStatus);
 
         // On transition to completed, check to see if they earned a certificate
-        if (!$completed && $status->completed) {
-            $this->certificate->award($status->courses_id, $this);
+        if (!$completed && $lessonStatus->completed) {
+            $this->certificate->award($lessonStatus->courses_id, $this);
         }
 
     }
@@ -195,14 +195,14 @@ class UserActivity extends AbstractBase
             $query = $this->getStatusQuery()
                 ->where('lesson.id = ' . (int)$lessonId);
 
-            $status = $this->dbo->setQuery($query)->loadObject(get_class($this->status));
+            $lessonStatus = $this->dbo->setQuery($query)->loadObject(get_class($this->lessonStatus));
         }
 
-        if (empty($status)) {
-            $status = clone $this->status;
+        if (empty($lessonStatus)) {
+            $status = clone $this->lessonStatus;
         }
-        if (!$status->users_id) {
-            $status->setProperties(
+        if (!$lessonStatus->users_id) {
+            $lessonStatus->setProperties(
                 array(
                     'users_id'   => $userId,
                     'lessons_id' => $lessonId
@@ -210,7 +210,7 @@ class UserActivity extends AbstractBase
             );
         }
 
-        return $status;
+        return $lessonStatus;
     }
 
     /**
@@ -237,27 +237,27 @@ class UserActivity extends AbstractBase
     /**
      * insert/update an activity status record
      *
-     * @param LessonStatus $status
+     * @param LessonStatus $lessonStatus
      *
      * @return bool
      */
-    public function setStatus(LessonStatus $status)
+    public function setStatus(LessonStatus $lessonStatus)
     {
-        if (!empty($status->users_id) && !empty($status->lessons_id)) {
+        if (!empty($lessonStatus->users_id) && !empty($lessonStatus->lessons_id)) {
             $fields = $this->dbo->getTableColumns('#__oscampus_users_lessons');
 
-            if (empty($status->id)) {
+            if (empty($lessonStatus->id)) {
                 $thisVisit = OscampusFactory::getDate();
 
-                $status->first_visit = $thisVisit;
-                $status->last_visit  = $thisVisit;
-                $status->visits      = 1;
+                $lessonStatus->first_visit = $thisVisit;
+                $lessonStatus->last_visit  = $thisVisit;
+                $lessonStatus->visits      = 1;
 
-                $insert  = (object)array_intersect_key($status->toArray(), $fields);
+                $insert  = (object)array_intersect_key($lessonStatus->toArray(), $fields);
                 $success = $this->dbo->insertObject('#__oscampus_users_lessons', $insert);
 
             } else {
-                $update  = (object)array_intersect_key($status->toArray(), $fields);
+                $update  = (object)array_intersect_key($lessonStatus->toArray(), $fields);
                 $success = $this->dbo->updateObject('#__oscampus_users_lessons', $update, 'id');
             }
             return $success;
