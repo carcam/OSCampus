@@ -462,7 +462,8 @@
 #oscampus.osc-container .osc-progress-bar > span > span {
     margin: 0 10px;
     color: #fff;
-    font-size: 11px;
+    font-size: 10px;
+    text-shadow: 0 0 2px #000;
 }
 
 /* Teacher
