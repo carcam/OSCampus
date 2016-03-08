@@ -199,7 +199,7 @@ class UserActivity extends AbstractBase
         }
 
         if (empty($lessonStatus)) {
-            $status = clone $this->lessonStatus;
+            $lessonStatus = clone $this->lessonStatus;
         }
         if (!$lessonStatus->users_id) {
             $lessonStatus->setProperties(
