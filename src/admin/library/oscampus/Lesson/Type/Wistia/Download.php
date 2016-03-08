@@ -80,7 +80,7 @@ class Download
                 ->where(
                     array(
                         'users_id = ' . $userId,
-                        "downloaded BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL {$this->limitPeriod} day)) AND NOW()"
+                        "downloaded >= TIMESTAMP(DATE_SUB(NOW(), INTERVAL {$this->period} day))"
                     )
                 );
 
