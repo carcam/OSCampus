@@ -60,13 +60,13 @@ class Services implements ServiceProviderInterface
 
         $pimple['activity'] = $pimple->factory(
             function (Container $c) {
-                $status  = new LessonStatus();
-                $summary = new LessonSummary();
+                $lessonStatus  = new LessonStatus();
+                $lessonSummary = new LessonSummary();
                 return new UserActivity(
                     $c['dbo'],
                     $c['user'],
-                    $status,
-                    $summary,
+                    $lessonStatus,
+                    $lessonSummary,
                     $c['certificate']);
             }
         );
