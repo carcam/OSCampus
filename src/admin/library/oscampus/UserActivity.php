@@ -12,7 +12,7 @@ use JDatabase;
 use JDatabaseQuery;
 use JUser;
 use Oscampus\Activity\LessonStatus;
-use Oscampus\Lesson\ActivitySummary;
+use Oscampus\Activity\LessonSummary;
 use OscampusFactory;
 
 defined('_JEXEC') or die();
@@ -30,7 +30,7 @@ class UserActivity extends AbstractBase
     protected $status = null;
 
     /**
-     * @var ActivitySummary
+     * @var LessonSummary
      */
     protected $summary = null;
 
@@ -48,7 +48,7 @@ class UserActivity extends AbstractBase
         JDatabase $dbo,
         JUser $user,
         LessonStatus $activityStatus,
-        ActivitySummary $activitySummary,
+        LessonSummary $activitySummary,
         Certificate $certificate
     ) {
         parent::__construct($dbo);
@@ -271,7 +271,7 @@ class UserActivity extends AbstractBase
      *
      * @param int $courseId
      *
-     * @return ActivitySummary|ActivitySummary[]
+     * @return LessonSummary|LessonSummary[]
      */
     public function summary($courseId = null)
     {

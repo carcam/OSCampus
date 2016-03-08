@@ -6,14 +6,14 @@
  * @license
  */
 
-namespace Oscampus\Lesson;
+namespace Oscampus\Activity;
 
 use DateTime;
 use Oscampus\AbstractPrototype;
 
 defined('_JEXEC') or die();
 
-class ActivitySummary extends AbstractPrototype
+class LessonSummary extends AbstractPrototype
 {
     /**
      * @var int
