@@ -35,7 +35,7 @@ class DefaultType extends AbstractType
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
     {
         // Nothing to do
     }
