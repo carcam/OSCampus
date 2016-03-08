@@ -14,15 +14,21 @@ class OscampusModelPathway extends OscampusModelSiteList
 {
     protected function getListQuery()
     {
+        $db         = $this->getDbo();
         $user       = OscampusFactory::getUser();
         $viewLevels = join(',', $user->getAuthorisedViewLevels());
 
-        $query = parent::getListQuery()
+        $tags  = sprintf(
+            'GROUP_CONCAT(tag.title ORDER BY tag.title ASC SEPARATOR %s) AS tags',
+            $db->quote(', ')
+        );
+        $query = $db->getQuery(true)
             ->select(
                 array(
                     'cp.*',
                     'pathway.title AS pathway',
                     'user.name AS teacher',
+                    $tags,
                     'course.*'
                 )
             )
@@ -30,6 +36,8 @@ class OscampusModelPathway extends OscampusModelSiteList
             ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
             ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
+            ->leftJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
+            ->leftJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
             ->leftJoin('#__users AS user ON user.id = teacher.users_id')
             ->where(
                 array(
@@ -39,7 +47,8 @@ class OscampusModelPathway extends OscampusModelSiteList
                     'course.access IN (' . $viewLevels . ')',
                     'course.released <= NOW()'
                 )
-            );
+            )
+            ->group('course.id');
 
         $order     = $this->getState('list.order', 'cp.ordering');
         $direction = $this->getState('list.direction', 'ASC');
@@ -53,39 +62,11 @@ class OscampusModelPathway extends OscampusModelSiteList
         $items = parent::getItems();
 
         $tbd = JText::_('COM_OSCAMPUS_TEACHER_UNKNOWN');
-
-        $courses = array();
         foreach ($items as $idx => $item) {
-            $courses[$item->id] = $idx;
-
-            $item->tags = array();
             if (!$item->teacher) {
                 $item->teacher = $tbd;
             }
         }
-
-        // Format tags
-        // @TODO: This is a pretty brain-dead way to handle tags
-        $db       = $this->getDbo();
-        $tagQuery = $db->getQuery(true)
-            ->select('ct.*, tag.title')
-            ->from('#__oscampus_courses_tags AS ct')
-            ->innerJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
-            ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
-            ->where('course.id IN (' . join(',', array_keys($courses)) . ')');
-        $tags     = $db->setQuery($tagQuery)->loadObjectList();
-        foreach ($tags as $tag) {
-            if (isset($courses[$tag->courses_id])) {
-                $idx                 = $courses[$tag->courses_id];
-                $items[$idx]->tags[] = $tag->title;
-            }
-        }
-        array_walk($items, function ($item) {
-            $item->tags = join(', ', $item->tags);
-            if (empty($item->image)) {
-                $item->image = Course::DEFAULT_IMAGE;
-            }
-        });
 
         return $items;
     }
