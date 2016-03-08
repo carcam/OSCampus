@@ -32,7 +32,7 @@ class UserActivity extends AbstractBase
     /**
      * @var LessonSummary
      */
-    protected $summary = null;
+    protected $lessonSummary = null;
 
     /**
      * @var Certificate
@@ -47,16 +47,16 @@ class UserActivity extends AbstractBase
     public function __construct(
         JDatabase $dbo,
         JUser $user,
-        LessonStatus $activityStatus,
-        LessonSummary $activitySummary,
+        LessonStatus $lessonStatus,
+        LessonSummary $lessonSummary,
         Certificate $certificate
     ) {
         parent::__construct($dbo);
 
-        $this->user        = $user;
-        $this->status      = $activityStatus;
-        $this->summary     = $activitySummary;
-        $this->certificate = $certificate;
+        $this->user          = $user;
+        $this->status        = $lessonStatus;
+        $this->lessonSummary = $lessonSummary;
+        $this->certificate   = $certificate;
     }
 
     /**
@@ -267,13 +267,13 @@ class UserActivity extends AbstractBase
     }
 
     /**
-     * Get a summary of this user's activity for courses
+     * Get a summary of this user's lesson activity for courses
      *
      * @param int $courseId
      *
      * @return LessonSummary[]
      */
-    public function summary($courseId = null)
+    public function getLessonSummary($courseId = null)
     {
         $queryCount = $this->dbo->getQuery(true)
             ->select('m1.courses_id, count(distinct l1.id) lessons')
@@ -308,7 +308,7 @@ class UserActivity extends AbstractBase
             $query->where('course.id = ' . (int)$courseId);
         }
 
-        $summary = $this->dbo->setQuery($query)->loadObjectlist('id', get_class($this->summary));
+        $summary = $this->dbo->setQuery($query)->loadObjectlist('id', get_class($this->lessonSummary));
 
         return $summary;
     }
