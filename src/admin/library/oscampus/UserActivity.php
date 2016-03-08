@@ -11,6 +11,7 @@ namespace Oscampus;
 use JDatabase;
 use JDatabaseQuery;
 use JUser;
+use Oscampus\Activity\CourseStatus;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Activity\LessonSummary;
 use OscampusFactory;
@@ -30,6 +31,11 @@ class UserActivity extends AbstractBase
     protected $lessonStatus = null;
 
     /**
+     * @var LessonStatus[]
+     */
+    protected $lessons = array();
+
+    /**
      * @var LessonSummary
      */
     protected $lessonSummary = null;
@@ -40,15 +46,21 @@ class UserActivity extends AbstractBase
     public $certificate = null;
 
     /**
-     * @var array[]
+     * @var CourseStatus
      */
-    protected $lessons = array();
+    protected $courseStatus = null;
+
+    /**
+     * @var CourseStatus[]
+     */
+    protected $courses = null;
 
     public function __construct(
         JDatabase $dbo,
         JUser $user,
         LessonStatus $lessonStatus,
         LessonSummary $lessonSummary,
+        CourseStatus $courseStatus,
         Certificate $certificate
     ) {
         parent::__construct($dbo);
@@ -56,6 +68,7 @@ class UserActivity extends AbstractBase
         $this->user          = $user;
         $this->lessonStatus  = $lessonStatus;
         $this->lessonSummary = $lessonSummary;
+        $this->courseStatus  = $courseStatus;
         $this->certificate   = $certificate;
     }
 
@@ -71,6 +84,7 @@ class UserActivity extends AbstractBase
         if ($id != $this->user->id) {
             $this->user->load($id);
             $this->lessons = array();
+            $this->courses = array();
         }
 
         return $this->user;
@@ -133,6 +147,67 @@ class UserActivity extends AbstractBase
     }
 
     /**
+     * Get all user course activity
+     *
+     * @return CourseStatus[]
+     */
+    public function getCourseStatus()
+    {
+        if ($this->courses === null) {
+            $db = OscampusFactory::getDbo();
+
+            $activityQuery = $db->getQuery(true)
+                ->select(
+                    array(
+                        'module.courses_id',
+                        'activity.users_id',
+                        'MIN(activity.first_visit) AS first_visit',
+                        'MAX(activity.last_visit) AS last_visit',
+                        sprintf(
+                            'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
+                            $db->quote(':')
+                        ),
+                        'certificate.id AS certificates_id',
+                        'certificate.date_earned',
+                        'count(*) AS lessons_taken'
+                    )
+                )
+                ->from('#__oscampus_users_lessons AS activity')
+                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+                ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                ->leftJoin('#__oscampus_certificates AS certificate ON certificate.courses_id = module.courses_id AND certificate.users_id = activity.users_id')
+                ->where('activity.users_id = ' . $this->user->id)
+                ->group('module.courses_id');
+
+            $courseQuery = $db->getQuery(true)
+                ->select(
+                    array(
+                        'course.id',
+                        'course.title',
+                        'count(*) AS lessons',
+                        'user_activity.lessons_taken',
+                        'user_activity.users_id',
+                        'user_activity.first_visit',
+                        'user_activity.last_visit',
+                        'user_activity.scores',
+                        'user_activity.certificates_id',
+                        'user_activity.date_earned'
+                    )
+                )
+                ->from('#__oscampus_courses AS course')
+                ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
+                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+                ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
+                ->group('course.id');
+
+            $this->courses = $db->setQuery($courseQuery)->loadObjectList('id', get_class($this->courseStatus));
+        }
+
+        return $this->courses;
+    }
+
+
+    /**
      * Update last visit date and number of visits
      *
      * @param Lesson $lesson
@@ -167,8 +242,8 @@ class UserActivity extends AbstractBase
      */
     public function recordProgress(Lesson $lesson, $score = null, $data = null)
     {
-        $lessonStatus    = $this->getLessonStatus($lesson->id);
-        $completed = $lessonStatus->completed;
+        $lessonStatus = $this->getLessonStatus($lesson->id);
+        $completed    = $lessonStatus->completed;
 
         $lesson->renderer->prepareActivityProgress($lessonStatus, $score, $data);
         $this->setStatus($lessonStatus);
@@ -184,14 +259,12 @@ class UserActivity extends AbstractBase
      * Get an activity status record
      *
      * @param int $lessonId
-     * @param int $userId
      *
      * @return LessonStatus
      */
-    public function getLessonStatus($lessonId, $userId = null)
+    public function getLessonStatus($lessonId)
     {
-        $userId = $userId ?: $this->user->id;
-        if ($userId) {
+        if ($this->user->id) {
             $query = $this->getStatusQuery()
                 ->where('lesson.id = ' . (int)$lessonId);
 
@@ -204,7 +277,7 @@ class UserActivity extends AbstractBase
         if (!$lessonStatus->users_id) {
             $lessonStatus->setProperties(
                 array(
-                    'users_id'   => $userId,
+                    'users_id'   => $this->user->id,
                     'lessons_id' => $lessonId
                 )
             );

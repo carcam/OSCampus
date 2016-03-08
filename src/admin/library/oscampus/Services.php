@@ -9,6 +9,7 @@
 namespace Oscampus;
 
 use Mobile_Detect;
+use Oscampus\Activity\CourseStatus;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Activity\LessonSummary;
 use Oscampus\Lesson;
@@ -62,11 +63,13 @@ class Services implements ServiceProviderInterface
             function (Container $c) {
                 $lessonStatus  = new LessonStatus();
                 $lessonSummary = new LessonSummary();
+                $courseStatus = new CourseStatus();
                 return new UserActivity(
                     $c['dbo'],
                     $c['user'],
                     $lessonStatus,
                     $lessonSummary,
+                    $courseStatus,
                     $c['certificate']);
             }
         );
