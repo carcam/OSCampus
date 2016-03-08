@@ -147,67 +147,6 @@ class UserActivity extends AbstractBase
     }
 
     /**
-     * Get all user course activity
-     *
-     * @return CourseStatus[]
-     */
-    public function getCourseStatus()
-    {
-        if ($this->courses === null) {
-            $db = OscampusFactory::getDbo();
-
-            $activityQuery = $db->getQuery(true)
-                ->select(
-                    array(
-                        'module.courses_id',
-                        'activity.users_id',
-                        'MIN(activity.first_visit) AS first_visit',
-                        'MAX(activity.last_visit) AS last_visit',
-                        sprintf(
-                            'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
-                            $db->quote(':')
-                        ),
-                        'certificate.id AS certificates_id',
-                        'certificate.date_earned',
-                        'count(*) AS lessons_taken'
-                    )
-                )
-                ->from('#__oscampus_users_lessons AS activity')
-                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
-                ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-                ->leftJoin('#__oscampus_certificates AS certificate ON certificate.courses_id = module.courses_id AND certificate.users_id = activity.users_id')
-                ->where('activity.users_id = ' . $this->user->id)
-                ->group('module.courses_id');
-
-            $courseQuery = $db->getQuery(true)
-                ->select(
-                    array(
-                        'course.id',
-                        'course.title',
-                        'count(*) AS lessons',
-                        'user_activity.lessons_taken',
-                        'user_activity.users_id',
-                        'user_activity.first_visit',
-                        'user_activity.last_visit',
-                        'user_activity.scores',
-                        'user_activity.certificates_id',
-                        'user_activity.date_earned'
-                    )
-                )
-                ->from('#__oscampus_courses AS course')
-                ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
-                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
-                ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
-                ->group('course.id');
-
-            $this->courses = $db->setQuery($courseQuery)->loadObjectList('id', get_class($this->courseStatus));
-        }
-
-        return $this->courses;
-    }
-
-
-    /**
      * Update last visit date and number of visits
      *
      * @param Lesson $lesson

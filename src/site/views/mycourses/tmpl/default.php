@@ -11,11 +11,15 @@ defined('_JEXEC') or die();
 /** @var OscampusViewMycourses $this */
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
-    <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCOURSES')): ?>
+    <?php
+    if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCOURSES')):
+        ?>
         <div class="page-header">
             <h1><?php echo $heading; ?></h1>
         </div>
-    <?php endif; ?>
+        <?php
+    endif;
+    ?>
 
     <?php
     if ($this->items) :
@@ -33,18 +37,21 @@ defined('_JEXEC') or die();
                 </div>
             </div>
 
-            <?php foreach ($this->items as $item) : ?>
+            <?php
+            foreach ($this->items as $item) :
+                $progress = sprintf('%s%%', $item->progress);
+                ?>
                 <div class="osc-section osc-row-one">
                     <div class="block6">
                         <?php echo JHtml::_('osc.course.link', $item); ?>
                     </div>
                     <div class="block3">
-                        <?php echo $item->last_lesson->format('F j, Y'); ?>
+                        <?php echo $item->last_visit->format('F j, Y'); ?>
                     </div>
                     <div class="block3">
                         <span class="osc-progress-bar">
-                            <span style="width: 75%;">
-                                <span>75%</span>
+                            <span style="<?php echo sprintf('width: %s;', $progress); ?>">
+                                <span><?php echo $progress; ?></span>
                             </span>
                         </span>
                     </div>
@@ -52,15 +59,15 @@ defined('_JEXEC') or die();
             <?php endforeach; ?>
         </div>
         <?php
-        else :
+    else :
         ?>
-            <div class="osc-section">
-                <?php
-                $link = JRoute::_(OscampusRoute::getInstance()->get('courses'));
-                $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK'));
-                echo JText::sprintf('COM_OSCAMPUS_MYCOURSES_GET_STARTED', $link);
-                ?>
-            </div>
+        <div class="osc-section">
+            <?php
+            $link = JRoute::_(OscampusRoute::getInstance()->get('courses'));
+            $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK'));
+            echo JText::sprintf('COM_OSCAMPUS_MYCOURSES_GET_STARTED', $link);
+            ?>
+        </div>
         <?php
     endif;
     ?>

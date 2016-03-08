@@ -13,6 +13,13 @@ use Oscampus\AbstractPrototype;
 
 defined('_JEXEC') or die();
 
+/**
+ * Class CourseStatus
+ *
+ * @package Oscampus\Activity
+ *
+ * @property-read float $progress
+ */
 class CourseStatus extends AbstractPrototype
 {
     /**
@@ -70,4 +77,13 @@ class CourseStatus extends AbstractPrototype
         'last_visit',
         'date_earned'
     );
+
+    public function __get($name)
+    {
+        if ($name == 'progress' && $this->lessons > 0) {
+            return round(($this->lessons_taken / $this->lessons) *100, 0);
+        }
+
+        return null;
+    }
 }
