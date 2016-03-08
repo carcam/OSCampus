@@ -31,9 +31,10 @@ endif;
         <?php echo $this->lesson->render(); ?>
     </div>
 <?php
-
-echo $this->loadDefaultTemplate('description');
-echo $this->loadDefaultTemplate('files');
+if ($this->lesson->isAuthorised()) {
+    echo $this->loadDefaultTemplate('description');
+    echo $this->loadDefaultTemplate('files');
+}
 
 if (!$component):
     ?>
