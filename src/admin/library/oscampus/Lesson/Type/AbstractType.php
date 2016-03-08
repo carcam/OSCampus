@@ -19,6 +19,8 @@ defined('_JEXEC') or die();
 
 abstract class AbstractType
 {
+    const PASSING_SCORE = 0;
+
     /**
      * @var Lesson
      */
