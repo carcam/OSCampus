@@ -29,7 +29,7 @@ class Certificate extends AbstractBase
     public function award($courseId, UserActivity $activity)
     {
         if ($courseId) {
-            $summary = $activity->summary($courseId);
+            $summary = array_pop($activity->summary($courseId));
             if ($summary->viewed == $summary->lessons) {
                 $lessons = $activity->getCourse($courseId);
                 foreach ($lessons as $lessonId => $lesson) {

@@ -271,7 +271,7 @@ class UserActivity extends AbstractBase
      *
      * @param int $courseId
      *
-     * @return LessonSummary|LessonSummary[]
+     * @return LessonSummary[]
      */
     public function summary($courseId = null)
     {
@@ -309,10 +309,6 @@ class UserActivity extends AbstractBase
         }
 
         $summary = $this->dbo->setQuery($query)->loadObjectlist('id', get_class($this->summary));
-
-        if ($courseId) {
-            return array_pop($summary);
-        }
 
         return $summary;
     }
