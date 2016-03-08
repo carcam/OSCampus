@@ -209,7 +209,7 @@ class OscampusModelCourse extends OscampusModelSite
 
         if ($uid > 0 && $cid > 0) {
             $this->activity->setUser($uid);
-            return $this->activity->getCourse($cid);
+            return $this->activity->getCourseLessons($cid);
         }
 
         return array();

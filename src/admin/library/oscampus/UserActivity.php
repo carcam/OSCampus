@@ -126,7 +126,7 @@ class UserActivity extends AbstractBase
      *
      * @return LessonStatus[]
      */
-    public function getCourse($courseId)
+    public function getCourseLessons($courseId)
     {
         $lessons = $this->get($courseId);
         return $lessons;
