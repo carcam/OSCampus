@@ -13,6 +13,11 @@ defined('_JEXEC') or die();
 class OscampusViewPathway extends OscampusViewSite
 {
     /**
+     * @var OscampusModelPathway
+     */
+    protected $model = null;
+
+    /**
      * @var object[]
      */
     protected $items = array();
@@ -29,11 +34,10 @@ class OscampusViewPathway extends OscampusViewSite
 
     public function display($tpl = null)
     {
-        /** @var OscampusModelPathway $model */
-        $model = $this->getModel();
+        $this->model = $this->getModel();
 
-        $this->items   = $model->getItems();
-        $this->pathway = $model->getPathway();
+        $this->items   = $this->model->getItems();
+        $this->pathway = $this->model->getPathway();
         $this->filters = $this->getFilters();
 
         $pathway = JFactory::getApplication()->getPathway();
@@ -73,10 +77,14 @@ class OscampusViewPathway extends OscampusViewSite
         return JHtml::_('osc.link.lesson', $item->id, 0, $button, 'class="osc-btn"');
     }
 
+    /**
+     * Returns array of form fields for use in filtering classes
+     *
+     * @return string[]
+     */
     protected function getFilters()
     {
         $db  = OscampusFactory::getDbo();
-        $app = OscampusFactory::getApplication();
 
         $filters = array();
 
@@ -102,22 +110,36 @@ class OscampusViewPathway extends OscampusViewSite
         $filters[] = JHtml::_(
             'select.genericlist',
             $pathways,
-            'filter_pathway',
+            'pid',
             array('list.select' => $this->pathway->id)
         );
 
-        // Create difficulty filter
-        $difficulties = JHtml::_('osc.options.difficulties');
+        // Create difficulty selector
+        $difficulty = JHtml::_('osc.options.difficulties');
         array_unshift(
-            $difficulties,
+            $difficulty,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'))
         );
         $filters[] = JHtml::_(
             'select.genericlist',
-            $difficulties,
-            'filter_level',
-            array('list.select' => $app->getUserStateFromRequest('oscampus.filter.level', 'filter_level',null,'cmd'))
+            $difficulty,
+            'difficulty',
+            array(
+                'list.select' => $this->model->getState('filter.difficulty')
+            )
         );
+
+        // Add discrete JS
+        JHtml::_('osc.jquery');
+        $js = <<<JSCRIPT
+jQuery(document).ready(function() {
+    jQuery('#formFilter select').on('change', function(evt) {
+        this.form.submit();
+    });
+});
+JSCRIPT;
+
+        OscampusFactory::getDocument()->addScriptDeclaration($js);
 
         return $filters;
     }

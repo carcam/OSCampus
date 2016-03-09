@@ -55,6 +55,10 @@ class OscampusModelPathway extends OscampusModelSiteList
             )
             ->group('course.id');
 
+        if ($difficulty = $this->getState('filter.difficulty')) {
+            $query->where('course.difficulty = ' . $db->quote($difficulty));
+        }
+
         $order     = $this->getState('list.order', 'cp.ordering');
         $direction = $this->getState('list.direction', 'ASC');
         $query->order($order . ' ' . $direction . ', course.title ' . $direction);
@@ -122,5 +126,8 @@ class OscampusModelPathway extends OscampusModelSiteList
 
         $pathwayId = $app->input->getInt('pid');
         $this->setState('pathway.id', $pathwayId);
+
+        $difficulty = $this->getUserStateFromRequest($this->context . 'filter.difficulty', 'difficulty', null, 'cmd');
+        $this->setState('filter.difficulty', $difficulty);
     }
 }
