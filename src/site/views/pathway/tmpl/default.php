@@ -60,9 +60,6 @@ defined('_JEXEC') or die();
                         <?php
                     endif;
                     ?>
-                    <span class="osc-label">
-                    <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
-                </span>
                 <span class="osc-label">
                     <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
                         $item->length); ?>
