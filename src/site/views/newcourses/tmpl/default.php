@@ -34,15 +34,7 @@ defined('_JEXEC') or die();
                     if (!OscampusFactory::getUser()->guest) :
                         ?>
                         <div class="osc-course-start">
-                            <?php
-                            echo JHtml::_(
-                                'osc.link.lesson',
-                                $item->id,
-                                0,
-                                '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
-                                'class="osc-btn"'
-                            );
-                            ?>
+                            <?php echo $this->getStartButton($item); ?>
                         </div>
                         <?php
                     endif;
