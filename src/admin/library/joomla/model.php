@@ -22,10 +22,6 @@ abstract class OscampusModel extends JModelLegacy
 
     public static function getInstance($type, $prefix = 'OscampusModel', $config = array())
     {
-        if ($prefix == 'OscampusModel' && !static::$pathAdded) {
-            parent::addIncludePath(OSCAMPUS_ADMIN . '/models');
-            static::$pathAdded = true;
-        }
         return parent::getInstance($type, $prefix, $config);
     }
 }
