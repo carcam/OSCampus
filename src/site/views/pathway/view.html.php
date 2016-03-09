@@ -129,6 +129,24 @@ class OscampusViewPathway extends OscampusViewSite
             )
         );
 
+        // Completion options
+        $completion = JHtml::_('osc.options.completion');
+        array_unshift(
+            $completion,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COMPLETION'))
+        );
+
+        if (!OscampusFactory::getUser()->guest) {
+            $filters[] = JHtml::_(
+                'select.genericlist',
+                $completion,
+                'completion',
+                array(
+                    'list.select' => $this->model->getState('filter.completion')
+                )
+            );
+        }
+
         // Add discrete JS
         JHtml::_('osc.jquery');
         $js = <<<JSCRIPT

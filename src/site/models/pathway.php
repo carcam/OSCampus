@@ -46,7 +46,7 @@ class OscampusModelPathway extends OscampusModelSiteList
             ->leftJoin('#__users AS user ON user.id = teacher.users_id')
             ->where(
                 array(
-                    'pathway.id = ' . $this->getState('pathway.id'),
+                    'pathway.id = ' . $this->getState('filter.pathway'),
                     'pathway.published = 1',
                     'course.published = 1',
                     'course.access IN (' . $viewLevels . ')',
@@ -57,6 +57,44 @@ class OscampusModelPathway extends OscampusModelSiteList
 
         if ($difficulty = $this->getState('filter.difficulty')) {
             $query->where('course.difficulty = ' . $db->quote($difficulty));
+        }
+
+        $completion = $this->getState('filter.completion');
+        if ($completion !== null) {
+            $activities = $this->getUserActivity();
+
+            if ($completion == CourseStatus::NOT_STARTED) {
+                $query->where(
+                    sprintf(
+                        'course.id NOT IN (%s)',
+                        join(', ', array_keys($activities))
+                    )
+                );
+
+            } else {
+                // Use existence of a certificate to test if course has been completed
+                $ids = array();
+                foreach ($activities as $courseId => $activity) {
+                    if ($completion == CourseStatus::COMPLETED) {
+                        if ($activity->certificates_id) {
+                            $ids[] = $courseId;
+                        }
+
+                    } elseif ($completion == CourseStatus::IN_PROGRESS) {
+                        if (!$activity->certificates_id && $activity->lessons_taken > 0) {
+                            $ids[] = $courseId;
+                        }
+                    }
+                }
+                if ($ids) {
+                    $query->where(
+                        sprintf(
+                            'course.id IN (%s)',
+                            join(', ', $ids)
+                        )
+                    );
+                }
+            }
         }
 
         $order     = $this->getState('list.order', 'cp.ordering');
@@ -108,7 +146,7 @@ class OscampusModelPathway extends OscampusModelSiteList
     {
         $pathway = $this->getState('pathway');
         if ($pathway === null) {
-            if ($pid = (int)$this->getState('pathway.id')) {
+            if ($pid = (int)$this->getState('filter.pathway')) {
                 $db      = $this->getDbo();
                 $pathway = $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pid)->loadObject();
 
@@ -125,9 +163,12 @@ class OscampusModelPathway extends OscampusModelSiteList
         $app = JFactory::getApplication();
 
         $pathwayId = $app->input->getInt('pid');
-        $this->setState('pathway.id', $pathwayId);
+        $this->setState('filter.pathway', $pathwayId);
 
         $difficulty = $this->getUserStateFromRequest($this->context . 'filter.difficulty', 'difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);
+
+        $completion = $this->getUserStateFromRequest($this->context . 'filter.completion', 'completion', null, 'cmd');
+        $this->setState('filter.completion', $completion);
     }
 }

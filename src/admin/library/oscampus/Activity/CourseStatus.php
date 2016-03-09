@@ -22,15 +22,20 @@ defined('_JEXEC') or die();
  */
 class CourseStatus extends AbstractPrototype
 {
-    /**
-     * @var int
-     */
-    public $id              = null;
+    // Completion statuses (stati?)
+    const NOT_STARTED = 0;
+    const IN_PROGRESS = 1;
+    const COMPLETED   = 2;
 
     /**
      * @var int
      */
-    public $users_id        = null;
+    public $id = null;
+
+    /**
+     * @var int
+     */
+    public $users_id = null;
 
     /**
      * @var int
@@ -40,37 +45,37 @@ class CourseStatus extends AbstractPrototype
     /**
      * @var string
      */
-    public $title           = null;
+    public $title = null;
 
     /**
      * @var int
      */
-    public $lessons         = null;
+    public $lessons = null;
 
     /**
      * @var int
      */
-    public $lessons_taken   = null;
+    public $lessons_taken = null;
 
     /**
      * @var DateTime
      */
-    public $first_visit     = null;
+    public $first_visit = null;
 
     /**
      * @var DateTime
      */
-    public $last_visit      = null;
+    public $last_visit = null;
 
     /**
      * @var string
      */
-    public $scores          = null;
+    public $scores = null;
 
     /**
      * @var DateTime
      */
-    public $date_earned     = null;
+    public $date_earned = null;
 
     protected $dateProperties = array(
         'first_visit',
@@ -81,7 +86,7 @@ class CourseStatus extends AbstractPrototype
     public function __get($name)
     {
         if ($name == 'progress' && $this->lessons > 0) {
-            return round(($this->lessons_taken / $this->lessons) *100, 0);
+            return round(($this->lessons_taken / $this->lessons) * 100, 0);
         }
 
         return null;

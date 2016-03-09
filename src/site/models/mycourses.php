@@ -66,6 +66,12 @@ class OscampusModelMycourses extends OscampusModelList
             ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
             ->group('course.id');
 
+        if ($pid = (int)$this->getState('filter.pathway')) {
+            $courseQuery
+                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+                ->where('cp.pathways_id = ' . $pid);
+        }
+
         $ordering  = $this->getState('list.ordering', 'course.title');
         $direction = $this->getState('list.direction', 'ASC');
         $courseQuery->order($ordering . ' ' . $direction);
@@ -92,6 +98,11 @@ class OscampusModelMycourses extends OscampusModelList
 
     protected function populateState($ordering = 'course.title', $direction = 'ASC')
     {
+        $app = OscampusFactory::getApplication();
+
+        $pathwayId = $app->input->getInt('pid');
+        $this->setState('filter.pathway', $pathwayId);
+
         $this->setState('list.limit', 0);
         $this->setState('list.start', 0);
     }

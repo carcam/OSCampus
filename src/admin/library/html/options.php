@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
 use Oscampus\Course;
 
 defined('_JEXEC') or die();
@@ -263,5 +264,33 @@ abstract class OscOptions
         }
 
         return static::$cache[$key];
+    }
+
+    /**
+     * Course completion statuses
+     *
+     * @return object[]
+     */
+    public static function completion()
+    {
+        $options = array(
+            JHtml::_(
+                'select.option',
+                CourseStatus::NOT_STARTED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_NOT_STARTED')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::IN_PROGRESS,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_IN_PROGRESS')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::COMPLETED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_COMPLETED')
+            )
+        );
+
+        return $options;
     }
 }
