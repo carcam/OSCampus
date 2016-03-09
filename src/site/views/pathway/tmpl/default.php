@@ -11,6 +11,10 @@ defined('_JEXEC') or die();
 /** @var OscampusViewPathway $this */
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathway'); ?>" id="oscampus">
+    <div class="osc-section osc-pathway-filters">
+        <?php echo join('', $this->filters); ?>
+    </div>
+
     <div class="page-header">
         <h1><?php echo $this->pathway->title; ?></h1>
     </div>

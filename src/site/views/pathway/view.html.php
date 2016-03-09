@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 class OscampusViewPathway extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
 
@@ -22,6 +22,11 @@ class OscampusViewPathway extends OscampusViewSite
      */
     protected $pathway = null;
 
+    /**
+     * @var string[]
+     */
+    protected $filters = null;
+
     public function display($tpl = null)
     {
         /** @var OscampusModelPathway $model */
@@ -29,6 +34,7 @@ class OscampusViewPathway extends OscampusViewSite
 
         $this->items   = $model->getItems();
         $this->pathway = $model->getPathway();
+        $this->filters = $this->getFilters();
 
         $pathway = JFactory::getApplication()->getPathway();
         $pathway->addItem($this->pathway->title);
@@ -65,5 +71,58 @@ class OscampusViewPathway extends OscampusViewSite
         $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
 
         return JHtml::_('osc.link.lesson', $item->id, 0, $button, 'class="osc-btn"');
+    }
+
+    protected function getFilters()
+    {
+        $db  = OscampusFactory::getDbo();
+        $app = OscampusFactory::getApplication();
+
+        $filters = array();
+
+        // Create Pathway/topic selector
+        $pathwayQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'id AS ' . $db->quote('value'),
+                    'title AS ' . $db->quote('text')
+                )
+            )
+            ->from('#__oscampus_pathways')
+            ->where(
+                array(
+                    'users_id = 0',
+                    'published = 1'
+                )
+            )
+            ->order('ordering ASC');
+
+        $pathways = $db->setQuery($pathwayQuery)->loadObjectlist();
+        array_unshift(
+            $pathways,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
+        );
+
+        $filters[] = JHtml::_(
+            'select.genericlist',
+            $pathways,
+            'filter_pathway',
+            array('list.select' => $this->pathway->id)
+        );
+
+        // Create difficulty filter
+        $difficulties = JHtml::_('osc.options.difficulties');
+        array_unshift(
+            $difficulties,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'))
+        );
+        $filters[] = JHtml::_(
+            'select.genericlist',
+            $difficulties,
+            'filter_level',
+            array('list.select' => $app->getUserStateFromRequest('oscampus.filter.level', 'filter_level',null,'cmd'))
+        );
+
+        return $filters;
     }
 }
