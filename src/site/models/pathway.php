@@ -6,12 +6,17 @@
  * @license
  */
 
-use Oscampus\Course;
+use Oscampus\Activity\CourseStatus;
 
 defined('_JEXEC') or die();
 
 class OscampusModelPathway extends OscampusModelSiteList
 {
+    /**
+     * @var CourseStatus[]
+     */
+    protected $activity = null;
+
     protected function getListQuery()
     {
         $db         = $this->getDbo();
@@ -59,16 +64,35 @@ class OscampusModelPathway extends OscampusModelSiteList
 
     public function getItems()
     {
-        $items = parent::getItems();
+        $items    = parent::getItems();
+        $activity = $this->getUserActivity();
 
         $tbd = JText::_('COM_OSCAMPUS_TEACHER_UNKNOWN');
         foreach ($items as $idx => $item) {
             if (!$item->teacher) {
                 $item->teacher = $tbd;
             }
+            $item->progress = isset($activity[$item->id]) ? $activity[$item->id]->progress : 0;
         }
 
         return $items;
+    }
+
+    /**
+     * Get user's course activity
+     *
+     * @return CourseStatus[]
+     */
+    protected function getUserActivity()
+    {
+        if ($this->activity === null) {
+            /** @var OscampusModelMycourses $model */
+            $model = OscampusModel::getInstance('Mycourses');
+
+            $this->activity = $model->getItems();
+        }
+
+        return $this->activity;
     }
 
     /**

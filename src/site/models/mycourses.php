@@ -85,7 +85,7 @@ class OscampusModelMycourses extends OscampusModelList
     protected function _getList($query, $limitstart = 0, $limit = 0)
     {
         $this->_db->setQuery($query, $limitstart, $limit);
-        $result = $this->_db->loadObjectList(null, '\\Oscampus\\Activity\\CourseStatus');
+        $result = $this->_db->loadObjectList('id', '\\Oscampus\\Activity\\CourseStatus');
 
         return $result;
     }

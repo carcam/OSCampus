@@ -54,15 +54,7 @@ defined('_JEXEC') or die();
                 </span>
             </div>
             <div class="block3 osc-course-start">
-                <?php
-                echo JHtml::_(
-                    'osc.link.lesson',
-                    $item->id,
-                    0,
-                    '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
-                    'class="osc-btn"'
-                );
-                ?>
+                <?php echo $this->getStartButton($item); ?>
             </div>
         </div>
         <!-- .osc-section -->

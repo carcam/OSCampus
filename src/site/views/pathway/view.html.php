@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
+
 defined('_JEXEC') or die();
 
 class OscampusViewPathway extends OscampusViewSite
@@ -38,5 +40,30 @@ class OscampusViewPathway extends OscampusViewSite
         );
 
         parent::display($tpl);
+    }
+
+    /**
+     * Draw a dynamic start button based on user's progress
+     *
+     * @param object $item
+     *
+     * @return string
+     */
+    protected function getStartButton($item)
+    {
+        if ($item->progress == 0) {
+            $icon = 'fa-play';
+            $text = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+        } elseif ($item->progress == 100) {
+            $icon = 'fa-play';
+            $text = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+        } else {
+            $icon = 'fa-play';
+            $text = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+        }
+
+        $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
+
+        return JHtml::_('osc.link.lesson', $item->id, 0, $button, 'class="osc-btn"');
     }
 }
