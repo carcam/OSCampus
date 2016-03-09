@@ -65,10 +65,10 @@ class OscampusViewPathway extends OscampusViewSite
             $icon = 'fa-play';
             $text = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
         } elseif ($item->progress == 100) {
-            $icon = 'fa-play';
+            $icon = 'fa-repeat';
             $text = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
         } else {
-            $icon = 'fa-play';
+            $icon = 'fa-step-forward';
             $text = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
         }
 
