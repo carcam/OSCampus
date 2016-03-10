@@ -52,4 +52,40 @@ abstract class OscCourse
 
         return $value . ': ' . JText::_('COM_OSCAMPUS_UNDEFINED');
     }
+
+    /**
+     * Generate the start button for a course
+     *
+     * @param object|int $progress
+     * @param int        $courseId
+     *
+     * @return string
+     */
+    public static function startbutton($progress, $courseId = null)
+    {
+        if ($courseId === null && is_object($progress)) {
+            $courseId = isset($progress->id) ? $progress->id : null;
+            $progress = isset($progress->progress) ? $progress->progress : 0;
+        }
+
+        if ($courseId) {
+            if ($progress == 0) {
+                $icon = 'fa-play';
+                $text = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+            } elseif ($progress == 100) {
+                $icon = 'fa-repeat';
+                $text = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+            } else {
+                $icon = 'fa-step-forward';
+                $text = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+            }
+
+            $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
+
+            return JHtml::_('osc.link.lesson', $courseId, 0, $button, 'class="osc-btn"');
+        }
+
+        return '';
+    }
+
 }
