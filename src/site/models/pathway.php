@@ -24,7 +24,7 @@ class OscampusModelPathway extends OscampusModelSiteList
         $viewLevels = join(',', $user->getAuthorisedViewLevels());
 
         $tags  = sprintf(
-            'GROUP_CONCAT(tag.title ORDER BY tag.title ASC SEPARATOR %s) AS tags',
+            'GROUP_CONCAT(DISTINCT tag.title ORDER BY tag.title ASC SEPARATOR %s) AS tags',
             $db->quote(', ')
         );
         $query = $db->getQuery(true)
@@ -34,12 +34,15 @@ class OscampusModelPathway extends OscampusModelSiteList
                     'pathway.title AS pathway',
                     'user.name AS teacher',
                     $tags,
-                    'course.*'
+                    'course.*',
+                    'COUNT(DISTINCT lesson.id) AS lesson_count'
                 )
             )
             ->from('#__oscampus_pathways AS pathway')
             ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
             ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
+            ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
             ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
             ->leftJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
             ->leftJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')

@@ -60,6 +60,10 @@ defined('_JEXEC') or die();
                         <?php
                     endif;
                     ?>
+                    <span class="osc-label">
+                        <i class="fa fa-list"></i>
+                        <?php echo JText::plural('COM_OSCAMPUS_COURSE_LESSON_COUNT', $item->lesson_count); ?>
+                    </span>
                 <span class="osc-label">
                     <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
                         $item->length); ?>
