@@ -11,17 +11,6 @@ defined('_JEXEC') or die();
 /** @var OscampusViewPathway $this */
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathway'); ?>" id="oscampus">
-    <div class="osc-section osc-pathway-filters">
-        <form
-            name="formFilter"
-            id="formFilter"
-            method="get"
-            action="">
-            <?php echo join('', $this->filters); ?>
-            <input type="hidden" name="task" value="filter.pathway"/>
-        </form>
-    </div>
-
     <div class="page-header">
         <h1><?php echo $this->pathway->title; ?></h1>
     </div>
