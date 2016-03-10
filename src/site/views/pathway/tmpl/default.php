@@ -65,8 +65,8 @@ defined('_JEXEC') or die();
                         <?php echo JText::plural('COM_OSCAMPUS_COURSE_LESSON_COUNT', $item->lesson_count); ?>
                     </span>
                 <span class="osc-label">
-                    <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
-                        $item->length); ?>
+                    <i class="fa fa-clock-o"></i>
+                    <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
                 </span>
                 <span class="osc-label">
                     <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
