@@ -50,7 +50,7 @@ class CourseStatus extends AbstractPrototype
     /**
      * @var int
      */
-    public $lessons = null;
+    public $lesson_count = null;
 
     /**
      * @var int
@@ -85,8 +85,8 @@ class CourseStatus extends AbstractPrototype
 
     public function __get($name)
     {
-        if ($name == 'progress' && $this->lessons > 0) {
-            return round(($this->lessons_taken / $this->lessons) * 100, 0);
+        if ($name == 'progress' && $this->lesson_count > 0) {
+            return round(($this->lessons_taken / $this->lesson_count) * 100, 0);
         }
 
         return null;

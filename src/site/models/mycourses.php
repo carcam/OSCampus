@@ -12,6 +12,10 @@ defined('_JEXEC') or die();
 
 class OscampusModelMycourses extends OscampusModelList
 {
+    protected $filter_fields = array(
+        'course.title'
+    );
+
     public function getListQuery()
     {
         $user = OscampusFactory::getUser($this->getState('user.id'));
@@ -50,7 +54,7 @@ class OscampusModelMycourses extends OscampusModelList
                 array(
                     'course.id',
                     'course.title',
-                    'count(*) AS lessons',
+                    'count(*) AS lesson_count',
                     'user_activity.lessons_taken',
                     'user_activity.users_id',
                     'user_activity.first_visit',
@@ -72,9 +76,12 @@ class OscampusModelMycourses extends OscampusModelList
                 ->where('cp.pathways_id = ' . $pid);
         }
 
-        $ordering  = $this->getState('list.ordering', 'course.title');
+        $ordering  = $this->getState('list.ordering');
         $direction = $this->getState('list.direction', 'ASC');
         $courseQuery->order($ordering . ' ' . $direction);
+        if ($ordering != 'course.title') {
+            $courseQuery->order('course.title ' . $direction);
+        }
 
         return $courseQuery;
     }
@@ -102,6 +109,8 @@ class OscampusModelMycourses extends OscampusModelList
 
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
+
+        parent::populateState($ordering, $direction);
 
         $this->setState('list.limit', 0);
         $this->setState('list.start', 0);
