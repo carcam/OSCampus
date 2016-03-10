@@ -55,8 +55,9 @@ defined('_JEXEC') or die();
                     if ($item->tags) :
                         ?>
                         <span class="osc-label">
-                        <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
-                    </span>
+                            <i class="fa fa-tag"></i>
+                            <?php echo $item->tags; ?>
+                        </span>
                         <?php
                     endif;
                     ?>
@@ -64,13 +65,13 @@ defined('_JEXEC') or die();
                         <i class="fa fa-list"></i>
                         <?php echo JText::plural('COM_OSCAMPUS_COURSE_LESSON_COUNT', $item->lesson_count); ?>
                     </span>
-                <span class="osc-label">
-                    <i class="fa fa-clock-o"></i>
-                    <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
-                </span>
-                <span class="osc-label">
-                    <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
-                </span>
+                    <span class="osc-label">
+                        <i class="fa fa-clock-o"></i>
+                        <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES', $item->length); ?>
+                    </span>
+                    <span class="osc-label">
+                        <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
+                    </span>
                 </div>
                 <div class="block3 osc-course-start">
                     <?php echo $this->getStartButton($item); ?>
