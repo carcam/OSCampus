@@ -8,9 +8,9 @@
 
 defined('_JEXEC') or die();
 
-require_once __DIR__ . '/pathway.php';
+JLoader::import('courses', __DIR__);
 
-class OscampusModelNewcourses extends OscampusModelPathway
+class OscampusModelNewcourses extends OscampusModelCourses
 {
     protected function getListQuery()
     {
@@ -18,49 +18,30 @@ class OscampusModelNewcourses extends OscampusModelPathway
          * @var JDate $cutoff
          */
 
-        $db         = $this->getDbo();
-        $user       = OscampusFactory::getUser();
-        $viewLevels = join(',', $user->getAuthorisedViewLevels());
-        $cutoff     = $this->getState('cutoff');
+        $db     = $this->getDbo();
+        $cutoff = $this->getState('filter.cutoff');
 
-        $query = $db->getQuery(true)
-            ->select('user.name AS teacher, course.*, cp.pathways_id')
-            ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
-            ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
-            ->leftJoin('#__users user ON user.id = teacher.users_id')
-            ->where(
-                array(
-                    'course.published = 1',
-                    'course.access IN (' . $viewLevels . ')',
-                    'course.released >= ' . $db->quote($cutoff->toSql()),
-                    'pathway.access IN (' . $viewLevels . ')',
-                    'pathway.published = 1'
-                )
-            )
-            ->group('course.id')
-            ->order('course.released desc');
+        $query = $this->getBaseQuery();
+
+        $query->where('course.released >= ' . $db->quote($cutoff->toSql()));
 
         return $query;
     }
 
     /**
-     * Get the current pathway information
-     *
-     * @return object
+     * Ignore all common filters. DON'T call the parent
      */
-    public function getPathway()
-    {
-        return null;
-    }
-
-    protected function populateState($ordering = null, $direction = null)
+    protected function setFilters()
     {
         $params = OscampusFactory::getApplication()->getParams();
 
         $releasePeriod = $params->get('releasePeriod', '1 month');
         $cutoff        = OscampusFactory::getDate('now - ' . $releasePeriod);
-        $this->setState('cutoff', $cutoff);
+        $this->setState('filter.cutoff', $cutoff);
+    }
+
+    protected function populateState($ordering = 'course.released', $direction = 'DESC')
+    {
+        parent::populateState($ordering, $direction);
     }
 }
