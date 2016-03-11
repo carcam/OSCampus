@@ -89,6 +89,10 @@ class Search
             ->order('ordering ASC');
 
         $pathways = $db->setQuery($pathwayQuery)->loadObjectlist();
+        array_unshift(
+            $pathways,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
+        );
 
         $filters['pathway'] = JHtml::_(
             'select.genericlist',
@@ -103,7 +107,7 @@ class Search
             $difficulty,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'))
         );
-        $filters[] = JHtml::_(
+        $filters['difficulty'] = JHtml::_(
             'select.genericlist',
             $difficulty,
             'difficulty',
@@ -120,7 +124,7 @@ class Search
         );
 
         if (!OscampusFactory::getUser()->guest) {
-            $filters[] = JHtml::_(
+            $filters['completion'] = JHtml::_(
                 'select.genericlist',
                 $completion,
                 'completion',
