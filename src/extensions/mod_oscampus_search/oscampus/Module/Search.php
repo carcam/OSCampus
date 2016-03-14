@@ -153,6 +153,51 @@ class Search
     }
 
     /**
+     * Tag filter
+     * 
+     * @return string
+     */
+    protected function createFilterTag()
+    {
+        $user   = OscampusFactory::getUser();
+        $levels = $user->getAuthorisedViewLevels();
+
+        $tagQuery = $this->db->getQuery(true)
+            ->select(
+                array(
+                    'tag.id AS ' . $this->db->quote('value'),
+                    'tag.title AS ' . $this->db->quote('text')
+                )
+            )
+            ->from('#__oscampus_tags AS tag')
+            ->innerJoin('#__oscampus_courses_tags AS ct ON ct.tags_id = tag.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
+            ->where(
+                array(
+                    'course.published = 1',
+                    sprintf('course.access IN (%s)', join(',', $levels))
+                )
+            )
+            ->group('tag.id')
+            ->order('tag.title ASC');
+
+        $tags = $this->db->setQuery($tagQuery)->loadObjectlist();
+        array_unshift(
+            $tags,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TAG'))
+        );
+
+        $html = JHtml::_(
+            'select.genericlist',
+            $tags,
+            'tag',
+            array('list.select' => $this->model->getState('filter.tag'))
+        );
+
+        return $html;
+    }
+
+    /**
      * Difficulty Filter
      *
      * @return string
