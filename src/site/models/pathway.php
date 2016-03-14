@@ -12,11 +12,4 @@ JLoader::import('courses', __DIR__);
 
 class OscampusModelPathway extends OscampusModelCourses
 {
-    protected function getListQuery()
-    {
-        $query = $this->getBaseQuery()
-            ->group('course.id');
-
-        return $query;
-    }
 }
