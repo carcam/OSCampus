@@ -79,14 +79,28 @@ class OscampusModelCourses extends OscampusModelSiteList
             )
             ->group('course.id');
 
+        // Pathway Filter
         if ($pathwayId = (int)$this->getState('filter.pathway')) {
             $query->where('pathway.id = ' . $pathwayId);
         }
 
+        // Tag filter
+        if ($tagId = (int)$this->getState('filter.tag')) {
+            $tagQuery = $db->getQuery(true)
+                ->select('courses_id')
+                ->from('#__oscampus_courses_tags')
+                ->where('tags_id = ' . $tagId)
+                ->group('courses_id');
+
+            $query->where(sprintf('course.id IN (%s)', $tagQuery));
+        }
+
+        // Difficulty filter
         if ($difficulty = $this->getState('filter.difficulty')) {
             $query->where('course.difficulty = ' . $db->quote($difficulty));
         }
 
+        // User completion status filter
         $completion = $this->getState('filter.completion');
         if ($completion !== null) {
             $activities = $this->getUserActivity();
@@ -203,6 +217,9 @@ class OscampusModelCourses extends OscampusModelSiteList
 
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
+
+        $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'tag', null, 'int');
+        $this->setState('filter.tag', $tagId);
 
         $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);
