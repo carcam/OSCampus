@@ -116,25 +116,29 @@ class Search
     protected function createFilterPathway()
     {
         $user   = OscampusFactory::getUser();
-        $access = $user->getAuthorisedViewLevels();
+        $levels = join(',', $user->getAuthorisedViewLevels());
 
         $pathwayQuery = $this->db->getQuery(true)
             ->select(
                 array(
-                    'id AS ' . $this->db->quote('value'),
-                    'title AS ' . $this->db->quote('text')
+                    'pathway.id AS ' . $this->db->quote('value'),
+                    'pathway.title AS ' . $this->db->quote('text')
                 )
             )
-            ->from('#__oscampus_pathways')
+            ->from('#__oscampus_pathways AS pathway')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
             ->where(
                 array(
-                    'users_id = 0',
-                    'published = 1',
-                    sprintf('access IN (%s)', join(',', $access)),
-                    'id IN (SELECT pathways_id From #__oscampus_courses_pathways GROUP BY pathways_id)'
+                    'pathway.users_id = 0',
+                    'pathway.published = 1',
+                    sprintf('pathway.access IN (%s)', $levels),
+                    'course.published = 1',
+                    sprintf('course.access IN (%s)', $levels)
                 )
             )
-            ->order('ordering ASC');
+            ->group('pathway.id')
+            ->order('cp.ordering ASC');
 
         $pathways = $this->db->setQuery($pathwayQuery)->loadObjectlist();
         array_unshift(
@@ -154,7 +158,7 @@ class Search
 
     /**
      * Tag filter
-     * 
+     *
      * @return string
      */
     protected function createFilterTag()
