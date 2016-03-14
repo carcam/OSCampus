@@ -8,6 +8,7 @@
 
 namespace Oscampus\Module;
 
+use JDatabase;
 use JHtml;
 use JModuleHelper;
 use JRegistry;
@@ -38,6 +39,11 @@ class Search
     protected $model = null;
 
     /**
+     * @var JDatabase
+     */
+    protected $db = null;
+
+    /**
      * @var int
      */
     protected static $instanceCount = 0;
@@ -45,7 +51,8 @@ class Search
     public function __construct(JRegistry $params)
     {
         $this->params = $params;
-        $this->model = OscampusModel::getInstance('Pathway');
+        $this->model  = OscampusModel::getInstance('Pathway');
+        $this->db     = OscampusFactory::getDbo();
 
         self::$instanceCount++;
         $this->id = $this->name . '_' . self::$instanceCount;
@@ -61,22 +68,55 @@ class Search
     }
 
     /**
-     * Returns array of form fields for use in filtering classes
+     * Get a single input filter by name
+     *
+     * @param string $name
+     *
+     * @return string|null
+     */
+    public function getFilter($name)
+    {
+        $method = 'createFilter' . ucfirst(strtolower($name));
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get an associative array of defined input filters
      *
      * @return string[]
      */
-     protected function getFilters()
+    public function getFilters()
     {
-        $db  = OscampusFactory::getDbo();
-
+        $methods = get_class_methods($this);
         $filters = array();
 
+        foreach ($methods as $method) {
+            if (strpos($method, 'createFilter') === 0) {
+                $name = strtolower(str_replace('createFilter', '', $method));
+                $filters[$name] = $this->$method();
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
+     * pathway filter
+     *
+     * @return string
+     */
+    protected function createFilterPathway()
+    {
         // Create Pathway/topic selector
-        $pathwayQuery = $db->getQuery(true)
+        $pathwayQuery = $this->db->getQuery(true)
             ->select(
                 array(
-                    'id AS ' . $db->quote('value'),
-                    'title AS ' . $db->quote('text')
+                    'id AS ' . $this->db->quote('value'),
+                    'title AS ' . $this->db->quote('text')
                 )
             )
             ->from('#__oscampus_pathways')
@@ -88,26 +128,37 @@ class Search
             )
             ->order('ordering ASC');
 
-        $pathways = $db->setQuery($pathwayQuery)->loadObjectlist();
+        $pathways = $this->db->setQuery($pathwayQuery)->loadObjectlist();
         array_unshift(
             $pathways,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
         );
 
-        $filters['pathway'] = JHtml::_(
+        $html = JHtml::_(
             'select.genericlist',
             $pathways,
             'pid',
             array('list.select' => $this->model->getState('filter.pathway'))
         );
 
+        return $html;
+    }
+
+    /**
+     * Difficulty Filter
+     *
+     * @return string
+     */
+    protected function createFilterDifficulty()
+    {
         // Create difficulty selector
         $difficulty = JHtml::_('osc.options.difficulties');
         array_unshift(
             $difficulty,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'))
         );
-        $filters['difficulty'] = JHtml::_(
+
+        $html = JHtml::_(
             'select.genericlist',
             $difficulty,
             'difficulty',
@@ -116,6 +167,16 @@ class Search
             )
         );
 
+        return $html;
+    }
+    
+    /**
+     * Completion filter. Only available for logged in users
+     *
+     * @return string|null
+     */
+    protected function createFilterCompletion()
+    {
         // Completion options
         $completion = JHtml::_('osc.options.completion');
         array_unshift(
@@ -124,7 +185,7 @@ class Search
         );
 
         if (!OscampusFactory::getUser()->guest) {
-            $filters['completion'] = JHtml::_(
+            $html = JHtml::_(
                 'select.genericlist',
                 $completion,
                 'completion',
@@ -132,23 +193,11 @@ class Search
                     'list.select' => $this->model->getState('filter.completion')
                 )
             );
+
+            return $html;
         }
 
-        return $filters;
-    }
-
-    public function addJS()
-    {
-        JHtml::_('osc.jquery');
-        $js = <<<JSCRIPT
-    jQuery(document).ready(function() {
-        jQuery('#formFilter select').on('change', function(evt) {
-            this.form.submit();
-        });
-    });
-JSCRIPT;
-
-        OscampusFactory::getDocument()->addScriptDeclaration($js);
+        return null;
     }
 
     public function output($layout = null)
