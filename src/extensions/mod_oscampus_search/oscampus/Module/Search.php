@@ -164,7 +164,7 @@ class Search
     protected function createFilterTag()
     {
         $user   = OscampusFactory::getUser();
-        $levels = $user->getAuthorisedViewLevels();
+        $levels = join(',', $user->getAuthorisedViewLevels());
 
         $tagQuery = $this->db->getQuery(true)
             ->select(
@@ -179,7 +179,7 @@ class Search
             ->where(
                 array(
                     'course.published = 1',
-                    sprintf('course.access IN (%s)', join(',', $levels))
+                    sprintf('course.access IN (%s)', $levels)
                 )
             )
             ->group('tag.id')
@@ -253,6 +253,56 @@ class Search
         }
 
         return null;
+    }
+
+    /**
+     * Teacher filter
+     *
+     * @return string
+     */
+    protected function createFilterTeacher()
+    {
+        $user   = OscampusFactory::getUser();
+        $levels = join(',', $user->getAuthorisedViewLevels());
+
+        $teacherQuery = $this->db->getQuery(true)
+            ->select(
+                array(
+                    'teacher.id AS ' . $this->db->quote('value'),
+                    'user.name AS ' . $this->db->quote('text')
+                )
+            )
+            ->from('#__users AS user')
+            ->innerJoin('#__oscampus_teachers AS teacher ON teacher.users_id = user.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.teachers_id = teacher.id')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+            ->where(
+                array(
+                    'pathway.users_id = 0',
+                    'pathway.published = 1',
+                    sprintf('pathway.access IN (%s)', $levels),
+                    'course.published = 1',
+                    sprintf('course.access IN (%s)', $levels)
+                )
+            )
+            ->group('teacher.id')
+            ->order('user.name ASC');
+
+        $teachers = $this->db->setQuery($teacherQuery)->loadObjectlist();
+        array_unshift(
+            $teachers,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TEACHER'))
+        );
+
+        $html = JHtml::_(
+            'select.genericlist',
+            $teachers,
+            'tid',
+            array('list.select' => $this->model->getState('filter.teacher'))
+        );
+
+        return $html;
     }
 
     public function output($layout = null)
