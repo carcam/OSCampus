@@ -115,7 +115,9 @@ class Search
      */
     protected function createFilterPathway()
     {
-        // Create Pathway/topic selector
+        $user   = OscampusFactory::getUser();
+        $access = $user->getAuthorisedViewLevels();
+
         $pathwayQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -127,7 +129,9 @@ class Search
             ->where(
                 array(
                     'users_id = 0',
-                    'published = 1'
+                    'published = 1',
+                    sprintf('access IN (%s)', join(',', $access)),
+                    'id IN (SELECT pathways_id From #__oscampus_courses_pathways GROUP BY pathways_id)'
                 )
             )
             ->order('ordering ASC');
@@ -155,7 +159,6 @@ class Search
      */
     protected function createFilterDifficulty()
     {
-        // Create difficulty selector
         $difficulty = JHtml::_('osc.options.difficulties');
         array_unshift(
             $difficulty,
@@ -181,7 +184,6 @@ class Search
      */
     protected function createFilterCompletion()
     {
-        // Completion options
         $completion = JHtml::_('osc.options.completion');
         array_unshift(
             $completion,
