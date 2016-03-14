@@ -10,23 +10,27 @@ defined('_JEXEC') or die();
 
 /** \Oscampus\Module\Search $this */
 ?>
-<form
-    name="oscampusFilter"
-    id="<?php echo $this->id; ?>"
-    method="post"
-    action="">
+<div class="osc-module-container">
+    <form
+        name="oscampusFilter"
+        id="<?php echo $this->id; ?>"
+        method="post"
+        action="">
 
-    <input
-        name="search"
-        type="text"
-        value="<?php echo $this->getState('filter.search'); ?>"/>
+        <input
+            name="search"
+            type="text"
+            value="<?php echo $this->getState('filter.search'); ?>"/>
 
-    <?php echo $this->getFilter('Pathway'); ?>
-    <?php echo $this->getFilter('Tag'); ?>
-    <?php echo $this->getFilter('Difficulty'); ?>
-    <?php echo $this->getFilter('Teacher'); ?>
+        <?php echo $this->getFilter('Pathway'); ?>
+        <?php echo $this->getFilter('Tag'); ?>
+        <?php echo $this->getFilter('Difficulty'); ?>
+        <?php echo $this->getFilter('Teacher'); ?>
 
-    <button type="submit">go</button>
-    <input type="hidden" name="option" value="com_oscampus"/>
-    <input type="hidden" name="task" value="filter.pathway"/>
-</form>
+        <button type="submit" class="osc-btn">
+            <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
+        </button>
+        <input type="hidden" name="option" value="com_oscampus"/>
+        <input type="hidden" name="task" value="filter.pathway"/>
+    </form>
+</div>
