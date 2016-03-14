@@ -18,6 +18,7 @@ if (!defined('OSCAMPUS_LOADED')) {
 if (defined('OSCAMPUS_LOADED')) {
     Oscampus\AutoLoader::register('Oscampus', __DIR__ . '/oscampus');
 
+    /** @var JRegistry $params */
     $module = new Search($params);
     $module->output();
 }
