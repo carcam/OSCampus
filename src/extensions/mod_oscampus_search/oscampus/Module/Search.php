@@ -58,15 +58,6 @@ class Search
         $this->id = $this->name . '_' . self::$instanceCount;
     }
 
-    public function __get($name)
-    {
-        if (property_exists($this, $name)) {
-            return $this->$name;
-        }
-
-        return null;
-    }
-
     /**
      * Get a single input filter by name
      *
@@ -74,7 +65,7 @@ class Search
      *
      * @return string|null
      */
-    public function getFilter($name)
+    protected function getFilter($name)
     {
         $method = 'createFilter' . ucfirst(strtolower($name));
         if (method_exists($this, $method)) {
@@ -91,7 +82,7 @@ class Search
      *
      * @return string[]
      */
-    public function getFilters()
+    protected function getFilters()
     {
         $methods = get_class_methods($this);
         $filters = array();
@@ -106,6 +97,19 @@ class Search
         }
 
         return $filters;
+    }
+
+    /**
+     * Wrapper for the model state
+     *
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    protected function getState($name, $default = null)
+    {
+        return $this->model->getState($name, $default);
     }
 
     /**
