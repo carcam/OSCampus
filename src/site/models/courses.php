@@ -79,7 +79,7 @@ class OscampusModelCourses extends OscampusModelSiteList
             )
             ->group('course.id');
 
-        if ($pathwayId = $this->getState('filter.pathway')) {
+        if ($pathwayId = (int)$this->getState('filter.pathway')) {
             $query->where('pathway.id = ' . $pathwayId);
         }
 
@@ -204,10 +204,10 @@ class OscampusModelCourses extends OscampusModelSiteList
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
 
-        $difficulty = $this->getUserStateFromRequest($this->context . 'filter.difficulty', 'difficulty', null, 'cmd');
+        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);
 
-        $completion = $this->getUserStateFromRequest($this->context . 'filter.completion', 'completion', null, 'cmd');
+        $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'completion', null, 'cmd');
         $this->setState('filter.completion', $completion);
     }
 
