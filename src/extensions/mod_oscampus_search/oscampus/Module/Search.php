@@ -78,7 +78,9 @@ class Search
     {
         $method = 'createFilter' . ucfirst(strtolower($name));
         if (method_exists($this, $method)) {
-            return $this->$method();
+            if ($filter = $this->$method()) {
+                return $filter;
+            }
         }
 
         return null;
@@ -97,7 +99,9 @@ class Search
         foreach ($methods as $method) {
             if (strpos($method, 'createFilter') === 0) {
                 $name = strtolower(str_replace('createFilter', '', $method));
-                $filters[$name] = $this->$method();
+                if ($filter = $this->$method()) {
+                    $filters[$name] = $filter;
+                }
             }
         }
 
@@ -169,7 +173,7 @@ class Search
 
         return $html;
     }
-    
+
     /**
      * Completion filter. Only available for logged in users
      *
