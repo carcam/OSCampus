@@ -14,6 +14,7 @@ use JModuleHelper;
 use JRegistry;
 use JText;
 use OscampusFactory;
+use OscampusHelperSite;
 use OscampusModel;
 use OscampusModelPathway;
 
@@ -56,6 +57,8 @@ class Search
 
         self::$instanceCount++;
         $this->id = $this->name . '_' . self::$instanceCount;
+
+        OscampusHelperSite::loadTheme();
     }
 
     /**
