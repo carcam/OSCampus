@@ -87,15 +87,15 @@ class OscampusRoute
 
         $default = null;
         foreach ($this->items as $item) {
-            $mView   = empty($item->query['view']) ? '' : $item->query['view'];
-            $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
-            $access  = in_array($item->access, $viewLevels);
+            $menuView   = empty($item->query['view']) ? '' : $item->query['view'];
+            $menuLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
+            $menuAccess = in_array($item->access, $viewLevels);
 
-            if ($access && $mView == $view && $mLayout == $layout) {
+            if ($menuAccess && $menuView == $view && $menuLayout == $layout) {
                 // Found an exact match
                 return $item;
 
-            } elseif ($access && $mView == 'pathways' && empty($mLayout)) {
+            } elseif ($menuAccess && $menuView == 'pathways' && empty($menuLayout)) {
                 // The pathways view can always be used as a base
                 $default = $item;
             }
@@ -152,13 +152,13 @@ class OscampusRoute
         if ($menuItem = $this->getMenu($view, $layout)) {
             $query['Itemid'] = $menuItem->id;
 
-            $mView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
-            if ($mView == $view) {
+            $menuView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
+            if ($menuView == $view) {
                 unset($query['view']);
             }
 
-            $mLayout = empty($menuItem->query['layout']) ? '' : $menuItem->query['layout'];
-            if ($layout && $mLayout == $layout) {
+            $menuLayout = empty($menuItem->query['layout']) ? '' : $menuItem->query['layout'];
+            if ($layout && $menuLayout == $layout) {
                 unset($query['layout']);
             }
         }
