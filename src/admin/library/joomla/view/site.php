@@ -121,4 +121,28 @@ abstract class OscampusViewSite extends OscampusView
             $doc->setMetaData('description', $description);
         }
     }
+
+    /**
+     * Allow reuse of other view templates by view name
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function shareViewTemplates($name)
+    {
+        $path = OSCAMPUS_SITE . '/views/pathway/tmpl';
+        if (is_dir($path)) {
+            // Add path to include path
+            $this->addTemplatePath($path);
+
+            // but allow local override as needed
+            $templatePath = array_shift($this->_path['template']);
+            $this->_path['template'][] = $templatePath;
+
+            return true;
+        }
+
+        return false;
+    }
 }
