@@ -14,6 +14,9 @@ class OscampusControllerFilter extends OscampusControllerBase
     {
         $app = OscampusFactory::getApplication();
 
+        // Here's some nice fudge! We want to register any additional filters before the redirect
+        OscampusModel::getInstance('Pathway')->getState();
+
         if ($pid = $app->input->getInt('pid')) {
             $query = array(
                 'option' => 'com_oscampus',
@@ -21,13 +24,10 @@ class OscampusControllerFilter extends OscampusControllerBase
                 'pid'    => $pid
             );
 
-            // Here's some nice fudge! We want to register any additional filters before the redirect
-            OscampusModel::getInstance('Pathway')->getState();
-
             $this->setRedirect(JRoute::_('index.php?' . http_build_query($query)));
 
         } else {
-            $this->setRedirect(JRoute::_('index.php?option=com_oscampus&view=pathways'));
+            $this->setRedirect(JRoute::_('index.php?option=com_oscampus&view=search'));
         }
     }
 }

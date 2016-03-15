@@ -22,6 +22,14 @@ class OscampusModelCourses extends OscampusModelSiteList
      */
     protected $activity = null;
 
+    public function __construct(array $config)
+    {
+        parent::__construct($config);
+
+        // We want to force context to be the same for all subclasses
+        $this->context = 'com_oscampus.courses';
+    }
+
     protected function getListQuery()
     {
         return $this->getBaseQuery();
@@ -246,7 +254,7 @@ class OscampusModelCourses extends OscampusModelSiteList
         $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', null, 'int');
         $this->setState('filter.tag', $tagId);
 
-        $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'filter_teacher', 'int');
+        $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'filter_teacher', null, 'int');
         $this->setState('filter.teacher', $teacherId);
 
         $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty', null, 'cmd');
