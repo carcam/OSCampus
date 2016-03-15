@@ -95,8 +95,8 @@ class OscampusRoute
                 // Found an exact match
                 return $item;
 
-            } elseif ($menuAccess && $menuView == 'pathways' && empty($menuLayout)) {
-                // The pathways view can always be used as a base
+            } elseif ($menuAccess && $menuView == 'pathways' && empty($menuLayout) && $view == 'pathway') {
+                // The pathways view can be used as a base for pathway view
                 $default = $item;
             }
         }
