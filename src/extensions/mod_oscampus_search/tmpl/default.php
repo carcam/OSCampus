@@ -33,6 +33,11 @@ defined('_JEXEC') or die();
         <button type="submit" class="osc-btn">
             <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
         </button>
+
+        <button type="button" class="osc-btn osc-clear-filters">
+            <i class="fa fa-search-minus"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_CLEAR'); ?>
+        </button>
+
         <input type="hidden" name="option" value="com_oscampus"/>
         <input type="hidden" name="task" value="filter.courses"/>
     </form>
