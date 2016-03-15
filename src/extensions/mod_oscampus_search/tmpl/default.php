@@ -22,11 +22,13 @@ defined('_JEXEC') or die();
             type="text"
             value="<?php echo $this->getState('filter.text'); ?>"/>
 
-        <?php echo $this->getFilter('Pathway'); ?>
-        <?php echo $this->getFilter('Tag'); ?>
-        <?php echo $this->getFilter('Difficulty'); ?>
-        <?php echo $this->getFilter('Teacher'); ?>
-        <?php echo $this->getFilter('Completion'); ?>
+        <?php
+        echo $this->getFilter('Pathway');
+        echo $this->getFilter('Tag');
+        echo $this->getFilter('Difficulty');
+        echo $this->getFilter('Teacher');
+        echo $this->getFilter('Completion');
+        ?>
 
         <button type="submit" class="osc-btn">
             <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
