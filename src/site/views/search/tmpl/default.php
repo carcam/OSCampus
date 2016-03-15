@@ -66,7 +66,7 @@ defined('_JEXEC') or die();
                 <?php
                 endif;
                 ?>
-                </div>
+            </div>
             <!-- .osc-section -->
             <?php
         endforeach;
