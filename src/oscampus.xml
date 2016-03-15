@@ -77,6 +77,11 @@
             <extension
                 type="module"
                 element="oscampus_search">mod_oscampus_search</extension>
+
+            <extension
+                type="plugin"
+                folder="osmap"
+                element="com_oscampus">plg_osmap_com_oscampus</extension>
         </relatedExtensions>
 
         <obsolete>
