@@ -273,7 +273,7 @@ class OscampusModelCourses extends OscampusModelSiteList
     {
         $states = $this->getState()->getProperties();
         foreach ($states as $name => $state) {
-            if (strpos($name, 'filter.') === 0 && !empty($state)) {
+            if (strpos($name, 'filter.') === 0 && $state != '') {
                 return true;
             }
         }
