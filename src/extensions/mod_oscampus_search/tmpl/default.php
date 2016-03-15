@@ -30,13 +30,13 @@ defined('_JEXEC') or die();
         echo $this->getFilter('Completion');
         ?>
 
-        <button type="submit" class="osc-btn">
-            <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
-        </button>
-
-        <button type="button" class="osc-btn osc-clear-filters">
-            <i class="fa fa-search-minus"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_CLEAR'); ?>
-        </button>
+        <div class="osc-btn-group">
+            <button type="submit" class="osc-btn osc-btn-main">
+                <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
+            </button><button type="button" class="osc-btn osc-clear-filters">
+                <?php echo JText::_('MOD_OSCAMPUS_SEARCH_CLEAR'); ?>
+            </button>
+        </div>
 
         <input type="hidden" name="option" value="com_oscampus"/>
         <input type="hidden" name="task" value="filter.courses"/>

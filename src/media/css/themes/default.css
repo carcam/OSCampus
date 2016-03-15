@@ -117,10 +117,14 @@
     padding: 6px 10px;
 }
 
-.osc-module-container .osc-btn {
-    width: 100%;
-}
-
+.osc-module-container input[type="text"]:focus,
+.osc-module-container input[type="email"]:focus,
+.osc-module-container input[type="password"]:focus,
+.osc-module-container textarea:focus,
+.osc-module-container select:focus,
+.osc-module-container input:focus:invalid:focus,
+.osc-module-container textarea:focus:invalid:focus,
+.osc-module-container select:focus:invalid:focus,
 #oscampus.osc-container input[type="text"]:focus,
 #oscampus.osc-container input[type="email"]:focus,
 #oscampus.osc-container input[type="password"]:focus,
@@ -128,7 +132,7 @@
 #oscampus.osc-container select:focus,
 #oscampus.osc-container input:focus:invalid:focus,
 #oscampus.osc-container textarea:focus:invalid:focus,
-#oscampus.osc-container select:focus:invalid:focus{
+#oscampus.osc-container select:focus:invalid:focus {
     color: #666666;
     border-color: #999999;
     box-shadow: none;
@@ -142,9 +146,12 @@
     height: 38px;
 }
 
+.osc-module-container input[readonly],
+.osc-module-container input[readonly]:hover,
+.osc-module-container input[readonly]:focus,
 #oscampus.osc-container input[readonly],
 #oscampus.osc-container input[readonly]:hover,
-#oscampus.osc-container input[readonly]:focus{
+#oscampus.osc-container input[readonly]:focus {
     background: #f2f2f2;
 }
 
@@ -166,14 +173,18 @@
     width: 140px;
 }
 
+.osc-module-container input[type="radio"],
 #oscampus.osc-container input[type="radio"] {
     margin-bottom: 5px;
 }
 
+.osc-module-container input[type="checkbox"],
 #oscampus.osc-container input[type="checkbox"] {
     margin: 0 0 2px 0;
 }
 
+.osc-module-container input[type="submit"],
+.osc-module-container button
 #oscampus.osc-container input[type="submit"],
 #oscampus.osc-container button {
     background: #666666;
@@ -199,6 +210,10 @@
     margin-bottom: 10px;
 }
 
+.osc-module-container input[type="submit"]:hover,
+.osc-module-container input[type="submit"]:focus,
+.osc-module-container button:hover,
+.osc-module-container button:focus,
 #oscampus.osc-container input[type="submit"]:hover,
 #oscampus.osc-container input[type="submit"]:focus,
 #oscampus.osc-container button:hover,
@@ -241,21 +256,28 @@
     color: #fff;
 }
 
+.osc-module-container .osc-btn-big,
 #oscampus.osc-container .osc-btn-big {
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
 }
 
+.osc-module-container .osc-btn-warning,
 #oscampus.osc-container .osc-btn-warning {
     background:#ff0000;
 }
 
+.osc-module-container .osc-btn-warning:hover,
+.osc-module-container .osc-btn-warning:focus,
 #oscampus.osc-container .osc-btn-warning:hover,
 #oscampus.osc-container .osc-btn-warning:focus {
     background:#FF4D4D;
 }
 
+.osc-module-container button[disabled],
+.osc-module-container button[disabled]:hover,
+.osc-module-container button[disabled]:focus,
 #oscampus.osc-container button[disabled],
 #oscampus.osc-container button[disabled]:hover,
 #oscampus.osc-container button[disabled]:focus {
@@ -266,12 +288,15 @@
     background: #f2f2f2;
 }
 
+.osc-module-container .osc-btn-main,
 #oscampus.osc-container .osc-btn-main {
     color: #3f4044;
     font-weight: 600;
     background: #feb123;
 }
 
+.osc-module-container .osc-btn-main:hover,
+.osc-module-container .osc-btn-main:focus,
 #oscampus.osc-container .osc-btn-main:hover,
 #oscampus.osc-container .osc-btn-main:focus {
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
@@ -282,6 +307,7 @@
     background: #ed8034;
 }
 
+.osc-module-container .osc-btn-group,
 #oscampus.osc-container .osc-btn-group {
     display: inline-block;
     vertical-align: middle;
@@ -289,14 +315,20 @@
     white-space: nowrap;
 }
 
+.osc-module-container .osc-btn-group > *,
 #oscampus.osc-container .osc-btn-group > * {
     display: inline-block;
 }
 
+.osc-module-container .osc-btn-group .osc-btn,
 #oscampus.osc-container .osc-btn-group .osc-btn {
     vertical-align: top;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-module-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
+.osc-module-container .osc-btn-group > .osc-btn:first-child,
+.osc-module-container .osc-btn-group > div:first-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
 #oscampus.osc-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:first-child,
@@ -304,6 +336,8 @@
     margin-right: 1px;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-module-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
 #oscampus.osc-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn {
     border-radius: 0;
@@ -312,6 +346,8 @@
     -o-border-radius: 0;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:first-child,
+.osc-module-container .osc-btn-group > div:first-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:first-child,
 #oscampus.osc-container .osc-btn-group > div:first-child .osc-btn {
     border-bottom-right-radius: 0;
@@ -324,6 +360,8 @@
     -o-border-top-right-radius: 0;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:last-child,
+.osc-module-container .osc-btn-group > div:last-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:last-child,
 #oscampus.osc-container .osc-btn-group > div:last-child .osc-btn {
     border-bottom-left-radius: 0;
@@ -336,6 +374,7 @@
     -o-border-top-left-radius: 0;
 }
 
+.osc-module-container label,
 #oscampus.osc-container label {
     display: block;
     margin-bottom: 5px;
@@ -344,10 +383,14 @@
     cursor: default;
 }
 
+.osc-module-container label span,
 #oscampus.osc-container label span {
     color: #ff0000;
 }
 
+.osc-module-container a i,
+.osc-module-container button i,
+.osc-module-container input[type="submit"] i,
 #oscampus.osc-container a i,
 #oscampus.osc-container button i,
 #oscampus.osc-container input[type="submit"] i {
