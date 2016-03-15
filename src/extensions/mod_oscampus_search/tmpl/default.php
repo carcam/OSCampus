@@ -34,6 +34,6 @@ defined('_JEXEC') or die();
             <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
         </button>
         <input type="hidden" name="option" value="com_oscampus"/>
-        <input type="hidden" name="task" value="filter.pathway"/>
+        <input type="hidden" name="task" value="filter.courses"/>
     </form>
 </div>

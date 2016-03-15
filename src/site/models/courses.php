@@ -26,7 +26,7 @@ class OscampusModelCourses extends OscampusModelSiteList
     {
         parent::__construct($config);
 
-        // We want to force context to be the same for all subclasses
+        // All subclasses will share the same context
         $this->context = 'com_oscampus.courses';
     }
 
@@ -262,6 +262,23 @@ class OscampusModelCourses extends OscampusModelSiteList
 
         $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'filter_completion', null, 'cmd');
         $this->setState('filter.completion', $completion);
+    }
+
+    /**
+     * Determines if any filters are currently in play.
+     *
+     * @return bool
+     */
+    public function activeFilters()
+    {
+        $states = $this->getState()->getProperties();
+        foreach ($states as $name => $state) {
+            if (strpos($name, 'filter.') === 0 && !empty($state)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function populateState($ordering = 'cp.ordering', $direction = 'ASC')
