@@ -397,6 +397,10 @@
     line-height: inherit;
 }
 
+.osc-module-container i.fa-times {
+    display: none;
+}
+
 /* Help classes
  ========================================================================== */
 #oscampus.osc-container div.osc-alert-warning{
@@ -957,6 +961,14 @@
     #oscampus.osc-container .osc-section .block8.osc-course-description {
         width: 69.81196581196582%;
         margin-left: 2.56410256410255%;
+    }
+    /* form elements */
+    .osc-module-container i.fa-times {
+        display: inherit;
+    }
+    .osc-module-container .osc-clear-filters > span,
+    .osc-module-container .osc-search-filters > span {
+        display: none;
     }
 }
 
