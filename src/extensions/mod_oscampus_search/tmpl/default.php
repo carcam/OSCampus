@@ -18,7 +18,7 @@ defined('_JEXEC') or die();
         action="">
 
         <input
-            name="text"
+            name="filter_text"
             type="text"
             value="<?php echo $this->getState('filter.search'); ?>"/>
 

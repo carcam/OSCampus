@@ -201,7 +201,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $tags,
-            'tag',
+            'filter_tag',
             array('list.select' => $this->model->getState('filter.tag'))
         );
 
@@ -224,7 +224,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $difficulty,
-            'difficulty',
+            'filter_difficulty',
             array(
                 'list.select' => $this->model->getState('filter.difficulty')
             )
@@ -250,7 +250,7 @@ class Search
             $html = JHtml::_(
                 'select.genericlist',
                 $completion,
-                'completion',
+                'filter_completion',
                 array(
                     'list.select' => $this->model->getState('filter.completion')
                 )
@@ -305,7 +305,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $teachers,
-            'tid',
+            'filter_teacher',
             array('list.select' => $this->model->getState('filter.teacher'))
         );
 

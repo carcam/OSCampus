@@ -218,13 +218,13 @@ class OscampusModelCourses extends OscampusModelSiteList
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
 
-        $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'tag', null, 'int');
+        $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', null, 'int');
         $this->setState('filter.tag', $tagId);
 
-        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'difficulty', null, 'cmd');
+        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);
 
-        $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'completion', null, 'cmd');
+        $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'filter_completion', null, 'cmd');
         $this->setState('filter.completion', $completion);
     }
 
