@@ -26,9 +26,9 @@ defined('_JEXEC') or die();
 
     else:
         ?>
-        <div class="osc-alert-notify"><i class="fa fa-info-circle"></i> <?php
-            echo JText::_('COM_OSCAMPUS_PATHWAY_NO_COURSES');
-            ?></div>
+        <div class="osc-alert-notify"><i class="fa fa-info-circle"></i>
+            <?php echo JText::_('COM_OSCAMPUS_PATHWAY_NO_COURSES'); ?>
+        </div>
         <?php
     endif;
     ?>
