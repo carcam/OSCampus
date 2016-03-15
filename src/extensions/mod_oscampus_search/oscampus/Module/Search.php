@@ -312,8 +312,37 @@ class Search
         return $html;
     }
 
+    /**
+     * Add any scripts needed for module operation
+     *
+     * @return void
+     */
+    protected function addScript()
+    {
+        JHtml::_('osc.jquery');
+        $js = <<< JSCRIPT
+(function($) {
+    $(document).ready(function() {
+        $('.osc-clear-filters').on('click', function(evt) {
+            evt.preventDefault();
+            $(this.form)
+                .find(':input')
+                .not(':button,:hidden')
+                .each(function (index, element) {
+                    $(element).val(null);
+                });
+        });
+    });
+})(jQuery);
+JSCRIPT;
+
+        OscampusFactory::getDocument()->addScriptDeclaration($js);
+    }
+
     public function output($layout = null)
     {
+        $this->addScript();
+
         $layout = $layout ?: $this->params->get('layout', 'default');
         require JModuleHelper::getLayoutPath($this->name, $layout);
     }
