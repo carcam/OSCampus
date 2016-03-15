@@ -26,10 +26,12 @@ defined('_JEXEC') or die();
 
     else:
         ?>
-        <p><?php
+        <div class="osc-alert-notify"><i class="fa fa-info-circle"></i>
+            <?php
             $cutoff = $this->getState('cutoff');
             echo JText::sprintf('COM_OSCAMPUS_NO_NEW_COURSES', $cutoff->format('F j, Y'));
-            ?></p>
+            ?>
+        </div>
         <?php
     endif;
     ?>
