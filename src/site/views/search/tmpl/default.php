@@ -30,21 +30,12 @@ defined('_JEXEC') or die();
                 <div class="block8 osc-course-description">
                     <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
                     <?php echo $item->introtext ?: $item->description; ?>
-                    <?php
-                    if (!OscampusFactory::getUser()->guest) :
-                        ?>
-                        <div class="osc-course-start">
-                            <?php echo JHtml::_('osc.course.startbutton', $item); ?>
-                        </div>
-                        <?php
-                    endif;
-                    ?>
                 </div>
             </div>
             <!-- .osc-section -->
 
             <div class="osc-section osc-course-list">
-                <div class="block12">
+                <div class="block9">
                     <?php
                     if ($item->tags) :
                         ?>
@@ -66,7 +57,16 @@ defined('_JEXEC') or die();
                         <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
                     </span>
                 </div>
-            </div>
+                <?php
+                if (!OscampusFactory::getUser()->guest) :
+                    ?>
+                    <div class="block3 osc-course-start">
+                        <?php echo JHtml::_('osc.course.startbutton', $item); ?>
+                    </div>
+                <?php
+                endif;
+                ?>
+                </div>
             <!-- .osc-section -->
             <?php
         endforeach;
