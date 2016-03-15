@@ -18,7 +18,8 @@ defined('_JEXEC') or die();
     <?php
     if (!$this->items) :
         ?>
-        <div class="osc-alert-notify"><i class="fa fa-info-circle"></i>
+        <div class="osc-alert-notify">
+            <i class="fa fa-info-circle"></i>
             <?php echo JText::_('COM_OSCAMPUS_PATHWAY_NO_COURSES'); ?>
         </div>
         <?php
