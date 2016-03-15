@@ -11,12 +11,19 @@ defined('_JEXEC') or die();
 class OscampusViewSearch extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
 
+    /**
+     * @var object
+     */
+    protected $item = null;
+
     public function display($tpl = null)
     {
+        $this->shareViewTemplates('pathway');
+
         /** @var OscampusModelSearch $model */
         $model = $this->getModel();
 

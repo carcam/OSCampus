@@ -25,6 +25,11 @@ class OscampusViewPathway extends OscampusViewSite
     /**
      * @var object
      */
+    protected $item = null;
+
+    /**
+     * @var object
+     */
     protected $pathway = null;
 
     public function display($tpl = null)

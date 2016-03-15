@@ -11,9 +11,14 @@ defined('_JEXEC') or die();
 class OscampusViewNewcourses extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
+
+    /**
+     * @var object
+     */
+    protected $item = null;
 
     /**
      * @var DateTime
@@ -22,6 +27,8 @@ class OscampusViewNewcourses extends OscampusViewSite
 
     public function display($tpl = null)
     {
+        $this->shareViewTemplates('pathway');
+
         /** @var OscampusModelNewcourses $model */
         $model = $this->getModel();
 
