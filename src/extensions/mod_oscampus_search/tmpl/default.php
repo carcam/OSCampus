@@ -26,6 +26,7 @@ defined('_JEXEC') or die();
         <?php echo $this->getFilter('Tag'); ?>
         <?php echo $this->getFilter('Difficulty'); ?>
         <?php echo $this->getFilter('Teacher'); ?>
+        <?php echo $this->getFilter('Completion'); ?>
 
         <button type="submit" class="osc-btn">
             <i class="fa fa-search"></i> <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
