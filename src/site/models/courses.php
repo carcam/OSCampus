@@ -79,14 +79,44 @@ class OscampusModelCourses extends OscampusModelSiteList
             )
             ->group('course.id');
 
-        if ($pathwayId = $this->getState('filter.pathway')) {
+        // Pathway Filter
+        if ($pathwayId = (int)$this->getState('filter.pathway')) {
             $query->where('pathway.id = ' . $pathwayId);
         }
 
+        // Tag filter
+        if ($tagId = (int)$this->getState('filter.tag')) {
+            $tagQuery = $db->getQuery(true)
+                ->select('courses_id')
+                ->from('#__oscampus_courses_tags')
+                ->where('tags_id = ' . $tagId)
+                ->group('courses_id');
+
+            $query->where(sprintf('course.id IN (%s)', $tagQuery));
+        }
+
+        // Teacher filter
+        if ($teacherId = (int)$this->getState('filter.teacher')) {
+            $query->where('teacher.id = ' . $teacherId);
+        }
+
+        // Difficulty filter
         if ($difficulty = $this->getState('filter.difficulty')) {
             $query->where('course.difficulty = ' . $db->quote($difficulty));
         }
 
+        // Text filter
+        if ($text = $this->getState('filter.text')) {
+            $searchText = $db->quote('%' . $text . '%');
+            $ors = array(
+                'course.introtext LIKE ' . $searchText,
+                'course.description LIKE ' . $searchText,
+                'lesson.description LIKE ' . $searchText
+            );
+            $query->where('(' . join(' OR ', $ors) . ')');
+        }
+
+        // User completion status filter
         $completion = $this->getState('filter.completion');
         if ($completion !== null) {
             $activities = $this->getUserActivity();
@@ -204,10 +234,25 @@ class OscampusModelCourses extends OscampusModelSiteList
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
 
-        $difficulty = $this->getUserStateFromRequest($this->context . 'filter.difficulty', 'difficulty', null, 'cmd');
+        $text = $app->input->getString('filter_text');
+        if ($text && strlen($text) < 3) {
+            $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
+            $text = $app->getUserState($this->context . '.filter.text', '');
+        } else {
+            $text = $this->getUserStateFromRequest($this->context . '.filter.text', 'filter_text', null, 'string');
+        }
+        $this->setState('filter.text', $text);
+
+        $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', null, 'int');
+        $this->setState('filter.tag', $tagId);
+
+        $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'filter_teacher', 'int');
+        $this->setState('filter.teacher', $teacherId);
+
+        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);
 
-        $completion = $this->getUserStateFromRequest($this->context . 'filter.completion', 'completion', null, 'cmd');
+        $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'filter_completion', null, 'cmd');
         $this->setState('filter.completion', $completion);
     }
 

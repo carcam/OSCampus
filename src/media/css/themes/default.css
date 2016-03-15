@@ -89,6 +89,8 @@
 
 /* Form elements
  ========================================================================== */
+.osc-module-container input[type="text"],
+.osc-module-container select,
 #oscampus.osc-container input[type="text"],
 #oscampus.osc-container input[type="email"],
 #oscampus.osc-container input[type="password"],
@@ -106,6 +108,17 @@
     padding: 9px 10px;
     width: 90%;
     background: #ffffff;
+}
+
+.osc-module-container input[type="text"],
+.osc-module-container select {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 6px 10px;
+}
+
+.osc-module-container .osc-btn {
+    width: 100%;
 }
 
 #oscampus.osc-container input[type="text"]:focus,
@@ -193,6 +206,7 @@
     background: #999999;
 }
 
+.osc-module-container .osc-btn,
 #oscampus.osc-container .osc-btn {
     display: inline-block;
     -moz-box-sizing: border-box;
@@ -213,6 +227,8 @@
     transition: background-color 0.15s ease-in-out;
 }
 
+.osc-module-container .osc-btn:hover,
+.osc-module-container .osc-btn:focus,
 #oscampus.osc-container .osc-btn:hover,
 #oscampus.osc-container .osc-btn:focus,
 #oscampus.osc-container .osc-btn.osc-btn-active,

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="2.5" method="upgrade">
+    <name>MOD_OSCAMPUS_SEARCH</name>
+    <author>OSTraining</author>
+    <creationDate>March 11, 2016</creationDate>
+    <copyright>Copyright (C) 2015 OSTraining.com</copyright>
+    <license>GPL v3</license>
+    <authorEmail>info@ostraining.com</authorEmail>
+    <authorUrl>http://www.ostraining.com</authorUrl>
+    <version>1.0.0</version>
+    <description>MOD_OSCAMPUS_SEARCH_DESC</description>
+
+    <files>
+        <folder>language</folder>
+        <filename module="mod_oscampus_search">mod_oscampus_search.php</filename>
+    </files>
+
+</extension>

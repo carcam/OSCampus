@@ -73,6 +73,12 @@
         <namespace>Oscampus</namespace>
         <license>free</license>
 
+        <relatedExtensions>
+            <extension
+                type="module"
+                element="oscampus_search">mod_oscampus_search</extension>
+        </relatedExtensions>
+
         <obsolete>
             <folder>/administrator/components/com_oscampus/views/dashboard</folder>
             <folder>/components/com_oscampus/views/dashboard</folder>

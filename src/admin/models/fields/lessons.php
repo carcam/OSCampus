@@ -25,7 +25,7 @@ class OscampusFormFieldLessons extends JFormField
         $html[] = '</ul>';
         $html[] = '</div>';
 
-        JHtml::stylesheet('com_oscampus/awesome/css/font-awesome.min.css', null, true);
+        JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
         $this->addJavascript();
 
         return join("\n", $html);
