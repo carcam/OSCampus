@@ -95,9 +95,25 @@ class OscampusModelCourses extends OscampusModelSiteList
             $query->where(sprintf('course.id IN (%s)', $tagQuery));
         }
 
+        // Teacher filter
+        if ($teacherId = (int)$this->getState('filter.teacher')) {
+            $query->where('teacher.id = ' . $teacherId);
+        }
+
         // Difficulty filter
         if ($difficulty = $this->getState('filter.difficulty')) {
             $query->where('course.difficulty = ' . $db->quote($difficulty));
+        }
+
+        // Text filter
+        if ($text = $this->getState('filter.text')) {
+            $searchText = $db->quote('%' . $text . '%');
+            $ors = array(
+                'course.introtext LIKE ' . $searchText,
+                'course.description LIKE ' . $searchText,
+                'lesson.description LIKE ' . $searchText
+            );
+            $query->where('(' . join(' OR ', $ors) . ')');
         }
 
         // User completion status filter
@@ -218,8 +234,20 @@ class OscampusModelCourses extends OscampusModelSiteList
         $pathwayId = $app->input->getInt('pid');
         $this->setState('filter.pathway', $pathwayId);
 
+        $text = $app->input->getString('filter_text');
+        if ($text && strlen($text) < 3) {
+            $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
+            $text = $app->getUserState($this->context . '.filter.text', '');
+        } else {
+            $text = $this->getUserStateFromRequest($this->context . '.filter.text', 'filter_text', null, 'string');
+        }
+        $this->setState('filter.text', $text);
+
         $tagId = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', null, 'int');
         $this->setState('filter.tag', $tagId);
+
+        $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'filter_teacher', 'int');
+        $this->setState('filter.teacher', $teacherId);
 
         $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty', null, 'cmd');
         $this->setState('filter.difficulty', $difficulty);

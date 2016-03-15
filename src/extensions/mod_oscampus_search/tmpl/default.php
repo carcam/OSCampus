@@ -20,7 +20,7 @@ defined('_JEXEC') or die();
         <input
             name="filter_text"
             type="text"
-            value="<?php echo $this->getState('filter.search'); ?>"/>
+            value="<?php echo $this->getState('filter.text'); ?>"/>
 
         <?php echo $this->getFilter('Pathway'); ?>
         <?php echo $this->getFilter('Tag'); ?>
