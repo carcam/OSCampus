@@ -18,7 +18,7 @@ class OscampusModelPathway extends OscampusModelAdmin
         if (!$item->id) {
             $item->access    = 1;
             $item->published = 1;
-            $item->image     = \Oscampus\Course::DEFAULT_IMAGE;
+            $item->image     = \Oscampus\Pathway::DEFAULT_IMAGE;
 
         }
 
