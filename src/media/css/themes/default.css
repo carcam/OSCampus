@@ -527,7 +527,8 @@
 }
 
 #oscampus.osc-container .osc-progress-bar > span {
-    display: inline-block;
+    display: block;
+    overflow: hidden;
     background: #706560;
 }
 
