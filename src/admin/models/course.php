@@ -196,6 +196,9 @@ class OscampusModelCourse extends OscampusModelAdmin
 
         $success = true;
         try {
+            if (empty($data['image'])) {
+                $data['image'] = Course::DEFAULT_IMAGE;
+            }
             $success = parent::save($data);
 
             // Handle additional update tasks
