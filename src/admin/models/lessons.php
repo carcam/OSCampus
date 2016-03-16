@@ -27,6 +27,12 @@ class OscampusModelLessons extends OscampusModelList
         );
 
         parent::__construct($config);
+
+        $app = OscampusFactory::getApplication();
+
+        if ($context = $app->input->getCmd('context', null)) {
+            $this->context .= '.' . $context;
+        }
     }
 
     protected function getListQuery()
@@ -102,11 +108,6 @@ class OscampusModelLessons extends OscampusModelList
 
     protected function populateState($ordering = 'lesson.title', $direction = 'ASC')
     {
-        $app = OscampusFactory::getApplication();
-        if ($app->input->getBool('clear', false)) {
-            $app->setUserState($this->context, null);
-        }
-
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
 
