@@ -76,7 +76,7 @@ abstract class OscCourse
             } elseif ($progress == 100) {
                 $icon     = 'fa-repeat';
                 $text     = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
-                $attribs  = 'class="osc-btn"';
+                $attribs  = 'class="osc-btn osc-btn-active"';
             } else {
                 $icon     = 'fa-step-forward';
                 $text     = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
