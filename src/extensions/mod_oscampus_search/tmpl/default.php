@@ -25,8 +25,6 @@ defined('_JEXEC') or die();
         <?php
         echo $this->getFilter('Pathway');
         echo $this->getFilter('Tag');
-        echo $this->getFilter('Difficulty');
-        echo $this->getFilter('Teacher');
         echo $this->getFilter('Completion');
         ?>
 
