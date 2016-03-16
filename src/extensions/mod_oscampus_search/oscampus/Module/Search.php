@@ -145,7 +145,7 @@ class Search
                 )
             )
             ->group('pathway.id')
-            ->order('cp.ordering ASC');
+            ->order('pathway.ordering ASC');
 
         $pathways = $this->db->setQuery($pathwayQuery)->loadObjectlist();
         array_unshift(

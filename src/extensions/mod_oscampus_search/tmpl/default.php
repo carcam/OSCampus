@@ -23,8 +23,8 @@ defined('_JEXEC') or die();
             value="<?php echo $this->getState('filter.text'); ?>"/>
 
         <?php
-        echo $this->getFilter('Pathway');
         echo $this->getFilter('Tag');
+        echo $this->getFilter('Pathway');
         echo $this->getFilter('Completion');
         ?>
 
