@@ -497,8 +497,17 @@
 }
 
 #oscampus.osc-container a.osc-btn i:before,
-#oscampus.osc-container button.osc-btn i:before {
+#oscampus.osc-container button.osc-btn i:before,
+#oscampus.osc-container a.osc-btn-main:hover i:before,
+#oscampus.osc-container button.osc-btn-main:hover i:before,
+#oscampus.osc-container a.osc-btn-main:focus i:before,
+#oscampus.osc-container button.osc-btn-main:focus i:before {
     color: #fff;
+}
+
+#oscampus.osc-container a.osc-btn-main i:before,
+#oscampus.osc-container button.osc-btn-main i:before {
+    color: #3f4044;
 }
 
 #oscampus.osc-container .osc-row-heading {

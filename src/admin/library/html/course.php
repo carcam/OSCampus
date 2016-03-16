@@ -70,19 +70,22 @@ abstract class OscCourse
 
         if ($courseId) {
             if ($progress == 0) {
-                $icon = 'fa-play';
-                $text = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+                $icon     = 'fa-play';
+                $text     = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+                $attribs  = 'class="osc-btn osc-btn-main"';
             } elseif ($progress == 100) {
-                $icon = 'fa-repeat';
-                $text = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+                $icon     = 'fa-repeat';
+                $text     = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+                $attribs  = 'class="osc-btn"';
             } else {
-                $icon = 'fa-step-forward';
-                $text = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+                $icon     = 'fa-step-forward';
+                $text     = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+                $attribs  = 'class="osc-btn"';
             }
 
             $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
 
-            return JHtml::_('osc.link.lesson', $courseId, 0, $button, 'class="osc-btn"');
+            return JHtml::_('osc.link.lesson', $courseId, 0, $button, $attribs);
         }
 
         return '';
