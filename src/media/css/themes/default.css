@@ -401,6 +401,18 @@
     display: none;
 }
 
+.osc-module-container input[type="text"].osc-formfield-inactive,
+.osc-module-container select.osc-formfield-inactive {
+    border-color: #ccc;
+    color: #999;
+}
+
+.osc-module-container input[type="text"].osc-formfield-active,
+.osc-module-container select.osc-formfield-active {
+    border-color: #333;
+    color: #333;
+}
+
 /* Help classes
  ========================================================================== */
 #oscampus.osc-container div.osc-alert-warning{
