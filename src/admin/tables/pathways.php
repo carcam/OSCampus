@@ -17,4 +17,13 @@ class OscampusTablePathways extends OscampusTable
     {
         parent::__construct('#__oscampus_pathways', 'id', $db);
     }
+
+    public function store($updateNulls = false)
+    {
+        if (empty($this->ordering)) {
+            $this->ordering = $this->getNextOrder();
+        }
+
+        return parent::store($updateNulls);
+    }
 }
