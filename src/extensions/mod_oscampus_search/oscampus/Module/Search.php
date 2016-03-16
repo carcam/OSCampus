@@ -374,7 +374,7 @@ JSCRIPT;
      */
     public function getStateClass($state)
     {
-        return 'osc-formfield-' . ($state ? 'active' : 'inactive');
+        return 'osc-formfield-' . ($state == '' ? 'inactive' : 'active');
     }
 
     public function output($layout = null)
