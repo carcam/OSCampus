@@ -153,11 +153,17 @@ class Search
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
         );
 
+        $selected = $this->model->getState('filter.pathway');
+        $class    = $this->getStateClass($selected);
+
         $html = JHtml::_(
             'select.genericlist',
             $pathways,
             'pid',
-            array('list.select' => $this->model->getState('filter.pathway'))
+            array(
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
+            )
         );
 
         return $html;
@@ -198,11 +204,17 @@ class Search
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TAG'))
         );
 
+        $selected = $this->model->getState('filter.tag');
+        $class    = $this->getStateClass($selected);
+
         $html = JHtml::_(
             'select.genericlist',
             $tags,
             'filter_tag',
-            array('list.select' => $this->model->getState('filter.tag'))
+            array(
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
+            )
         );
 
         return $html;
@@ -221,12 +233,16 @@ class Search
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY'))
         );
 
+        $selected = $this->model->getState('filter.difficulty');
+        $class    = $this->getStateClass($selected);
+
         $html = JHtml::_(
             'select.genericlist',
             $difficulty,
             'filter_difficulty',
             array(
-                'list.select' => $this->model->getState('filter.difficulty')
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
             )
         );
 
@@ -247,12 +263,16 @@ class Search
         );
 
         if (!OscampusFactory::getUser()->guest) {
+            $selected = $this->model->getState('filter.completion');
+            $class    = $this->getStateClass($selected);
+
             $html = JHtml::_(
                 'select.genericlist',
                 $completion,
                 'filter_completion',
                 array(
-                    'list.select' => $this->model->getState('filter.completion')
+                    'list.select' => $selected,
+                    'list.attr'   => sprintf('class="%s"', $class)
                 )
             );
 
@@ -302,11 +322,17 @@ class Search
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TEACHER'))
         );
 
+        $selected = $this->model->getState('filter.teacher');
+        $class    = $this->getStateClass($selected);
+
         $html = JHtml::_(
             'select.genericlist',
             $teachers,
             'filter_teacher',
-            array('list.select' => $this->model->getState('filter.teacher'))
+            array(
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
+            )
         );
 
         return $html;
@@ -337,6 +363,18 @@ class Search
 JSCRIPT;
 
         OscampusFactory::getDocument()->addScriptDeclaration($js);
+    }
+
+    /**
+     * Get the classname for active vs inactive fields
+     *
+     * @param mixed $state
+     *
+     * @return string
+     */
+    public function getStateClass($state)
+    {
+        return 'osc-formfield-' . ($state ? 'active' : 'inactive');
     }
 
     public function output($layout = null)

@@ -9,6 +9,9 @@
 defined('_JEXEC') or die();
 
 /** \Oscampus\Module\Search $this */
+
+$textValue = $this->getState('filter.text');
+$textClass = $this->getStateClass($textValue);
 ?>
 <div class="osc-module-container">
     <form
@@ -20,7 +23,8 @@ defined('_JEXEC') or die();
         <input
             name="filter_text"
             type="text"
-            value="<?php echo $this->getState('filter.text'); ?>"/>
+            value="<?php echo $textValue; ?>"
+            class="<?php echo $textClass; ?>"/>
 
         <?php
         echo $this->getFilter('Tag');
