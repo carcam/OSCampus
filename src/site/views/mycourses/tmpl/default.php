@@ -40,6 +40,7 @@ defined('_JEXEC') or die();
             <?php
             foreach ($this->items as $item) :
                 $progress = sprintf('%s%%', $item->progress);
+                $class = $item->progress == 100 ? 'osc-progress-bar-completed' : '';
                 ?>
                 <div class="osc-section osc-row-one">
                     <div class="block6">
@@ -50,7 +51,9 @@ defined('_JEXEC') or die();
                     </div>
                     <div class="block3">
                         <span class="osc-progress-bar">
-                            <span style="<?php echo sprintf('width: %s;', $progress); ?>" class="<?php echo ($progress == '100%') ? 'osc-progress-bar-completed' : ''; ?>">
+                            <span
+                                style="<?php echo sprintf('width: %s;', $progress); ?>"
+                                class="<?php echo $class; ?>">
                                 <span><?php echo $progress; ?></span>
                             </span>
                         </span>
