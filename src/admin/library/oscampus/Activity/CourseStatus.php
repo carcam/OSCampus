@@ -68,6 +68,11 @@ class CourseStatus extends AbstractPrototype
     public $last_visit = null;
 
     /**
+     * @var int
+     */
+    public $last_lesson = null;
+
+    /**
      * @var string
      */
     public $scores = null;

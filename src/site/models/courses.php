@@ -65,6 +65,9 @@ class OscampusModelCourses extends OscampusModelSiteList
                     'user.name AS teacher',
                     $tags,
                     'course.*',
+                    '0 AS progress',
+                    'NULL AS last_lesson',
+                    'NULL AS certificates_id',
                     'COUNT(DISTINCT lesson.id) AS lesson_count'
                 )
             )
@@ -115,13 +118,12 @@ class OscampusModelCourses extends OscampusModelSiteList
 
         // Text filter
         if ($text = $this->getState('filter.text')) {
-            $searchText = $db->quote('%' . $text . '%');
-            $ors = array(
-                'course.introtext LIKE ' . $searchText,
-                'course.description LIKE ' . $searchText,
-                'lesson.description LIKE ' . $searchText
+            $fields = array(
+                'course.introtext',
+                'course.description',
+                'lesson.description'
             );
-            $query->where('(' . join(' OR ', $ors) . ')');
+            $query->where($this->getWhereTextSearch($text, $fields));
         }
 
         // User completion status filter
@@ -185,7 +187,14 @@ class OscampusModelCourses extends OscampusModelSiteList
             if (!$item->teacher) {
                 $item->teacher = $tbd;
             }
-            $item->progress = isset($activity[$item->id]) ? $activity[$item->id]->progress : 0;
+
+            if (isset($activity[$item->id])) {
+                $userActivity = $activity[$item->id];
+
+                $item->progress        = $userActivity->progress;
+                $item->last_lesson     = $userActivity->last_lesson;
+                $item->certificates_id = $userActivity->certificates_id;
+            }
         }
 
         return $items;
@@ -257,10 +266,20 @@ class OscampusModelCourses extends OscampusModelSiteList
         $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'filter_teacher', null, 'int');
         $this->setState('filter.teacher', $teacherId);
 
-        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty', null, 'cmd');
+        $difficulty = $this->getUserStateFromRequest(
+            $this->context . '.filter.difficulty',
+            'filter_difficulty',
+            null,
+            'cmd'
+        );
         $this->setState('filter.difficulty', $difficulty);
 
-        $completion = $this->getUserStateFromRequest($this->context . '.filter.completion', 'filter_completion', null, 'cmd');
+        $completion = $this->getUserStateFromRequest(
+            $this->context . '.filter.completion',
+            'filter_completion',
+            null,
+            'cmd'
+        );
         $this->setState('filter.completion', $completion);
     }
 

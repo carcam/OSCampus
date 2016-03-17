@@ -21,6 +21,36 @@ class OscampusModelMycourses extends OscampusModelList
         $user = OscampusFactory::getUser($this->getState('user.id'));
         $db   = $this->getDbo();
 
+        $lastLessonSubquery = $db->getQuery(true)
+            ->select('a2.id')
+            ->from('#__oscampus_users_lessons AS a2')
+            ->innerJoin('#__oscampus_lessons AS l2 ON l2.id = a2.lessons_id')
+            ->innerJoin('#__oscampus_modules AS m2 ON m2.id = l2.modules_id')
+            ->where(
+                array(
+                    'a2.users_id = activity.users_id',
+                    'm2.courses_id = module.courses_id',
+                    'a2.last_visit > activity.last_visit'
+                )
+            );
+
+        $lastLessonQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'activity.lessons_id',
+                    'module.courses_id'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->where(
+                array(
+                    'activity.users_id = ' . $user->id,
+                    sprintf('NOT EXISTS(%s)', $lastLessonSubquery)
+                )
+            );
+
         $activityQuery = $db->getQuery(true)
             ->select(
                 array(
@@ -28,6 +58,7 @@ class OscampusModelMycourses extends OscampusModelList
                     'activity.users_id',
                     'MIN(activity.first_visit) AS first_visit',
                     'MAX(activity.last_visit) AS last_visit',
+                    'last_lesson.lessons_id AS last_lesson',
                     sprintf(
                         'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
                         $db->quote(':')
@@ -40,6 +71,7 @@ class OscampusModelMycourses extends OscampusModelList
             ->from('#__oscampus_users_lessons AS activity')
             ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin("({$lastLessonQuery}) AS last_lesson ON last_lesson.courses_id = module.courses_id")
             ->leftJoin('#__oscampus_certificates AS certificate ON certificate.courses_id = module.courses_id AND certificate.users_id = activity.users_id')
             ->where(
                 array(
@@ -59,6 +91,7 @@ class OscampusModelMycourses extends OscampusModelList
                     'user_activity.users_id',
                     'user_activity.first_visit',
                     'user_activity.last_visit',
+                    'user_activity.last_lesson',
                     'user_activity.scores',
                     'user_activity.certificates_id',
                     'user_activity.date_earned'
