@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
+
 defined('_JEXEC') or die();
 
 abstract class OscCourse
@@ -56,34 +58,37 @@ abstract class OscCourse
     /**
      * Generate the start button for a course
      *
-     * @param object|int $progress
-     * @param int        $courseId
+     * @param CourseStatus|object $courseActivity
      *
      * @return string
      */
-    public static function startbutton($progress, $courseId = null)
+    public static function startbutton($courseActivity)
     {
-        if ($courseId === null && is_object($progress)) {
-            $courseId = isset($progress->id) ? $progress->id : null;
-            $progress = isset($progress->progress) ? $progress->progress : 0;
-        }
+        $courseId      = @$courseActivity->id;
+        $progress      = @$courseActivity->progress;
+        $lastLesson    = @$courseActivity->last_lesson;
+        $certificateId = @$courseActivity->certificates_id;
 
         if ($courseId) {
             if ($progress == 0) {
-                $icon     = 'fa-play';
-                $text     = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
-                $attribs  = 'class="osc-btn osc-btn-main"';
-            } elseif ($progress == 100) {
-                $icon     = 'fa-repeat';
-                $text     = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
-                $attribs  = 'class="osc-btn osc-btn-active"';
+                $icon    = 'fa-play';
+                $text    = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+                $attribs = 'class="osc-btn osc-btn-main"';
+            } elseif ($progress == 100 && $certificateId) {
+                $icon    = 'fa-repeat';
+                $text    = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+                $attribs = 'class="osc-btn osc-btn-active"';
             } else {
-                $icon     = 'fa-step-forward';
-                $text     = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
-                $attribs  = 'class="osc-btn"';
+                $icon    = 'fa-step-forward';
+                $text    = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+                $attribs = 'class="osc-btn"';
             }
 
             $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
+
+            if ($lastLesson) {
+                return JHtml::_('osc.link.lessonid', $courseId, $lastLesson, $button, $attribs);
+            }
 
             return JHtml::_('osc.link.lesson', $courseId, 0, $button, $attribs);
         }
