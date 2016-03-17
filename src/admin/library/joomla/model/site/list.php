@@ -40,4 +40,33 @@ abstract class OscampusModelSiteList extends JModelList
 
         return $merged;
     }
+
+    /**
+     * Create a where clause of OR conditions for a text search
+     * across one or more fields
+     *
+     * @param string          $text
+     * @param string|string[] $fields
+     *
+     * @return string
+     */
+    protected function getWhereTextSearch($text, $fields)
+    {
+        if (!is_array($fields)) {
+            $fields = (array)$fields;
+        }
+
+        $searchText = $this->getDbo()->quote('%' . $text . '%');
+
+        $ors = array();
+        foreach ($fields as $field) {
+            $ors[] = $field . ' LIKE ' . $searchText;
+        }
+
+        if (count($ors) > 1) {
+            return sprintf('(%s)', join(' OR ', $ors));
+        }
+
+        return array_pop($ors);
+    }
 }
