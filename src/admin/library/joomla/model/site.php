@@ -10,7 +10,7 @@ use JRegistry as Registry;
 
 defined('_JEXEC') or die();
 
-abstract class OscampusModelSite extends JModelLegacy
+abstract class OscampusModelSite extends OscampusModel
 {
     /**
      * @var string
