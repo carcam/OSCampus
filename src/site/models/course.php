@@ -39,7 +39,8 @@ class OscampusModelCourse extends OscampusModelSite
                 array(
                     'course.id = ' . (int)$this->getState('course.id'),
                     'course.published = 1',
-                    'course.released <= CURDATE()'
+                    $this->getWhereAccess('course.access'),
+                    'course.released <= NOW()'
                 )
             );
 
@@ -66,8 +67,6 @@ class OscampusModelCourse extends OscampusModelSite
         $db  = JFactory::getDbo();
         $cid = (int)$this->getState('course.id');
 
-        $user   = OscampusFactory::getUser();
-
         $query = $db->getQuery(true)
             ->select(
                 array(
@@ -93,7 +92,8 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'course.published = 1',
-                        'course.released <= CURDATE()',
+                        $this->getWhereAccess('course.access'),
+                        'course.released <= NOW()',
                         'course.id != ' . $cid,
                         'teacher.id = ' . $teacher->id,
                     )
@@ -165,7 +165,8 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'module.courses_id = ' . (int)$this->getState('course.id'),
-                        'lesson.published = 1'
+                        'lesson.published = 1',
+                        $this->getWhereAccess('lesson.access')
                     )
                 )
                 ->order('module.ordering ASC, lesson.ordering ASC');
