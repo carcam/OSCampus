@@ -12,21 +12,35 @@ class OscampusModelPathways extends OscampusModelList
 {
     protected function getListQuery()
     {
-        $user = JFactory::getUser();
-        $viewLevels  = join(',', $user->getAuthorisedViewLevels());
+        $user       = JFactory::getUser();
+        $viewLevels = join(',', $user->getAuthorisedViewLevels());
 
         $query = parent::getListQuery()
             ->select('*')
-            ->from('#__oscampus_pathways')
+            ->from('#__oscampus_pathways AS pathway')
             ->where(
                 array(
-                    'published = 1',
-                    'access IN (' . $viewLevels . ')',
-                    'users_id = 0'
+                    'pathway.published = 1',
+                    sprintf('pathway.access IN (%s)', $viewLevels),
+                    'pathway.users_id = 0'
                 )
-            )
-            ->order('ordering asc');
+            );
+
+        $ordering  = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+        $query->order($ordering . ' ' . $direction);
+        if ($ordering != 'pathway.title') {
+            $query->order('pathway.title ' . $direction);
+        }
 
         return $query;
+    }
+
+    protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
+    {
+        parent::populateState($ordering, $direction);
+
+        $this->setState('list.start', 0);
+        $this->setState('list.limit', 0);
     }
 }
