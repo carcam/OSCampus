@@ -13,6 +13,7 @@ use JHtml;
 use JModuleHelper;
 use JRegistry as Registry;
 use JText;
+use JUser;
 use OscampusFactory;
 use OscampusHelperSite;
 use OscampusModel;
@@ -122,9 +123,6 @@ class Search
      */
     protected function createFilterPathway()
     {
-        $user   = OscampusFactory::getUser();
-        $levels = join(',', $user->getAuthorisedViewLevels());
-
         $pathwayQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -139,9 +137,10 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    sprintf('pathway.access IN (%s)', $levels),
+                    $this->getWhereAccess('pathway.access'),
                     'course.published = 1',
-                    sprintf('course.access IN (%s)', $levels)
+                    $this->getWhereAccess('course.access'),
+                    'course.released <= NOW()'
                 )
             )
             ->group('pathway.id')
@@ -170,15 +169,71 @@ class Search
     }
 
     /**
+     * Topic filter. Defined as any pathway containing a course with the chosen tag.
+     *
+     * @return string
+     */
+    protected function createFilterTopic()
+    {
+        $topicQuery = $this->db->getQuery(true)
+            ->select(
+                array(
+                    'tag.id AS ' . $this->db->quoteName('value'),
+                    'tag.title AS ' . $this->db->quoteName('text')
+                )
+            )
+            ->from('#__oscampus_pathways AS pathway')
+            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
+            ->innerJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
+            ->innerJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
+            ->where(
+                array(
+                    'pathway.users_id = 0',
+                    'pathway.published = 1',
+                    $this->getWhereAccess('pathway.access'),
+                    'course.published = 1',
+                    $this->getWhereAccess('course.access'),
+                    'course.released <= NOW()'
+                )
+            )
+            ->group('tag.id')
+            ->order(
+                array(
+                    'pathway.ordering ASC',
+                    'tag.title ASC'
+                )
+            );
+
+        $topics = $this->db->setQuery($topicQuery)->loadObjectList();
+        array_unshift(
+            $topics,
+            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TOPIC'))
+        );
+
+        $selected = $this->model->getState('filter.topic');
+        $class    = $this->getStateClass($selected);
+
+        $html = JHtml::_(
+            'select.genericlist',
+            $topics,
+            'filter_topic',
+            array(
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
+            )
+        );
+
+        return $html;
+    }
+
+    /**
      * Tag filter
      *
      * @return string
      */
     protected function createFilterTag()
     {
-        $user   = OscampusFactory::getUser();
-        $levels = join(',', $user->getAuthorisedViewLevels());
-
         $tagQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -192,7 +247,8 @@ class Search
             ->where(
                 array(
                     'course.published = 1',
-                    sprintf('course.access IN (%s)', $levels)
+                    $this->getWhereAccess('course.access'),
+                    'course.released <= NOW()'
                 )
             )
             ->group('tag.id')
@@ -289,9 +345,6 @@ class Search
      */
     protected function createFilterTeacher()
     {
-        $user   = OscampusFactory::getUser();
-        $levels = join(',', $user->getAuthorisedViewLevels());
-
         $teacherQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -308,9 +361,10 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    sprintf('pathway.access IN (%s)', $levels),
+                    $this->getWhereAccess('pathway.access'),
                     'course.published = 1',
-                    sprintf('course.access IN (%s)', $levels)
+                    $this->getWhereAccess('course.access'),
+                    'course.released <= NOW()'
                 )
             )
             ->group('teacher.id')
@@ -383,5 +437,22 @@ JSCRIPT;
 
         $layout = $layout ?: $this->params->get('layout', 'default');
         require JModuleHelper::getLayoutPath($this->name, $layout);
+    }
+
+    /**
+     * Construct a SQL where item for an access level field
+     *
+     * @param string $field
+     * @param JUser  $user
+     *
+     * @return string
+     */
+    protected function getWhereAccess($field, JUser $user = null)
+    {
+        $user = $user ?: OscampusFactory::getUser();
+
+        $viewLevels = array_unique($user->getAuthorisedViewLevels());
+
+        return sprintf($field . ' IN (%s)', join(', ', $viewLevels));
     }
 }
