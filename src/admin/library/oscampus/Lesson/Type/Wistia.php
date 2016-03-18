@@ -12,7 +12,6 @@ use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
 use JRegistry;
-use JRoute;
 use JSession;
 use JText;
 use Oscampus\Activity\LessonStatus;

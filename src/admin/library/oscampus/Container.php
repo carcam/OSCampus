@@ -8,10 +8,9 @@
 
 namespace Oscampus;
 
-use JDatabaseInterface;
+use JDatabaseDriver;
 use JUser;
 use Mobile_Detect;
-use Oscampus\UserActivity;
 
 defined('_JEXEC') or die();
 
@@ -21,7 +20,7 @@ defined('_JEXEC') or die();
  * @package OSCampus
  *
  * @property Certificate        $certificate
- * @property JDatabaseInterface $dbo
+ * @property JDatabaseDriver $dbo
  * @property JUser              $user
  * @property Lesson             $lesson
  * @property Mobile_Detect      $device

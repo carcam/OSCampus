@@ -9,7 +9,7 @@
 namespace Oscampus;
 
 use Exception;
-use JDatabase;
+use JDatabaseDriver;
 use JForm;
 use JRegistry;
 use JUser;
@@ -91,7 +91,7 @@ class Lesson extends AbstractBase
      */
     protected $files = array();
 
-    public function __construct(JDatabase $dbo, Properties $properties)
+    public function __construct(JDatabaseDriver $dbo, Properties $properties)
     {
         $this->previous = $properties;
         $this->current  = clone $properties;
