@@ -10,69 +10,9 @@ defined('_JEXEC') or die();
 
 class OscampusControllerUtility extends OscampusControllerBase
 {
-    public function fixFiles()
+    public function display()
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
-        $db = OscampusFactory::getDbo();
-
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'files_id AS id',
-                    'courses_id',
-                    'lessons_id',
-                    'ordering'
-                )
-            )
-            ->from('#__oscampus_files_links');
-
-        if ($flinks = $db->setQuery($query)->loadObjectList()) {
-            try {
-                $this->backupTable('#__oscampus_files_links');
-                $this->backupTable('#__oscampus_files');
-
-                $query = <<<TABLEFIX
-ALTER TABLE `#__oscampus_files`
-ADD COLUMN `courses_id` INT(11) NOT NULL AFTER `id`,
-ADD COLUMN `lessons_id` INT(11) NULL DEFAULT NULL AFTER `courses_id`,
-ADD COLUMN `ordering` INT(11) NOT NULL AFTER `description`,
-ADD COLUMN `modified` DATETIME NULL DEFAULT NULL AFTER `created_by_alias`,
-ADD COLUMN `modified_by` INT(11) NULL DEFAULT NULL AFTER `modified`,
-ADD INDEX `files_courses_idx` (`courses_id` ASC),
-ADD INDEX `files_lessons_idx` (`lessons_id` ASC);
-TABLEFIX;
-                $db->setQuery($query)->execute();
-
-                $ids = array();
-                foreach ($flinks as $flink) {
-                    if (in_array($flink->id, $ids)) {
-                        $file = $db->setQuery('SELECT * FROM #__oscampus_files WHERE id=' . $flink->id)->loadAssoc();
-
-                        $insertObject = (object)array_merge($file, (array)$flink);
-                        unset($insertObject->id);
-
-                        $db->insertObject('#__oscampus_files', $insertObject);
-                        echo '<br/>INSERT:';
-                        print_r($insertObject);
-
-                    } else {
-                        $ids[] = $flink->id;
-                        $db->updateObject('#__oscampus_files', $flink, 'id');
-                        echo '<br/>UPDATE:';
-                        print_r($flink);
-                    }
-                }
-
-                $db->setQuery('DROP TABLE #__oscampus_files_links')->execute();
-
-            } catch (Exception $e) {
-                echo '<br/><br/>ERROR: ' . $e->getMessage();
-            }
-        }
-
-        JError::$legacy = $errorLegacy;
+        $this->setRedirect('index.php?option=com_oscampus', 'No such utility task - ' . $this->getTask(), 'notice');
     }
 
     protected function backupTable($source)
@@ -121,7 +61,7 @@ TABLEFIX;
      */
     public function checkcerts()
     {
-        echo '<h3>Checking/updating certificate records</h3>';
+        $this->heading('Checking/updating certificate records');
 
         $app = OscampusFactory::getApplication();
         $db  = OscampusFactory::getDbo();
@@ -224,6 +164,128 @@ TABLEFIX;
     }
 
     /**
+     * Check all user activity records to see if they have completed all lessons but
+     * don't have a certificate
+     */
+    public function checkactivity()
+    {
+        $this->heading('Look for missing certificates');
+
+        $db = OscampusFactory::getDbo();
+
+        $lastLessonSubquery = $db->getQuery(true)
+            ->select('a2.id')
+            ->from('#__oscampus_users_lessons AS a2')
+            ->innerJoin('#__oscampus_lessons AS l2 ON l2.id = a2.lessons_id')
+            ->innerJoin('#__oscampus_modules AS m2 ON m2.id = l2.modules_id')
+            ->where(
+                array(
+                    'a2.users_id = activity.users_id',
+                    'm2.courses_id = module.courses_id',
+                    'a2.last_visit > activity.last_visit'
+                )
+            );
+
+        $lastLessonQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'activity.lessons_id',
+                    'module.courses_id'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->where(
+                array(
+                    'activity.users_id = %1$s',
+                    sprintf('NOT EXISTS(%s)', $lastLessonSubquery)
+                )
+            );
+
+        $activityQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'module.courses_id',
+                    'activity.users_id',
+                    'MIN(activity.first_visit) AS first_visit',
+                    'MAX(activity.last_visit) AS last_visit',
+                    'last_lesson.lessons_id AS last_lesson',
+                    sprintf(
+                        'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
+                        $db->quote(':')
+                    ),
+                    'certificate.id AS certificates_id',
+                    'certificate.date_earned',
+                    'count(*) AS lessons_taken'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin("({$lastLessonQuery}) AS last_lesson ON last_lesson.courses_id = module.courses_id")
+            ->leftJoin('#__oscampus_certificates AS certificate ON certificate.courses_id = module.courses_id AND certificate.users_id = activity.users_id')
+            ->where(
+                array(
+                    'activity.users_id = %1$s',
+                    'activity.completed'
+                )
+            )
+            ->group('module.courses_id');
+
+        $courseQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'course.id',
+                    'course.title',
+                    'count(*) AS lesson_count',
+                    'user_activity.lessons_taken',
+                    'user_activity.users_id',
+                    'user_activity.first_visit',
+                    'user_activity.last_visit',
+                    'user_activity.last_lesson',
+                    'user_activity.scores',
+                    'user_activity.certificates_id',
+                    'user_activity.date_earned'
+                )
+            )
+            ->from('#__oscampus_courses AS course')
+            ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+            ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
+            ->group('course.id');
+
+        $userQuery = $db->getQuery(true)
+            ->select(
+                array(
+                    'user.id',
+                    'user.username'
+                )
+            )
+            ->from('#__users AS user')
+            ->innerJoin('#__oscampus_users_lessons AS activity ON activity.users_id = user.id')
+            ->group('user.id');
+
+        $users = $db->setQuery($userQuery, 0, 1)->loadObjectList();
+
+        $fixes = array();
+        foreach ($users as $user) {
+            $fixes[$user->username] = array();
+
+            $courses = $db->setQuery(sprintf($courseQuery, $user->id))->loadObjectList('id');
+            foreach ($courses as $course) {
+                if ($course->lesson_count == $course->lessons_taken && !$course->certificates_id) {
+                    $fixes[$user->username][] = $course;
+                }
+            }
+        }
+
+        echo '<pre>';
+        print_r($fixes);
+        echo '</pre>';
+    }
+
+    /**
      * search all text/varchar fields in db for desired string
      */
     public function searchdb()
@@ -293,5 +355,10 @@ TABLEFIX;
 
         echo join("\n", $html);
         echo '<p>Total Runtime: ' . number_format((microtime(true) - $start), 1) . '</p>';
+    }
+
+    protected function heading($heading)
+    {
+        echo '<h3>' . $heading . '</h3>';
     }
 }

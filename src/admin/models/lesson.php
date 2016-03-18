@@ -141,7 +141,7 @@ class OscampusModelLesson extends OscampusModelAdmin
     /**
      * @param JTable $table
      */
-    protected function prepareTable(&$table)
+    protected function prepareTable($table)
     {
         if (!$table->id) {
             $ordering = 0;
