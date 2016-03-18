@@ -6,6 +6,8 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+use JRegistry as Registry;
+
 defined('_JEXEC') or die();
 
 abstract class OscampusModelSite extends JModelLegacy
@@ -35,7 +37,7 @@ abstract class OscampusModelSite extends JModelLegacy
     /**
      * Get component params merged with menu params
      *
-     * @return JRegistry
+     * @return Registry
      */
     public function getParams()
     {

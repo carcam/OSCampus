@@ -6,6 +6,7 @@
  * @license
  */
 
+use JRegistry as Registry;
 use Oscampus\Course;
 use Oscampus\File;
 use Oscampus\Lesson\Properties;
@@ -50,7 +51,7 @@ class OscampusModelCourse extends OscampusModelSite
         if (empty($course->image)) {
             $course->image = Course::DEFAULT_IMAGE;
         }
-        $course->metadata = new JRegistry($course->metadata);
+        $course->metadata = new Registry($course->metadata);
 
         return $course;
     }

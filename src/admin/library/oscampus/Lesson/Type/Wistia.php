@@ -11,8 +11,7 @@ namespace Oscampus\Lesson\Type;
 use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
-use JRegistry;
-use JRoute;
+use JRegistry as Registry;
 use JSession;
 use JText;
 use Oscampus\Activity\LessonStatus;
@@ -61,7 +60,7 @@ class Wistia extends AbstractType
             return $this->renderStatic();
         }
 
-        /** @var JRegistry $params */
+        /** @var Registry $params */
         $session = OscampusFactory::getSession();
         $device  = OscampusFactory::getContainer()->device;
         $params  = clone $oswistia->params;
@@ -216,11 +215,11 @@ class Wistia extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $content = $data->get('content');
         if ($content && is_string($content)) {
@@ -235,9 +234,9 @@ class Wistia extends AbstractType
     }
 
     /**
-     * @param JRegistry $data
+     * @param Registry $data
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $content = $data->get('content');
         if (!is_string($content)) {

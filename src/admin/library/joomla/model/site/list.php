@@ -6,6 +6,8 @@
  * @license
  */
 
+use JRegistry as Registry;
+
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
@@ -25,7 +27,7 @@ abstract class OscampusModelSiteList extends JModelList
     /**
      * Get component params merged with menu params
      *
-     * @return JRegistry
+     * @return Registry
      */
     public function getParams()
     {

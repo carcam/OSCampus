@@ -11,7 +11,7 @@ namespace Oscampus\Module;
 use JDatabase;
 use JHtml;
 use JModuleHelper;
-use JRegistry;
+use JRegistry as Registry;
 use JText;
 use OscampusFactory;
 use OscampusHelperSite;
@@ -30,7 +30,7 @@ class Search
     protected $name = 'mod_oscampus_search';
 
     /**
-     * @var JRegistry
+     * @var Registry
      */
     protected $params = null;
 
@@ -49,7 +49,7 @@ class Search
      */
     protected static $instanceCount = 0;
 
-    public function __construct(JRegistry $params)
+    public function __construct(Registry $params)
     {
         $this->params = $params;
         $this->model  = OscampusModel::getInstance('Pathway');

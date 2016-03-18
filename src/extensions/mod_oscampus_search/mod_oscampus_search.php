@@ -7,6 +7,8 @@
  * @license
  */
 
+use JRegistry as Registry;
+
 use Oscampus\Module\Search;
 
 defined('_JEXEC') or die();
@@ -18,7 +20,7 @@ if (!defined('OSCAMPUS_LOADED')) {
 if (defined('OSCAMPUS_LOADED')) {
     Oscampus\AutoLoader::register('Oscampus', __DIR__ . '/oscampus');
 
-    /** @var JRegistry $params */
+    /** @var Registry $params */
     $module = new Search($params);
     $module->output();
 }
