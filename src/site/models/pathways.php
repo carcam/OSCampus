@@ -12,7 +12,7 @@ class OscampusModelPathways extends OscampusModelList
 {
     protected function getListQuery()
     {
-        $query = parent::getListQuery()
+        $query = $this->getDbo()->getQuery(true)
             ->select('*')
             ->from('#__oscampus_pathways AS pathway')
             ->where(
@@ -22,6 +22,18 @@ class OscampusModelPathways extends OscampusModelList
                     'pathway.users_id = 0'
                 )
             );
+
+        if ($topic = (int)$this->getState('filter.topic')) {
+            $subQuery = $this->getDbo()->getQuery(true)
+                ->select('cp.pathways_id')
+                ->from('#__oscampus_courses_tags AS ct')
+                ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
+                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+                ->where('ct.tags_id = ' . $topic)
+                ->group('cp.pathways_id');
+
+            $query->where(sprintf('pathway.id IN (%s)', $subQuery));
+        }
 
         $ordering  = $this->getState('list.ordering');
         $direction = $this->getState('list.direction');
@@ -35,6 +47,9 @@ class OscampusModelPathways extends OscampusModelList
 
     protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
     {
+        $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic', null, 'int');
+        $this->setState('filter.topic', $topic);
+
         parent::populateState($ordering, $direction);
 
         $this->setState('list.start', 0);
