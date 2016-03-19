@@ -9,7 +9,7 @@ namespace Oscampus\Lesson\Type\Wistia;
 
 use Exception;
 use JDatabaseDriver;
-use JRegistry;
+use JRegistry as Registry;
 use JText;
 use JUser;
 use OscampusFactory;
@@ -41,7 +41,7 @@ class Download
      */
     protected $period = null;
 
-    public function __construct(JRegistry $params = null)
+    public function __construct(Registry $params = null)
     {
         $params = $params ?: \OscampusComponentHelper::getParams();
 

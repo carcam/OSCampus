@@ -8,7 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
-use JRegistry;
+use JRegistry as Registry;
 use Oscampus\Activity\LessonStatus;
 
 defined('_JEXEC') or die();
@@ -40,7 +40,7 @@ class DefaultType extends AbstractType
         // Nothing to do
     }
 
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $path = __DIR__ . '/default_type.xml';
         if (is_file($path)) {

@@ -6,6 +6,8 @@
  * @license
  */
 
+use JRegistry as Registry;
+
 defined('_JEXEC') or die();
 
 abstract class OscampusTable extends JTable
@@ -79,7 +81,7 @@ abstract class OscampusTable extends JTable
     {
         if (property_exists($this, 'metadata')) {
             if (isset($array['metadata']) && !is_string($array['metadata'])) {
-                $registry = new JRegistry($array['metadata']);
+                $registry = new Registry($array['metadata']);
                 $array['metadata'] = $registry->toString();
             }
         }

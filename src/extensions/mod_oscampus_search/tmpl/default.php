@@ -28,7 +28,7 @@ $textClass = $this->getStateClass($textValue);
 
         <?php
         echo $this->getFilter('Tag');
-        echo $this->getFilter('Pathway');
+        echo $this->getFilter('Topic');
         echo $this->getFilter('Completion');
         ?>
 

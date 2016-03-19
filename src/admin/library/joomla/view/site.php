@@ -6,12 +6,14 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+use JRegistry as Registry;
+
 defined('_JEXEC') or die();
 
 abstract class OscampusViewSite extends OscampusView
 {
     /**
-     * @var JRegistry
+     * @var Registry
      */
     protected $params = null;
 
@@ -38,7 +40,7 @@ abstract class OscampusViewSite extends OscampusView
     }
 
     /**
-     * @return JRegistry
+     * @return Registry
      */
     protected function getParams()
     {
@@ -50,7 +52,7 @@ abstract class OscampusViewSite extends OscampusView
                 }
             }
             if (!($this->params = $this->get('Params'))) {
-                $this->params = new JRegistry();
+                $this->params = new Registry();
             }
         }
         return $this->params;
@@ -92,14 +94,14 @@ abstract class OscampusViewSite extends OscampusView
     /**
      * Set document title and metadata
      *
-     * @param array|object|JRegistry $metadata
-     * @param string                 $defaultTitle
-     * @param string                 $defaultDescription
+     * @param array|object|Registry $metadata
+     * @param string                $defaultTitle
+     * @param string                $defaultDescription
      */
     protected function setMetadata($metadata, $defaultTitle = null, $defaultDescription = null)
     {
-        if (!$metadata instanceof JRegistry) {
-            $metadata = new JRegistry($metadata);
+        if (!$metadata instanceof Registry) {
+            $metadata = new Registry($metadata);
         }
         $doc = OscampusFactory::getDocument();
 
@@ -137,7 +139,7 @@ abstract class OscampusViewSite extends OscampusView
             $this->addTemplatePath($path);
 
             // but allow local override as needed
-            $templatePath = array_shift($this->_path['template']);
+            $templatePath              = array_shift($this->_path['template']);
             $this->_path['template'][] = $templatePath;
 
             return true;

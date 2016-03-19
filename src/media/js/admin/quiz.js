@@ -38,7 +38,9 @@
                 if (siblings[0]) {
                     var newElement = $(siblings[0]).clone(true);
 
-                    newElement.find('input[type=radio]').prop('checked', false);
+                    newElement.find('input[type=radio]')
+                        .prop('checked', false)
+                        .val(siblings.length);
 
                     var newInput = newElement.find('input[type=text]'),
                         newName  = newInput.prop('name').replace(/\[\d+\]$/, '[' + siblings.length + ']'),

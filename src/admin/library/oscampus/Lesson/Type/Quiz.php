@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use JRegistry;
+use JRegistry as Registry;
 use JText;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
@@ -205,11 +205,11 @@ class Quiz extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $content = $data->get('content');
         if ($content && is_string($content)) {
@@ -223,7 +223,7 @@ class Quiz extends AbstractType
         return $xml;
     }
 
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $quiz = $data->get('content');
 

@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use JRegistry;
+use JRegistry as Registry;
 use Oscampus\Activity\LessonStatus;
 use OscampusFactory;
 use SimpleXMLElement;
@@ -41,11 +41,11 @@ class Text extends AbstractType
     }
 
     /**
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return null|SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $path = __DIR__ . '/text.xml';
         if (is_file($path)) {

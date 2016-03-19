@@ -11,7 +11,7 @@ namespace Oscampus;
 use Exception;
 use JDatabaseDriver;
 use JForm;
-use JRegistry;
+use JRegistry as Registry;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
@@ -57,7 +57,7 @@ class Lesson extends AbstractBase
     public $moduleTitle = null;
 
     /**
-     * @var JRegistry
+     * @var Registry
      */
     public $metadata = null;
 
@@ -218,7 +218,7 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
-    public function loadAdminForm(JForm $form, JRegistry $data)
+    public function loadAdminForm(JForm $form, Registry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {
@@ -236,12 +236,12 @@ class Lesson extends AbstractBase
      * Opportunity for Lesson Types to verify and massage content data
      * as needed
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return void
      * @throws Exception
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {
@@ -291,7 +291,7 @@ class Lesson extends AbstractBase
         $currentValues      = (object)$data[1];
         $this->courseTitle  = $currentValues->course_title;
         $this->moduleTitle  = $currentValues->module_title;
-        $this->metadata     = new JRegistry($currentValues->metadata);
+        $this->metadata     = new Registry($currentValues->metadata);
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);

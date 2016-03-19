@@ -6,6 +6,7 @@
  * @license
  */
 
+use JRegistry as Registry;
 use Oscampus\String;
 
 defined('_JEXEC') or die();
@@ -18,7 +19,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     {
         if ($item = parent::getItem($pk)) {
             if (!empty($item->metadata)) {
-                $metadata = new JRegistry($item->metadata);
+                $metadata = new Registry($item->metadata);
                 $item->metadata = $metadata->toArray();
             }
         }
@@ -36,8 +37,11 @@ abstract class OscampusModelAdmin extends JModelAdmin
 
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_oscampus.' . $this->name, $this->name,
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_oscampus.' . $this->name,
+            $this->name,
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
         if (empty($form)) {
             return false;
         }

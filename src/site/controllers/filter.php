@@ -14,34 +14,34 @@ class OscampusControllerFilter extends OscampusControllerBase
     {
         $app = OscampusFactory::getApplication();
 
-        /**
-         * @var OscampusModelCourses $model
-         */
+        $route = OscampusRoute::getInstance();
 
         if ($pid = $app->input->getInt('pid')) {
+            // single pathway selected
             $model = OscampusModel::getInstance('Pathway');
             $model->getState();
 
-            $query = array(
-                'option' => 'com_oscampus',
-                'view'   => 'pathway',
-                'pid'    => $pid
-            );
+            $redirect        = $route->getQuery('pathway');
+            $redirect['pid'] = $pid;
 
-            $redirect = 'index.php?' . http_build_query($query);
+        } elseif ($topic = $app->input->getInt('filter_topic')) {
+            $model = OscampusModel::getInstance('pathways');
+            $model->getState();
+
+            $redirect = $route->getQuery('pathways');
 
         } else {
             $model = OscampusModel::getInstance('Search');
 
             if ($model->activeFilters()) {
-                $redirect = 'index.php?option=com_oscampus&view=search';
+                $redirect = $route->getQuery('search');
             }
         }
 
         if (empty($redirect)) {
-            $redirect = 'index.php?option=com_oscampus&view=pathways';
+            $redirect = $route->getQuery('pathways');
         }
 
-        $this->setRedirect(JRoute::_($redirect));
+        $this->setRedirect(JRoute::_('index.php?' . http_build_query($redirect)));
     }
 }

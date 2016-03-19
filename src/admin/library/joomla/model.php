@@ -24,4 +24,21 @@ abstract class OscampusModel extends JModelLegacy
     {
         return parent::getInstance($type, $prefix, $config);
     }
+
+    /**
+     * Construct a SQL where item for an access level field
+     *
+     * @param string $field
+     * @param JUser  $user
+     *
+     * @return string
+     */
+    protected function getWhereAccess($field, JUser $user = null)
+    {
+        $user = $user ?: OscampusFactory::getUser();
+
+        $accessLevels = array_unique($user->getAuthorisedViewLevels());
+
+        return sprintf($field . ' IN (%s)', join(', ', $accessLevels));
+    }
 }

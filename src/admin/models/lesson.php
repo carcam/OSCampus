@@ -6,6 +6,8 @@
  * @license
  */
 
+use JRegistry as Registry;
+
 defined('_JEXEC') or die();
 
 
@@ -34,7 +36,7 @@ class OscampusModelLesson extends OscampusModelAdmin
         $form = parent::getForm($data, $loadData);
 
         if ($data) {
-            $fixedData = new JRegistry($data);
+            $fixedData = new Registry($data);
             OscampusFactory::getContainer()
                 ->lesson
                 ->loadAdminForm($form, $fixedData);
@@ -47,7 +49,7 @@ class OscampusModelLesson extends OscampusModelAdmin
     {
         if ($data) {
             $fixedData = $data instanceof JObject ? $data->getProperties() : $data;
-            $fixedData = new JRegistry($fixedData);
+            $fixedData = new Registry($fixedData);
 
             if (!$fixedData->get('courses_id')) {
                 $app      = OscampusFactory::getApplication();
@@ -97,7 +99,7 @@ class OscampusModelLesson extends OscampusModelAdmin
         try {
             unset($data['courses_id'], $data['module_title']);
 
-            $fixedData = new JRegistry($data);
+            $fixedData = new Registry($data);
 
             OscampusFactory::getContainer()
                 ->lesson

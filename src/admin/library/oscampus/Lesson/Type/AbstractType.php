@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use Exception;
-use JRegistry;
+use JRegistry as Registry;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
 use OscampusFactory;
@@ -86,22 +86,22 @@ abstract class AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    abstract public function prepareAdminData(JRegistry $data);
+    abstract public function prepareAdminData(Registry $data);
 
     /**
      * The default procedure to vet the lesson content on saving
      * changes in admin. Note passing of data object allowing
      * modification of any of the form POST data
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @throws Exception
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         // Subclasses indicate a problem by throwing Exception
     }

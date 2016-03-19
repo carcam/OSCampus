@@ -6,6 +6,7 @@
  * @license
  */
 
+use JRegistry as Registry;
 use Oscampus\Activity\CourseStatus;
 
 defined('_JEXEC') or die();
@@ -233,7 +234,7 @@ class OscampusModelCourses extends OscampusModelSiteList
                 $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pathwayId);
                 $pathway = $db->loadObject();
 
-                $pathway->metadata = new JRegistry($pathway->metadata);
+                $pathway->metadata = new Registry($pathway->metadata);
 
                 $this->setState('pathway', $pathway);
             }
