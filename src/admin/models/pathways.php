@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelPathways extends OscampusModelList
+class OscampusModelPathways extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
@@ -44,7 +44,10 @@ class OscampusModelPathways extends OscampusModelList
             ->leftJoin('#__viewlevels AS viewlevel ON pathway.access = viewlevel.id')
             ->leftJoin('#__users AS editor_user ON editor_user.id = pathway.checked_out');
 
-        $this->whereTextSearch($query, 'pathway.id', 'pathway.title', 'pathway.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('pathway.title', 'pathway.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'pathway.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {

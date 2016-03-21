@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-abstract class OscampusModelAdminList extends JModelList
+abstract class OscampusModelAdminList extends OscampusModelList
 {
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {

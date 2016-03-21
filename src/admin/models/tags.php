@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelTags extends OscampusModelList
+class OscampusModelTags extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {

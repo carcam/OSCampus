@@ -9,15 +9,19 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelTeachers extends OscampusModelList
+class OscampusModelTeachers extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id', 'teacher.id',
-            'name', 'user.name',
-            'username', 'user.username',
-            'email', 'user.email'
+            'id',
+            'teacher.id',
+            'name',
+            'user.name',
+            'username',
+            'user.username',
+            'email',
+            'user.email'
         );
 
         parent::__construct($config);
@@ -41,9 +45,17 @@ class OscampusModelTeachers extends OscampusModelList
             ->leftJoin('#__users user ON teacher.users_id = user.id')
             ->leftJoin('#__users editor_user ON editor_user.id = teacher.checked_out');
 
-        $this->whereTextSearch($query, 'user.id', 'user.name', 'user.username', 'user.email');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array(
+                'user.name',
+                'user.username',
+                'user.email'
+            );
+            $query->where($this->whereTextSearch($search, $fields, 'user.id'));
+        }
 
-        $primary = $this->getState('list.ordering', 'user.name');
+
+        $primary   = $this->getState('list.ordering', 'user.name');
         $direction = $this->getState('list.direction', 'ASC');
         $query->order($primary . ' ' . $direction);
 

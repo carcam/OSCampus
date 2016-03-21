@@ -108,7 +108,7 @@ abstract class OscampusModelCourselist extends OscampusModelFiltered
                 'course.description',
                 'lesson.description'
             );
-            $query->where($this->getWhereTextSearch($text, $fields));
+            $query->where($this->whereTextSearch($text, $fields));
         }
 
         // User completion status filter

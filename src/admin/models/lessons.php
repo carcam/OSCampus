@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusModelLessons extends OscampusModelList
+class OscampusModelLessons extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
@@ -68,7 +68,10 @@ class OscampusModelLessons extends OscampusModelList
             ->leftJoin('#__viewlevels AS course_view ON course_view.id = course.access')
             ->leftJoin('#__users AS editor_user ON editor_user.id = lesson.checked_out');
 
-        $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('lesson.title', 'lesson.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'lesson.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {
