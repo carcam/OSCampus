@@ -12,6 +12,17 @@ JLoader::import('courselist', __DIR__);
 
 class OscampusModelPathway extends OscampusModelCourselist
 {
+    protected function setFilters()
+    {
+        parent::setFilters();
+
+        $userStateName = $this->context . '.filter.pathway';
+
+        $pathwayId = $this->getUserStateFromRequest($userStateName, 'pid', null, 'int');
+
+        $this->setState('filter.pathway', $pathwayId);
+    }
+
     protected function populateState($ordering = 'cp.ordering', $direction = 'ASC')
     {
         parent::populateState($ordering, $direction);

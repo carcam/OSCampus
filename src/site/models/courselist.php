@@ -80,12 +80,16 @@ abstract class OscampusModelCourselist extends OscampusModelFiltered
             $query->where('pathway.id = ' . $pathwayId);
         }
 
-        // Tag filter
-        if ($tagId = (int)$this->getState('filter.tag')) {
+        // Tag & topic filters are both on course tags
+        $tagId = (int)$this->getState('filter.tag');
+        $topicId = (int)$this->getState('filter.topic');
+        if ($tagId || $topicId) {
+            $tags = join(', ', array_filter(array($tagId, $topicId)));
+
             $tagQuery = $db->getQuery(true)
                 ->select('courses_id')
                 ->from('#__oscampus_courses_tags')
-                ->where('tags_id = ' . $tagId)
+                ->where(sprintf('tags_id IN (%s)', $tags))
                 ->group('courses_id');
 
             $query->where(sprintf('course.id IN (%s)', $tagQuery));

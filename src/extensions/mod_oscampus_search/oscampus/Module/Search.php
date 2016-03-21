@@ -58,7 +58,7 @@ class Search
     public function __construct(Registry $params)
     {
         $this->params = $params;
-        $this->model  = OscampusModel::getInstance('Pathway');
+        $this->model  = OscampusModel::getInstance('Search');
         $this->db     = OscampusFactory::getDbo();
 
         self::$instanceCount++;
