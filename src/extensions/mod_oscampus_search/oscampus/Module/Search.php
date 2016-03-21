@@ -46,6 +46,11 @@ class Search
     protected $db = null;
 
     /**
+     * @var string[]
+     */
+    protected $accessList = array();
+
+    /**
      * @var int
      */
     protected static $instanceCount = 0;
@@ -137,16 +142,16 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    $this->getWhereAccess('pathway.access'),
+                    $this->whereAccess('pathway.access'),
                     'course.published = 1',
-                    $this->getWhereAccess('course.access'),
+                    $this->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
             ->group('pathway.id')
             ->order('pathway.ordering ASC');
 
-        $pathways = $this->db->setQuery($pathwayQuery)->loadObjectlist();
+        $pathways = $this->db->setQuery($pathwayQuery)->loadObjectList();
         array_unshift(
             $pathways,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
@@ -191,9 +196,9 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    $this->getWhereAccess('pathway.access'),
+                    $this->whereAccess('pathway.access'),
                     'course.published = 1',
-                    $this->getWhereAccess('course.access'),
+                    $this->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
@@ -247,14 +252,14 @@ class Search
             ->where(
                 array(
                     'course.published = 1',
-                    $this->getWhereAccess('course.access'),
+                    $this->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
             ->group('tag.id')
             ->order('tag.title ASC');
 
-        $tags = $this->db->setQuery($tagQuery)->loadObjectlist();
+        $tags = $this->db->setQuery($tagQuery)->loadObjectList();
         array_unshift(
             $tags,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TAG'))
@@ -361,16 +366,16 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    $this->getWhereAccess('pathway.access'),
+                    $this->whereAccess('pathway.access'),
                     'course.published = 1',
-                    $this->getWhereAccess('course.access'),
+                    $this->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
             ->group('teacher.id')
             ->order('user.name ASC');
 
-        $teachers = $this->db->setQuery($teacherQuery)->loadObjectlist();
+        $teachers = $this->db->setQuery($teacherQuery)->loadObjectList();
         array_unshift(
             $teachers,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TEACHER'))
@@ -440,19 +445,26 @@ JSCRIPT;
     }
 
     /**
-     * Construct a SQL where item for an access level field
+     * Provide a generic access search for selected field
      *
-     * @param string $field
-     * @param JUser  $user
+     * @param string         $field
+     * @param JUser          $user
      *
      * @return string
      */
-    protected function getWhereAccess($field, JUser $user = null)
+    protected function whereAccess($field, JUser $user = null)
     {
-        $user = $user ?: OscampusFactory::getUser();
+        $user   = $user ?: OscampusFactory::getUser();
+        $userId = $user->id;
 
-        $viewLevels = array_unique($user->getAuthorisedViewLevels());
+        if (!isset($this->accessList[$userId])) {
+            $this->accessList[$userId] = join(', ', array_unique($user->getAuthorisedViewLevels()));
+        }
 
-        return sprintf($field . ' IN (%s)', join(', ', $viewLevels));
+        if ($this->accessList[$userId]) {
+            return sprintf($field . ' IN (%s)', $this->accessList[$userId]);
+        }
+
+        return 'TRUE';
     }
 }

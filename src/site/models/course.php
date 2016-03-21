@@ -39,7 +39,7 @@ class OscampusModelCourse extends OscampusModelSite
                 array(
                     'course.id = ' . (int)$this->getState('course.id'),
                     'course.published = 1',
-                    $this->getWhereAccess('course.access'),
+                    $this->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             );
@@ -92,7 +92,7 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'course.published = 1',
-                        $this->getWhereAccess('course.access'),
+                        $this->whereAccess('course.access'),
                         'course.released <= NOW()',
                         'course.id != ' . $cid,
                         'teacher.id = ' . $teacher->id,
@@ -166,7 +166,7 @@ class OscampusModelCourse extends OscampusModelSite
                     array(
                         'module.courses_id = ' . (int)$this->getState('course.id'),
                         'lesson.published = 1',
-                        $this->getWhereAccess('lesson.access')
+                        $this->whereAccess('lesson.access')
                     )
                 )
                 ->order('module.ordering ASC, lesson.ordering ASC');

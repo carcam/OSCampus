@@ -12,12 +12,10 @@ jimport('joomla.application.component.modellist');
 
 abstract class OscampusModelList extends JModelList
 {
-    public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
-    {
-        $type = $type ?: $this->name;
-
-        return OscampusTable::getInstance($type, $prefix, $config);
-    }
+    /**
+     * @var string[]
+     */
+    protected $accessList = array();
 
     /**
      * Provide a generic text search item for a where clause. Takes a variable number
@@ -52,19 +50,26 @@ abstract class OscampusModelList extends JModelList
     }
 
     /**
-     * Construct a SQL where item for an access level field
+     * Provide a generic access search for selected field
      *
-     * @param string $field
-     * @param JUser  $user
+     * @param string         $field
+     * @param JUser          $user
      *
      * @return string
      */
-    protected function getWhereAccess($field, JUser $user = null)
+    protected function whereAccess($field, JUser $user = null)
     {
-        $user = $user ?: OscampusFactory::getUser();
+        $user   = $user ?: OscampusFactory::getUser();
+        $userId = $user->id;
 
-        $accessLevels = array_unique($user->getAuthorisedViewLevels());
+        if (!isset($this->accessList[$userId])) {
+            $this->accessList[$userId] = join(', ', array_unique($user->getAuthorisedViewLevels()));
+        }
 
-        return sprintf($field . ' IN (%s)', join(', ', $accessLevels));
+        if ($this->accessList[$userId]) {
+            return sprintf($field . ' IN (%s)', $this->accessList[$userId]);
+        }
+
+        return 'TRUE';
     }
 }

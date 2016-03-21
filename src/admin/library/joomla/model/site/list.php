@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-abstract class OscampusModelSiteList extends JModelList
+abstract class OscampusModelSiteList extends OscampusModelList
 {
     public function getState($property = null, $default = null)
     {

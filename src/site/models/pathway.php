@@ -8,8 +8,16 @@
 
 defined('_JEXEC') or die();
 
-JLoader::import('courses', __DIR__);
+JLoader::import('courselist', __DIR__);
 
-class OscampusModelPathway extends OscampusModelCourses
+class OscampusModelPathway extends OscampusModelCourselist
 {
+    protected function populateState($ordering = 'cp.ordering', $direction = 'ASC')
+    {
+        parent::populateState($ordering, $direction);
+
+        // Ignore pagination for now
+        $this->setState('list.start', 0);
+        $this->setState('list.limit');
+    }
 }

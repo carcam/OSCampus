@@ -8,7 +8,9 @@
 
 defined('_JEXEC') or die();
 
-class OscampusModelPathways extends OscampusModelList
+JLoader::import('filtered', __DIR__);
+
+class OscampusModelPathways extends OscampusModelFiltered
 {
     protected function getListQuery()
     {
@@ -18,7 +20,7 @@ class OscampusModelPathways extends OscampusModelList
             ->where(
                 array(
                     'pathway.published = 1',
-                    $this->getWhereAccess('pathway.access'),
+                    $this->whereAccess('pathway.access'),
                     'pathway.users_id = 0'
                 )
             );
@@ -47,9 +49,6 @@ class OscampusModelPathways extends OscampusModelList
 
     protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
     {
-        $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic', null, 'int');
-        $this->setState('filter.topic', $topic);
-
         parent::populateState($ordering, $direction);
 
         $this->setState('list.start', 0);

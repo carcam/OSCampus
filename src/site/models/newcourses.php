@@ -8,9 +8,7 @@
 
 defined('_JEXEC') or die();
 
-JLoader::import('courses', __DIR__);
-
-class OscampusModelNewcourses extends OscampusModelCourses
+class OscampusModelNewcourses extends OscampusModelCourselist
 {
     protected function getListQuery()
     {
@@ -43,5 +41,9 @@ class OscampusModelNewcourses extends OscampusModelCourses
     protected function populateState($ordering = 'course.released', $direction = 'DESC')
     {
         parent::populateState($ordering, $direction);
+
+        // Ignore pagination for now
+        $this->setState('list.start', 0);
+        $this->setState('list.limit');
     }
 }

@@ -15,6 +15,11 @@ abstract class OscampusModel extends JModelLegacy
      */
     private static $pathAdded = false;
 
+    /**
+     * @var string[]
+     */
+    protected $accessList = array();
+
     public static function addIncludePath($path = '', $prefix = '')
     {
         return parent::addIncludePath($path, $prefix);
@@ -26,19 +31,26 @@ abstract class OscampusModel extends JModelLegacy
     }
 
     /**
-     * Construct a SQL where item for an access level field
+     * Provide a generic access search for selected field
      *
-     * @param string $field
-     * @param JUser  $user
+     * @param string         $field
+     * @param JUser          $user
      *
      * @return string
      */
-    protected function getWhereAccess($field, JUser $user = null)
+    protected function whereAccess($field, JUser $user = null)
     {
-        $user = $user ?: OscampusFactory::getUser();
+        $user   = $user ?: OscampusFactory::getUser();
+        $userId = $user->id;
 
-        $accessLevels = array_unique($user->getAuthorisedViewLevels());
+        if (!isset($this->accessList[$userId])) {
+            $this->accessList[$userId] = join(', ', array_unique($user->getAuthorisedViewLevels()));
+        }
 
-        return sprintf($field . ' IN (%s)', join(', ', $accessLevels));
+        if ($this->accessList[$userId]) {
+            return sprintf($field . ' IN (%s)', $this->accessList[$userId]);
+        }
+
+        return 'TRUE';
     }
 }
