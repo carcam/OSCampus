@@ -79,7 +79,7 @@ abstract class OscampusModelFiltered extends OscampusModelSiteList
     {
         $app = JFactory::getApplication();
 
-        $pathwayId = $app->input->getInt('pid');
+        $pathwayId = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'filter_pathway', null, 'int');
         $this->setState('filter.pathway', $pathwayId);
 
         $topic = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic', null, 'int');

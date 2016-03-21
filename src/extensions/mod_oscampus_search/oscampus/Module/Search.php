@@ -163,7 +163,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $pathways,
-            'pid',
+            'filter_pathway',
             array(
                 'list.select' => $selected,
                 'list.attr'   => sprintf('class="%s"', $class)

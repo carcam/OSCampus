@@ -12,27 +12,22 @@ class OscampusControllerFilter extends OscampusControllerBase
 {
     public function courses()
     {
-        $app = OscampusFactory::getApplication();
+        /** @var OscampusModelSearch $model */
 
+        $app   = OscampusFactory::getApplication();
         $route = OscampusRoute::getInstance();
+        $model = OscampusModel::getInstance('Search');
+        $model->getState();
 
-        if ($pid = $app->input->getInt('pid')) {
+        if ($pid = $app->input->getInt('filter_pathway')) {
             // single pathway selected
-            $model = OscampusModel::getInstance('Pathway');
-            $model->getState();
-
             $redirect        = $route->getQuery('pathway');
             $redirect['pid'] = $pid;
 
         } elseif ($topic = $app->input->getInt('filter_topic')) {
-            $model = OscampusModel::getInstance('pathways');
-            $model->getState();
-
             $redirect = $route->getQuery('pathways');
 
         } else {
-            $model = OscampusModel::getInstance('Search');
-
             if ($model->activeFilters()) {
                 $redirect = $route->getQuery('search');
             }
