@@ -49,7 +49,8 @@ class OscampusModelMycourses extends OscampusModelList
                     'activity.users_id = ' . $user->id,
                     sprintf('NOT EXISTS(%s)', $lastLessonSubquery)
                 )
-            );
+            )
+            ->group('module.courses_id');
 
         $activityQuery = $db->getQuery(true)
             ->select(
