@@ -181,7 +181,7 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     protected function prepareTable($table)
     {
-        $descriptions = preg_split('#<.*?id=["\']system-readmore["\'].*?>#', $table->description, 2);
+        $descriptions = preg_split('#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i', $table->description, 2);
 
         $table->description = trim(array_pop($descriptions));
         $table->introtext   = trim(array_pop($descriptions));
