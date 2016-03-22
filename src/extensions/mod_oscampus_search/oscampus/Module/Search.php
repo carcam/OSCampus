@@ -203,12 +203,7 @@ class Search
                 )
             )
             ->group('tag.id')
-            ->order(
-                array(
-                    'pathway.ordering ASC',
-                    'tag.title ASC'
-                )
-            );
+            ->order('tag.title ASC');
 
         $topics = $this->db->setQuery($topicQuery)->loadObjectList();
         array_unshift(
