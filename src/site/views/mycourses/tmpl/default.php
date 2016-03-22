@@ -54,7 +54,9 @@ defined('_JEXEC') or die();
                             <span
                                 style="<?php echo sprintf('width: %s;', $progress); ?>"
                                 class="<?php echo $class; ?>">
-                                <span><?php echo $progress; ?></span>
+                                <span>
+                                    <?php echo ($item->progress >= 30) ? $progress : ''; ?>
+                                </span>
                             </span>
                         </span>
                     </div>
