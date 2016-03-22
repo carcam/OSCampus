@@ -20,7 +20,7 @@ abstract class OscampusModel extends JModelLegacy
      */
     protected $accessList = array();
 
-    public static function addIncludePath($path = '', $prefix = '')
+    public static function addIncludePath($path = '', $prefix = 'OscampusModel')
     {
         return parent::addIncludePath($path, $prefix);
     }
