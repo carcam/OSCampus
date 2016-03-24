@@ -8,7 +8,7 @@
 
 namespace Oscampus\Module;
 
-use JDatabase;
+use JDatabaseDriver;
 use JHtml;
 use JModuleHelper;
 use JRegistry as Registry;
@@ -41,7 +41,7 @@ class Search
     protected $model = null;
 
     /**
-     * @var JDatabase
+     * @var JDatabaseDriver
      */
     protected $db = null;
 

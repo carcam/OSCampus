@@ -8,7 +8,7 @@
 namespace Oscampus\Lesson\Type\Wistia;
 
 use Exception;
-use JDatabase;
+use JDatabaseDriver;
 use JRegistry as Registry;
 use JText;
 use JUser;
@@ -119,15 +119,15 @@ class Download
     }
 
     /**
-     * @param Video     $video
-     * @param JUser     $user
-     * @param JDatabase $db
+     * @param Video           $video
+     * @param JUser           $user
+     * @param JDatabaseDriver $db
      *
      * Add an entry to the download log
      *
      * @return void
      */
-    public function log(Video $video, JUser $user = null, JDatabase $db = null)
+    public function log(Video $video, JUser $user = null, JDatabaseDriver $db = null)
     {
         $db   = $db ?: OscampusFactory::getDbo();
         $user = $user ?: OscampusFactory::getUser();

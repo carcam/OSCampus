@@ -14,8 +14,6 @@ use Twig_SimpleFilter;
 use OscampusFactory;
 use JUri;
 use JRoute;
-use JText;
-
 
 class Joomla extends Twig_Extension
 {

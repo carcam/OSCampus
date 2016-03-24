@@ -8,7 +8,7 @@
 
 namespace Oscampus;
 
-use JDatabase;
+use JDatabaseDriver;
 use JDatabaseQuery;
 use JUser;
 use Oscampus\Activity\CourseStatus;
@@ -56,7 +56,7 @@ class UserActivity extends AbstractBase
     protected $courses = null;
 
     public function __construct(
-        JDatabase $dbo,
+        JDatabaseDriver $dbo,
         JUser $user,
         LessonStatus $lessonStatus,
         LessonSummary $lessonSummary,

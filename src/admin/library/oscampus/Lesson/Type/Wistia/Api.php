@@ -27,6 +27,11 @@ class Api
     const USER_NAME = 'api';
 
     /**
+     * @var string
+     */
+    public $response = null;
+
+    /**
      *
      * @var string
      */
@@ -163,7 +168,7 @@ class Api
             $url .= '?' . http_build_query($params);
         }
 
-        $result = $this->send($url, $params);
+        $result = $this->send($url);
 
         $result = json_decode($result);
         return $result;
@@ -190,14 +195,13 @@ class Api
             )
         );
 
-        $result = curl_exec($ch);
-        $info   = curl_getinfo($ch);
+        $this->response = curl_exec($ch);
 
+        $info   = curl_getinfo($ch);
         curl_close($ch);
-        $this->response = $result;
 
         JLog::add('Response: ' . json_encode($info), JLog::INFO, 'oscampus');
 
-        return $result;
+        return $this->response;
     }
 }
