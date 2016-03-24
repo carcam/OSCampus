@@ -28,13 +28,8 @@ class Joomla extends Twig_Extension
     {
         $app = OscampusFactory::getApplication();
 
-        $joomla2 = version_compare(JVERSION, '3', 'lt') && version_compare(JVERSION, '2', 'ge');
-        $joomla3 = version_compare(JVERSION, '4', 'lt') && version_compare(JVERSION, '3', 'ge');
-
         return array(
             'joomla_version' => JVERSION,
-            'joomla2'        => $joomla2,
-            'joomla3'        => $joomla3,
             'input'          => $app->input,
             'uri'            => JUri::getInstance()->toString()
         );
@@ -44,7 +39,7 @@ class Joomla extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction('html', '\JHtml::_'),
-            new Twig_SimpleFunction('linkto', array($this, 'function_linkto'))
+            new Twig_SimpleFunction('linkto', array($this, 'functionLinkto'))
         );
     }
 
@@ -55,7 +50,7 @@ class Joomla extends Twig_Extension
      *
      * @return string
      */
-    public function function_linkto(array $urlvars)
+    public function functionLinkto(array $urlvars)
     {
         if (!isset($urlvars['option'])) {
             $urlvars = array_merge(
@@ -73,7 +68,7 @@ class Joomla extends Twig_Extension
             new Twig_SimpleFilter('route', '\JRoute::_'),
             new Twig_SimpleFilter('lang', '\JText::_'),
             new Twig_SimpleFilter('sprintf', '\JText::sprintf'),
-            new Twig_SimpleFilter('clean', array($this, 'filter_filter'))
+            new Twig_SimpleFilter('clean', array($this, 'filterFilter'))
         );
     }
 
@@ -85,7 +80,7 @@ class Joomla extends Twig_Extension
      *
      * @return mixed
      */
-    public function filter_filter($string, $command)
+    public function filterFilter($string, $command)
     {
         $filter = \OscampusFilterInput::getInstance();
 

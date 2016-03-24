@@ -75,10 +75,10 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $items = JToolbar::getInstance('toolbar')->getItems();
 
             if (!empty($items)) {
-                JToolBarHelper::divider();
+                JToolbarHelper::divider();
             }
 
-            JToolBarHelper::preferences('com_oscampus');
+            JToolbarHelper::preferences('com_oscampus');
         }
     }
 
@@ -112,12 +112,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     {
         $link = 'index.php?option=com_oscampus&view=' . $view;
 
-        if (method_exists('JHtmlSidebar', 'addEntry')) {
-            JHtmlSidebar::addEntry(JText::_($name), $link, $active);
-        } else {
-            // Deprecated after J2.5
-            JSubMenuHelper::addEntry(JText::_($name), $link, $active);
-        }
+        JHtmlSidebar::addEntry(JText::_($name), $link, $active);
     }
 
     /**
@@ -129,7 +124,6 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
 
         $hide = $app->input->getBool('hidemainmenu', false);
         if (!$hide) {
-            //$this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses', $this->_name == 'courses');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_LESSONS', 'lessons', $this->_name == 'lessons');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_PATHWAYS', 'pathways', $this->_name == 'pathways');
@@ -137,6 +131,6 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
         }
 
-        $this->setVariable('show_sidebar', !$hide && version_compare(JVERSION, '3', 'ge'));
+        $this->setVariable('show_sidebar', !$hide);
     }
 }
