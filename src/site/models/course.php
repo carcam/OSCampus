@@ -165,8 +165,7 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'module.courses_id = ' . (int)$this->getState('course.id'),
-                        'lesson.published = 1',
-                        $this->whereAccess('lesson.access')
+                        'lesson.published = 1'
                     )
                 )
                 ->order('module.ordering ASC, lesson.ordering ASC');
