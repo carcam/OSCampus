@@ -79,8 +79,6 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setOrdering($field = null, $prefix = null, $enabled = false)
     {
-        $state = $this->getState();
-
         $ordering = array_merge(
             $this->getVariable('ordering', array()),
             array(
@@ -89,6 +87,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
                 'prefix'  => $prefix
             )
         );
+
         $this->setVariable('ordering', $ordering);
     }
 

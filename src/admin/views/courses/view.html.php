@@ -16,7 +16,7 @@ class OscampusViewCourses extends OscampusViewList
 
         $state = $this->getState();
 
-        $enableOrdering = $state->get('list.ordering') == 'cp.ordering' && $state->get('filter.pathway') > 0;
-        $this->setOrdering('cp.ordering', 'courses.', $enableOrdering);
+        $enableOrdering = $state->get('list.ordering') == 'cp.ordering' && $state->get('filter.pathways') > 0;
+        $this->setOrdering('cp.ordering', 'courses', $enableOrdering);
     }
 }
