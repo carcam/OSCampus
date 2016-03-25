@@ -83,8 +83,8 @@
             <option value="course.difficulty DESC">COM_OSCAMPUS_SORT_DIFFICULTY_DESC</option>
             <option value="teacher_user.name ASC">COM_OSCAMPUS_SORT_TEACHER_ASC</option>
             <option value="teacher_user.name DESC">COM_OSCAMPUS_SORT_TEACHER_DESC</option>
-            <option value="viewlevel.title ASC">COM_OSCAMPUS_SORT_ACCESS_LEVEL_ASC</option>
-            <option value="viewlevel.title DESC">COM_OSCAMPUS_SORT_ACCESS_LEVEL_DESC</option>
+            <option value="viewlevel.title ASC">COM_OSCAMPUS_SORT_ACCESS_ASC</option>
+            <option value="viewlevel.title DESC">COM_OSCAMPUS_SORT_ACCESS_DESC</option>
             <option value="course.id ASC">COM_OSCAMPUS_SORT_ID_ASC</option>
             <option value="course.id DESC">COM_OSCAMPUS_SORT_ID_DESC</option>
         </field>
