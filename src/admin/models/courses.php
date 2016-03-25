@@ -14,15 +14,15 @@ class OscampusModelCourses extends OscampusModelAdminList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',          'course.id',
-            'title',       'course.title',
-            'tags',        'tag.title',
-            'pathways',    'pathway.title',
-            'difficulty',  'course.difficulty',
-            'published',   'course.published',
-            'access',      'viewlevel.title',
-            'teacher',     'teacher_user.name',
-            'cp.ordering', 'ordering'
+            'id',         'course.id',
+            'title',      'course.title',
+            'tags',       'tag.title',
+            'pathways',   'pathway.title',
+            'difficulty', 'course.difficulty',
+            'published',  'course.published',
+            'access',     'viewlevel.title',
+            'teacher',    'teacher_user.name',
+            'ordering',   'cp.ordering'
         );
 
         parent::__construct($config);
