@@ -12,8 +12,6 @@
         <field
             name="published"
             type="status"
-            label="COM_OSCAMPUS_FILTER_PUBLISHED_LABEL"
-            description="COM_OSCAMPUS_FILTER_PUBLISHED_DESC"
             filter="0,1"
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_PUBLISHED</option>
@@ -23,8 +21,6 @@
             name="pathway"
             type="oscampus.options"
             options="pathways"
-            label="COM_OSCAMPUS_FILTER_PATHWAY_LABEL"
-            description="COM_OSCAMPUS_FILTER_PATHWAY_DESC"
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_PATHWAY</option>
         </field>
@@ -33,8 +29,6 @@
             name="tag"
             type="oscampus.options"
             options="tags"
-            label=""
-            description=""
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_TAG</option>
             <option value="null">COM_OSCAMPUS_OPTION_NOT_TAGGED</option>
@@ -44,8 +38,6 @@
             name="difficulty"
             type="oscampus.options"
             options="difficulties"
-            label=""
-            description=""
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_DIFFICULTY</option>
         </field>
@@ -54,8 +46,6 @@
             name="access"
             type="oscampus.options"
             options="access"
-            label=""
-            description=""
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_ACCESS</option>
         </field>
@@ -104,8 +94,6 @@
             type="limitbox"
             class="input-mini"
             default="25"
-            label="COM_OSCAMPUS_LIST_LIMIT"
-            description="COM_OSCAMPUS_LIST_LIMIT_DESC"
             onchange="this.form.submit();"
         />
     </fields>
