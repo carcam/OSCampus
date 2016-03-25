@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block form_body %}
-    {{ form_macro.tabs_startset(form, {'active' : 'main-panel', 'useCookie' : 1}) }}
+    {{ form_macro.tabs_startset(form) }}
 
     {{ form_macro.tabs_add(form, 'main') }}
     {{ form_macro.render_fieldset(form, 'main', true, '4') }}
