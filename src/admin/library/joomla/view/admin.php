@@ -31,7 +31,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
         $this->setup();
 
         $this->setTitle();
-        $this->setToolBar();
+        $this->setToolbar();
         $this->setSubmenu();
 
         $this->displayHeader();

@@ -14,12 +14,12 @@ class OscampusModelPathways extends OscampusModelAdminList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',           'pathway.id',
-            'title',        'pathway.title',
-            'published',    'pathway.published',
-            'ordering',     'pathway.ordering',
-            'access_level', 'viewlevel.title',
-            'owner_name',   'owner_user.name'
+            'id',        'pathway.id',
+            'title',     'pathway.title',
+            'published', 'pathway.published',
+            'ordering',  'pathway.ordering',
+            'access',    'viewlevel.title',
+            'owner',     'owner_user.name'
         );
 
         parent::__construct($config);
@@ -73,20 +73,20 @@ class OscampusModelPathways extends OscampusModelAdminList
         return $query;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'pathway.title', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search', '', 'string');
         $this->setState('filter.search', $search);
 
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published', '', 'string');
         $this->setState('filter.published', $published);
 
-        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'filter_owner', '', 'string');
+        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'owner', '', 'string');
         $this->setState('filter.owner', $owner);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'access', 0, 'int');
         $this->setState('filter.access', $access);
 
-        parent::populateState('pathway.title', 'ASC');
+        parent::populateState($ordering, $direction);
     }
 }

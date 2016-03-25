@@ -17,7 +17,7 @@ class OscampusViewPathways extends OscampusViewList
         $state = $this->getState();
 
         $enableOrdering = $state->get('list.ordering') == 'pathway.ordering';
-        $this->setOrdering('pathway.ordering', 'pathways.', $enableOrdering);
+        $this->setOrdering('pathway.ordering', 'pathways', $enableOrdering);
 
         $published = JHtml::_(
             'osc.select.published',
