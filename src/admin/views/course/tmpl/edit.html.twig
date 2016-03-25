@@ -40,11 +40,11 @@
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'files') }}
-    {{ form_macro.render_field(form, 'files', true) }}
+    {{ form_macro.render_field(form, 'files', false) }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'metadata') }}
-    {{ html('osc.render.adminfieldset', form, 'metadata', true)|raw }}
+    {{ html('osc.render.adminfieldset', form, 'metadata', false)|raw }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_endset() }}
