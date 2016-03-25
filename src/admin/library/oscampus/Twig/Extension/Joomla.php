@@ -8,6 +8,7 @@
 
 namespace Oscampus\Twig\Extension;
 
+use JLayoutHelper;
 use Twig_Extension;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
@@ -37,7 +38,8 @@ class Joomla extends Twig_Extension
     {
         return array(
             new Twig_SimpleFunction('html', '\JHtml::_'),
-            new Twig_SimpleFunction('linkto', array($this, 'functionLinkto'))
+            new Twig_SimpleFunction('linkto', array($this, 'functionLinkto')),
+            new Twig_SimpleFunction('layout', array($this, 'functionLayout'))
         );
     }
 
@@ -58,6 +60,21 @@ class Joomla extends Twig_Extension
         }
 
         return \JRoute::_('index.php?' . http_build_query($urlvars));
+    }
+
+    /**
+     * Wrapper for use of layouts in Twig
+     *
+     * @param string $layoutFile
+     * @param array  $displayData
+     * @param string $basePath
+     * @param mixed  $options
+     *
+     * @return string
+     */
+    public function functionLayout($layoutFile, $displayData = null, $basePath = '', $options = null)
+    {
+        return JLayoutHelper::render($layoutFile, $displayData, $basePath, $options);
     }
 
     public function getFilters()

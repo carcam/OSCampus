@@ -115,8 +115,9 @@ class OscampusViewTwig extends OscampusView
 
         // If alternate layout can't be found, fall back to default layout
         if ($this->_template == false) {
-            $filetofind      = $this->_createFileName('',
-                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)));
+            $fileName   = 'default' . (isset($tpl) ? '_' . $tpl : $tpl);
+            $filetofind = $this->_createFileName('', array('name' => $fileName));
+
             $this->_template = JPath::find($this->_path['template'], $filetofind);
         }
 

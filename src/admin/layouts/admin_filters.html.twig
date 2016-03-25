@@ -20,8 +20,9 @@ JHtml::_('sortablelist.sortable', 'planList', 'adminForm', strtolower($listDir),
 }
 
 ?>
+#}
 <script type="text/javascript">
-    Joomla.orderTable = function () {
+    Joomla.orderTable = function() {
         var dirn;
 
         var table = document.getElementById("sortTable");
@@ -36,13 +37,4 @@ JHtml::_('sortablelist.sortable', 'planList', 'adminForm', strtolower($listDir),
         Joomla.tableOrdering(order, dirn, '');
     }
 </script>
-
-<form
-        action="<?php echo JRoute::_('index.php?option=com_simplerenew&view=plans'); ?>"
-        method="post"
-        name="adminForm"
-        id="adminForm">
-
-    <?php
-echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-#}
+{{ layout('joomla.searchtools.default', {'view' : view})|raw }}

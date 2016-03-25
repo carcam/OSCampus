@@ -14,6 +14,18 @@ defined('_JEXEC') or die();
 abstract class OscampusViewList extends OscampusViewAdmin
 {
     /**
+     * @var OscampusModelAdminList
+     */
+    protected $model = null;
+
+    /**
+     * @var JForm
+     */
+    public $filterForm = null;
+
+    public $activeFilters = null;
+
+    /**
      * Default admin screen title
      *
      * @param string $sub
@@ -32,11 +44,12 @@ abstract class OscampusViewList extends OscampusViewAdmin
     {
         parent::setup();
 
-        $model = $this->getModel();
-        $state = $this->getState();
+        $this->model = $this->getModel();
 
-        $this->setVariable('items', $model->getItems());
-        $this->setVariable('pagination', $model->getPagination());
+        $state = $this->model->getState();
+
+        $this->setVariable('items', $this->model->getItems());
+        $this->setVariable('pagination', $this->model->getPagination());
 
         $ordering = array(
             'enabled'   => false,
@@ -50,6 +63,9 @@ abstract class OscampusViewList extends OscampusViewAdmin
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
+
+        $this->filterForm    = $this->model->getFilterForm();
+        $this->activeFilters = $this->model->getActiveFilters();
     }
 
     /**

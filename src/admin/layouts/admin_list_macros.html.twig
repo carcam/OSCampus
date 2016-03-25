@@ -97,9 +97,3 @@
         {{ text|lang }}
     </td>
 {% endmacro %}
-
-{% macro filter_tools(filters) %}
-    {% if filters %}
-        {% include ('admin_filters_j3.html.twig') %}
-    {% endif %}
-{% endmacro %}

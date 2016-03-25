@@ -293,4 +293,14 @@ abstract class OscOptions
 
         return $options;
     }
+
+    /**
+     * Standard method for retrieving access levels
+     *
+     * @return string
+     */
+    public static function access()
+    {
+        return JHtml::_('access.assetgroups');
+    }
 }

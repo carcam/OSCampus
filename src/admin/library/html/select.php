@@ -117,9 +117,7 @@ abstract class OscSelect
      */
     public static function access($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
-        $accessGroups = JHtml::_('access.assetgroups');
-
-        $options = array_merge(static::createAddOptions($addOptions), $accessGroups);
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.access'));
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }
