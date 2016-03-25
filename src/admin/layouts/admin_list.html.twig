@@ -57,8 +57,6 @@
         {% block list_hidden %}
             <input type="hidden" name="task" value="{{ task }}"/>
             <input type="hidden" name="boxchecked" value="0"/>
-            <input type="hidden" name="ordering" value="{{ ordering.order }}"/>
-            <input type="hidden" name="direction" value="{{ ordering.direction }}"/>
             {{ html('form.token')|raw }}
         {% endblock %}
     </form>

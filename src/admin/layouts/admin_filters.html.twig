@@ -5,36 +5,8 @@
  # @license
  #}
 
-
-{#
-$app = SimplerenewFactory::getApplication();
-$user = SimplerenewFactory::getUser();
-$userId = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDir = $this->escape($this->state->get('list.direction'));
-$saveOrder = $listOrder == 'plan.ordering';
-
-if ($saveOrder) {
-$saveOrderingUrl = 'index.php?option=com_simplerenew&task=plans.saveOrderAjax&tmpl=component';
-JHtml::_('sortablelist.sortable', 'planList', 'adminForm', strtolower($listDir), $saveOrderingUrl);
-}
-
-?>
-#}
-<script type="text/javascript">
-    Joomla.orderTable = function() {
-        var dirn;
-
-        var table = document.getElementById("sortTable");
-        var direction = document.getElementById("directionTable");
-        var order = table.options[table.selectedIndex].value;
-        if (order != '<?php echo $listOrder; ?>') {
-            dirn = 'asc';
-        }
-        else {
-            dirn = direction.options[direction.selectedIndex].value;
-        }
-        Joomla.tableOrdering(order, dirn, '');
-    }
-</script>
+{% if ordering.enabled %}
+    {% set link = 'index.php?option=com_oscampus&task='~ ordering.prefix ~'.saveOrderAjax&tmpl=component' %}
+    {{ html('sortablelist.sortable', 'admintable', 'adminForm', ordering.direction, link) }}
+{% endif %}
 {{ layout('joomla.searchtools.default', {'view' : view})|raw }}

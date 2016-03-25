@@ -35,17 +35,23 @@
     </th>
 {% endmacro %}
 
-{% macro td_ordering(index, order_value, items, ordering, pagination) %}
+{% macro td_ordering(index, order_value, ordering) %}
     <td class="order nowrap center hidden-phone">
         {% set tt_text = html('tooltipText', 'JORDERINGDISABLED') %}
         {% set iconClass = 'sortable-handler' ~ (ordering.enabled ? '' : ' inactive tip-top hasTooltip" title="{{ tt_text }}"') %}
         <span class="{{ iconClass }}">
                 <span class="icon-menu"></span>
             </span>
-        {% if enabled %}
-            <input type="text" style="display:none" name="order[]" size="5" value="{{ order_value }}"
+        {% if ordering.enabled %}
+            <input
+                    type="text"
+                    style="display:none"
+                    name="order[]"
+                    size="5"
+                    value="{{ order_value }}"
                    class="width-20 text-area-order "/>
         {% endif %}
+
     </td>
 {% endmacro %}
 

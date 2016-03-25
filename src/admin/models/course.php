@@ -150,7 +150,10 @@ class OscampusModelCourse extends OscampusModelAdmin
     public function saveorder($pks = null, $order = null)
     {
         $app = OscampusFactory::getApplication();
-        if ($pathwayId = $app->input->getInt('filter_pathway')) {
+        $filters = $app->input->get('filter', array(), 'array');
+        $pathwayId = isset($filters['pathways']) ? (int)$filters['pathways'] : 0;
+
+        if ($pathwayId) {
             $db  = $this->getDbo();
             $sql = 'UPDATE #__oscampus_courses_pathways SET ordering = %s WHERE courses_id = %s AND pathways_id = ' . $pathwayId;
             foreach ($pks as $index => $courseId) {
