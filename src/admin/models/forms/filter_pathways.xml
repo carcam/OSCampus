@@ -11,7 +11,7 @@
 
         <field
             name="published"
-            type="published"
+            type="status"
             filter="0,1"
             onchange="this.form.submit();">
             <option value="">COM_OSCAMPUS_OPTION_SELECT_PUBLISHED</option>
