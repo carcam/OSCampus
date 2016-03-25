@@ -8,7 +8,7 @@
 {% extends "admin_form.html.twig" %}
 
 {% macro lessons_link(course_id, text) %}
-    {% set link = linkto({'view' : 'lessons', 'context' : 'course', 'filter_course' : course_id, 'filter_order' : 'lesson.ordering'}) %}
+    {% set link = linkto({'view' : 'lessons', 'context' : 'course', 'course' : course_id, 'ordering' : 'lesson.ordering'}) %}
     {{ html('link', link, text|lang, 'target="_blank"')|raw }}
 {% endmacro %}
 {% import _self as macro %}
