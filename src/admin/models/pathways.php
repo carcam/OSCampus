@@ -14,12 +14,16 @@ class OscampusModelPathways extends OscampusModelAdminList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',        'pathway.id',
-            'title',     'pathway.title',
-            'published', 'pathway.published',
-            'ordering',  'pathway.ordering',
-            'access',    'viewlevel.title',
-            'owner',     'owner_user.name'
+            'published',
+            'owner',
+            'access',
+
+            'pathway.ordering',
+            'pathway.published',
+            'pathway.title',
+            'owner_user.name',
+            'viewlevel.title',
+            'pathway.id'
         );
 
         parent::__construct($config);
