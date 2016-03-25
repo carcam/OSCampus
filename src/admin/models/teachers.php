@@ -14,14 +14,10 @@ class OscampusModelTeachers extends OscampusModelAdminList
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',
-            'teacher.id',
-            'name',
             'user.name',
-            'username',
             'user.username',
-            'email',
-            'user.email'
+            'user.email',
+            'teacher.id'
         );
 
         parent::__construct($config);

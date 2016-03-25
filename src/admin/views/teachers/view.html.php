@@ -10,17 +10,5 @@ defined('_JEXEC') or die();
 
 class OscampusViewTeachers extends OscampusViewList
 {
-    protected function setup()
-    {
-        parent::setup();
 
-        $filters = array(
-            'text'  => array(
-                'value' => $this->getState()->get('filter.search'),
-                'description' => 'COM_OSCAMPUS_SEARCH_TEXT_TEACHERS_DESC'
-            )
-        );
-
-        $this->setVariable('filters', $filters);
-    }
 }
