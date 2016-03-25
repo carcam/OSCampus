@@ -9,7 +9,21 @@
 
 {% set main_legend = 'COM_OSCAMPUS_PAGE_VIEW_PATHWAY_' ~ (item.id ? 'EDIT' : 'ADD')|lang %}
 
+{% block form_header %}
+    {{ html('osc.render.formfield', form.getField('title'))|raw }}
+    {{ html('osc.render.formfield', form.getField('alias'))|raw }}
+{% endblock %}
+
 {% block form_body %}
-    {{ html('osc.render.adminfieldset', form, 'main', main_legend, 9)|raw }}
-    {{ html('osc.render.adminfieldset', form, 'metadata', true, 3)|raw }}
+    {{ form_macro.tabs_startset(form, {'active' : 'main-panel', 'useCookie' : 1}) }}
+
+    {{ form_macro.tabs_add(form, 'main') }}
+    {{ form_macro.render_fieldset(form, 'main', false) }}
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_add(form, 'metadata') }}
+    {{ form_macro.render_fieldset(form, 'metadata', false) }}
+    {{ form_macro.tabs_end() }}
+
+    {{ form_macro.tabs_endset() }}
 {% endblock %}
