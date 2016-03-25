@@ -21,9 +21,7 @@
             name="adminForm"
             id="adminForm">
 
-        {% if filters %}
-           {% include ('admin_filters.html.twig') %}
-        {% endif %}
+       {% include ('admin_filters.html.twig') %}
 
         {% if not items %}
             <div class="alert alert-no-items">
