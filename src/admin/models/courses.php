@@ -16,8 +16,8 @@ class OscampusModelCourses extends OscampusModelAdminList
         $config['filter_fields'] = array(
             'id',          'course.id',
             'title',       'course.title',
-            'tag',         'tag.title',
-            'pathway',     'pathway.title',
+            'tags',        'tag.title',
+            'pathways',    'pathway.title',
             'difficulty',  'course.difficulty',
             'published',   'course.published',
             'access',      'viewlevel.title',
@@ -67,14 +67,14 @@ class OscampusModelCourses extends OscampusModelAdminList
             $query->where('course.published = ' . (int)$published);
         }
 
-        if ($pathway = (int)$this->getState('filter.pathway')) {
+        if ($pathway = (int)$this->getState('filter.pathways')) {
             $query->leftJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id');
             $query->where('cp.pathways_id = ' . $pathway);
         }
         $ordering = $pathway ? 'cp.ordering' : $db->q('---');
         $query->select($ordering . ' AS ordering');
 
-        $tag = $this->getState('filter.tag');
+        $tag = $this->getState('filter.tags');
         if (is_numeric($tag) != '') {
             $queryTag = $db->getQuery(true)
                 ->select('courses_id')
@@ -127,11 +127,11 @@ class OscampusModelCourses extends OscampusModelAdminList
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published');
         $this->setState('filter.published', $published);
 
-        $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'pathway');
-        $this->setState('filter.pathway', $pathway);
+        $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathways', 'pathways');
+        $this->setState('filter.pathways', $pathway);
 
-        $tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'tag');
-        $this->setState('filter.tag', $tag);
+        $tag = $this->getUserStateFromRequest($this->context . '.filter.tags', 'tags');
+        $this->setState('filter.tags', $tag);
 
         $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'difficulty');
         $this->setState('filter.difficulty', $difficulty);

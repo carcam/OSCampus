@@ -17,15 +17,15 @@
     </th>
 {% endmacro %}
 
-{% macro th_published(field, list_dir, list_order) %}
+{% macro th_published(field, direction, order) %}
     <th width="1%" style="min-width:55px" class="nowrap center">
-        {{ html('osc.grid.sort', 'COM_OSCAMPUS_PUBLISHED', field, list_dir, list_order)|raw }}
+        {{ html('searchtools.sort', 'COM_OSCAMPUS_PUBLISHED', field, direction, order)|raw }}
     </th>
 {% endmacro %}
 
-{% macro th_sort(order_field, title, list_dir, list_order, width = '') %}
+{% macro th_sort(field_name, title, direction, order, width = '') %}
     <th class="nowrap"{{ width ? ' width="{{ width }}"' : '' }}>
-        {{ html('osc.grid.sort', title, order_field, list_dir, list_order)|raw }}
+        {{ html('searchtools.sort', title, field_name, direction, order)|raw }}
     </th>
 {% endmacro %}
 
