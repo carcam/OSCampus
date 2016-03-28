@@ -48,7 +48,7 @@ class OscampusTableLessons extends OscampusTable
                     array(
                         "module.courses_id IN ({$subQuery})",
                         'lesson.alias = ' . $db->quote($this->alias),
-                        'lesson.id != ' . $this->id
+                        'lesson.id != ' . (int)$this->id
                     )
                 );
 
