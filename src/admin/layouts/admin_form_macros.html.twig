@@ -12,7 +12,7 @@
 {% macro tabs_add(form, fieldset_name, label = '') %}
     {% set fieldset = attribute(form.getFieldsets(), fieldset_name) ?: {'label' : fieldset_name, 'name' : fieldset_name} %}
     {% set label = label ?: fieldset.label %}
-    {{ html('osc.tabs.add', form.getName()|clean('alnum'), label|lang, fieldset.name)|raw }}
+    {{ html('osc.tabs.add', form.getName()|clean('alnum'), label|lang, fieldset.name ~ '-panel')|raw }}
 {% endmacro %}
 
 {% macro render_fieldset(form, fieldset_name, legend = true, span = '12') %}
