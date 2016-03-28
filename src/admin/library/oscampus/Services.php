@@ -70,7 +70,8 @@ class Services implements ServiceProviderInterface
                     $lessonStatus,
                     $lessonSummary,
                     $courseStatus,
-                    $c['certificate']);
+                    $c['certificate']
+                );
             }
         );
 
