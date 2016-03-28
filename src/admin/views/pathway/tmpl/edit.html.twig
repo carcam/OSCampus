@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block form_body %}
-    {{ form_macro.tabs_startset(form) }}
+    {{ form_macro.tabs_startset(form, {'active' : 'main'}) }}
 
     {{ form_macro.tabs_add(form, 'main') }}
     {{ form_macro.render_fieldset(form, 'main', false) }}
