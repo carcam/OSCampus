@@ -72,7 +72,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     {
         $user = OscampusFactory::getUser();
         if ($user->authorise('core.admin', 'com_oscampus')) {
-            $items = JToolbar::getInstance('toolbar')->getItems();
+            $items = JToolBar::getInstance('toolbar')->getItems();
 
             if (!empty($items)) {
                 OscampusToolbarHelper::divider();
