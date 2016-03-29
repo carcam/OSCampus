@@ -60,7 +60,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $title .= ': ' . JText::_($sub);
         }
 
-        JToolbarHelper::title($title, $icon);
+        OscampusToolbarHelper::title($title, $icon);
     }
 
     /**
@@ -75,10 +75,10 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $items = JToolbar::getInstance('toolbar')->getItems();
 
             if (!empty($items)) {
-                JToolbarHelper::divider();
+                OscampusToolbarHelper::divider();
             }
 
-            JToolbarHelper::preferences('com_oscampus');
+            OscampusToolbarHelper::preferences('com_oscampus');
         }
     }
 
