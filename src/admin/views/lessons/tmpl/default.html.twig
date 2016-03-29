@@ -6,8 +6,6 @@
  #}
 {% extends 'admin_list.html.twig' %}
 
-{% set sortable_group_field = 'modules_id' %}
-
 {% block list_head_upper %}
     <tr class="head2">
         <th colspan="8">{{ 'COM_OSCAMPUS_LESSON'|lang }}</th>
@@ -30,7 +28,7 @@
 
 {% block list_item %}
     {{ list_macro.td_check(loop.index0, item.id) }}
-    {{ list_macro.td_ordering(loop.index0, item.ordering, items, ordering, pagination) }}
+    {{ list_macro.td_ordering(loop.index0, item.ordering, ordering) }}
     {{ list_macro.td_published(item.published, loop.index0, 'lessons.') }}
     {{ list_macro.td_text(item.module_title) }}
     {{ list_macro.td_edit_link(item, loop.index0, 'lesson', 'lessons.', item.title, item.alias) }}
