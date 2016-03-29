@@ -92,6 +92,16 @@ abstract class OscampusViewList extends OscampusViewAdmin
     }
 
     /**
+     * Complement to setOrdering()
+     *
+     * @return object
+     */
+    protected function getOrdering()
+    {
+        return $this->getVariable('ordering');
+    }
+
+    /**
      * Method to set default buttons to the toolbar
      *
      * @return  void
