@@ -40,7 +40,7 @@
 
                 <tbody>
                 {% for item in items %}
-                    <tr class="row{{ loop.index0 % 2 }}" sortable-group-id="{{ attribute(item, sortable_group_field) }}">
+                    <tr class="row{{ loop.index0 % 2 }}" sortable-group-id="{{ view.getSortGroupId(item) }}">
                         {% block list_item %}
                             <td></td>
                         {% endblock %}
