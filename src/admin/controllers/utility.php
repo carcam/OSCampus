@@ -6,10 +6,17 @@
  * @license
  */
 
+use Oscampus\Lesson\Type\Quiz;
+
 defined('_JEXEC') or die();
 
 class OscampusControllerUtility extends OscampusControllerBase
 {
+    /**
+     * @var array[object[]]
+     */
+    protected $lessonScores = array();
+
     public function display()
     {
         $this->setRedirect('index.php?option=com_oscampus', 'No such utility task - ' . $this->getTask(), 'notice');
@@ -46,7 +53,7 @@ class OscampusControllerUtility extends OscampusControllerBase
             $db->setQuery("DELETE FROM {$source}");
             $db->setQuery("INSERT {$source} SELECT * FROM {$backup}");
             $db->dropTable($backup);
-            $restore = true;
+            $restored = true;
         }
 
         JError::$legacy = $errorLegacy;
@@ -61,228 +68,204 @@ class OscampusControllerUtility extends OscampusControllerBase
      */
     public function checkcerts()
     {
-        $this->heading('Checking/updating certificate records');
+        $legacy         = JError::$legacy;
+        JError::$legacy = false;
+
+        echo $this->heading('Check for Missing Certificates');
 
         $app = OscampusFactory::getApplication();
         $db  = OscampusFactory::getDbo();
 
         $create = $app->input->getInt('create', 0);
         if (!$create) {
-            echo '<p>New certificates will not be created</p>';
+            echo '<p>New certificates will not be created (url: \'create=1\')</p>';
+        }
+
+        $start = microtime(true);
+
+        // Get list of candidates
+        $query = $this->getActivityQuery()
+            ->where('certificate.id IS NULL')
+            ->having('lessonsViewed = totalLessons')
+            ->order('last_visit ASC');
+
+        $activities = $db->setQuery($query)->loadObjectList();
+        echo $this->runtime($start, 'Query');
+
+        $fixed      = array();
+        $inProgress = array();
+        $errors     = array();
+        foreach ($activities as $activity) {
+            $candidate = sprintf(
+                '%s: %s (%s) for %s',
+                $activity->last_visit,
+                $activity->name,
+                $activity->username,
+                $activity->course_title
+            );
+
+            if ($this->passedCourse($activity->users_id, $activity->courses_id)) {
+                if ($create) {
+                    try {
+                        $certificate = (object)array(
+                            'users_id'    => $activity->users_id,
+                            'courses_id'  => $activity->courses_id,
+                            'date_earned' => $activity->last_visit
+                        );
+
+                        $db->insertObject('#__oscampus_certificates', $certificate);
+
+                        $fixed[] = '[CREATED CERTIFICATE] ' . $candidate;
+
+                    } catch (Exception $e) {
+                        $errors[] = $e->getMessage();
+                    }
+                }
+            } else {
+                $inProgress[] = $candidate;
+            }
+        }
+
+        echo $this->runtime($start);
+
+        echo $this->heading(number_format(count($errors)) . ' Database Errors');
+        echo $this->showList($errors);
+
+        echo $this->heading(number_format(count($fixed)) . ' Missing Certificates');
+        echo $this->showList($fixed);
+
+        echo $this->heading(number_format(count($inProgress)) . ' Classes in Progress');
+        echo $this->showList($inProgress);
+
+        JError::$legacy = $legacy;
+    }
+
+    /**
+     * Look for certificates awarded for incomplete courses
+     */
+    public function checkactivity()
+    {
+        $legacy         = JError::$legacy;
+        JError::$legacy = false;
+
+        $app = OscampusFactory::getApplication();
+        $db  = OscampusFactory::getDbo();
+
+        $fixFailed  = $app->input->getInt('failed', 0);
+        $fixMissing = $app->input->getCmd('missing', '');
+
+        echo $this->heading('Check for Invalid Certificates');
+
+        if (!$fixFailed) {
+            echo '<p>Certificates for failed classes have NOT been removed (url: \'failed=1\')</p>';
+        }
+        if (!$fixMissing) {
+            echo '<p>Missing activity logs have NOT been created (url: \'missing={lessonType}\')</p>';
+        } else {
+            echo sprintf('<p>Missing activity logs HAVE been created for \'%s\' lessons</p>', $fixMissing);
         }
 
         $start = microtime(true);
 
         // Get list of active user IDs
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'activity.users_id',
-                    'module.courses_id',
-                    'user.name',
-                    'user.username',
-                    'count(*) AS lessonsViewed',
-                    'MAX(activity.last_visit) AS last_visit',
-                    'GROUP_CONCAT(CONCAT(lesson.type, \'|\' , activity.score)) AS scores'
-                )
-            )
-            ->from('#__oscampus_users_lessons AS activity')
-            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
-            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-            ->where('activity.users_id NOT IN (SELECT DISTINCT users_id FROM #__oscampus_certificates)')
-            ->innerJoin('#__users AS user ON user.id = activity.users_id')
-            ->group('activity.users_id, module.courses_id')
-            ->order('activity.last_visit ASC');
+        $query = $this->getActivityQuery()
+            ->where('certificate.id IS NOT NULL')
+            ->order('last_visit ASC');
 
         $activities = $db->setQuery($query)->loadObjectList();
-        echo sprintf('<p>Reviewing %s course activities</p>', number_format(count($activities)));
+        echo $this->runtime($start, 'Query');
 
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'course.id',
-                    'course.title',
-                    'count(lesson.id) AS totalLessons'
-                )
-            )
-            ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
-            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
-            ->group('course.id');
-
-        $courses = $db->setQuery($query)->loadObjectList('id');
-
-        $created = 0;
-        echo '<ul>';
+        $valid     = array();
+        $notPassed = array();
+        $missing   = array();
+        $errors    = array();
         foreach ($activities as $activity) {
-            if (empty($courses[$activity->courses_id])) {
-                $app->enqueueMessage('ERROR: Missing course - id ' . $activity->courses_id, 'error');
-                return;
-            }
+            $userId   = $activity->users_id;
+            $courseId = $activity->courses_id;
 
-            $course = $courses[$activity->courses_id];
+            $candidate = sprintf(
+                '%s: %s [%s] (%s) for %s (%s)',
+                $activity->last_visit,
+                $activity->name,
+                $activity->username,
+                $userId,
+                $activity->course_title,
+                $courseId
+            );
+            if ($this->passedCourse($userId, $courseId)) {
+                $valid[] = $candidate;
+            } else {
+                $scores     = $this->getLessonScores($userId, $courseId);
+                $emptyTotal = 0;
+                $emptyFixed = 0;
+                foreach ($scores as $score) {
+                    if ($score->id === null) {
+                        $emptyTotal++;
 
-            if ($activity->lessonsViewed == $course->totalLessons) {
-                $passed = true;
-                $scores = explode(',', $activity->scores);
-                foreach ($scores as $row) {
-                    list($type, $score) = explode('|', $row);
-                    if ($type == 'quiz' && $score < Oscampus\Lesson\Type\Quiz::PASSING_SCORE) {
-                        $passed = false;
-                        break;
-                    }
-                }
-                if ($passed) {
-                    echo sprintf(
-                        '<li>%s: %s (%s) for %s',
-                        $activity->last_visit,
-                        $activity->name,
-                        $activity->username,
-                        $course->title
-                    );
-                    if ($create) {
-                        $certificate = (object)array(
-                            'users_id'    => $activity->users_id,
-                            'courses_id'  => $course->id,
-                            'date_earned' => $activity->last_visit
-                        );
-                        $db->insertObject('#__oscampus_certificates', $certificate);
-                        $error = $db->getErrorMsg();
-                        echo sprintf(' [%s]', $error ?: 'CREATED');
-                        if (!$error) {
-                            $created += 1;
+                        if ($score->type == $fixMissing) {
+                            try {
+                                $insertObject = (object)array(
+                                    'users_id'    => $userId,
+                                    'lessons_id'  => $score->lessons_id,
+                                    'completed'   => $activity->last_visit,
+                                    'score'       => 100,
+                                    'visits'      => 1,
+                                    'first_visit' => $activity->last_visit,
+                                    'last_visit'  => $activity->last_visit
+                                );
+
+                                $db->insertObject('#__oscampus_users_lessons', $insertObject, 'id');
+                                $emptyFixed++;
+
+                            } catch (Exception $e) {
+                                $errors[] = $e->getMessage();
+                            }
                         }
                     }
-                    echo '</li>';
                 }
-            }
-        }
-        echo '</ul>';
 
-        echo sprintf('<p>Created %s new certificates</p>', number_format($created));
-        echo sprintf('<p>Total Runtime: %s</p>', number_format((microtime(true) - $start), 1));
-    }
+                if ($emptyTotal) {
+                    if ($fixMissing) {
+                        $candidate = sprintf('[Created %s of %s] ', $emptyFixed, $emptyTotal) . $candidate;
+                    }
+                    $missing[] = $candidate;
 
-    /**
-     * Check all user activity records to see if they have completed all lessons but
-     * don't have a certificate
-     */
-    public function checkactivity()
-    {
-        $this->heading('Look for missing certificates');
+                } else {
+                    if ($fixFailed) {
+                        try {
+                            $query = $db->getQuery(true)
+                                ->delete('#__oscampus_certificates')
+                                ->where('id = ' . $activity->certificates_id);
 
-        $db = OscampusFactory::getDbo();
+                            $db->setQuery($query)->execute();
 
-        $lastLessonSubquery = $db->getQuery(true)
-            ->select('a2.id')
-            ->from('#__oscampus_users_lessons AS a2')
-            ->innerJoin('#__oscampus_lessons AS l2 ON l2.id = a2.lessons_id')
-            ->innerJoin('#__oscampus_modules AS m2 ON m2.id = l2.modules_id')
-            ->where(
-                array(
-                    'a2.users_id = activity.users_id',
-                    'm2.courses_id = module.courses_id',
-                    'a2.last_visit > activity.last_visit'
-                )
-            );
+                            $candidate = sprintf('[REMOVED CERTIFICATE #%s] ', $activity->certificates_id) . $candidate;
 
-        $lastLessonQuery = $db->getQuery(true)
-            ->select(
-                array(
-                    'activity.lessons_id',
-                    'module.courses_id'
-                )
-            )
-            ->from('#__oscampus_users_lessons AS activity')
-            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
-            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-            ->where(
-                array(
-                    'activity.users_id = %1$s',
-                    sprintf('NOT EXISTS(%s)', $lastLessonSubquery)
-                )
-            );
+                        } catch (Exception $e) {
+                            $errors[] = $e->getMessage();
+                        }
 
-        $activityQuery = $db->getQuery(true)
-            ->select(
-                array(
-                    'module.courses_id',
-                    'activity.users_id',
-                    'MIN(activity.first_visit) AS first_visit',
-                    'MAX(activity.last_visit) AS last_visit',
-                    'last_lesson.lessons_id AS last_lesson',
-                    sprintf(
-                        'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
-                        $db->quote(':')
-                    ),
-                    'certificate.id AS certificates_id',
-                    'certificate.date_earned',
-                    'count(*) AS lessons_taken'
-                )
-            )
-            ->from('#__oscampus_users_lessons AS activity')
-            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
-            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
-            ->innerJoin("({$lastLessonQuery}) AS last_lesson ON last_lesson.courses_id = module.courses_id")
-            ->leftJoin('#__oscampus_certificates AS certificate ON certificate.courses_id = module.courses_id AND certificate.users_id = activity.users_id')
-            ->where(
-                array(
-                    'activity.users_id = %1$s',
-                    'activity.completed'
-                )
-            )
-            ->group('module.courses_id');
+                    }
 
-        $courseQuery = $db->getQuery(true)
-            ->select(
-                array(
-                    'course.id',
-                    'course.title',
-                    'count(*) AS lesson_count',
-                    'user_activity.lessons_taken',
-                    'user_activity.users_id',
-                    'user_activity.first_visit',
-                    'user_activity.last_visit',
-                    'user_activity.last_lesson',
-                    'user_activity.scores',
-                    'user_activity.certificates_id',
-                    'user_activity.date_earned'
-                )
-            )
-            ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
-            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
-            ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
-            ->group('course.id');
-
-        $userQuery = $db->getQuery(true)
-            ->select(
-                array(
-                    'user.id',
-                    'user.username'
-                )
-            )
-            ->from('#__users AS user')
-            ->innerJoin('#__oscampus_users_lessons AS activity ON activity.users_id = user.id')
-            ->group('user.id');
-
-        $users = $db->setQuery($userQuery, 0, 1)->loadObjectList();
-
-        $fixes = array();
-        foreach ($users as $user) {
-            $fixes[$user->username] = array();
-
-            $courses = $db->setQuery(sprintf($courseQuery, $user->id))->loadObjectList('id');
-            foreach ($courses as $course) {
-                if ($course->lesson_count == $course->lessons_taken && !$course->certificates_id) {
-                    $fixes[$user->username][] = $course;
+                    $notPassed[] = $candidate;
                 }
             }
         }
 
-        echo '<pre>';
-        print_r($fixes);
-        echo '</pre>';
+        echo $this->runtime($start);
+
+        echo $this->heading(number_format(count($errors)) . ' Database Errors');
+        echo $this->showList($errors);
+
+        echo $this->heading(number_format(count($missing)) . ' Missing Log Entries');
+        echo $this->showList($missing);
+
+        echo $this->heading(number_format(count($notPassed)) . ' Failed Classes');
+        echo $this->showList($notPassed);
+
+        echo $this->heading(number_format(count($valid)) . ' Valid Certificates');
+
+        JError::$legacy = $legacy;
     }
 
     /**
@@ -354,11 +337,147 @@ class OscampusControllerUtility extends OscampusControllerBase
         $html[] = '</ul>';
 
         echo join("\n", $html);
-        echo '<p>Total Runtime: ' . number_format((microtime(true) - $start), 1) . '</p>';
+        echo $this->runtime($start);
     }
 
+    /**
+     * @param string $heading
+     *
+     * @return string
+     */
     protected function heading($heading)
     {
-        echo '<h3>' . $heading . '</h3>';
+        return '<h3>' . $heading . '</h3>';
+    }
+
+    /**
+     * @param float  $start
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function runtime($start, $name = 'Total')
+    {
+        return sprintf('<p>%s Runtime: %s seconds</p>', $name, number_format((microtime(true) - $start), 1));
+    }
+
+    /**
+     * Get the base query for finding summary user activities
+     *
+     * @return JDatabaseQuery
+     */
+    protected function getActivityQuery()
+    {
+        $db = OscampusFactory::getDbo();
+
+        $courseQuery = $db->getQuery(true)
+            ->select('course.id, course.title, count(*) AS totalLessons')
+            ->from('#__oscampus_modules AS module')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+            ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+            ->group('courses_id');
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'activity.users_id',
+                    'module.courses_id',
+                    'certificate.id AS certificates_id',
+                    'user.name,user.username',
+                    'course.title AS course_title',
+                    'count(*) AS lessonsViewed',
+                    'course.totalLessons',
+                    'MIN(activity.first_visit) AS first_visit',
+                    'MAX(activity.last_visit) AS last_visit'
+                )
+            )
+            ->from('#__oscampus_users_lessons AS activity')
+            ->innerJoin('#__oscampus_lessons AS lesson ON lesson.id = activity.lessons_id')
+            ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+            ->innerJoin(sprintf('(%s) AS course ON course.id = module.courses_id', $courseQuery))
+            ->leftJoin('#__oscampus_certificates AS certificate ON certificate.users_id = activity.users_id AND certificate.courses_id = module.courses_id')
+            ->innerJoin('#__users AS user ON user.id = activity.users_id')
+            ->group('activity.users_id, module.courses_id');
+
+        return $query;
+    }
+
+    /**
+     * @param int $userId
+     * @param int $courseId
+     *
+     * @return object[]
+     */
+    protected function getLessonScores($userId, $courseId)
+    {
+        if (!isset($this->lessonScores[$userId])) {
+            $this->lessonScores[$userId] = array();
+        }
+
+        if (!isset($this->lessonScores[$userId][$courseId])) {
+            $db = OscampusFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'activity.id',
+                        'lesson.id AS lessons_id',
+                        'lesson.type',
+                        'activity.score',
+                        'activity.completed'
+                    )
+                )
+                ->from('#__oscampus_courses AS course')
+                ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
+                ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
+                ->leftJoin('#__oscampus_users_lessons AS activity ON activity.lessons_id = lesson.id AND activity.users_id = ' . $userId)
+                ->where('course.id = ' . $courseId);
+
+            $this->lessonScores[$userId][$courseId] = $db->setQuery($query)->loadObjectList();
+        }
+
+        if (!empty($this->lessonScores[$userId][$courseId])) {
+            return $this->lessonScores[$userId][$courseId];
+        }
+
+        return array();
+    }
+
+    /**
+     * see if user passed the course
+     *
+     * @param int $userId
+     * @param int $courseId
+     *
+     * @return bool
+     */
+    protected function passedCourse($userId, $courseId)
+    {
+        $activities = $this->getLessonScores($userId, $courseId);
+        foreach ($activities as $activity) {
+            if ($activity->id === null
+                || ($activity->type == 'quiz' && $activity->score < Oscampus\Lesson\Type\Quiz::PASSING_SCORE)
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Standard display of a list of items
+     *
+     * @param string[] $items
+     *
+     * @return string
+     */
+    protected function showList(array $items)
+    {
+        if ($items) {
+            return '<ul><li>' . join('</li><li>', $items) . '</li></ul>';
+        }
+
+        return '';
     }
 }
