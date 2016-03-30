@@ -19,46 +19,29 @@ class OscampusControllerUtility extends OscampusControllerBase
 
     public function display()
     {
-        $this->setRedirect('index.php?option=com_oscampus', 'No such utility task - ' . $this->getTask(), 'notice');
-    }
+        echo $this->heading('Available utilities');
 
-    protected function backupTable($source)
-    {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
+        $link = 'index.php?option=com_oscampus&task=utility.%s';
 
-        $backup = $source . '_bak';
-
-        $db = OscampusFactory::getDbo();
-
-        $db->setQuery("DROP TABLE IF EXISTS {$backup}")->execute();
-        $db->setQuery("CREATE TABLE {$backup} LIKE {$source}")->execute();
-        $db->setQuery("INSERT {$backup} SELECT * FROM {$source}")->execute();
-
-        JError::$legacy = $errorLegacy;
-    }
-
-    protected function restoreTable($source)
-    {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
-        $backup = $source . '_bak';
-
-        $db     = OscampusFactory::getDbo();
-        $tables = $db->getTableList();
-
-        $restored = false;
-        if (in_array($db->replacePrefix($backup), $tables)) {
-            $db->setQuery("DELETE FROM {$source}");
-            $db->setQuery("INSERT {$source} SELECT * FROM {$backup}");
-            $db->dropTable($backup);
-            $restored = true;
-        }
-
-        JError::$legacy = $errorLegacy;
-
-        return $restored;
+        echo $this->showList(
+            array(
+                JHtml::_(
+                    'link',
+                    sprintf($link, 'checkcerts'),
+                    'Check for Missing Certificates'
+                ),
+                JHtml::_(
+                    'link',
+                    sprintf($link, 'checkactivity'),
+                    'Check for invalid certificates and missing activity entries'
+                ),
+                JHtml::_(
+                    'link',
+                    sprintf($link, 'searchdb'),
+                    'Find a string in the database'
+                )
+            )
+        );
     }
 
     /**
@@ -97,11 +80,13 @@ class OscampusControllerUtility extends OscampusControllerBase
         $errors     = array();
         foreach ($activities as $activity) {
             $candidate = sprintf(
-                '%s: %s (%s) for %s',
+                '%s: %s [%s] (%s) for %s (%s)',
                 $activity->last_visit,
                 $activity->name,
                 $activity->username,
-                $activity->course_title
+                $activity->users_id,
+                $activity->course_title,
+                $activity->courses_id
             );
 
             if ($this->passedCourse($activity->users_id, $activity->courses_id)) {
@@ -208,7 +193,7 @@ class OscampusControllerUtility extends OscampusControllerBase
                                     'users_id'    => $userId,
                                     'lessons_id'  => $score->lessons_id,
                                     'completed'   => $activity->last_visit,
-                                    'score'       => 100,
+                                    'score'       => ($score->type == 'quiz' ? 100: 0),
                                     'visits'      => 1,
                                     'first_visit' => $activity->last_visit,
                                     'last_visit'  => $activity->last_visit
@@ -479,5 +464,44 @@ class OscampusControllerUtility extends OscampusControllerBase
         }
 
         return '';
+    }
+
+    protected function backupTable($source)
+    {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $backup = $source . '_bak';
+
+        $db = OscampusFactory::getDbo();
+
+        $db->setQuery("DROP TABLE IF EXISTS {$backup}")->execute();
+        $db->setQuery("CREATE TABLE {$backup} LIKE {$source}")->execute();
+        $db->setQuery("INSERT {$backup} SELECT * FROM {$source}")->execute();
+
+        JError::$legacy = $errorLegacy;
+    }
+
+    protected function restoreTable($source)
+    {
+        $errorLegacy    = JError::$legacy;
+        JError::$legacy = false;
+
+        $backup = $source . '_bak';
+
+        $db     = OscampusFactory::getDbo();
+        $tables = $db->getTableList();
+
+        $restored = false;
+        if (in_array($db->replacePrefix($backup), $tables)) {
+            $db->setQuery("DELETE FROM {$source}");
+            $db->setQuery("INSERT {$source} SELECT * FROM {$backup}");
+            $db->dropTable($backup);
+            $restored = true;
+        }
+
+        JError::$legacy = $errorLegacy;
+
+        return $restored;
     }
 }
