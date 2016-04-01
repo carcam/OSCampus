@@ -20,6 +20,7 @@ class OscampusFilterInput extends JFilterInput
      * @param int   $tagsMethod
      * @param int   $attrMethod
      * @param int   $xssAuto
+     * @param int   $stripUSC
      *
      * @return OscampusFilterInput
      */
@@ -28,7 +29,8 @@ class OscampusFilterInput extends JFilterInput
         $attrArray = array(),
         $tagsMethod = 0,
         $attrMethod = 0,
-        $xssAuto = 1
+        $xssAuto = 1,
+        $stripUSC = -1
     ) {
         $sig = md5(serialize(array($tagsArray, $attrArray, $tagsMethod, $attrMethod, $xssAuto)));
 
