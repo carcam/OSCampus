@@ -8,23 +8,16 @@
 
 defined('_JEXEC') or die();
 
-JLoader::import('courselist', __DIR__);
+JLoader::import('courses', __DIR__);
 
-class OscampusModelPathway extends OscampusModelCourselist
+class OscampusModelPathway extends OscampusModelCourses
 {
-    protected function setFilters()
-    {
-        parent::setFilters();
-
-        $userStateName = $this->context . '.filter.pathway';
-
-        $pathwayId = $this->getUserStateFromRequest($userStateName, 'pid', null, 'int');
-
-        $this->setState('filter.pathway', $pathwayId);
-    }
-
     protected function populateState($ordering = 'cp.ordering', $direction = 'ASC')
     {
+        $app = OscampusFactory::getApplication();
+        $pathwayId = $app->input->getInt('pid', 0);
+        $this->setState('pathway.id', $pathwayId);
+
         parent::populateState($ordering, $direction);
 
         // Ignore pagination for now

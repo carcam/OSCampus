@@ -8,8 +8,8 @@
 
 defined('_JEXEC') or die();
 
-JLoader::import('courselist', __DIR__);
+JLoader::import('courses', __DIR__);
 
-class OscampusModelSearch extends OscampusModelCourselist
+class OscampusModelSearch extends OscampusModelCourses
 {
 }

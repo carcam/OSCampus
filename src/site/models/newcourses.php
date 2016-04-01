@@ -6,11 +6,13 @@
  * @license
  */
 
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die();
 
-JLoader::import('courselist', __DIR__);
+JLoader::import('courses', __DIR__);
 
-class OscampusModelNewcourses extends OscampusModelCourselist
+class OscampusModelNewcourses extends OscampusModelCourses
 {
     protected function getListQuery()
     {
@@ -21,27 +23,27 @@ class OscampusModelNewcourses extends OscampusModelCourselist
         $db     = $this->getDbo();
         $cutoff = $this->getState('filter.cutoff');
 
-        $query = $this->getBaseQuery();
+        $query = parent::getListQuery();
 
         $query->where('course.released >= ' . $db->quote($cutoff->toSql()));
 
         return $query;
     }
 
-    /**
-     * Ignore all common filters. DON'T call the parent
-     */
-    protected function setFilters()
+    protected function populateState($ordering = 'course.released', $direction = 'DESC')
     {
-        $params = OscampusFactory::getApplication()->getParams();
+        $app = OscampusFactory::getApplication();
+
+        if (method_exists($app, 'getParams')) {
+            $params = $app->getParams();
+        } else {
+            $params = new Registry();
+        }
 
         $releasePeriod = $params->get('releasePeriod', '1 month');
         $cutoff        = OscampusFactory::getDate('now - ' . $releasePeriod);
         $this->setState('filter.cutoff', $cutoff);
-    }
 
-    protected function populateState($ordering = 'course.released', $direction = 'DESC')
-    {
         parent::populateState($ordering, $direction);
 
         // Ignore pagination for now
