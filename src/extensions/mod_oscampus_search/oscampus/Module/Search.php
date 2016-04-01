@@ -11,7 +11,7 @@ namespace Oscampus\Module;
 use JDatabaseDriver;
 use JHtml;
 use JModuleHelper;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use JText;
 use JUser;
 use OscampusFactory;

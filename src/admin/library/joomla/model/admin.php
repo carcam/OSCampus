@@ -6,7 +6,7 @@
  * @license
  */
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use Oscampus\String;
 
 defined('_JEXEC') or die();

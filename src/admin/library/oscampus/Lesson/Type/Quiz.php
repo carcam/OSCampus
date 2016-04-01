@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use JText;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;

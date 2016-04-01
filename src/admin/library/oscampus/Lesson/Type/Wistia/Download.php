@@ -9,7 +9,7 @@ namespace Oscampus\Lesson\Type\Wistia;
 
 use Exception;
 use JDatabaseDriver;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use JText;
 use JUser;
 use OscampusFactory;

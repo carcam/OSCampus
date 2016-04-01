@@ -11,7 +11,7 @@ namespace Oscampus;
 use Exception;
 use JDatabaseDriver;
 use JForm;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;

@@ -6,7 +6,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 

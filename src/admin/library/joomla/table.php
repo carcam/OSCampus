@@ -6,7 +6,7 @@
  * @license
  */
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 

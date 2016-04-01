@@ -7,7 +7,7 @@
  * @license
  */
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 
 use Oscampus\Module\Search;
 

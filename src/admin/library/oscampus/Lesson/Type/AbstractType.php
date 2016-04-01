@@ -9,7 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use Exception;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
 use OscampusFactory;

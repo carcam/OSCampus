@@ -11,7 +11,7 @@ namespace Oscampus\Lesson\Type;
 use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use JHtml;
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use JSession;
 use JText;
 use Oscampus\Activity\LessonStatus;

@@ -6,7 +6,7 @@
  * @license
  */
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use Oscampus\Activity\CourseStatus;
 
 defined('_JEXEC') or die();

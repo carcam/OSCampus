@@ -8,7 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
-use JRegistry as Registry;
+use Joomla\Registry\Registry as Registry;
 use Oscampus\Activity\LessonStatus;
 
 defined('_JEXEC') or die();
