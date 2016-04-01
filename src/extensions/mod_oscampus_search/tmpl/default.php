@@ -29,7 +29,7 @@ $textClass = $this->getStateClass($textValue);
         <?php
         echo $this->getFilter('Tag');
         echo $this->getFilter('Topic');
-        echo $this->getFilter('Completion');
+        echo $this->getFilter('Progress');
         ?>
 
         <div class="osc-btn-group">

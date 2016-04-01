@@ -8,6 +8,7 @@
 
 namespace Oscampus\Module;
 
+use Exception;
 use JDatabaseDriver;
 use JHtml;
 use JModuleHelper;
@@ -50,6 +51,13 @@ class Search
      */
     protected $accessList = array();
 
+    protected $courseLists = array(
+        'search',
+        'pathway',
+        'mycourses',
+        'newcourses'
+    );
+
     /**
      * @var int
      */
@@ -57,9 +65,19 @@ class Search
 
     public function __construct(Registry $params)
     {
+        if (!defined('OSCAMPUS_LOADED')) {
+            $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
+            if (!is_file($path)) {
+                throw new Exception('MOD_OSCAMPUS_SEARCH_ERROR_OSCAMPUS_NOTFOUND');
+            }
+
+            require_once $path;
+        }
+
         $this->params = $params;
-        $this->model  = OscampusModel::getInstance('Search');
-        $this->db     = OscampusFactory::getDbo();
+
+        $this->model = OscampusModel::getInstance('Search');
+        $this->db    = OscampusFactory::getDbo();
 
         self::$instanceCount++;
         $this->id = $this->name . '_' . self::$instanceCount;
@@ -175,11 +193,16 @@ class Search
 
     /**
      * Topic filter. Defined as any pathway containing a course with the chosen tag.
+     * Only available for pathways view
      *
      * @return string
      */
     protected function createFilterTopic()
     {
+        if (!$this->isOscampusView('pathways')) {
+            return '';
+        }
+
         $topicQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -234,6 +257,10 @@ class Search
      */
     protected function createFilterTag()
     {
+        if (!$this->isOscampusView($this->courseLists)) {
+            return '';
+        }
+
         $tagQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -283,6 +310,10 @@ class Search
      */
     protected function createFilterDifficulty()
     {
+        if (!$this->isOscampusView($this->courseLists)) {
+            return '';
+        }
+
         $difficulty = JHtml::_('osc.options.difficulties');
         array_unshift(
             $difficulty,
@@ -306,36 +337,36 @@ class Search
     }
 
     /**
-     * Completion filter. Only available for logged in users
+     * User progress filter. Only available for logged in users
      *
      * @return string|null
      */
-    protected function createFilterCompletion()
+    protected function createFilterProgress()
     {
-        $completion = JHtml::_('osc.options.completion');
+        if (!$this->isOscampusView($this->courseLists) || OscampusFactory::getUser()->guest) {
+            return '';
+        }
+
+        $progress = JHtml::_('osc.options.progress');
         array_unshift(
-            $completion,
+            $progress,
             JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COMPLETION'))
         );
 
-        if (!OscampusFactory::getUser()->guest) {
-            $selected = $this->model->getState('filter.completion');
-            $class    = $this->getStateClass($selected);
+        $selected = $this->model->getState('filter.progress');
+        $class    = $this->getStateClass($selected);
 
-            $html = JHtml::_(
-                'select.genericlist',
-                $completion,
-                'filter_completion',
-                array(
-                    'list.select' => $selected,
-                    'list.attr'   => sprintf('class="%s"', $class)
-                )
-            );
+        $html = JHtml::_(
+            'select.genericlist',
+            $progress,
+            'filter_progress',
+            array(
+                'list.select' => $selected,
+                'list.attr'   => sprintf('class="%s"', $class)
+            )
+        );
 
-            return $html;
-        }
-
-        return null;
+        return $html;
     }
 
     /**
@@ -345,6 +376,10 @@ class Search
      */
     protected function createFilterTeacher()
     {
+        if (!$this->isOscampusView($this->courseLists)) {
+            return '';
+        }
+
         $teacherQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -461,5 +496,30 @@ JSCRIPT;
         }
 
         return 'TRUE';
+    }
+
+    /**
+     * See if we're on one of the desired views. Leave blank for any OSCampus page
+     *
+     * @param string[]|string $views
+     *
+     * @return bool
+     */
+    protected function isOscampusView($views = array())
+    {
+        $app = OscampusFactory::getApplication();
+
+        if ($app->input->getCmd('option') == 'com_oscampus') {
+            if (is_string($views)) {
+                $views = array($views);
+            }
+
+            $view = $app->input->getCmd('view');
+            if (empty($views) || (is_array($view) && in_array($view, $views))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -22,7 +22,7 @@ defined('_JEXEC') or die();
  */
 class CourseStatus extends AbstractPrototype
 {
-    // Completion statuses (stati?)
+    // Progress statuses (stati?)
     const NOT_STARTED = 0;
     const IN_PROGRESS = 1;
     const COMPLETED   = 2;

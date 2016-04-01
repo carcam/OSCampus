@@ -267,11 +267,11 @@ abstract class OscOptions
     }
 
     /**
-     * Course completion statuses
+     * Course progress statuses
      *
      * @return object[]
      */
-    public static function completion()
+    public static function progress()
     {
         $options = array(
             JHtml::_(
