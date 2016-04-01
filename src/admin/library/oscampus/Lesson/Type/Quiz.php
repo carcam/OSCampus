@@ -235,6 +235,7 @@ class Quiz extends AbstractType
 
         $questions = array();
         foreach ((array)$quiz->questions as $questionId => $question) {
+            $question = (array)$question;
             if ($question['text']) {
                 $questionKey = md5($question['text']);
                 $correct     = $question['correct'];
