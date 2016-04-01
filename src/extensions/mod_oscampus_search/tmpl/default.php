@@ -46,5 +46,6 @@ $textClass = $this->getStateClass($textValue);
 
         <input type="hidden" name="option" value="com_oscampus"/>
         <input type="hidden" name="task" value="filter.courses"/>
+        <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>
