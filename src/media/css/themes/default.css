@@ -562,6 +562,8 @@
 #oscampus.osc-container .osc-teacher-image {
     float: left;
     margin: 5px 20px 10px 0;
+    width: 200px;
+    height: auto;
 }
 
 #oscampus.osc-container .osc-teacher-links > span {
