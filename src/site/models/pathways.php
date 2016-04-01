@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 JLoader::import('filtered', __DIR__);
 
-class OscampusModelPathways extends OscampusModelFiltered
+class OscampusModelPathways extends OscampusModelSiteList
 {
     protected function getListQuery()
     {
