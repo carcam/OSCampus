@@ -36,6 +36,14 @@ class OscampusModelPathways extends OscampusModelSiteList
             $query->where(sprintf('pathway.id IN (%s)', $subQuery));
         }
 
+        if ($text = $this->getState('filter.text')) {
+            $fields = array(
+                'pathway.title',
+                'pathway.description'
+            );
+            $query->where($this->whereTextSearch($text, $fields));
+        }
+
         $ordering  = $this->getState('list.ordering');
         $direction = $this->getState('list.direction');
         $query->order($ordering . ' ' . $direction);
@@ -48,8 +56,20 @@ class OscampusModelPathways extends OscampusModelSiteList
 
     protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
     {
+        $app = JFactory::getApplication();
+
         $topicId = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic', null, 'int');
         $this->setState('filter.topic', $topicId);
+
+        // Text search filter
+        $text = $app->input->getString('filter_text');
+        if ($text && strlen($text) < 3) {
+            $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
+            $text = $app->getUserState($this->context . '.filter.text', '');
+        } else {
+            $text = $this->getUserStateFromRequest($this->context . '.filter.text', 'filter_text', null, 'string');
+        }
+        $this->setState('filter.text', $text);
 
         parent::populateState($ordering, $direction);
 

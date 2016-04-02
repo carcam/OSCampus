@@ -76,7 +76,9 @@ class Search
 
         $this->params = $params;
 
-        $this->model = OscampusModel::getInstance('Search');
+        $view = OscampusFactory::getApplication()->input->getCmd('view');
+
+        $this->model = OscampusModel::getInstance($view);
         $this->db    = OscampusFactory::getDbo();
 
         self::$instanceCount++;
