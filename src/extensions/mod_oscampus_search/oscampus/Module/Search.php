@@ -515,7 +515,7 @@ JSCRIPT;
             }
 
             $view = $app->input->getCmd('view');
-            if (empty($views) || (is_array($view) && in_array($view, $views))) {
+            if (empty($views) || (is_array($views) && in_array($view, $views))) {
                 return true;
             }
         }
