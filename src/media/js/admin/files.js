@@ -54,7 +54,22 @@
                     var blocks = $(container).find(options.fileBlock);
 
                     if (blocks[0]) {
-                        var newElement = $.Oscampus.admin.files.clearBlock($(blocks[0]).clone(true));
+                        var newElement = $(blocks[0]).clone(true),
+                            chznSelects = newElement.find('select.chzn-done');
+
+                        newElement = $.Oscampus.admin.files.clearBlock(newElement);
+
+                        // Handle jui chosen selectors
+                        if (chznSelects[0]) {
+                            newElement.find('.chzn-container').remove();
+                            chznSelects.removeClass('chzn-done').show();
+
+                            setTimeout(function() {
+                                console.log(chznSelects);
+                                chznSelects.removeData('chosen').chosen({"disable_search_threshold":10,"search_contains":true,"allow_single_deselect":true,"placeholder_text_multiple":"Select some options","placeholder_text_single":"Select an option","no_results_text":"No results match"});
+                            }, 10);
+                        }
+
                         $(container.find('ul')).append(newElement)
                     }
                 });
@@ -69,9 +84,8 @@
         clearBlock: function(fileBlock, options) {
             options = $.extend(true, {}, this.options, options);
 
-            fileBlock
-                .find('input, textarea, select')
-                .val('');
+            fileBlock.find('select option').attr('selected', false);
+            fileBlock.find('input, textarea, select').val('');
 
             fileBlock.find(options.path).html('');
 
