@@ -163,10 +163,10 @@ class OscampusFormFieldFiles extends JFormFieldList
             'select.genericlist',
             $this->files,
             $this->name . '[path][]',
-            null,
-            'value',
-            'text',
-            $selected
+            array(
+                'id'          => '',
+                'list.select' => $selected
+            )
         );
 
         return $html;
