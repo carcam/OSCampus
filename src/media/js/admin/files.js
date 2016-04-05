@@ -62,12 +62,11 @@
                         // Handle jui chosen selectors
                         if (chznSelects[0]) {
                             newElement.find('.chzn-container').remove();
-                            chznSelects.removeClass('chzn-done').show();
-
-                            setTimeout(function() {
-                                console.log(chznSelects);
-                                chznSelects.removeData('chosen').chosen({"disable_search_threshold":10,"search_contains":true,"allow_single_deselect":true,"placeholder_text_multiple":"Select some options","placeholder_text_single":"Select an option","no_results_text":"No results match"});
-                            }, 10);
+                            chznSelects
+                                .removeClass('chzn-done')
+                                .show()
+                                .removeData('chosen');
+                                //.chosen(); // @TODO: figure out why this doesn't work!
                         }
 
                         $(container.find('ul')).append(newElement)
@@ -86,6 +85,8 @@
 
             fileBlock.find('select option').attr('selected', false);
             fileBlock.find('input, textarea, select').val('');
+
+            fileBlock.find('select').trigger('liszt:updated');
 
             fileBlock.find(options.path).html('');
 
