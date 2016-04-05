@@ -54,7 +54,7 @@
                     var blocks = $(container).find(options.fileBlock);
 
                     if (blocks[0]) {
-                        var newElement = $(blocks[0]).clone(true),
+                        var newElement  = $(blocks[0]).clone(true),
                             chznSelects = newElement.find('select.chzn-done');
 
                         newElement = $.Oscampus.admin.files.clearBlock(newElement);
@@ -74,10 +74,13 @@
                 });
 
             $(options.button.order).css('cursor', 'move');
-            container.find('ul').sortable({
-                handle: options.button.order,
-                cancel: ''
-            });
+            container
+                .children('ul')
+                .first()
+                .sortable({
+                    handle: options.button.order,
+                    cancel: ''
+                });
         },
 
         clearBlock: function(fileBlock, options) {
