@@ -65,11 +65,11 @@
                             chznSelects
                                 .removeClass('chzn-done')
                                 .show()
-                                .removeData('chosen');
-                                //.chosen(); // @TODO: figure out why this doesn't work!
+                                .removeData('chosen')
+                                .chosen();
                         }
 
-                        $(container.find('ul')).append(newElement)
+                        $(container.children('ul').first()).append(newElement)
                     }
                 });
 
