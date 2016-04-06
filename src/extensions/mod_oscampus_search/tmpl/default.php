@@ -14,6 +14,13 @@ $actionUrl = JRoute::_(OscampusRoute::getInstance()->get('search'));
 
 $textValue = $this->getState('filter.text');
 $textClass = $this->getStateClass($textValue);
+
+$advancedToggle  = $this->id . '-toggle';
+$advancedContent = $this->id . '-advanced';
+$advancedVisible = array_filter(array_diff_key($this->model->getActiveFilters(), array('text' => null)));
+
+JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
+
 ?>
 <div class="osc-module-container">
     <form
@@ -28,11 +35,16 @@ $textClass = $this->getStateClass($textValue);
             value="<?php echo $textValue; ?>"
             class="<?php echo $textClass; ?>"/>
 
-        <?php
-        echo $this->getFilter('Tag');
+        <div id="<?php echo $advancedToggle; ?>" data-content="<?php echo '#' . $advancedContent; ?>">
+            <?php echo JText::_('MOD_OSCAMPUS_SEARCH_ADVANCED'); ?>
+        </div>
 
-        echo $this->getTypes();
-        ?>
+        <div id="<?php echo $advancedContent; ?>">
+            <?php
+            echo $this->getFilter('Tag');
+            echo $this->getTypes();
+            ?>
+        </div>
 
         <div class="osc-btn-group">
             <button type="button" class="osc-btn osc-clear-filters">
