@@ -14,11 +14,11 @@ use JHtml;
 use JModuleHelper;
 use Joomla\Registry\Registry as Registry;
 use JText;
-use JUser;
 use OscampusFactory;
 use OscampusHelperSite;
 use OscampusModel;
-use OscampusModelPathway;
+use OscampusModelSearch;
+use OscampusUtilitiesArray;
 
 defined('_JEXEC') or die();
 
@@ -29,6 +29,9 @@ class Search
      */
     protected $id = null;
 
+    /**
+     * @var string
+     */
     protected $name = 'mod_oscampus_search';
 
     /**
@@ -37,7 +40,7 @@ class Search
     protected $params = null;
 
     /**
-     * @var OscampusModelPathway
+     * @var OscampusModelSearch
      */
     protected $model = null;
 
@@ -50,13 +53,6 @@ class Search
      * @var string[]
      */
     protected $accessList = array();
-
-    protected $courseLists = array(
-        'search',
-        'pathway',
-        'mycourses',
-        'newcourses'
-    );
 
     /**
      * @var int
@@ -76,56 +72,13 @@ class Search
 
         $this->params = $params;
 
-        $view = OscampusFactory::getApplication()->input->getCmd('view');
-
-        $this->model = OscampusModel::getInstance($view);
+        $this->model = OscampusModel::getInstance('Search');
         $this->db    = OscampusFactory::getDbo();
 
         self::$instanceCount++;
         $this->id = $this->name . '_' . self::$instanceCount;
 
         OscampusHelperSite::loadTheme();
-    }
-
-    /**
-     * Get a single input filter by name
-     *
-     * @param string $name
-     *
-     * @return string|null
-     */
-    protected function getFilter($name)
-    {
-        $method = 'createFilter' . ucfirst(strtolower($name));
-        if (method_exists($this, $method)) {
-            if ($filter = $this->$method()) {
-                return $filter;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get an associative array of defined input filters
-     *
-     * @return string[]
-     */
-    protected function getFilters()
-    {
-        $methods = get_class_methods($this);
-        $filters = array();
-
-        foreach ($methods as $method) {
-            if (strpos($method, 'createFilter') === 0) {
-                $name = strtolower(str_replace('createFilter', '', $method));
-                if ($filter = $this->$method()) {
-                    $filters[$name] = $filter;
-                }
-            }
-        }
-
-        return $filters;
     }
 
     /**
@@ -142,114 +95,22 @@ class Search
     }
 
     /**
-     * pathway filter
+     * Get an input filter by name
      *
-     * @return string
-     */
-    protected function createFilterPathway()
-    {
-        $pathwayQuery = $this->db->getQuery(true)
-            ->select(
-                array(
-                    'pathway.id AS ' . $this->db->quote('value'),
-                    'pathway.title AS ' . $this->db->quote('text')
-                )
-            )
-            ->from('#__oscampus_pathways AS pathway')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
-            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
-            ->where(
-                array(
-                    'pathway.users_id = 0',
-                    'pathway.published = 1',
-                    $this->whereAccess('pathway.access'),
-                    'course.published = 1',
-                    $this->whereAccess('course.access'),
-                    'course.released <= NOW()'
-                )
-            )
-            ->group('pathway.id')
-            ->order('pathway.ordering ASC');
-
-        $pathways = $this->db->setQuery($pathwayQuery)->loadObjectList();
-        array_unshift(
-            $pathways,
-            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_PATHWAY'))
-        );
-
-        $selected = $this->model->getState('filter.pathway');
-        $class    = $this->getStateClass($selected);
-
-        $html = JHtml::_(
-            'select.genericlist',
-            $pathways,
-            'filter_pathway',
-            array(
-                'list.select' => $selected,
-                'list.attr'   => sprintf('class="%s"', $class)
-            )
-        );
-
-        return $html;
-    }
-
-    /**
-     * Topic filter. Defined as any pathway containing a course with the chosen tag.
-     * Only available for pathways view
+     * @param string $name
      *
-     * @return string
+     * @return string|null
      */
-    protected function createFilterTopic()
+    protected function getFilter($name)
     {
-        if (!$this->isOscampusView('pathways')) {
-            return '';
+        $method = 'getFilter' . ucfirst(strtolower($name));
+        if (method_exists($this, $method)) {
+            if ($filter = $this->$method()) {
+                return $filter;
+            }
         }
 
-        $topicQuery = $this->db->getQuery(true)
-            ->select(
-                array(
-                    'tag.id AS ' . $this->db->quoteName('value'),
-                    'tag.title AS ' . $this->db->quoteName('text')
-                )
-            )
-            ->from('#__oscampus_pathways AS pathway')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
-            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
-            ->innerJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
-            ->innerJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
-            ->where(
-                array(
-                    'pathway.users_id = 0',
-                    'pathway.published = 1',
-                    $this->whereAccess('pathway.access'),
-                    'course.published = 1',
-                    $this->whereAccess('course.access'),
-                    'course.released <= NOW()'
-                )
-            )
-            ->group('tag.id')
-            ->order('tag.title ASC');
-
-        $topics = $this->db->setQuery($topicQuery)->loadObjectList();
-        array_unshift(
-            $topics,
-            JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_TOPIC'))
-        );
-
-        $selected = $this->model->getState('filter.topic');
-        $class    = $this->getStateClass($selected);
-
-        $html = JHtml::_(
-            'select.genericlist',
-            $topics,
-            'filter_topic',
-            array(
-                'list.select' => $selected,
-                'list.attr'   => sprintf('class="%s"', $class)
-            )
-        );
-
-        return $html;
+        return null;
     }
 
     /**
@@ -257,12 +118,8 @@ class Search
      *
      * @return string
      */
-    protected function createFilterTag()
+    protected function getFilterTag()
     {
-        if (!$this->isOscampusView($this->courseLists)) {
-            return '';
-        }
-
         $tagQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -276,7 +133,7 @@ class Search
             ->where(
                 array(
                     'course.published = 1',
-                    $this->whereAccess('course.access'),
+                    $this->model->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
@@ -295,7 +152,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $tags,
-            'filter_tag',
+            'tag',
             array(
                 'list.select' => $selected,
                 'list.attr'   => sprintf('class="%s"', $class)
@@ -310,12 +167,8 @@ class Search
      *
      * @return string
      */
-    protected function createFilterDifficulty()
+    protected function getFilterDifficulty()
     {
-        if (!$this->isOscampusView($this->courseLists)) {
-            return '';
-        }
-
         $difficulty = JHtml::_('osc.options.difficulties');
         array_unshift(
             $difficulty,
@@ -328,7 +181,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $difficulty,
-            'filter_difficulty',
+            'difficulty',
             array(
                 'list.select' => $selected,
                 'list.attr'   => sprintf('class="%s"', $class)
@@ -343,12 +196,8 @@ class Search
      *
      * @return string|null
      */
-    protected function createFilterProgress()
+    protected function getFilterProgress()
     {
-        if (!$this->isOscampusView($this->courseLists) || OscampusFactory::getUser()->guest) {
-            return '';
-        }
-
         $progress = JHtml::_('osc.options.progress');
         array_unshift(
             $progress,
@@ -361,7 +210,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $progress,
-            'filter_progress',
+            'progress',
             array(
                 'list.select' => $selected,
                 'list.attr'   => sprintf('class="%s"', $class)
@@ -376,12 +225,8 @@ class Search
      *
      * @return string
      */
-    protected function createFilterTeacher()
+    protected function getFilterTeacher()
     {
-        if (!$this->isOscampusView($this->courseLists)) {
-            return '';
-        }
-
         $teacherQuery = $this->db->getQuery(true)
             ->select(
                 array(
@@ -398,9 +243,9 @@ class Search
                 array(
                     'pathway.users_id = 0',
                     'pathway.published = 1',
-                    $this->whereAccess('pathway.access'),
+                    $this->model->whereAccess('pathway.access'),
                     'course.published = 1',
-                    $this->whereAccess('course.access'),
+                    $this->model->whereAccess('course.access'),
                     'course.released <= NOW()'
                 )
             )
@@ -419,7 +264,7 @@ class Search
         $html = JHtml::_(
             'select.genericlist',
             $teachers,
-            'filter_teacher',
+            'teacher',
             array(
                 'list.select' => $selected,
                 'list.attr'   => sprintf('class="%s"', $class)
@@ -427,6 +272,37 @@ class Search
         );
 
         return $html;
+    }
+
+    protected function getTypes($class = null)
+    {
+        $show = (array)$this->model->getState('show.types');
+
+        $types = array(
+            'P' => 'MOD_OSCAMPUS_SEARCH_TYPE_PATHWAY',
+            'C' => 'MOD_OSCAMPUS_SEARCH_TYPE_COURSE',
+            'L' => 'MOD_OSCAMPUS_SEARCH_TYPE_LESSON'
+        );
+
+        $html = array();
+        foreach ($types as $type => $label) {
+            $attribs = array(
+                'name' => 'types[]',
+                'type' => 'checkbox',
+                'value' => $type
+            );
+            if ($class) {
+                $attribs['class'] = $class;
+            }
+            if (in_array($type, $show)) {
+                $attribs['checked'] = 'checked';
+            }
+
+            $html[] = '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+            $html[] = '<label>' . JText::_($label) . '</label>';
+        }
+
+        return join("\n", $html);
     }
 
     /**
@@ -474,54 +350,5 @@ JSCRIPT;
 
         $layout = $layout ?: $this->params->get('layout', 'default');
         require JModuleHelper::getLayoutPath($this->name, $layout);
-    }
-
-    /**
-     * Provide a generic access search for selected field
-     *
-     * @param string $field
-     * @param JUser  $user
-     *
-     * @return string
-     */
-    protected function whereAccess($field, JUser $user = null)
-    {
-        $user   = $user ?: OscampusFactory::getUser();
-        $userId = $user->id;
-
-        if (!isset($this->accessList[$userId])) {
-            $this->accessList[$userId] = join(', ', array_unique($user->getAuthorisedViewLevels()));
-        }
-
-        if ($this->accessList[$userId]) {
-            return sprintf($field . ' IN (%s)', $this->accessList[$userId]);
-        }
-
-        return 'TRUE';
-    }
-
-    /**
-     * See if we're on one of the desired views. Leave blank for any OSCampus page
-     *
-     * @param string[]|string $views
-     *
-     * @return bool
-     */
-    protected function isOscampusView($views = array())
-    {
-        $app = OscampusFactory::getApplication();
-
-        if ($app->input->getCmd('option') == 'com_oscampus') {
-            if (is_string($views)) {
-                $views = array($views);
-            }
-
-            $view = $app->input->getCmd('view');
-            if (empty($views) || (is_array($views) && in_array($view, $views))) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

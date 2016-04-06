@@ -28,7 +28,7 @@ abstract class OscampusModelList extends JModelList
      *
      * @return string
      */
-    protected function whereTextSearch($text, $fields, $idField = null)
+    public function whereTextSearch($text, $fields, $idField = null)
     {
         if ($idField && stripos(trim($text), 'id:') === 0) {
             $id = (int)substr($text, 3);
@@ -57,7 +57,7 @@ abstract class OscampusModelList extends JModelList
      *
      * @return string
      */
-    protected function whereAccess($field, JUser $user = null)
+    public function whereAccess($field, JUser $user = null)
     {
         $user   = $user ?: OscampusFactory::getUser();
         $userId = $user->id;

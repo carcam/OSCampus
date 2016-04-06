@@ -14,16 +14,27 @@ JLoader::import('courselist', __DIR__);
 
 class OscampusModelSearch extends OscampusModelCourselist
 {
-    protected function getListQuery()
+    public function getItems()
     {
-        return $this->getCourseQuery();
+        $query = $this->getCourseQuery();
+
+        $ordering = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+
+        $query->order($ordering . ' ' . $direction);
+
+        $start = $this->getState('list.start');
+        $limit = $this->getState('list.limit');
+
+        $items = $this->getDbo()->setQuery($query, $start, $limit)->loadObjectList();
+
+        return $items;
     }
 
     protected function getCourseQuery()
     {
         // We're leveraging the courselist model to get this query
         $db    = $this->getDbo();
-        $user  = $this->getState('user');
         $query = parent::getListQuery();
 
         // Tag filter
@@ -106,11 +117,11 @@ class OscampusModelSearch extends OscampusModelCourselist
         $app = JFactory::getApplication();
 
         // Display result types
-        $types = $this->getUserStateFromRequest($this->context . '.results', 'types', array(), 'array');
-        $this->set('show.types', $types);
+        $types = $this->getUserStateFromRequest($this->context . '.types', 'types', array(), 'array');
+        $this->setState('show.types', $types);
 
         // Text search filter
-        $text = $app->input->getString('filter_text');
+        $text = $app->input->getString('text');
         if ($text && strlen($text) < 3) {
             $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
             $text = $app->getUserState($this->context . '.filter.text', '');
@@ -124,7 +135,7 @@ class OscampusModelSearch extends OscampusModelCourselist
         $this->setState('filter.tag', $tagId);
 
         // Teacher filter
-        $teacherId = $this->getUserStateFromRequest($this->context . '.filter_teacher', 'teacher', null, 'int');
+        $teacherId = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'teacher', null, 'int');
         $this->setState('filter.teacher', $teacherId);
 
         // Course difficulty filter

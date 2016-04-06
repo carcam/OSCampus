@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 
 /** \Oscampus\Module\Search $this */
 
+$actionUrl = JRoute::_(OscampusRoute::getInstance()->get('search'));
+
 $textValue = $this->getState('filter.text');
 $textClass = $this->getStateClass($textValue);
 ?>
@@ -18,18 +20,18 @@ $textClass = $this->getStateClass($textValue);
         name="oscampusFilter"
         id="<?php echo $this->id; ?>"
         method="post"
-        action="">
+        action="<?php echo $actionUrl; ?>">
 
         <input
-            name="filter_text"
+            name="text"
             type="text"
             value="<?php echo $textValue; ?>"
             class="<?php echo $textClass; ?>"/>
 
         <?php
         echo $this->getFilter('Tag');
-        echo $this->getFilter('Topic');
-        echo $this->getFilter('Progress');
+
+        echo $this->getTypes();
         ?>
 
         <div class="osc-btn-group">
@@ -43,9 +45,6 @@ $textClass = $this->getStateClass($textValue);
                 </span>
             </button>
         </div>
-
-        <input type="hidden" name="option" value="com_oscampus"/>
-        <input type="hidden" name="task" value="filter.courses"/>
         <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>
