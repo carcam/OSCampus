@@ -35,11 +35,7 @@ $textClass = $this->getStateClass($textValue);
         ?>
 
         <div class="osc-btn-group">
-            <button type="submit" class="osc-btn osc-btn-main osc-search-filters">
-                <i class="fa fa-search"></i> <span>
-                    <?php echo JText::_('MOD_OSCAMPUS_SEARCH_GO'); ?>
-                </span>
-            </button><button type="button" class="osc-btn osc-clear-filters">
+            <button type="button" class="osc-btn osc-clear-filters">
                 <i class="fa fa-times"></i> <span>
                     <?php echo JText::_('MOD_OSCAMPUS_SEARCH_CLEAR'); ?>
                 </span>

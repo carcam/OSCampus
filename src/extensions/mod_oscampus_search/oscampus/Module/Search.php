@@ -59,6 +59,11 @@ class Search
      */
     protected static $instanceCount = 0;
 
+    /**
+     * @var bool
+     */
+    protected static $javascriptLoaded = false;
+
     public function __construct(Registry $params)
     {
         if (!defined('OSCAMPUS_LOADED')) {
@@ -312,10 +317,16 @@ class Search
      */
     protected function addScript()
     {
-        JHtml::_('osc.jquery');
-        $js = <<< JSCRIPT
+        if (!static::$javascriptLoaded) {
+            JHtml::_('osc.jquery');
+            $js = <<< JSCRIPT
 (function($) {
     $(document).ready(function() {
+        var forms = $('form[name=oscampusFilter]');
+        forms.find('select, input[type=checkbox]').on('change', function(evt) {
+            this.form.submit();
+        });
+        
         $('.osc-clear-filters').on('click', function(evt) {
             evt.preventDefault();
             $(this.form)
@@ -324,12 +335,17 @@ class Search
                 .each(function (index, element) {
                     $(element).val(null);
                 });
+            
+            this.form.submit();
         });
     });
 })(jQuery);
 JSCRIPT;
 
-        OscampusFactory::getDocument()->addScriptDeclaration($js);
+            OscampusFactory::getDocument()->addScriptDeclaration($js);
+
+            static::$javascriptLoaded = true;
+        }
     }
 
     /**
