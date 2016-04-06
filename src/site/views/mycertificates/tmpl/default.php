@@ -54,7 +54,7 @@ defined('_JEXEC') or die();
         ?>
         <div class="osc-alert-notify a-center">
             <?php
-            $link = JRoute::_(OscampusRoute::getInstance()->get('courses'));
+            $link = JRoute::_(OscampusRoute::getInstance()->get('pathways'));
             $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK', 'class="osc-btn"'));
             echo JText::sprintf('COM_OSCAMPUS_MYCERTIFICATES_GET_STARTED', $link);
             ?>
