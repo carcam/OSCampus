@@ -121,9 +121,10 @@ class OscampusModelSearch extends OscampusModelCourselist
         $this->setState('show.types', $types);
 
         // Text search filter
+        $minLength = 2;
         $text = $app->input->getString('text');
-        if ($text && strlen($text) < 3) {
-            $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
+        if ($text && strlen($text) < $minLength) {
+            $app->enqueueMessage(JText::sprintf('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT', $minLength), 'notice');
             $text = $app->getUserState($this->context . '.filter.text', '');
         } else {
             $text = $this->getUserStateFromRequest($this->context . '.filter.text', 'text', null, 'string');
