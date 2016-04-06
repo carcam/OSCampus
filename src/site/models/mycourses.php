@@ -60,13 +60,9 @@ class OscampusModelMycourses extends OscampusModelList
                     'MIN(activity.first_visit) AS first_visit',
                     'MAX(activity.last_visit) AS last_visit',
                     'last_lesson.lessons_id AS last_lesson',
-                    sprintf(
-                        'GROUP_CONCAT(CONCAT_WS(%s, lesson.type, activity.score, activity.lessons_id)) AS scores',
-                        $db->quote(':')
-                    ),
                     'certificate.id AS certificates_id',
                     'certificate.date_earned',
-                    'count(*) AS lessons_taken'
+                    'count(*) AS lessons_viewed'
                 )
             )
             ->from('#__oscampus_users_lessons AS activity')
@@ -88,12 +84,11 @@ class OscampusModelMycourses extends OscampusModelList
                     'course.id',
                     'course.title',
                     'count(*) AS lesson_count',
-                    'user_activity.lessons_taken',
+                    'user_activity.lessons_viewed',
                     'user_activity.users_id',
                     'user_activity.first_visit',
                     'user_activity.last_visit',
                     'user_activity.last_lesson',
-                    'user_activity.scores',
                     'user_activity.certificates_id',
                     'user_activity.date_earned'
                 )
@@ -103,12 +98,6 @@ class OscampusModelMycourses extends OscampusModelList
             ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
             ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
             ->group('course.id');
-
-        if ($pid = (int)$this->getState('filter.pathway')) {
-            $courseQuery
-                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-                ->where('cp.pathways_id = ' . $pid);
-        }
 
         $ordering  = $this->getState('list.ordering');
         $direction = $this->getState('list.direction', 'ASC');
@@ -139,11 +128,6 @@ class OscampusModelMycourses extends OscampusModelList
 
     protected function populateState($ordering = 'course.title', $direction = 'ASC')
     {
-        $app = OscampusFactory::getApplication();
-
-        $pathwayId = $app->input->getInt('pid');
-        $this->setState('filter.pathway', $pathwayId);
-
         parent::populateState($ordering, $direction);
 
         $this->setState('list.limit', 0);

@@ -19,6 +19,7 @@ defined('_JEXEC') or die();
  * @package Oscampus\Activity
  *
  * @property-read float $progress
+ * @property-read int   $courses_id
  */
 class CourseStatus extends AbstractPrototype
 {
@@ -55,7 +56,7 @@ class CourseStatus extends AbstractPrototype
     /**
      * @var int
      */
-    public $lessons_taken = null;
+    public $lessons_viewed = null;
 
     /**
      * @var DateTime
@@ -90,8 +91,18 @@ class CourseStatus extends AbstractPrototype
 
     public function __get($name)
     {
-        if ($name == 'progress' && $this->lesson_count > 0) {
-            return round(($this->lessons_taken / $this->lesson_count) * 100, 0);
+        switch ($name) {
+            case 'courses_id':
+                return $this->id;
+                break;
+
+            case 'progress':
+                if ($this->lesson_count > 0) {
+                    return round(($this->lessons_viewed / $this->lesson_count) * 100, 0);
+                }
+                return 0;
+                break;
+
         }
 
         return null;
