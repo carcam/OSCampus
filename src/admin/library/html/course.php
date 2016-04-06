@@ -64,7 +64,7 @@ abstract class OscCourse
      */
     public static function startbutton($course)
     {
-        if (empty($course->lesson_progress)) {
+        if (empty($course->lessons_viewed)) {
             $icon    = 'fa-play';
             $text    = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
             $attribs = 'class="osc-btn osc-btn-main"';
@@ -83,7 +83,7 @@ abstract class OscCourse
         $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
 
         // @TODO: Figure out some way to send them to where they left off
-        if (!empty($course->lesson_progress) && empty($course->date_earned)) {
+        if (!empty($course->lessons_viewed) && empty($course->certificates_id)) {
             return static::link($course, $button, $attribs);
         }
 
