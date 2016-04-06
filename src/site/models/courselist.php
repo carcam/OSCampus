@@ -28,7 +28,7 @@ abstract class OscampusModelCourselist extends OscampusModelSiteList
                     'course.*',
                     'COUNT(DISTINCT lesson.id) AS lesson_count',
                     $tags,
-                    'user.name AS teacher'
+                    'teacher_user.name AS teacher'
                 )
             )
             ->from('#__oscampus_courses AS course')
@@ -37,7 +37,7 @@ abstract class OscampusModelCourselist extends OscampusModelSiteList
             ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
             ->leftJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
             ->leftJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
-            ->leftJoin('#__users AS user ON user.id = teacher.users_id')
+            ->leftJoin('#__users AS teacher_user ON teacher_user.id = teacher.users_id')
             ->where(
                 array(
                     'course.published = 1',
@@ -63,7 +63,7 @@ abstract class OscampusModelCourselist extends OscampusModelSiteList
             $query->select(
                 array(
                     '0 AS users_id',
-                    '0 AS lesson_progress',
+                    '0 AS lessons_viewed',
                     '0 AS certificates_id',
                     'NULL AS date_earned'
                 )
