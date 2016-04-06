@@ -305,6 +305,7 @@ class Search
 
             $html[] = '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
             $html[] = '<label>' . JText::_($label) . '</label>';
+            $html[] = '<input type="hidden" name="types[]" value=""/>';
         }
 
         return join("\n", $html);
@@ -319,6 +320,7 @@ class Search
     {
         if (!static::$javascriptLoaded) {
             JHtml::_('osc.jquery');
+
             $js = <<< JSCRIPT
 (function($) {
     $(document).ready(function() {
@@ -355,7 +357,7 @@ JSCRIPT;
      *
      * @return string
      */
-    public function getStateClass($state)
+    protected function getStateClass($state)
     {
         return 'osc-formfield-' . ($state == '' ? 'inactive' : 'active');
     }
