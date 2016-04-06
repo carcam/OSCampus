@@ -10,9 +10,9 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-JLoader::import('courses', __DIR__);
+JLoader::import('courselist', __DIR__);
 
-class OscampusModelNewcourses extends OscampusModelCourses
+class OscampusModelNewcourses extends OscampusModelCourselist
 {
     protected function getListQuery()
     {
