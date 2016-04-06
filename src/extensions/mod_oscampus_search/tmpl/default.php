@@ -19,7 +19,7 @@ $textClass = $this->getStateClass($textValue);
     <form
         name="oscampusFilter"
         id="<?php echo $this->id; ?>"
-        method="post"
+        method="get"
         action="<?php echo $actionUrl; ?>">
 
         <input
@@ -45,6 +45,5 @@ $textClass = $this->getStateClass($textValue);
                 </span>
             </button>
         </div>
-        <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>
