@@ -14,6 +14,14 @@ JLoader::import('courselist', __DIR__);
 
 class OscampusModelSearch extends OscampusModelCourselist
 {
+    protected $filter_fields = array(
+        'text',
+        'tag',
+        'teacher',
+        'difficulty',
+        'progress'
+    );
+
     public function getItems()
     {
         $query = $this->getCourseQuery();
