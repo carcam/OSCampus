@@ -42,11 +42,14 @@ abstract class AbstractType
 
     /**
      * Each lesson type should provide a static image icon
-     * fore use in lists
+     * for use in lists
+     *
+     * @param int $width
+     * @param int $height
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon($width = null, $height = null)
     {
         return Course::DEFAULT_IMAGE;
     }

@@ -222,9 +222,17 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
-    public function getIcon()
+    /**
+     * Get a thumbnail icon for the lesson
+     *
+     * @param null $width
+     * @param null $height
+     *
+     * @return string
+     */
+    public function getIcon($width = null, $height = null)
     {
-        return $this->renderer->getIcon();
+        return $this->renderer->getIcon($width, $height);
     }
 
     public function loadAdminForm(JForm $form, Registry $data)

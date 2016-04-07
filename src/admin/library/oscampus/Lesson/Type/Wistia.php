@@ -10,6 +10,7 @@ namespace Oscampus\Lesson\Type;
 
 use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
+use Exception;
 use JHtml;
 use Joomla\Registry\Registry as Registry;
 use JSession;
@@ -37,6 +38,11 @@ class Wistia extends AbstractType
      */
     protected $autoplay = false;
 
+    /**
+     * @var Api
+     */
+    protected $wistiaApi = null;
+
     public function __construct(Lesson $lesson)
     {
         parent::__construct($lesson);
@@ -50,14 +56,22 @@ class Wistia extends AbstractType
     public function render()
     {
         if (!$this->pluginLoaded()) {
-            throw new \Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
         }
 
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
         $oswistia->loadLibrary();
 
         if (!$this->lesson->isAuthorised()) {
-            return $this->renderStatic();
+            $thumb = $this->getApi()->getThumbnail($this->id);
+
+            $attribs = array(
+                'src'    => $thumb->url,
+                'width'  => $thumb->size[0],
+                'height' => $thumb->size[1]
+            );
+
+            return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
         }
 
         /** @var Registry $params */
@@ -95,24 +109,25 @@ class Wistia extends AbstractType
         return $output;
     }
 
-    /**
-     * Render a still image version of this video
-     *
-     * @return string
-     */
-    protected function renderStatic()
+    public function getIcon($width = null, $height = null)
     {
-        $params = OscampusComponentHelper::getParams();
-        $api    = new Api($params->get('wistia.apikey'));
+        $thumb = $this->getApi()->getThumbnail($this->id, $width, $height);
+        return $thumb->url;
+    }
 
-        $thumb = $api->getThumbnail($this->id);
+    /**
+     * Load our API object only once
+     *
+     * @return Api
+     */
+    protected function getApi()
+    {
+        if ($this->wistiaApi === null) {
+            $params          = OscampusComponentHelper::getParams();
+            $this->wistiaApi = new Api($params->get('wistia.apikey'));
+        }
 
-        $attribs = array(
-            'src'    => $thumb->url,
-            'width'  => $thumb->size[0],
-            'height' => $thumb->size[1]
-        );
-        return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+        return $this->wistiaApi;
     }
 
     /**
