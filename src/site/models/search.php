@@ -12,18 +12,18 @@ JLoader::import('courselist', __DIR__);
 
 class OscampusModelSearch extends OscampusModelCourselist
 {
-
+    /**
+     * This method shouldn't be used. So we disable it.
+     * @return array
+     */
     public function getItems()
     {
-        $results = (object)array(
-            'pathways' => $this->getPathways(),
-            'courses'  => $this->getCourses(),
-            'lessons' => $this->getLessons()
-        );
-
-        return $results;
+        return array();
     }
 
+    /**
+     * @return object[]
+     */
     public function getCourses()
     {
         $types = (array)$this->getState('show.types');
@@ -35,6 +35,9 @@ class OscampusModelSearch extends OscampusModelCourselist
         return array();
     }
 
+    /**
+     * @return object[]
+     */
     public function getPathways()
     {
         $types = (array)$this->getState('show.types');
@@ -52,6 +55,9 @@ class OscampusModelSearch extends OscampusModelCourselist
         return array();
     }
 
+    /**
+     * @return object[]
+     */
     public function getLessons()
     {
         if (array_filter($this->getActiveFilters())) {
