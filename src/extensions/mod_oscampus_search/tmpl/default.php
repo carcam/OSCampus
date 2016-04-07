@@ -43,22 +43,21 @@ JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
             value="<?php echo $textValue; ?>"
             class="<?php echo $textClass; ?>"/>
 
+        <div id="<?php echo $advancedToggle; ?>" data-content="<?php echo '#' . $advancedContent; ?>" class="osc-search-toggle">
+            <i class="fa fa-cogs"></i>
+            <?php echo JText::_('MOD_OSCAMPUS_SEARCH_ADVANCED'); ?>
+        </div>
         <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced">
             <?php
             echo $this->getFilter('Tag');
             echo $this->getTypes();
             ?>
-        </div>
-
-        <div class="osc-btn-group">
-            <button type="button" id="<?php echo $advancedToggle; ?>" data-content="<?php echo '#' . $advancedContent; ?>" class="osc-btn osc-btn-main osc-search-toggle">
-                <i class="fa fa-cogs"></i> <span>
-                    <?php echo JText::_('MOD_OSCAMPUS_SEARCH_ADVANCED'); ?>
-                </span>
-            </button><button type="button" class="osc-btn osc-clear-filters">
-                <i class="fa fa-times"></i>
+            <div>
+                <button type="button" class="osc-btn osc-clear-filters">
+                    <i class="fa fa-times"></i>
                     <?php echo JText::_('MOD_OSCAMPUS_SEARCH_CLEAR'); ?>
-            </button>
+                </button>
+            </div>
         </div>
     </form>
 </div>

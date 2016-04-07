@@ -399,9 +399,12 @@
     line-height: inherit;
 }
 
-.osc-module-container .osc-clear-filters i,
-.osc-module-container .osc-search-toggle i {
-    display: none;
+.osc-module-container .osc-search-toggle {
+    color: #2184cd;
+}
+
+.osc-module-container .osc-clear-filters {
+    margin-top: 10px;
 }
 
 .osc-module-container input[type="text"].osc-formfield-inactive,
@@ -421,6 +424,7 @@
     border: 1px solid #ccc;
     background: #f9f9f9;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 /* Help classes
@@ -1001,15 +1005,6 @@
     #oscampus.osc-container .osc-section .block8.osc-course-description {
         width: 69.81196581196582%;
         margin-left: 2.56410256410255%;
-    }
-    /* form elements */
-    .osc-module-container .osc-clear-filters span,
-    .osc-module-container .osc-search-toggle span {
-        display: none;
-    }
-    .osc-module-container .osc-clear-filters i,
-    .osc-module-container .osc-search-toggle i {
-        display: inherit;
     }
 }
 
