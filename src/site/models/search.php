@@ -60,14 +60,7 @@ class OscampusModelSearch extends OscampusModelCourselist
                 $db = $this->getDbo();
 
                 $query = $db->getQuery(true)
-                    ->select(
-                        array(
-                            'lesson.id',
-                            'module.courses_id',
-                            'lesson.title',
-                            'lesson.description'
-                        )
-                    )
+                    ->select('lesson.id')
                     ->from('#__oscampus_lessons AS lesson')
                     ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
                     ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
