@@ -230,9 +230,9 @@ class Lesson extends AbstractBase
      *
      * @return string
      */
-    public function getIcon($width = null, $height = null)
+    public function getThumbnail($width = null, $height = null)
     {
-        return $this->renderer->getIcon($width, $height);
+        return $this->renderer->getThumbnail($width, $height);
     }
 
     public function loadAdminForm(JForm $form, Registry $data)

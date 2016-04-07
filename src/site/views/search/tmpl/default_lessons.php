@@ -22,7 +22,7 @@ if ($this->lessons) :
             <div class="block4 osc-course-image">
                 <?php
                 $link  = JHtml::_('osc.link.lessonid', $lesson->courses_id, $lesson->id, null, null, true);
-                $image = JHtml::_('image', $lesson->getIcon(), $lesson->title);
+                $image = JHtml::_('image', $lesson->getThumbnail(), $lesson->title);
                 echo JHtml::_('link', $link, $image);
                 ?>
             </div>

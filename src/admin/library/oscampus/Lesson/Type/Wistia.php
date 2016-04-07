@@ -109,7 +109,7 @@ class Wistia extends AbstractType
         return $output;
     }
 
-    public function getIcon($width = null, $height = null)
+    public function getThumbnail($width = null, $height = null)
     {
         $thumb = $this->getApi()->getThumbnail($this->id, $width, $height);
         return $thumb->url;
