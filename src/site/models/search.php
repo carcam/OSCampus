@@ -41,7 +41,7 @@ class OscampusModelSearch extends OscampusModelCourselist
             /** @var OscampusModelPathways $model */
             $model = OscampusModel::getInstance('Pathways');
 
-            $model->setState('filter.text', $this->getState('filter.state'));
+            $model->setState('filter.text', $this->getState('filter.text'));
             $model->setState('filter.tag', $this->getState('filter.tag'));
 
             return $model->getItems();
