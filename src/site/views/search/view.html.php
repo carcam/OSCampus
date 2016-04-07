@@ -11,6 +11,11 @@ defined('_JEXEC') or die();
 class OscampusViewSearch extends OscampusViewSite
 {
     /**
+     * @var OscampusModelSearch
+     */
+    protected $model = null;
+
+    /**
      * @var object[]
      */
     protected $courses = array();
@@ -28,10 +33,10 @@ class OscampusViewSearch extends OscampusViewSite
     public function display($tpl = null)
     {
         /** @var OscampusModelSearch $model */
-        $model = $this->getModel();
+        $this->model = $this->getModel();
 
-        $this->courses  = $model->getCourses();
-        $this->pathways = $model->getPathways();
+        $this->courses  = $this->model->getCourses();
+        $this->pathways = $this->model->getPathways();
 
         parent::display($tpl);
     }
