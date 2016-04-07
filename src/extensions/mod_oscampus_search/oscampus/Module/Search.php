@@ -303,8 +303,8 @@ class Search
                 $attribs['checked'] = 'checked';
             }
 
-            $html[] = '<input ' . OscampusUtilitiesArray::toString($attribs) . '/>';
-            $html[] = '<label>' . JText::_($label) . '</label>';
+            $html[] = '<div><input ' . OscampusUtilitiesArray::toString($attribs) . '/> ';
+            $html[] = JText::_($label) . '</div>';
         }
         $html[] = '<input type="hidden" name="types[]" value=""/>';
 

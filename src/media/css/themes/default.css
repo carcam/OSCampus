@@ -399,7 +399,8 @@
     line-height: inherit;
 }
 
-.osc-module-container i.fa-times {
+.osc-module-container .osc-clear-filters i,
+.osc-module-container .osc-search-toggle i {
     display: none;
 }
 
@@ -413,6 +414,13 @@
 .osc-module-container select.osc-formfield-active {
     border-color: #333;
     color: #333;
+}
+
+.osc-module-container .osc-search-advanced {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    margin-bottom: 10px;
 }
 
 /* Help classes
@@ -989,12 +997,13 @@
         margin-left: 2.56410256410255%;
     }
     /* form elements */
-    .osc-module-container i.fa-times {
-        display: inherit;
-    }
-    .osc-module-container .osc-clear-filters > span,
-    .osc-module-container .osc-search-filters > span {
+    .osc-module-container .osc-clear-filters span,
+    .osc-module-container .osc-search-toggle span {
         display: none;
+    }
+    .osc-module-container .osc-clear-filters i,
+    .osc-module-container .osc-search-toggle i {
+        display: inherit;
     }
 }
 
