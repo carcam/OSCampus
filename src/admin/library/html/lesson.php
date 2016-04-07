@@ -161,7 +161,7 @@ abstract class OscLesson
             return null;
         }
 
-        $query = OscampusRoute::getInstance()->getQuery('`course`');
+        $query = OscampusRoute::getInstance()->getQuery('course');
 
         $query['view'] = 'lesson';
         $query['cid']  = $properties->courses_id;
