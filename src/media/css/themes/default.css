@@ -449,6 +449,12 @@
     margin: 2px 0;
 }
 
+#oscampus.osc-container .osc-alert-warning.m-bottom,
+#oscampus.osc-container .osc-alert-success.m-bottom,
+#oscampus.osc-container .osc-alert-notify.m-bottom {
+    margin-bottom: 30px;
+}
+
 /* Listing
  ========================================================================== */
 #oscampus.osc-container .osc-table {

@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 if ($this->lessons) :
     $lesson = OscampusFactory::getContainer()->lesson;
     ?>
-    <div>
+    <div class="osc-alert-success m-bottom"><i class="fa fa-info-circle"></i>
         <?php echo JText::plural('COM_OSCAMPUS_SEARCH_RESULTS_LESSONS', count($this->lessons)); ?>
     </div>
     <?php
@@ -37,7 +37,7 @@ if ($this->lessons) :
 
 else :
     ?>
-    <div class="osc-alert-notify"><i class="fa fa-info-circle"></i>
+    <div class="osc-alert-warning m-bottom"><i class="fa fa-info-circle"></i>
         <?php echo JText::plural('COM_OSCAMPUS_SEARCH_RESULTS_LESSONS', 0); ?>
     </div>
     <?php

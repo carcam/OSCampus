@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 
 if ($this->courses) :
     ?>
-    <div>
+    <div class="osc-alert-success m-bottom"><i class="fa fa-info-circle"></i>
         <?php echo JText::plural('COM_OSCAMPUS_SEARCH_RESULTS_COURSES', count($this->courses)); ?>
     </div>
     <?php
@@ -21,7 +21,7 @@ if ($this->courses) :
 
 else :
     ?>
-    <div class="osc-alert-notify"><i class="fa fa-info-circle"></i>
+    <div class="osc-alert-warning m-bottom"><i class="fa fa-info-circle"></i>
         <?php echo JText::plural('COM_OSCAMPUS_SEARCH_RESULTS_COURSES', 0); ?>
     </div>
     <?php
