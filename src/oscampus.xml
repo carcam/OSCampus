@@ -86,15 +86,15 @@
 
         <obsolete>
             <folder>/administrator/components/com_oscampus/views/dashboard</folder>
-            <folder>/components/com_oscampus/controllers/filter.php</folder>
-            <folder>/components/com_oscampus/models/courses.php</folder>
             <folder>/components/com_oscampus/views/dashboard</folder>
             <file>/administrator/components/com_oscampus/controllers/import.php</file>
             <file>/administrator/components/com_oscampus/layouts/admin_filters_j2.html.twig</file>
             <file>/administrator/components/com_oscampus/layouts/admin_filters_j3.html.twig</file>
             <file>/administrator/components/com_oscampus/library/oscampus/Lesson/ActivityStatus.php</file>
             <file>/administrator/components/com_oscampus/library/oscampus/Lesson/ActivitySummary.php</file>
+            <file>/components/com_oscampus/controllers/filter.php</file>
             <file>/components/com_oscampus/model/dashboard.php</file>
+            <file>/components/com_oscampus/models/courses.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_footer.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_header.php</file>
         </obsolete>
