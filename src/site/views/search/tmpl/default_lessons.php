@@ -22,15 +22,18 @@ if ($this->lessons) :
             <div class="block4 osc-course-image">
                 <?php
                 $link  = JHtml::_('osc.link.lessonid', $lesson->courses_id, $lesson->id, null, null, true);
-                $image = JHtml::_('image',
-                    JURI::root() . '/media/com_oscampus/images/lesson-placeholder.png',
-                    $lesson->title,
-                    'style="background-image:url(' . $lesson->getThumbnail() . '); background-size: 100% auto;"');
+                $style = sprintf(
+                    'style="background-image:url(%s); background-size: 100%% auto;"',
+                    $lesson->getThumbnail()
+                );
+
+                $image = JHtml::_('image', 'com_oscampus/lesson-placeholder.png', $lesson->title, $style, true);
                 echo JHtml::_('link', $link, $image);
                 ?>
             </div>
             <div class="block8 osc-course-description">
                 <h2><?php echo JHtml::_('link', $link, $lesson->title); ?></h2>
+                <?php echo JHtml::_('osc.link.course', $lesson->courses_id, $lesson->courseTitle); ?>
             </div>
         </div>
         <!-- .osc-section -->
