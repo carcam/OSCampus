@@ -17,7 +17,15 @@ $textClass = $this->getStateClass($textValue);
 
 $advancedToggle  = $this->id . '-toggle';
 $advancedContent = $this->id . '-advanced';
-$advancedVisible = array_filter(array_diff_key($this->model->getActiveFilters(), array('text' => null)));
+$advancedVisible = $this->getState('show.types')
+    || array_filter(
+        array_diff_key(
+            $this->model->getActiveFilters(),
+            array(
+                'text' => null
+            )
+        )
+    );
 
 JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
 
