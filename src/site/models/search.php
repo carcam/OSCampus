@@ -6,21 +6,12 @@
  * @license
  */
 
-use Oscampus\Activity\CourseStatus;
-
 defined('_JEXEC') or die();
 
 JLoader::import('courselist', __DIR__);
 
 class OscampusModelSearch extends OscampusModelCourselist
 {
-    protected $filter_fields = array(
-        'text',
-        'tag',
-        'teacher',
-        'difficulty',
-        'progress'
-    );
 
     public function getItems()
     {
@@ -42,55 +33,7 @@ class OscampusModelSearch extends OscampusModelCourselist
     protected function getCourseQuery()
     {
         // We're leveraging the courselist model to get this query
-        $db    = $this->getDbo();
-        $query = parent::getListQuery();
-
-        // Tag filter
-        if ($tagId   = (int)$this->getState('filter.tag')) {
-            $tagQuery = $db->getQuery(true)
-                ->select('courses_id')
-                ->from('#__oscampus_courses_tags')
-                ->where(sprintf('tags_id = ' . $tagId))
-                ->group('courses_id');
-
-            $query->where(sprintf('course.id IN (%s)', $tagQuery));
-        }
-
-        // Teacher filter
-        if ($teacherId = (int)$this->getState('filter.teacher')) {
-            $query->where('teacher.id = ' . $teacherId);
-        }
-
-        // Difficulty filter
-        if ($difficulty = $this->getState('filter.difficulty')) {
-            $query->where('course.difficulty = ' . $db->quote($difficulty));
-        }
-
-        // Text filter
-        if ($text = $this->getState('filter.text')) {
-            $fields = array(
-                'course.introtext',
-                'course.description',
-                'lesson.description'
-            );
-            $query->where($this->whereTextSearch($text, $fields));
-        }
-
-        // User progress status filter
-        $progress = $this->getState('filter.progress');
-        if ($progress !== null) {
-            if ($progress == CourseStatus::NOT_STARTED) {
-                $query->having('lessons_viewed = 0');
-
-            } elseif ($progress == CourseStatus::COMPLETED) {
-                $query->having('certificates.id > 0');
-
-            } elseif ($progress == CourseStatus::IN_PROGRESS) {
-                $query->having('lessons_viewed > 0');
-            }
-        }
-
-        return $query;
+        return parent::getListQuery();
     }
 
     protected function getPathwayQuery()
