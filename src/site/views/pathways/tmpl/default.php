@@ -20,33 +20,18 @@ defined('_JEXEC') or die();
     ?>
 
     <?php
-    if ($this->items) :
-        foreach ($this->items as $item) :
-            ?>
-            <div class="osc-section osc-course-list">
-                <div class="block4 osc-course-image">
-                    <?php
-                    $link  = JHtml::_('osc.pathway.link', $item, null, null, true);
-                    $image = JHtml::_('image', $item->image, $item->title);
-                    echo JHtml::_('link', $link, $image);
-                    ?>
-                </div>
-                <div class="block8 osc-course-description">
-                    <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
-
-                    <?php echo $item->description; ?>
-                </div>
-            </div>
-            <!-- .osc-section -->
-            <?php
-        endforeach;
-
-    else :
+    if (!$this->items) :
         ?>
         <div class="osc-alert-notify">
             <i class="fa fa-info-circle"></i>
             <?php echo JText::sprintf('COM_OSCAMPUS_PATHWAYS_NOTFOUND'); ?>
         </div>
+        <?php
+    else :
+        foreach ($this->items as $this->item) :
+            echo $this->loadTemplate('pathway');
+        endforeach;
+        ?>
         <?php
     endif;
     ?>

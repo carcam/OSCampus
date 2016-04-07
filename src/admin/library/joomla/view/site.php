@@ -125,26 +125,29 @@ abstract class OscampusViewSite extends OscampusView
     }
 
     /**
-     * Allow reuse of other view templates by view name
+     * Load a template from a different view
      *
+     * @param string $view
      * @param string $name
      *
-     * @return bool
+     * @return string
+     * @throws Exception
      */
-    protected function shareViewTemplates($name)
+    protected function loadViewTemplate($view, $name)
     {
-        $path = OSCAMPUS_SITE . '/views/pathway/tmpl';
-        if (is_dir($path)) {
-            // Add path to include path
-            $this->addTemplatePath($path);
-
-            // but allow local override as needed
-            $templatePath              = array_shift($this->_path['template']);
-            $this->_path['template'][] = $templatePath;
-
-            return true;
+        $path = OSCAMPUS_SITE . '/views/' . strtolower($view) . '/tmpl';
+        if (!is_dir($path)) {
+            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_VIEW_NAME_INVALID', $view));
         }
 
-        return false;
+        // Add include path. This will override any local version
+        $originalPaths = $this->_path['template'];
+        $this->addTemplatePath($path);
+
+        $output = $this->loadTemplate($name);
+
+        $this->_path['template'] = $originalPaths;
+
+        return $output;
     }
 }

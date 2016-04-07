@@ -11,9 +11,14 @@ defined('_JEXEC') or die();
 class OscampusViewPathways extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
+
+    /**
+     * @var object
+     */
+    protected $item = null;
 
     public function display($tpl = null)
     {

@@ -24,8 +24,7 @@ defined('_JEXEC') or die();
     <?php
     if ($this->items) :
         foreach ($this->items as $this->item) :
-            // By default uses sub-template from pathway view
-            echo $this->loadTemplate('course');
+            echo $this->loadViewTemplate('pathway', 'course');
         endforeach;
 
     else :

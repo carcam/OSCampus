@@ -27,8 +27,6 @@ class OscampusViewNewcourses extends OscampusViewSite
 
     public function display($tpl = null)
     {
-        $this->shareViewTemplates('pathway');
-
         /** @var OscampusModelNewcourses $model */
         $model = $this->getModel();
 
