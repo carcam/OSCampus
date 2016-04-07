@@ -16,9 +16,11 @@ class OscampusModelSearch extends OscampusModelCourselist
     public function getItems()
     {
         $results = (object)array(
+            'pathways' => $this->getPathways(),
             'courses'  => $this->getCourses(),
-            'pathways' => $this->getPathways()
+            'lessons' => $this->getLessons()
         );
+
         return $results;
     }
 
@@ -50,9 +52,41 @@ class OscampusModelSearch extends OscampusModelCourselist
         return array();
     }
 
-    protected function getLessonQuery()
+    public function getLessons()
     {
+        if (array_filter($this->getActiveFilters())) {
+            $types = (array)$this->getState('show.types');
+            if (!$types || in_array('L', $types)) {
+                $db = $this->getDbo();
 
+                $query = $db->getQuery(true)
+                    ->select('lesson.*')
+                    ->from('#__oscampus_lessons AS lesson')
+                    ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
+                    ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+                    ->group('lesson.id');
+
+                if ($text = $this->getState('filter.text')) {
+                    $query->where($this->whereTextSearch($text, array('lesson.title', 'lesson.description')));
+                }
+
+                if ($tagId = (int)$this->getState('filter.tag')) {
+                    $query
+                        ->leftJoin('#__oscampus_courses_tags AS ct ON ct.courses_id = course.id')
+                        ->where('ct.tags_id = ' . $tagId);
+                }
+
+                $query->order('lesson.title ASC');
+
+                $start   = $this->getState('list.start', 0);
+                $limit   = $this->getState('list.limit', 0);
+                $lessons = $db->setQuery($query, $start, $limit)->loadObjectList();
+
+                return $lessons;
+            }
+        }
+
+        return array();
     }
 
     protected function populateState($ordering = 'course.title', $direction = 'ASC')

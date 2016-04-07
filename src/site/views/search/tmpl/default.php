@@ -20,15 +20,21 @@ defined('_JEXEC') or die();
         <?php
     endif;
 
-    $types = (array)$this->model->getState('show.types');
+    $activeFilters = $this->model->getActiveFilters();
+    $types         = (array)$this->model->getState('show.types');
 
     if (!$types || in_array('P', $types)) :
         echo $this->loadTemplate('pathways');
     endif;
 
-    if (!$types || in_array('C', $types)) :
+    if ((!$types && $activeFilters) || in_array('C', $types)) :
         echo $this->loadTemplate('courses');
     endif;
+
+    if ((!$types && $activeFilters) || in_array('L', $types)) :
+        echo $this->loadTemplate('lessons');
+    endif;
+
     ?>
 </div>
 
