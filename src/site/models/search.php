@@ -15,30 +15,39 @@ class OscampusModelSearch extends OscampusModelCourselist
 
     public function getItems()
     {
-        $query = $this->getCourseQuery();
-
-        $ordering = $this->getState('list.ordering');
-        $direction = $this->getState('list.direction');
-
-        $query->order($ordering . ' ' . $direction);
-
-        $start = $this->getState('list.start');
-        $limit = $this->getState('list.limit');
-
-        $items = $this->getDbo()->setQuery($query, $start, $limit)->loadObjectList();
-
-        return $items;
+        $results = (object)array(
+            'courses' => $this->getCourses(),
+            'pathways' => $this->getPathways()
+        );
+        return $results;
     }
 
-    protected function getCourseQuery()
+    public function getCourses()
     {
-        // We're leveraging the courselist model to get this query
-        return parent::getListQuery();
+        $types = (array)$this->getState('show.types');
+
+        if (!$types || in_array('C', $types)) {
+            return parent::getItems();
+        }
+
+        return array();
     }
 
-    protected function getPathwayQuery()
+    public function getPathways()
     {
+        $types = (array)$this->getState('show.types');
 
+        if (!$types || in_array('P', $types)) {
+            /** @var OscampusModelPathways $model */
+            $model = OscampusModel::getInstance('Pathways');
+
+            $model->setState('filter.text', $this->getState('filter.state'));
+            $model->setState('filter.tag', $this->getState('filter.tag'));
+
+            return $model->getItems();
+        }
+
+        return array();
     }
 
     protected function getLessonQuery()
@@ -68,8 +77,8 @@ class OscampusModelSearch extends OscampusModelCourselist
         $app = JFactory::getApplication();
 
         // Display result types
-        $types = $this->getUserStateFromRequest($this->context . '.types', 'types', array(), 'array');
-        $this->setState('show.types', $types);
+        $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', array(), 'array');
+        $this->setState('show.types', array_filter($types));
 
         // Text search filter
         $minLength = 2;

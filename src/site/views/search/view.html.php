@@ -13,7 +13,12 @@ class OscampusViewSearch extends OscampusViewSite
     /**
      * @var object[]
      */
-    protected $items = array();
+    protected $courses = array();
+
+    /**
+     * @var object[]
+     */
+    protected $pathways = array();
 
     /**
      * @var object
@@ -22,12 +27,11 @@ class OscampusViewSearch extends OscampusViewSite
 
     public function display($tpl = null)
     {
-        $this->shareViewTemplates('pathway');
-
         /** @var OscampusModelSearch $model */
         $model = $this->getModel();
 
-        $this->items = $model->getItems();
+        $this->courses  = $model->getCourses();
+        $this->pathways = $model->getPathways();
 
         parent::display($tpl);
     }
