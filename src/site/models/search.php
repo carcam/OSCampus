@@ -60,10 +60,29 @@ class OscampusModelSearch extends OscampusModelCourselist
                 $db = $this->getDbo();
 
                 $query = $db->getQuery(true)
-                    ->select('lesson.*')
+                    ->select(
+                        array(
+                            'lesson.id',
+                            'module.courses_id',
+                            'lesson.title',
+                            'lesson.description'
+                        )
+                    )
                     ->from('#__oscampus_lessons AS lesson')
                     ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
                     ->innerJoin('#__oscampus_courses AS course ON course.id = module.courses_id')
+                    ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+                    ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+                    ->where(
+                        array(
+                            'lesson.type = ' . $db->quote('wistia'),
+                            'lesson.published = 1',
+                            'course.published = 1',
+                            $this->whereAccess('course.access'),
+                            'pathway.published = 1',
+                            $this->whereAccess('pathway.access')
+                        )
+                    )
                     ->group('lesson.id');
 
                 if ($text = $this->getState('filter.text')) {
