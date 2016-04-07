@@ -11,6 +11,11 @@ defined('_JEXEC') or die();
 
 class OscampusModelPathways extends OscampusModelSiteList
 {
+    protected $filter_fields = array(
+        'tag',
+        'text'
+    );
+
     protected function getListQuery()
     {
         $query = $this->getDbo()->getQuery(true)
@@ -24,13 +29,13 @@ class OscampusModelPathways extends OscampusModelSiteList
                 )
             );
 
-        if ($topicId = (int)$this->getState('filter.topic')) {
+        if ($tagId = (int)$this->getState('filter.tag')) {
             $subQuery = $this->getDbo()->getQuery(true)
                 ->select('cp.pathways_id')
                 ->from('#__oscampus_courses_tags AS ct')
                 ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
                 ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-                ->where('ct.tags_id = ' . $topicId)
+                ->where('ct.tags_id = ' . $tagId)
                 ->group('cp.pathways_id');
 
             $query->where(sprintf('pathway.id IN (%s)', $subQuery));
@@ -56,21 +61,6 @@ class OscampusModelPathways extends OscampusModelSiteList
 
     protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
     {
-        $app = JFactory::getApplication();
-
-        $topicId = $this->getUserStateFromRequest($this->context . '.filter.topic', 'filter_topic', null, 'int');
-        $this->setState('filter.topic', $topicId);
-
-        // Text search filter
-        $text = $app->input->getString('filter_text');
-        if ($text && strlen($text) < 3) {
-            $app->enqueueMessage(JText::_('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT'), 'notice');
-            $text = $app->getUserState($this->context . '.filter.text', '');
-        } else {
-            $text = $this->getUserStateFromRequest($this->context . '.filter.text', 'filter_text', null, 'string');
-        }
-        $this->setState('filter.text', $text);
-
         parent::populateState($ordering, $direction);
 
         $this->setState('list.start', 0);
