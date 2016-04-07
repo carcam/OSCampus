@@ -22,7 +22,10 @@ if ($this->lessons) :
             <div class="block4 osc-course-image">
                 <?php
                 $link  = JHtml::_('osc.link.lessonid', $lesson->courses_id, $lesson->id, null, null, true);
-                $image = JHtml::_('image', $lesson->getThumbnail(), $lesson->title);
+                $image = JHtml::_('image',
+                    JURI::root() . '/media/com_oscampus/images/lesson-placeholder.png',
+                    $lesson->title,
+                    'style="background-image:url(' . $lesson->getThumbnail() . '); background-size: 100% auto;"');
                 echo JHtml::_('link', $link, $image);
                 ?>
             </div>
