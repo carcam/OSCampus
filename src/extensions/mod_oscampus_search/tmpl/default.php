@@ -41,7 +41,8 @@ JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
             name="text"
             type="text"
             value="<?php echo $textValue; ?>"
-            class="<?php echo $textClass; ?>"/>
+            class="<?php echo $textClass; ?>"
+            placeholder="Type and press enter"/>
 
         <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced">
             <?php
