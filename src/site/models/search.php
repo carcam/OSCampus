@@ -16,7 +16,7 @@ class OscampusModelSearch extends OscampusModelCourselist
     public function getItems()
     {
         $results = (object)array(
-            'courses' => $this->getCourses(),
+            'courses'  => $this->getCourses(),
             'pathways' => $this->getPathways()
         );
         return $results;
@@ -55,23 +55,6 @@ class OscampusModelSearch extends OscampusModelCourselist
 
     }
 
-    /**
-     * Determines if any filters are currently in play.
-     *
-     * @return bool
-     */
-    public function activeFilters()
-    {
-        $states = $this->getState()->getProperties();
-        foreach ($states as $name => $state) {
-            if (strpos($name, 'filter.') === 0 && $state != '') {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     protected function populateState($ordering = 'course.title', $direction = 'ASC')
     {
         $app = JFactory::getApplication();
@@ -82,7 +65,7 @@ class OscampusModelSearch extends OscampusModelCourselist
 
         // Text search filter
         $minLength = 2;
-        $text = $app->input->getString('text');
+        $text      = $app->input->getString('text');
         if ($text && strlen($text) < $minLength) {
             $app->enqueueMessage(JText::sprintf('COM_OSCAMPUS_WARNING_SEARCH_MINTEXT', $minLength), 'notice');
             $text = $app->getUserState($this->context . '.filter.text', '');

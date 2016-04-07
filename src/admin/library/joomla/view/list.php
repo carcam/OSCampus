@@ -23,8 +23,6 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     public $filterForm = null;
 
-    public $activeFilters = null;
-
     /**
      * Default admin screen title
      *
@@ -65,7 +63,6 @@ abstract class OscampusViewList extends OscampusViewAdmin
         }
 
         $this->filterForm    = $this->model->getFilterForm();
-        $this->activeFilters = $this->model->getActiveFilters();
     }
 
     /**
