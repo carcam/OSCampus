@@ -222,6 +222,11 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
+    public function getIcon()
+    {
+        return $this->renderer->getIcon();
+    }
+
     public function loadAdminForm(JForm $form, Registry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));

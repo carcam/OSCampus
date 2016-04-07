@@ -11,6 +11,7 @@ namespace Oscampus\Lesson\Type;
 use Exception;
 use Joomla\Registry\Registry as Registry;
 use Oscampus\Activity\LessonStatus;
+use Oscampus\Course;
 use Oscampus\Lesson;
 use OscampusFactory;
 use SimpleXMLElement;
@@ -38,6 +39,17 @@ abstract class AbstractType
      * @return string
      */
     abstract public function render();
+
+    /**
+     * Each lesson type should provide a static image icon
+     * fore use in lists
+     *
+     * @return string
+     */
+    public function getIcon()
+    {
+        return Course::DEFAULT_IMAGE;
+    }
 
     /**
      * get the current user state from a cookie
