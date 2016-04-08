@@ -48,6 +48,8 @@ class OscampusModelSearch extends OscampusModelCourselist
 
             $model->setState('filter.text', $this->getState('filter.text'));
             $model->setState('filter.tag', $this->getState('filter.tag'));
+            $model->setState('list.ordering', 'ISNULL(pathway.modified, pathway.created)');
+            $model->setState('list.direction', 'DESC');
 
             return $model->getItems();
         }
@@ -94,7 +96,7 @@ class OscampusModelSearch extends OscampusModelCourselist
                         ->where('ct.tags_id = ' . $tagId);
                 }
 
-                $query->order('lesson.title ASC');
+                $query->order('IFNULL(lesson.modified, lesson.created) DESC');
 
                 $start   = $this->getState('list.start', 0);
                 $limit   = $this->getState('list.limit', 0);
@@ -107,7 +109,7 @@ class OscampusModelSearch extends OscampusModelCourselist
         return array();
     }
 
-    protected function populateState($ordering = 'course.title', $direction = 'ASC')
+    protected function populateState($ordering = 'course.released', $direction = 'DESC')
     {
         $app = JFactory::getApplication();
 
