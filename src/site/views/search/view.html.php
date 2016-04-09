@@ -18,18 +18,12 @@ class OscampusViewSearch extends OscampusViewSite
     /**
      * @var object[]
      */
-    protected $pathways = array();
+    protected $items = null;
 
     /**
-     * @var object[]
+     * @var JPagination
      */
-    protected $courses = array();
-
-    /**
-     * @var object[]
-     */
-    protected $lessons = array();
-
+    protected $pagination = null;
     /**
      * @var object
      */
@@ -40,9 +34,8 @@ class OscampusViewSearch extends OscampusViewSite
         /** @var OscampusModelSearch $model */
         $this->model = $this->getModel();
 
-        $this->pathways = $this->model->getPathways();
-        $this->courses  = $this->model->getCourses();
-        $this->lessons = $this->model->getLessons();
+        $this->items      = $this->model->getItems();
+        $this->pagination = $this->model->getPagination();
 
         parent::display($tpl);
     }

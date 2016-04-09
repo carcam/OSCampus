@@ -10,59 +10,115 @@ defined('_JEXEC') or die();
 
 JLoader::import('courselist', __DIR__);
 
-class OscampusModelSearch extends OscampusModelCourselist
+class OscampusModelSearch extends OscampusModelSiteList
 {
     /**
-     * This method shouldn't be used. So we disable it.
-     * @return array
+     * @var object[]
+     */
+    protected $pathways = null;
+
+    /**
+     * @var object[]
+     */
+    protected $courses = null;
+
+    /**
+     * @var object[]
+     */
+    protected $lessons = null;
+
+    /**
+     * @var int
+     */
+    protected $total = null;
+
+    /**
+     * @return object[]
      */
     public function getItems()
     {
-        return array();
-    }
+        $start = (int)$this->getState('list.start', 0);
+        $limit = (int)$this->getState('list.limit');
 
-    /**
-     * @return object[]
-     */
-    public function getCourses()
-    {
-        $types = (array)$this->getState('show.types');
+        $fullList = array_merge(
+            $this->tagSection($this->getPathways(), 'pathways'),
+            $this->tagSection($this->getCourses(), 'courses'),
+            $this->tagSection($this->getLessons(), 'lessons')
+        );
 
-        if (!$types || in_array('C', $types)) {
-            return parent::getItems();
+        $chunks = array_chunk($fullList, $limit);
+
+        $index = intval($start / $limit);
+        if (isset($chunks[$index])) {
+            return $chunks[$index];
         }
 
         return array();
     }
 
-    /**
-     * @return object[]
-     */
-    public function getPathways()
+    protected function tagSection(array $items, $tag)
     {
-        $types = (array)$this->getState('show.types');
-
-        if (!$types || in_array('P', $types)) {
-            /** @var OscampusModelPathways $model */
-            $model = OscampusModel::getInstance('Pathways');
-
-            $model->setState('filter.text', $this->getState('filter.text'));
-            $model->setState('filter.tag', $this->getState('filter.tag'));
-            $model->setState('list.ordering', 'ISNULL(pathway.modified, pathway.created)');
-            $model->setState('list.direction', 'DESC');
-
-            return $model->getItems();
+        foreach ($items as $item) {
+            $item->section = $tag;
         }
 
-        return array();
+        return $items;
     }
 
     /**
      * @return object[]
      */
-    public function getLessons()
+    protected function getCourses()
     {
-        if (array_filter($this->getActiveFilters())) {
+        if ($this->courses === null) {
+            $this->courses = array();
+
+            $types = (array)$this->getState('show.types');
+
+            if (!$types || in_array('C', $types)) {
+                $model = OscampusModel::getInstance('Courselist');
+                $model->getState();
+
+                $this->setModelState($model, 'course.released', 'DESC');
+
+                $this->courses = $model->getItems();
+            }
+        }
+
+        return $this->courses;
+    }
+
+    /**
+     * @return object[]
+     */
+    protected function getPathways()
+    {
+        if ($this->pathways === null) {
+            $this->pathways = array();
+
+            $types = (array)$this->getState('show.types');
+
+            if (!$types || in_array('P', $types)) {
+                /** @var OscampusModelPathways $model */
+                $model = OscampusModel::getInstance('Pathways');
+
+                $this->setModelState($model, 'ISNULL(pathway.modified, pathway.created)', 'DESC');
+
+                $this->pathways = $model->getItems();
+            }
+        }
+
+        return $this->pathways;
+    }
+
+    /**
+     * @return object[]
+     */
+    protected function getLessons()
+    {
+        if ($this->lessons === null) {
+            $this->lessons = array();
+
             $types = (array)$this->getState('show.types');
             if (!$types || in_array('L', $types)) {
                 $db = $this->getDbo();
@@ -98,23 +154,63 @@ class OscampusModelSearch extends OscampusModelCourselist
 
                 $query->order('IFNULL(lesson.modified, lesson.created) DESC');
 
-                $start   = $this->getState('list.start', 0);
-                $limit   = $this->getState('list.limit', 0);
-                $lessons = $db->setQuery($query, $start, $limit)->loadObjectList();
+                $lessons = $db->setQuery($query)->loadObjectList();
 
-                return $lessons;
+                $this->lessons = $lessons;
             }
         }
 
-        return array();
+        return $this->lessons;
     }
 
-    protected function populateState($ordering = 'course.released', $direction = 'DESC')
+    public function getTotal($section = null)
+    {
+        if ($this->total === null) {
+            $this->getItems();
+
+            $this->total = count($this->courses)
+                + count($this->pathways)
+                + count($this->lessons);
+        }
+
+        if ($section) {
+            $section = strtolower($section);
+            if (property_exists($this, $section)) {
+                return count($this->$section);
+            }
+        }
+
+        return $this->total;
+    }
+
+    protected function setModelState(OscampusModelList $model, $ordering = null, $direction = null)
+    {
+        $state = $this->getState()->getProperties();
+        foreach ($state as $key => $value) {
+            if (strpos($key, 'filter.') === 0) {
+                $model->setState($key, $value);
+            }
+        }
+
+        $model->setState('list.start', 0);
+        $model->setState('list.limit', 0);
+
+        if ($ordering) {
+            $model->setState('list.ordering', $ordering);
+            $model->setState('list.direction', $direction);
+        }
+    }
+
+    protected function populateState($ordering = null, $direction = null)
     {
         $app = JFactory::getApplication();
 
         // Display result types
-        $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', array(), 'array');
+        $types = $app->input->get('types');
+        if ($types === null) {
+            $app->input->set('types', array());
+        }
+        $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', null, 'array');
         $this->setState('show.types', array_filter($types));
 
         // Text search filter
@@ -155,9 +251,5 @@ class OscampusModelSearch extends OscampusModelCourselist
         $this->setState('filter.progress', $progress);
 
         parent::populateState($ordering, $direction);
-
-        // Ignore pagination for now
-        $this->setState('list.start', 0);
-        $this->setState('list.limit');
     }
 }

@@ -10,7 +10,7 @@ use Oscampus\Activity\CourseStatus;
 
 defined('_JEXEC') or die();
 
-abstract class OscampusModelCourselist extends OscampusModelSiteList
+class OscampusModelCourselist extends OscampusModelSiteList
 {
     protected $filter_fields = array(
         'difficulty',

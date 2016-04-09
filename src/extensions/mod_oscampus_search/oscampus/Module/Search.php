@@ -306,7 +306,6 @@ class Search
             $html[] = '<div><input ' . OscampusUtilitiesArray::toString($attribs) . '/> ';
             $html[] = JText::_($label) . '</div>';
         }
-        $html[] = '<input type="hidden" name="types[]" value=""/>';
 
         return join("\n", $html);
     }

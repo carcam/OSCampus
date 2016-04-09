@@ -18,13 +18,15 @@ class OscampusModelPathways extends OscampusModelSiteList
 
     protected function getListQuery()
     {
+        $user = $this->getState('user');
+
         $query = $this->getDbo()->getQuery(true)
             ->select('*')
             ->from('#__oscampus_pathways AS pathway')
             ->where(
                 array(
                     'pathway.published = 1',
-                    $this->whereAccess('pathway.access'),
+                    $this->whereAccess('pathway.access', $user),
                     'pathway.users_id = 0'
                 )
             );
@@ -61,6 +63,8 @@ class OscampusModelPathways extends OscampusModelSiteList
 
     protected function populateState($ordering = 'pathway.ordering', $direction = 'ASC')
     {
+        $this->setState('user', OscampusFactory::getUser());
+
         parent::populateState($ordering, $direction);
 
         $this->setState('list.start', 0);

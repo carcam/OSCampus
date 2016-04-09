@@ -97,6 +97,9 @@
             <file>/components/com_oscampus/models/courses.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_footer.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_header.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_courses.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_lessons.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_pathways.php</file>
         </obsolete>
     </alledia>
 </extension>

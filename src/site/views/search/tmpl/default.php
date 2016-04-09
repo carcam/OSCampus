@@ -9,6 +9,9 @@
 defined('_JEXEC') or die();
 
 /** @var OscampusViewSearch $this */
+
+JHtml::_('behavior.core');
+
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-search'); ?>" id="oscampus">
     <?php
@@ -20,21 +23,42 @@ defined('_JEXEC') or die();
         <?php
     endif;
 
-    $activeFilters = $this->model->getActiveFilters();
-    $types         = (array)$this->model->getState('show.types');
+    $lastSection = null;
+    foreach ($this->items as $this->item) :
+        if ($this->item->section != $lastSection) :
+            $heading = 'COM_OSCAMPUS_SEARCH_RESULTS_' . $this->item->section;
+            $count   = $this->model->getTotal($this->item->section);
+            ?>
+            <div class="osc-alert-success m-bottom"><i class="fa fa-info-circle"></i>
+                <?php echo JText::plural($heading, $count); ?>
+            </div>
+            <?php
+        endif;
 
-    if (!$types || in_array('P', $types)) :
-        echo $this->loadTemplate('pathways');
-    endif;
+        switch ($this->item->section) :
+            case 'pathways':
+                echo $this->loadViewTemplate('pathways', 'pathway');
+                break;
 
-    if ((!$types && $activeFilters) || in_array('C', $types)) :
-        echo $this->loadTemplate('courses');
-    endif;
+            case 'courses':
+                echo $this->loadViewTemplate('pathway', 'course');
+                break;
 
-    if ((!$types && $activeFilters) || in_array('L', $types)) :
-        echo $this->loadTemplate('lessons');
-    endif;
+            case 'lessons':
+                echo $this->loadTemplate('lesson');
+                break;
 
+        endswitch;
+
+        $lastSection = $this->item->section;
+    endforeach;
     ?>
+    <div>
+        <form action="" method="post" name="adminForm" id="adminForm">
+            <div class="pagination">
+                <?php echo $this->pagination->getListFooter(); ?>
+            </div>
+        </form>
+    </div>
 </div>
 

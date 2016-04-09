@@ -14,6 +14,12 @@ jimport('joomla.application.component.modellist');
 
 abstract class OscampusModelSiteList extends OscampusModelList
 {
+    /**
+     * @param string $property
+     * @param mixed  $default
+     *
+     * @return JObject
+     */
     public function getState($property = null, $default = null)
     {
         $init  = !$this->__state_set;
