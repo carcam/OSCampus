@@ -459,6 +459,54 @@
     margin-bottom: 40px;
 }
 
+/* Pagination
+ ========================================================================== */
+#oscampus.osc-container .osc-pagination {
+    margin-top: 10px;
+}
+
+#oscampus.osc-container .osc-pagination ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+    float: left;
+    width: 80%;
+}
+
+#oscampus.osc-container .osc-pagination ul li {
+    display: inline-block;
+    float: left;
+    margin-right: 1px;
+}
+
+#oscampus.osc-container .osc-pagination ul li > span {
+    color: #999;
+    background: #CCC;
+}
+
+#oscampus.osc-container .osc-pagination ul li > a {
+    background: #2184cd;
+    color: #fff;
+}
+
+#oscampus.osc-container .osc-pagination ul li > span,
+#oscampus.osc-container .osc-pagination ul li > a {
+    display: inline-block;
+    padding: 4px 8px;
+    width: 18px;
+}
+
+#oscampus.osc-container .osc-pagination .pull-right {
+    float: right;
+    width: 20%;
+}
+
+#oscampus.osc-container .osc-pagination #limit {
+    width: 60px;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+
 /* Listing
  ========================================================================== */
 #oscampus.osc-container .osc-table {

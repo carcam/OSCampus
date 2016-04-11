@@ -63,7 +63,7 @@ JHtml::_('behavior.core');
     ?>
     <div>
         <form action="" method="post" name="adminForm" id="adminForm">
-            <div class="pagination">
+            <div class="osc-pagination">
                 <?php echo $this->pagination->getListFooter(); ?>
             </div>
         </form>
