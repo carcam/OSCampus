@@ -66,8 +66,5 @@ class OscampusModelPathways extends OscampusModelSiteList
         $this->setState('user', OscampusFactory::getUser());
 
         parent::populateState($ordering, $direction);
-
-        $this->setState('list.start', 0);
-        $this->setState('list.limit', 0);
     }
 }

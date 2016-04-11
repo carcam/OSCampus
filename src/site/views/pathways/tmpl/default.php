@@ -11,6 +11,9 @@ defined('_JEXEC') or die();
 /**
  * @var OscampusViewPathways $this
  */
+
+JHtml::_('behavior.core');
+
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
     <?php
@@ -39,4 +42,17 @@ defined('_JEXEC') or die();
         <?php
     endif;
     ?>
+</div>
+<div>
+    <form action="" method="post" name="adminForm" id="adminForm">
+        <div class="pagination">
+            <?php
+            if ($this->pagination->getPaginationPages()) :
+                echo $this->pagination->getListFooter();
+            else :
+                echo $this->pagination->getLimitBox();
+            endif;
+            ?>
+        </div>
+    </form>
 </div>

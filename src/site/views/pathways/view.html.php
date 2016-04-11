@@ -16,6 +16,11 @@ class OscampusViewPathways extends OscampusViewSite
     protected $items = array();
 
     /**
+     * @var JPagination
+     */
+    protected $pagination = null;
+
+    /**
      * @var object
      */
     protected $item = null;
@@ -26,6 +31,7 @@ class OscampusViewPathways extends OscampusViewSite
         $model = $this->getModel();
 
         $this->items = $model->getItems();
+        $this->pagination = $model->getPagination();
 
         parent::display($tpl);
     }
