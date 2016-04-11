@@ -46,7 +46,7 @@ class OscampusModelCourse extends OscampusModelSite
 
         $course = $db->setQuery($query)->loadObject();
         if (!$course) {
-            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND'), 404);
         }
 
         if (empty($course->image)) {
