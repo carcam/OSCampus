@@ -518,7 +518,7 @@
                                     form.submit();
 
                                 } else {
-                                    $.Oscampus.wistia.overlay.refused(data.error);
+                                    $.Oscampus.wistia.overlay.refused(response.error);
                                 }
                             },
                             complete: function() {
