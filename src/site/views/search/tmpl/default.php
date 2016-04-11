@@ -23,6 +23,14 @@ JHtml::_('behavior.core');
         <?php
     endif;
 
+    if (!$this->items) :
+        ?>
+        <div class="osc-alert-warning m-bottom"><i class="fa fa-info-circle"></i>
+            <?php echo JText::_('COM_OSCAMPUS_SEARCH_RESULTS_NOTFOUND'); ?>
+        </div>
+        <?php
+    endif;
+
     $lastSection = null;
     foreach ($this->items as $this->item) :
         if ($this->item->section != $lastSection) :
