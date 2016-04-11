@@ -56,7 +56,7 @@ class Api
     public function __construct($apiKey)
     {
         if (empty($apiKey)) {
-            throw new Exception(JText::_('COM_OSCAMPUS_WISTIA_ERROR_NOAPIKEY'), 500);
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOAPIKEY'), 500);
         }
         $this->apiKey = $apiKey;
     }
