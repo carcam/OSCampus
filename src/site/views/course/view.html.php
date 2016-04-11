@@ -58,9 +58,14 @@ class OscampusViewCourse extends OscampusViewSite
                 $this->course->introtext ?: $this->course->description
             );
 
-            parent::display($tpl);
         } catch (Exception $e) {
-            echo $e->getMessage();
+            if ($e->getCode() == 404) {
+                $this->setLayout('notfound');
+            } else {
+                throw $e;
+            }
         }
+
+        parent::display($tpl);
     }
 }
