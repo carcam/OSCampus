@@ -74,9 +74,5 @@ class OscampusModelPathway extends OscampusModelCourselist
         $this->setState('pathway.id', $pathwayId);
 
         parent::populateState($ordering, $direction);
-
-        // Ignore pagination for now
-        $this->setState('list.start', 0);
-        $this->setState('list.limit');
     }
 }

@@ -23,6 +23,11 @@ class OscampusViewPathway extends OscampusViewSite
     protected $items = array();
 
     /**
+     * @var JPagination
+     */
+    protected $pagination = null;
+
+    /**
      * @var object
      */
     protected $item = null;
@@ -36,8 +41,9 @@ class OscampusViewPathway extends OscampusViewSite
     {
         $this->model = $this->getModel();
 
-        $this->items   = $this->model->getItems();
-        $this->pathway = $this->model->getPathway();
+        $this->items      = $this->model->getItems();
+        $this->pathway    = $this->model->getPathway();
+        $this->pagination = $this->model->getPagination();
 
         $pathway = JFactory::getApplication()->getPathway();
         $pathway->addItem($this->pathway->title);
