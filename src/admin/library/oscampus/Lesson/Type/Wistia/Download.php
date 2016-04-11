@@ -74,7 +74,7 @@ class Download
 
             // Check the download limit
             $query = $db->getQuery(true)
-                ->select('COUNT(*)')
+                ->select('COUNT(DISTINCT media_hashed_id)')
                 ->from('#__oscampus_wistia_downloads')
                 ->where(
                     array(
