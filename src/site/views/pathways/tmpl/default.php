@@ -42,17 +42,11 @@ JHtml::_('behavior.core');
         <?php
     endif;
     ?>
-</div>
-<div>
-    <form action="" method="post" name="adminForm" id="adminForm">
-        <div class="pagination">
-            <?php
-            if ($this->pagination->getPaginationPages()) :
-                echo $this->pagination->getListFooter();
-            else :
-                echo $this->pagination->getLimitBox();
-            endif;
-            ?>
-        </div>
-    </form>
+    <div>
+        <form action="" method="post" name="adminForm" id="adminForm">
+            <div class="osc-pagination">
+                <?php echo $this->pagination->getListFooter(); ?>
+            </div>
+        </form>
+    </div>
 </div>
