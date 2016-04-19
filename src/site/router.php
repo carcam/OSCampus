@@ -149,7 +149,7 @@ class OscampusRouter
                 $query['Itemid'] = $menuQuery['Itemid'];
 
             } else {
-                $query = $route->getQuery($view);
+                $query = array_merge($query, $route->getQuery($view));
                 if (empty($query['Itemid'])) {
                     $segments[] = $view;
                     if (!empty($query['view'])) {
