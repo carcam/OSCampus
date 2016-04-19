@@ -79,7 +79,7 @@
                 .first()
                 .sortable({
                     handle: options.button.order,
-                    cancel: ''
+                    cancel: 'input,textarea,select,option'
                 });
         },
 
