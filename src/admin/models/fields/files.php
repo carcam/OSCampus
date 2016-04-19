@@ -66,14 +66,16 @@ class OscampusFormFieldFiles extends JFormFieldList
         );
 
         $title = sprintf(
-            '<input type="text" name="%s[title][]" value="%s" size="40"/>',
+            '<input type="text" name="%s[title][]" value="%s" size="40" placeholder="%s"/>',
             $this->name,
-            empty($file->title) ? '' : htmlspecialchars($file->title)
+            empty($file->title) ? '' : htmlspecialchars($file->title),
+            JText::_('COM_OSCAMPUS_FILES_TITLE_PLACEHOLDER')
         );
 
         $description = sprintf(
-            '<textarea name="%s[description][]">%s</textarea>',
+            '<textarea name="%s[description][]" placeholder="%s">%s</textarea>',
             $this->name,
+            JText::_('COM_OSCAMPUS_FILES_DESCRIPTION_PLACEHOLDER'),
             empty($file->description) ? '' : htmlspecialchars($file->description)
         );
 
