@@ -89,8 +89,8 @@ class OscampusFormFieldFiles extends JFormFieldList
             . $title
             . '<br class="clr"/>' . $description
             . '<br class="clr"/>' . $this->getFileList($file->path)
-            . $this->getLessonOptions($lessonId)
-            . '<br class="clr"/>' . $upload
+            . JText::_('COM_OSCAMPUS_FILES_UPLOAD_PLACEHOLDER') . ' ' . $upload
+            . '<br class="clr"/>' . $this->getLessonOptions($lessonId)
             . '</li>';
 
         return $html;
