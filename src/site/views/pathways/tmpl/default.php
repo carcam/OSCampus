@@ -42,11 +42,11 @@ JHtml::_('behavior.core');
         <?php
     endif;
     ?>
-    <div>
-        <form action="" method="post" name="adminForm" id="adminForm">
-            <div class="osc-pagination">
-                <?php echo $this->pagination->getListFooter(); ?>
-            </div>
-        </form>
+    <div class="pagination">
+        <p class="counter pull-right">
+            <?php echo $this->pagination->getPagesCounter(); ?>
+        </p>
+        <?php echo $this->pagination->getPagesLinks(); ?>
+        <?php echo $this->pagination->getLimitBox(); ?>
     </div>
 </div>
