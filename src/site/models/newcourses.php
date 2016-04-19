@@ -27,6 +27,10 @@ class OscampusModelNewcourses extends OscampusModelCourselist
 
         $query->where('course.released >= ' . $db->quote($cutoff->toSql()));
 
+        $ordering = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+        $query->order($ordering . ' ' . $direction);
+
         return $query;
     }
 

@@ -36,6 +36,10 @@ class OscampusModelPathway extends OscampusModelCourselist
             $query->select('0 AS pathways_id');
         }
 
+        $ordering  = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+        $query->order($ordering . ' ' . $direction);
+
         return $query;
     }
 
