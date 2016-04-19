@@ -41,12 +41,7 @@ JHtml::_('behavior.core');
         ?>
         <?php
     endif;
+    
+    echo JLayoutHelper::render('pagination', $this->pagination);
     ?>
-    <div class="pagination">
-        <p class="counter pull-right">
-            <?php echo $this->pagination->getPagesCounter(); ?>
-        </p>
-        <?php echo $this->pagination->getPagesLinks(); ?>
-        <?php echo $this->pagination->getLimitBox(); ?>
-    </div>
 </div>
