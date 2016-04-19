@@ -17,6 +17,14 @@ JHtml::_('behavior.core');
         <h1><?php echo $this->pathway->title; ?></h1>
     </div>
 
+    <div class="osc-section osc-course-list">
+        <div class="block12">
+            <div class="osc-pathway-description">
+                <?php echo $this->pathway->description; ?>
+            </div>
+        </div>
+    </div>
+
     <?php
     if (!$this->items) :
         ?>

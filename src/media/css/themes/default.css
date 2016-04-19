@@ -709,6 +709,17 @@
     text-align: right;
 }
 
+#oscampus.osc-container .osc-pathway-description {
+    background: #f2f2f2;
+    color: #666;
+    padding: 30px;
+    margin-bottom: 5px;
+}
+
+#oscampus.osc-container .osc-pathway-description > p {
+    margin-bottom: 0;
+}
+
 /* Course
  ========================================================================== */
 #oscampus.osc-container .osc-course-info {
