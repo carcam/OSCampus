@@ -17,7 +17,6 @@ defined('_JEXEC') or die();
 
 $pages = $displayData->getPaginationPages();
 
-
 $displayLink = function (JPaginationObject $page, $title = null) {
     $text = $title ?: $page->text;
     if ($page->link) {
