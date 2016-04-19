@@ -6,8 +6,6 @@
  * @license
  */
 
-use Oscampus\String;
-
 defined('_JEXEC') or die();
 
 
@@ -105,7 +103,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setToolbar()
     {
-        $inflector = String\Inflector::getInstance();
+        $inflector = Oscampus\String\Inflector::getInstance();
 
         $plural   = $this->getName();
         $singular = $inflector->toSingular($plural);

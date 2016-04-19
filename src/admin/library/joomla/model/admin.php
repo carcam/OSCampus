@@ -7,7 +7,6 @@
  */
 
 use Joomla\Registry\Registry as Registry;
-use Oscampus\String;
 
 defined('_JEXEC') or die();
 
@@ -29,7 +28,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {
         if (empty($type)) {
-            $inflector = String\Inflector::getInstance();
+            $inflector = Oscampus\String\Inflector::getInstance();
             $type      = $inflector->toPlural($this->name);
         }
         return OscampusTable::getInstance($type, $prefix, $config);
