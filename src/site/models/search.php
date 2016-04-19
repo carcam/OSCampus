@@ -102,8 +102,7 @@ class OscampusModelSearch extends OscampusModelSiteList
                 /** @var OscampusModelPathways $model */
                 $model = OscampusModel::getInstance('Pathways');
 
-                $this->setModelState($model, 'ISNULL(pathway.modified, pathway.created)', 'DESC');
-
+                $this->setModelState($model, 'IFNULL(pathway.modified, pathway.created)', 'DESC');
                 $this->pathways = $model->getItems();
             }
         }
@@ -185,6 +184,9 @@ class OscampusModelSearch extends OscampusModelSiteList
 
     protected function setModelState(OscampusModelList $model, $ordering = null, $direction = null)
     {
+        // Make sure state get initialized
+        $model->getState();
+
         $state = $this->getState()->getProperties();
         foreach ($state as $key => $value) {
             if (strpos($key, 'filter.') === 0) {
