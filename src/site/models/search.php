@@ -15,17 +15,17 @@ class OscampusModelSearch extends OscampusModelSiteList
     /**
      * @var object[]
      */
-    protected $pathways = null;
+    protected $pathway = null;
 
     /**
      * @var object[]
      */
-    protected $courses = null;
+    protected $course = null;
 
     /**
      * @var object[]
      */
-    protected $lessons = null;
+    protected $lesson = null;
 
     /**
      * @var int
@@ -41,9 +41,9 @@ class OscampusModelSearch extends OscampusModelSiteList
         $limit = (int)$this->getState('list.limit');
 
         $fullList = array_merge(
-            $this->tagSection($this->getPathways(), 'pathways'),
-            $this->tagSection($this->getCourses(), 'courses'),
-            $this->tagSection($this->getLessons(), 'lessons')
+            $this->tagSection($this->getPathways(), 'pathway'),
+            $this->tagSection($this->getCourses(), 'course'),
+            $this->tagSection($this->getLessons(), 'lesson')
         );
 
         $chunks = array_chunk($fullList, $limit);
@@ -70,8 +70,8 @@ class OscampusModelSearch extends OscampusModelSiteList
      */
     protected function getCourses()
     {
-        if ($this->courses === null) {
-            $this->courses = array();
+        if ($this->course === null) {
+            $this->course = array();
 
             $types = (array)$this->getState('show.types');
 
@@ -81,11 +81,11 @@ class OscampusModelSearch extends OscampusModelSiteList
 
                 $this->setModelState($model, 'course.released', 'DESC');
 
-                $this->courses = $model->getItems();
+                $this->course = $model->getItems();
             }
         }
 
-        return $this->courses;
+        return $this->course;
     }
 
     /**
@@ -93,8 +93,8 @@ class OscampusModelSearch extends OscampusModelSiteList
      */
     protected function getPathways()
     {
-        if ($this->pathways === null) {
-            $this->pathways = array();
+        if ($this->pathway === null) {
+            $this->pathway = array();
 
             $types = (array)$this->getState('show.types');
 
@@ -103,11 +103,11 @@ class OscampusModelSearch extends OscampusModelSiteList
                 $model = OscampusModel::getInstance('Pathways');
 
                 $this->setModelState($model, 'IFNULL(pathway.modified, pathway.created)', 'DESC');
-                $this->pathways = $model->getItems();
+                $this->pathway = $model->getItems();
             }
         }
 
-        return $this->pathways;
+        return $this->pathway;
     }
 
     /**
@@ -115,8 +115,8 @@ class OscampusModelSearch extends OscampusModelSiteList
      */
     protected function getLessons()
     {
-        if ($this->lessons === null) {
-            $this->lessons = array();
+        if ($this->lesson === null) {
+            $this->lesson = array();
 
             $types = (array)$this->getState('show.types');
             if (!$types || in_array('L', $types)) {
@@ -155,11 +155,11 @@ class OscampusModelSearch extends OscampusModelSiteList
 
                 $lessons = $db->setQuery($query)->loadObjectList();
 
-                $this->lessons = $lessons;
+                $this->lesson = $lessons;
             }
         }
 
-        return $this->lessons;
+        return $this->lesson;
     }
 
     public function getTotal($section = null)
@@ -167,9 +167,9 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->total === null) {
             $this->getItems();
 
-            $this->total = count($this->courses)
-                + count($this->pathways)
-                + count($this->lessons);
+            $this->total = count($this->course)
+                + count($this->pathway)
+                + count($this->lesson);
         }
 
         if ($section) {

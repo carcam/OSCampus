@@ -34,11 +34,11 @@ JHtml::_('behavior.core');
         </div>
         <?php
     else :
-        foreach ($this->items as $this->item) {
-            echo $this->loadTemplate('course');
+        foreach ($this->items as $item) {
+            echo JLayoutHelper::render('course', $item);
         }
     endif;
-    
+
     echo JLayoutHelper::render('pagination', $this->pagination);
     ?>
 </div>

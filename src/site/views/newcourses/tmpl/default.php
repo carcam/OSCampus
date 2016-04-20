@@ -23,8 +23,8 @@ defined('_JEXEC') or die();
 
     <?php
     if ($this->items) :
-        foreach ($this->items as $this->item) :
-            echo $this->loadViewTemplate('pathway', 'course');
+        foreach ($this->items as $item) :
+            echo JLayoutHelper::render('course', $item);
         endforeach;
 
     else :

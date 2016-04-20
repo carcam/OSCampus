@@ -32,10 +32,10 @@ JHtml::_('behavior.core');
     endif;
 
     $lastSection = null;
-    foreach ($this->items as $this->item) :
-        if ($this->item->section != $lastSection) :
-            $heading = 'COM_OSCAMPUS_SEARCH_RESULTS_' . $this->item->section;
-            $count   = $this->model->getTotal($this->item->section);
+    foreach ($this->items as $item) :
+        if ($item->section != $lastSection) :
+            $heading = 'COM_OSCAMPUS_SEARCH_RESULTS_' . $item->section;
+            $count   = $this->model->getTotal($item->section);
             ?>
             <div class="osc-alert-success m-bottom"><i class="fa fa-info-circle"></i>
                 <?php echo JText::plural($heading, $count); ?>
@@ -43,22 +43,8 @@ JHtml::_('behavior.core');
             <?php
         endif;
 
-        switch ($this->item->section) :
-            case 'pathways':
-                echo $this->loadViewTemplate('pathways', 'pathway');
-                break;
-
-            case 'courses':
-                echo $this->loadViewTemplate('pathway', 'course');
-                break;
-
-            case 'lessons':
-                echo $this->loadTemplate('lesson');
-                break;
-
-        endswitch;
-
-        $lastSection = $this->item->section;
+        echo JLayoutHelper::render($item->section, $item);
+        $lastSection = $item->section;
     endforeach;
 
     echo JLayoutHelper::render('pagination', $this->pagination);

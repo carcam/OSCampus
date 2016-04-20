@@ -8,9 +8,17 @@
 
 defined('_JEXEC') or die();
 
-$item  = $this->item;
+/**
+ * @var JLayoutFile $this
+ * @var object      $displayData
+ * @var string      $layoutOutput
+ * @var string      $path
+ */
+
+$item  = $displayData;
 $link  = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
 $image = JHtml::_('image', $item->image, $item->title);
+
 ?>
 <div class="osc-section osc-course-item">
     <div class="block4 osc-course-image">

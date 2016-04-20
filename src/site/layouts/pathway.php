@@ -8,21 +8,27 @@
 
 defined('_JEXEC') or die();
 
-/** @var OscampusViewPathways $this */
+/**
+ * @var JLayoutFile $this
+ * @var object      $displayData
+ * @var string      $layoutOutput
+ * @var string      $path
+ */
 
+$item = $displayData;
 ?>
 <div class="osc-section osc-course-list">
     <div class="block4 osc-course-image">
         <?php
-        $link  = JHtml::_('osc.pathway.link', $this->item, null, null, true);
-        $image = JHtml::_('image', $this->item->image, $this->item->title);
+        $link  = JHtml::_('osc.pathway.link', $item, null, null, true);
+        $image = JHtml::_('image', $item->image, $item->title);
         echo JHtml::_('link', $link, $image);
         ?>
     </div>
     <div class="block8 osc-course-description">
-        <h2><?php echo JHtml::_('link', $link, $this->item->title); ?></h2>
+        <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
 
-        <?php echo $this->item->description; ?>
+        <?php echo $item->description; ?>
     </div>
 </div>
 <!-- .osc-section -->

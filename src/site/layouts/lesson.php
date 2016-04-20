@@ -8,8 +8,15 @@
 
 defined('_JEXEC') or die();
 
+/**
+ * @var JLayoutFile $this
+ * @var object      $displayData
+ * @var string      $layoutOutput
+ * @var string      $path
+ */
+
 $lesson = OscampusFactory::getContainer()->lesson;
-$lesson->loadById($this->item->id);
+$lesson->loadById($displayData->id);
 ?>
 <div class="osc-section osc-course-list">
     <div class="block4 osc-course-image">

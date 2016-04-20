@@ -35,13 +35,13 @@ JHtml::_('behavior.core');
         </div>
         <?php
     else :
-        foreach ($this->items as $this->item) :
-            echo $this->loadTemplate('pathway');
+        foreach ($this->items as $item) :
+            echo JLayoutHelper::render('pathway', $item);
         endforeach;
         ?>
         <?php
     endif;
-    
+
     echo JLayoutHelper::render('pagination', $this->pagination);
     ?>
 </div>
