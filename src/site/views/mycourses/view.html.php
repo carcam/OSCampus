@@ -6,12 +6,14 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
+
 defined('_JEXEC') or die();
 
 class OscampusViewMycourses extends OscampusViewSite
 {
     /**
-     * @var object[]
+     * @var CourseStatus[]
      */
     protected $items = null;
 

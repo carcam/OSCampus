@@ -9,14 +9,13 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelTags extends OscampusModelList
+class OscampusModelTags extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id', 'tag.id',
-            'title', 'tag.title',
-            'alias', 'tag.alias'
+            'tag.id',
+            'tag.title'
         );
 
         parent::__construct($config);
@@ -48,11 +47,11 @@ class OscampusModelTags extends OscampusModelList
         return $query;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'tag.id', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search');
         $this->setState('filter.search', $search);
 
-        parent::populateState('tag.title', 'ASC');
+        parent::populateState($ordering, $direction);
     }
 }

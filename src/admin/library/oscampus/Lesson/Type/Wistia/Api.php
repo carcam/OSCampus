@@ -27,6 +27,11 @@ class Api
     const USER_NAME = 'api';
 
     /**
+     * @var string
+     */
+    public $response = null;
+
+    /**
      *
      * @var string
      */
@@ -51,7 +56,7 @@ class Api
     public function __construct($apiKey)
     {
         if (empty($apiKey)) {
-            throw new Exception(JText::_('COM_OSCAMPUS_WISTIA_ERROR_NOAPIKEY'), 500);
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOAPIKEY'), 500);
         }
         $this->apiKey = $apiKey;
     }
@@ -116,18 +121,69 @@ class Api
 
     /**
      * Gets the Still Image version of the video
-     * @TODO: Possibly need a strategy to extract thumbnail from video asset
      *
      * @param string $id
+     * @param int    $width
+     * @param int    $height
      *
      * @return null|Video
      */
-    public function getThumbnail($id)
+    public function getThumbnail($id, $width = null, $height = null)
     {
         if ($media = $this->getMedia($id)) {
+            // No specific size mentioned so take the less expensive default
             foreach ($media->assets as $index => $asset) {
                 if ($asset->type == 'StillImageFile') {
                     $thumb = new Video($media, $index);
+
+                    if ($width || $height) {
+                        list($oldWidth, $oldHeight) = $thumb->size;
+                        $fileName = basename($thumb->url);
+                        $fileName = substr($fileName, 0, strrpos($fileName, '.'));
+
+                        if (!$width) {
+                            $width = intval(($height / $oldHeight) * $oldWidth);
+                        } elseif (!$height) {
+                            $height = intval(($width / $oldWidth) * $oldHeight);
+                        }
+
+                        $localFile = sprintf(
+                            'cache/wistia/' . $fileName . '-%sX%s.jpg',
+                            $width ?: '',
+                            $height ?: ''
+                        );
+
+                        $path = OSCAMPUS_MEDIA . '/images/' . $localFile;
+                        if (!is_file($path)) {
+                            $sourceURL = substr($thumb->url, 0, strrpos($thumb->url, '.')) . '.jpg';
+                            $source    = imagecreatefromjpeg($sourceURL);
+
+                            if ($source) {
+                                $resized = imagecreatetruecolor($width, $height);
+
+                                imagecopyresampled(
+                                    $resized,
+                                    $source,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    $width,
+                                    $height,
+                                    $oldWidth,
+                                    $oldHeight
+                                );
+
+                                imagejpeg($resized, $path);
+                                imagedestroy($source);
+                                imagedestroy($resized);
+                            }
+                        }
+
+                        if (is_file($path)) {
+                            $asset->url = \JHtml::_('image', 'com_oscampus/' . $localFile, null, null, true, true);
+                        }
+                    }
 
                     // Convert to ssl when needed
                     if (!empty($_SERVER['HTTPS'])) {
@@ -142,7 +198,6 @@ class Api
                 }
             }
         }
-
         return null;
     }
 
@@ -163,7 +218,7 @@ class Api
             $url .= '?' . http_build_query($params);
         }
 
-        $result = $this->send($url, $params);
+        $result = $this->send($url);
 
         $result = json_decode($result);
         return $result;
@@ -190,14 +245,13 @@ class Api
             )
         );
 
-        $result = curl_exec($ch);
-        $info   = curl_getinfo($ch);
+        $this->response = curl_exec($ch);
 
+        $info = curl_getinfo($ch);
         curl_close($ch);
-        $this->response = $result;
 
         JLog::add('Response: ' . json_encode($info), JLog::INFO, 'oscampus');
 
-        return $result;
+        return $this->response;
     }
 }

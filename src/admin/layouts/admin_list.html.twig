@@ -21,9 +21,7 @@
             name="adminForm"
             id="adminForm">
 
-        {% block filter_tools %}
-            {{ list_macro.filter_tools(filters) }}
-        {% endblock %}
+       {% include ('admin_filters.html.twig') %}
 
         {% if not items %}
             <div class="alert alert-no-items">
@@ -42,7 +40,7 @@
 
                 <tbody>
                 {% for item in items %}
-                    <tr class="row{{ loop.index0 % 2 }}">
+                    <tr class="row{{ loop.index0 % 2 }}" sortable-group-id="{{ view.getSortGroupId(item) }}">
                         {% block list_item %}
                             <td></td>
                         {% endblock %}
@@ -59,8 +57,6 @@
         {% block list_hidden %}
             <input type="hidden" name="task" value="{{ task }}"/>
             <input type="hidden" name="boxchecked" value="0"/>
-            <input type="hidden" name="filter_order" value="{{ ordering.order }}"/>
-            <input type="hidden" name="filter_order_Dir" value="{{ ordering.direction }}"/>
             {{ html('form.token')|raw }}
         {% endblock %}
     </form>

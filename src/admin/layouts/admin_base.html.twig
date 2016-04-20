@@ -9,12 +9,8 @@
 
 {% block page_setup %}
     {{ html('osc.jquery')|raw }}
-    {% if joomla2 %}
-        {{ html('behavior.tooltip')|raw }}
-    {% else %}
-        {{ html('bootstrap.tooltip')|raw }}
-        {{ html('formbehavior.chosen', 'select')|raw }}
-    {% endif %}
+    {{ html('bootstrap.tooltip')|raw }}
+    {{ html('formbehavior.chosen', 'select')|raw }}
 {% endblock %}
 
 {% if show_sidebar %}
@@ -23,6 +19,7 @@
     </div>
     {% set class = ' class="span10"' %}
 {% endif %}
+
 <div id="j-main-container"{{ class }}>
     {% block main_content %}<p>Under Construction</p>{% endblock %}
 </div>

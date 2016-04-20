@@ -6,6 +6,7 @@
  * @license
  */
 
+use Joomla\Registry\Registry as Registry;
 use Oscampus\Course;
 use Oscampus\File;
 use Oscampus\Lesson\Properties;
@@ -38,19 +39,20 @@ class OscampusModelCourse extends OscampusModelSite
                 array(
                     'course.id = ' . (int)$this->getState('course.id'),
                     'course.published = 1',
-                    'course.released <= CURDATE()'
+                    $this->whereAccess('course.access'),
+                    'course.released <= NOW()'
                 )
             );
 
         $course = $db->setQuery($query)->loadObject();
         if (!$course) {
-            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND', 404));
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND'), 404);
         }
 
         if (empty($course->image)) {
             $course->image = Course::DEFAULT_IMAGE;
         }
-        $course->metadata = new JRegistry($course->metadata);
+        $course->metadata = new Registry($course->metadata);
 
         return $course;
     }
@@ -64,8 +66,6 @@ class OscampusModelCourse extends OscampusModelSite
     {
         $db  = JFactory::getDbo();
         $cid = (int)$this->getState('course.id');
-
-        $user   = OscampusFactory::getUser();
 
         $query = $db->getQuery(true)
             ->select(
@@ -92,7 +92,8 @@ class OscampusModelCourse extends OscampusModelSite
                 ->where(
                     array(
                         'course.published = 1',
-                        'course.released <= CURDATE()',
+                        $this->whereAccess('course.access'),
+                        'course.released <= NOW()',
                         'course.id != ' . $cid,
                         'teacher.id = ' . $teacher->id,
                     )
@@ -209,7 +210,7 @@ class OscampusModelCourse extends OscampusModelSite
 
         if ($uid > 0 && $cid > 0) {
             $this->activity->setUser($uid);
-            return $this->activity->getCourse($cid);
+            return $this->activity->getCourseLessons($cid);
         }
 
         return array();

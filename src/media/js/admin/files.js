@@ -54,24 +54,42 @@
                     var blocks = $(container).find(options.fileBlock);
 
                     if (blocks[0]) {
-                        var newElement = $.Oscampus.admin.files.clearBlock($(blocks[0]).clone(true));
-                        $(container.find('ul')).append(newElement)
+                        var newElement  = $(blocks[0]).clone(true),
+                            chznSelects = newElement.find('select.chzn-done');
+
+                        newElement = $.Oscampus.admin.files.clearBlock(newElement);
+
+                        // Handle jui chosen selectors
+                        if (chznSelects[0]) {
+                            newElement.find('.chzn-container').remove();
+                            chznSelects
+                                .removeClass('chzn-done')
+                                .show()
+                                .removeData('chosen')
+                                .chosen();
+                        }
+
+                        $(container.children('ul').first()).append(newElement)
                     }
                 });
 
             $(options.button.order).css('cursor', 'move');
-            container.find('ul').sortable({
-                handle: options.button.order,
-                cancel: ''
-            });
+            container
+                .children('ul')
+                .first()
+                .sortable({
+                    handle: options.button.order,
+                    cancel: 'input,textarea,select,option'
+                });
         },
 
         clearBlock: function(fileBlock, options) {
             options = $.extend(true, {}, this.options, options);
 
-            fileBlock
-                .find('input, textarea, select')
-                .val('');
+            fileBlock.find('select option').attr('selected', false);
+            fileBlock.find('input, textarea, select').val('');
+
+            fileBlock.find('select').trigger('liszt:updated');
 
             fileBlock.find(options.path).html('');
 

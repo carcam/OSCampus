@@ -9,17 +9,21 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelPathways extends OscampusModelList
+class OscampusModelPathways extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',           'pathway.id',
-            'title',        'pathway.title',
-            'published',    'pathway.published',
-            'ordering',     'pathway.ordering',
-            'access_level', 'viewlevel.title',
-            'owner_name',   'owner_user.name'
+            'published',
+            'owner',
+            'access',
+
+            'pathway.ordering',
+            'pathway.published',
+            'pathway.title',
+            'owner_user.name',
+            'viewlevel.title',
+            'pathway.id'
         );
 
         parent::__construct($config);
@@ -44,7 +48,10 @@ class OscampusModelPathways extends OscampusModelList
             ->leftJoin('#__viewlevels AS viewlevel ON pathway.access = viewlevel.id')
             ->leftJoin('#__users AS editor_user ON editor_user.id = pathway.checked_out');
 
-        $this->whereTextSearch($query, 'pathway.id', 'pathway.title', 'pathway.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('pathway.title', 'pathway.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'pathway.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {
@@ -70,20 +77,20 @@ class OscampusModelPathways extends OscampusModelList
         return $query;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'pathway.title', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search', '', 'string');
         $this->setState('filter.search', $search);
 
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published', '', 'string');
         $this->setState('filter.published', $published);
 
-        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'filter_owner', '', 'string');
+        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'owner', '', 'string');
         $this->setState('filter.owner', $owner);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'access', 0, 'int');
         $this->setState('filter.access', $access);
 
-        parent::populateState('pathway.title', 'ASC');
+        parent::populateState($ordering, $direction);
     }
 }

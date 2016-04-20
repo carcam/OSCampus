@@ -6,12 +6,20 @@
  * @license
  */
 
+use Joomla\Registry\Registry as Registry;
+
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-abstract class OscampusModelSiteList extends JModelList
+abstract class OscampusModelSiteList extends OscampusModelList
 {
+    /**
+     * @param string $property
+     * @param mixed  $default
+     *
+     * @return JObject
+     */
     public function getState($property = null, $default = null)
     {
         $init  = !$this->__state_set;
@@ -25,7 +33,7 @@ abstract class OscampusModelSiteList extends JModelList
     /**
      * Get component params merged with menu params
      *
-     * @return JRegistry
+     * @return Registry
      */
     public function getParams()
     {

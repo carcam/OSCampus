@@ -6,13 +6,26 @@
  * @license
  */
 
-use Oscampus\String;
-
 defined('_JEXEC') or die();
 
 
 abstract class OscampusViewList extends OscampusViewAdmin
 {
+    /**
+     * @var mixed[]
+     */
+    public $activeFilters = null;
+
+    /**
+     * @var OscampusModelAdminList
+     */
+    protected $model = null;
+
+    /**
+     * @var JForm
+     */
+    public $filterForm = null;
+
     /**
      * Default admin screen title
      *
@@ -32,11 +45,14 @@ abstract class OscampusViewList extends OscampusViewAdmin
     {
         parent::setup();
 
-        $model = $this->getModel();
-        $state = $this->getState();
+        $this->model = $this->getModel();
+        
+        // get model state and ensure state is initialised
+        $state = $this->model->getState();
 
-        $this->setVariable('items', $model->getItems());
-        $this->setVariable('pagination', $model->getPagination());
+        // Standard properties for Joomla list views
+        $this->activeFilters = $this->model->getActiveFilters();
+        $this->filterForm    = $this->model->getFilterForm();
 
         $ordering = array(
             'enabled'   => false,
@@ -45,6 +61,10 @@ abstract class OscampusViewList extends OscampusViewAdmin
             'order'     => $this->escape($state->get('list.ordering')),
             'direction' => $this->escape($state->get('list.direction'))
         );
+
+        // Standard variables for use in twig templates
+        $this->setVariable('items', $this->model->getItems());
+        $this->setVariable('pagination', $this->model->getPagination());
         $this->setVariable('ordering', $ordering);
 
         if (count($errors = $this->get('Errors'))) {
@@ -63,8 +83,6 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setOrdering($field = null, $prefix = null, $enabled = false)
     {
-        $state = $this->getState();
-
         $ordering = array_merge(
             $this->getVariable('ordering', array()),
             array(
@@ -73,7 +91,18 @@ abstract class OscampusViewList extends OscampusViewAdmin
                 'prefix'  => $prefix
             )
         );
+
         $this->setVariable('ordering', $ordering);
+    }
+
+    /**
+     * Complement to setOrdering()
+     *
+     * @return object
+     */
+    protected function getOrdering()
+    {
+        return $this->getVariable('ordering');
     }
 
     /**
@@ -83,7 +112,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setToolbar()
     {
-        $inflector = String\Inflector::getInstance();
+        $inflector = Oscampus\String\Inflector::getInstance();
 
         $plural   = $this->getName();
         $singular = $inflector->toSingular($plural);

@@ -9,9 +9,10 @@
 namespace Oscampus;
 
 use Exception;
-use JDatabase;
+use JDatabaseDriver;
 use JForm;
-use JRegistry;
+use Joomla\Registry\Registry as Registry;
+use JText;
 use JUser;
 use Oscampus\Lesson\Properties;
 use Oscampus\Lesson\Type\AbstractType;
@@ -57,7 +58,7 @@ class Lesson extends AbstractBase
     public $moduleTitle = null;
 
     /**
-     * @var JRegistry
+     * @var Registry
      */
     public $metadata = null;
 
@@ -91,7 +92,7 @@ class Lesson extends AbstractBase
      */
     protected $files = array();
 
-    public function __construct(JDatabase $dbo, Properties $properties)
+    public function __construct(JDatabaseDriver $dbo, Properties $properties)
     {
         $this->previous = $properties;
         $this->current  = clone $properties;
@@ -158,6 +159,7 @@ class Lesson extends AbstractBase
      * @param AbstractType $renderer
      *
      * @return Lesson
+     * @throws Exception
      */
     public function loadById($lessonId, AbstractType $renderer = null)
     {
@@ -174,24 +176,26 @@ class Lesson extends AbstractBase
                 )
             );
 
-        $courseId = $this->dbo->setQuery($query)->loadResult();
+        if ($courseId = $this->dbo->setQuery($query)->loadResult()) {
+            $query = $this->getQuery()->where('course.id = ' . $courseId);
 
-        $query = $this->getQuery()->where('course.id = ' . $courseId);
+            $lessons = $this->dbo->setQuery($query)->loadObjectList();
+            foreach ($lessons as $index => $lesson) {
+                if ($lesson->id == $lessonId) {
+                    $data = array(
+                        ($index > 0) ? $lessons[$index - 1] : null,
+                        $lesson,
+                        isset($lessons[$index + 1]) ? $lessons[$index + 1] : null
+                    );
 
-        $lessons = $this->dbo->setQuery($query)->loadObjectList();
-        foreach ($lessons as $index => $lesson) {
-            if ($lesson->id == $lessonId) {
-                $data = array(
-                    ($index > 0) ? $lessons[$index - 1] : null,
-                    $lesson,
-                    isset($lessons[$index + 1]) ? $lessons[$index + 1] : null
-                );
-
-                $this->setLessons($index, $data, $renderer);
+                    $this->setLessons($index, $data, $renderer);
+                }
             }
+
+            return $this;
         }
 
-        return $this;
+        throw new Exception(JText::_('COM_OSCAMPUS_ERROR_COURSE_NOT_FOUND'), 404);
     }
 
     /**
@@ -218,7 +222,20 @@ class Lesson extends AbstractBase
         return $this->renderer->render();
     }
 
-    public function loadAdminForm(JForm $form, JRegistry $data)
+    /**
+     * Get a thumbnail icon for the lesson
+     *
+     * @param null $width
+     * @param null $height
+     *
+     * @return string
+     */
+    public function getThumbnail($width = null, $height = null)
+    {
+        return $this->renderer->getThumbnail($width, $height);
+    }
+
+    public function loadAdminForm(JForm $form, Registry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {
@@ -236,12 +253,12 @@ class Lesson extends AbstractBase
      * Opportunity for Lesson Types to verify and massage content data
      * as needed
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return void
      * @throws Exception
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $renderer = $this->getRenderer($data->get('type'));
         if ($renderer) {
@@ -288,10 +305,10 @@ class Lesson extends AbstractBase
     {
         $this->index = $index;
 
-        $currentValues      = (object)$data[1];
-        $this->courseTitle  = $currentValues->course_title;
-        $this->moduleTitle  = $currentValues->module_title;
-        $this->metadata     = new JRegistry($currentValues->metadata);
+        $currentValues     = (object)$data[1];
+        $this->courseTitle = $currentValues->course_title;
+        $this->moduleTitle = $currentValues->module_title;
+        $this->metadata    = new Registry($currentValues->metadata);
 
         $this->previous->load($data[0]);
         $this->current->load($data[1]);

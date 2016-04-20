@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
 use Oscampus\Course;
 
 defined('_JEXEC') or die();
@@ -263,5 +264,43 @@ abstract class OscOptions
         }
 
         return static::$cache[$key];
+    }
+
+    /**
+     * Course progress statuses
+     *
+     * @return object[]
+     */
+    public static function progress()
+    {
+        $options = array(
+            JHtml::_(
+                'select.option',
+                CourseStatus::NOT_STARTED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_NOT_STARTED')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::IN_PROGRESS,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_IN_PROGRESS')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::COMPLETED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_COMPLETED')
+            )
+        );
+
+        return $options;
+    }
+
+    /**
+     * Standard method for retrieving access levels
+     *
+     * @return string
+     */
+    public static function access()
+    {
+        return JHtml::_('access.assetgroups');
     }
 }

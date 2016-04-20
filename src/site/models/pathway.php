@@ -6,92 +6,46 @@
  * @license
  */
 
-use Oscampus\Course;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-class OscampusModelPathway extends OscampusModelSiteList
+JLoader::import('courselist', __DIR__);
+
+class OscampusModelPathway extends OscampusModelCourselist
 {
     protected function getListQuery()
     {
-        $user       = OscampusFactory::getUser();
-        $viewLevels = join(',', $user->getAuthorisedViewLevels());
+        $user  = $this->getState('user');
+        $query = parent::getListQuery();
 
-        $query = parent::getListQuery()
-            ->select(
-                array(
-                    'cp.*',
-                    'pathway.title AS pathway',
-                    'user.name AS teacher',
-                    'course.*'
-                )
-            )
-            ->from('#__oscampus_pathways AS pathway')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.pathways_id = pathway.id')
-            ->innerJoin('#__oscampus_courses AS course ON course.id = cp.courses_id')
-            ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
-            ->leftJoin('#__users AS user ON user.id = teacher.users_id')
-            ->where(
-                array(
-                    'pathway.id = ' . $this->getState('pathway.id'),
-                    'pathway.published = 1',
-                    'course.published = 1',
-                    'course.access IN (' . $viewLevels . ')',
-                    'course.released <= NOW()'
-                )
-            );
+        // Set pathway selection
+        if ($pathwayId = (int)$this->getState('pathway.id')) {
+            $query
+                ->select('MIN(cp.pathways_id) AS pathways_id')
+                ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
+                ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
+                ->where(
+                    array(
+                        'pathway.published = 1',
+                        $this->whereAccess('pathway.access', $user),
+                        'pathway.id = ' . $pathwayId
+                    )
+                );
+        } else {
+            $query->select('0 AS pathways_id');
+        }
 
-        $order     = $this->getState('list.order', 'cp.ordering');
-        $direction = $this->getState('list.direction', 'ASC');
-        $query->order($order . ' ' . $direction . ', course.title ' . $direction);
+        $ordering  = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }
 
-    public function getItems()
-    {
-        $items = parent::getItems();
-
-        $tbd = JText::_('COM_OSCAMPUS_TEACHER_UNKNOWN');
-
-        $courses = array();
-        foreach ($items as $idx => $item) {
-            $courses[$item->id] = $idx;
-
-            $item->tags = array();
-            if (!$item->teacher) {
-                $item->teacher = $tbd;
-            }
-        }
-
-        // Format tags
-        // @TODO: This is a pretty brain-dead way to handle tags
-        $db       = $this->getDbo();
-        $tagQuery = $db->getQuery(true)
-            ->select('ct.*, tag.title')
-            ->from('#__oscampus_courses_tags AS ct')
-            ->innerJoin('#__oscampus_tags AS tag ON tag.id = ct.tags_id')
-            ->innerJoin('#__oscampus_courses AS course ON course.id = ct.courses_id')
-            ->where('course.id IN (' . join(',', array_keys($courses)) . ')');
-        $tags     = $db->setQuery($tagQuery)->loadObjectList();
-        foreach ($tags as $tag) {
-            if (isset($courses[$tag->courses_id])) {
-                $idx                 = $courses[$tag->courses_id];
-                $items[$idx]->tags[] = $tag->title;
-            }
-        }
-        array_walk($items, function ($item) {
-            $item->tags = join(', ', $item->tags);
-            if (empty($item->image)) {
-                $item->image = Course::DEFAULT_IMAGE;
-            }
-        });
-
-        return $items;
-    }
-
     /**
-     * Get the current pathway information
+     * Get the current pathway information. Note that this only
+     * makes sense if a pathway is selected
      *
      * @return object
      */
@@ -99,11 +53,17 @@ class OscampusModelPathway extends OscampusModelSiteList
     {
         $pathway = $this->getState('pathway');
         if ($pathway === null) {
-            if ($pid = (int)$this->getState('pathway.id')) {
-                $db      = $this->getDbo();
-                $pathway = $db->setQuery('Select * From #__oscampus_pathways Where id = ' . $pid)->loadObject();
+            if ($pathwayId = (int)$this->getState('pathway.id')) {
+                $db = $this->getDbo();
 
-                $pathway->metadata = new JRegistry($pathway->metadata);
+                $query = $db->getQuery(true)
+                    ->select('*')
+                    ->from('#__oscampus_pathways')
+                    ->where('id = ' . $pathwayId);
+
+                $pathway = $db->setQuery($query)->loadObject();
+
+                $pathway->metadata = new Registry($pathway->metadata);
 
                 $this->setState('pathway', $pathway);
             }
@@ -111,11 +71,12 @@ class OscampusModelPathway extends OscampusModelSiteList
         return $pathway;
     }
 
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'cp.ordering', $direction = 'ASC')
     {
-        $app = JFactory::getApplication();
-
-        $pathwayId = $app->input->getInt('pid');
+        $app       = OscampusFactory::getApplication();
+        $pathwayId = $app->input->getInt('pid', 0);
         $this->setState('pathway.id', $pathwayId);
+
+        parent::populateState($ordering, $direction);
     }
 }

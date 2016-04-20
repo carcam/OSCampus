@@ -10,5 +10,5 @@ defined('_JEXEC') or die();
 
 class OscampusController extends OscampusControllerBase
 {
-    protected $default_view = 'dashboard';
+    protected $default_view = 'pathways';
 }

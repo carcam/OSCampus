@@ -6,6 +6,8 @@
  * @license
  */
 
+use Oscampus\Activity\CourseStatus;
+
 defined('_JEXEC') or die();
 
 abstract class OscCourse
@@ -51,5 +53,40 @@ abstract class OscCourse
         }
 
         return $value . ': ' . JText::_('COM_OSCAMPUS_UNDEFINED');
+    }
+
+    /**
+     * Generate the start button for a course
+     *
+     * @param object $course
+     *
+     * @return string
+     */
+    public static function startbutton($course)
+    {
+        if (empty($course->lessons_viewed)) {
+            $icon    = 'fa-play';
+            $text    = JText::_('COM_OSCAMPUS_START_THIS_CLASS');
+            $attribs = 'class="osc-btn osc-btn-main"';
+
+        } elseif (!empty($course->date_earned)) {
+            $icon    = 'fa-repeat';
+            $text    = JText::_('COM_OSCAMPUS_WATCH_THIS_CLASS_AGAIN');
+            $attribs = 'class="osc-btn osc-btn-active"';
+
+        } else {
+            $icon    = 'fa-step-forward';
+            $text    = JText::_('COM_OSCAMPUS_CONTINUE_THIS_CLASS');
+            $attribs = 'class="osc-btn"';
+        }
+
+        $button = sprintf('<i class="fa %s"></i> %s', $icon, $text);
+
+        // @TODO: Figure out some way to send them to where they left off
+        if (!empty($course->lessons_viewed) && empty($course->certificates_id)) {
+            return static::link($course, $button, $attribs);
+        }
+
+        return JHtml::_('osc.link.lesson', $course->id, 0, $button, $attribs);
     }
 }

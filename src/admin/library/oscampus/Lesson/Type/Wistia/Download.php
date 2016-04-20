@@ -8,9 +8,8 @@
 namespace Oscampus\Lesson\Type\Wistia;
 
 use Exception;
-use JDatabase;
-use JFactory;
-use JRegistry;
+use JDatabaseDriver;
+use Joomla\Registry\Registry as Registry;
 use JText;
 use JUser;
 use OscampusFactory;
@@ -42,7 +41,7 @@ class Download
      */
     protected $period = null;
 
-    public function __construct(JRegistry $params = null)
+    public function __construct(Registry $params = null)
     {
         $params = $params ?: \OscampusComponentHelper::getParams();
 
@@ -75,12 +74,12 @@ class Download
 
             // Check the download limit
             $query = $db->getQuery(true)
-                ->select('COUNT(*)')
+                ->select('COUNT(DISTINCT media_hashed_id)')
                 ->from('#__oscampus_wistia_downloads')
                 ->where(
                     array(
                         'users_id = ' . $userId,
-                        "downloaded BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL {$this->limitPeriod} day)) AND NOW()"
+                        "downloaded >= TIMESTAMP(DATE_SUB(NOW(), INTERVAL {$this->period} day))"
                     )
                 );
 
@@ -120,15 +119,15 @@ class Download
     }
 
     /**
-     * @param Video     $video
-     * @param JUser     $user
-     * @param JDatabase $db
+     * @param Video           $video
+     * @param JUser           $user
+     * @param JDatabaseDriver $db
      *
      * Add an entry to the download log
      *
      * @return void
      */
-    public function log(Video $video, JUser $user = null, JDatabase $db = null)
+    public function log(Video $video, JUser $user = null, JDatabaseDriver $db = null)
     {
         $db   = $db ?: OscampusFactory::getDbo();
         $user = $user ?: OscampusFactory::getUser();
@@ -136,7 +135,7 @@ class Download
         $insertRow = (object)array(
             'users_id'           => $user->id,
             'downloaded'         => OscampusFactory::getDate()->toSql(),
-            'ip'                 => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ?: null,
+            'ip'                 => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
             'media_hashed_id'    => $video->id,
             'media_project_name' => $video->project,
             'media_name'         => $video->name

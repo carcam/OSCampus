@@ -11,9 +11,14 @@ defined('_JEXEC') or die();
 class OscampusViewPathways extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
+
+    /**
+     * @var JPagination
+     */
+    protected $pagination = null;
 
     public function display($tpl = null)
     {
@@ -21,6 +26,7 @@ class OscampusViewPathways extends OscampusViewSite
         $model = $this->getModel();
 
         $this->items = $model->getItems();
+        $this->pagination = $model->getPagination();
 
         parent::display($tpl);
     }

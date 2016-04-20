@@ -11,7 +11,7 @@ defined('_JEXEC') or die();
 class OscampusViewNewcourses extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var object[]
      */
     protected $items = array();
 
@@ -25,13 +25,8 @@ class OscampusViewNewcourses extends OscampusViewSite
         /** @var OscampusModelNewcourses $model */
         $model = $this->getModel();
 
-        try {
-            $this->items = $model->getItems();
+        $this->items = $model->getItems();
 
-            parent::display($tpl);
-
-        } catch (Exception $e) {
-            echo 'ERROR: ' . $e->getMessage();
-        }
+        parent::display($tpl);
     }
 }

@@ -12,7 +12,7 @@ JFormHelper::loadFieldType('List');
 
 class OscampusFormFieldLessontype extends JFormFieldList
 {
-    public function setup(&$element, $value, $group = null)
+    public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (empty($value) && $element['readonly']) {
             $element['readonly'] = 'false';

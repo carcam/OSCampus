@@ -12,11 +12,15 @@ defined('_JEXEC') or die();
 
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-mycertificates'); ?>" id="oscampus">
-    <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCERTIFICATES')): ?>
+    <?php
+    if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_MYCERTIFICATES')) :
+        ?>
         <div class="page-header">
             <h1><?php echo $heading; ?></h1>
         </div>
-    <?php endif; ?>
+        <?php
+    endif;
+    ?>
 
     <?php
     if ($this->items) :
@@ -34,7 +38,9 @@ defined('_JEXEC') or die();
                 </div>
             </div>
 
-            <?php foreach ($this->items as $item) : ?>
+            <?php
+            foreach ($this->items as $item) :
+                ?>
                 <div class="osc-section osc-row-one">
                     <div class="block6">
                         <?php echo JHtml::_('osc.course.link', $item); ?>
@@ -46,16 +52,18 @@ defined('_JEXEC') or die();
                         <?php echo JHtml::_('osc.link.certificate', $item->id); ?>
                     </div>
                 </div>
-            <?php endforeach; ?>
+                <?php
+            endforeach;
+            ?>
 
         </div>
         <?php
     else :
         ?>
-        <div class="osc-section">
+        <div class="osc-alert-notify a-center">
             <?php
-            $link = JRoute::_(OscampusRoute::getInstance()->get('courses'));
-            $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK'));
+            $link = JRoute::_(OscampusRoute::getInstance()->get('pathways'));
+            $link = JHtml::_('link', $link, JText::_('COM_OSCAMPUS_PATHWAYS_LINK'), 'class="osc-btn"');
             echo JText::sprintf('COM_OSCAMPUS_MYCERTIFICATES_GET_STARTED', $link);
             ?>
         </div>

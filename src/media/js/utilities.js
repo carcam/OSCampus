@@ -152,6 +152,7 @@
                 .css('cursor', 'pointer')
                 .data('contentPanel', $($(this).attr('data-content')))
                 .on('click', function(evt, options) {
+                    evt.preventDefault();
                     var contentPanel = $(this).data('contentPanel');
                     contentPanel.closePanelSlide(contentPanel.is(':visible'), options);
                 })

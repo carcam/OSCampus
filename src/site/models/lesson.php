@@ -67,10 +67,10 @@ class OscampusModelLesson extends OscampusModelSite
      *
      * @return object
      */
-    public function getActivityStatus()
+    public function getLessonStatus()
     {
         $lesson = $this->getItem();
-        return $this->activity->getStatus($lesson->id);
+        return $this->activity->getLessonStatus($lesson->id);
     }
 
     /**
@@ -82,7 +82,7 @@ class OscampusModelLesson extends OscampusModelSite
         $lessonId = (int)$this->getState('lesson.id');
 
         if ($courseId && $lessonId) {
-            $db = $this->getDbo();
+            $db    = $this->getDbo();
             $query = $db->getQuery(true)
                 ->select(
                     array(

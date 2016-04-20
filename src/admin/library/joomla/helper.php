@@ -6,6 +6,8 @@
  * @license
  */
 
+use Joomla\Registry\Registry as Registry;
+
 defined('_JEXEC') or die();
 
 abstract class OscampusHelper
@@ -13,11 +15,11 @@ abstract class OscampusHelper
     /**
      * get component information
      *
-     * @return JRegistry
+     * @return Registry
      */
     public static function getInfo()
     {
-        $info = new jRegistry();
+        $info = new Registry();
         $path = OSCAMPUS_ADMIN . '/oscampus.xml';
         if (is_file($path)) {
             $xml = JFactory::getXML($path);

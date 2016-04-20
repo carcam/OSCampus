@@ -10,13 +10,13 @@ namespace Oscampus\Lesson\Type;
 
 use Alledia\Framework\Factory as AllediaFactory;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
+use Exception;
 use JHtml;
-use JRegistry;
-use JRoute;
+use Joomla\Registry\Registry as Registry;
 use JSession;
 use JText;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\Wistia\Api;
 use OscampusComponentHelper;
 use OscampusFactory;
@@ -38,6 +38,11 @@ class Wistia extends AbstractType
      */
     protected $autoplay = false;
 
+    /**
+     * @var Api
+     */
+    protected $wistiaApi = null;
+
     public function __construct(Lesson $lesson)
     {
         parent::__construct($lesson);
@@ -51,17 +56,25 @@ class Wistia extends AbstractType
     public function render()
     {
         if (!$this->pluginLoaded()) {
-            throw new \Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
+            throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
         }
 
         $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
         $oswistia->loadLibrary();
 
         if (!$this->lesson->isAuthorised()) {
-            return $this->renderStatic();
+            $thumb = $this->getApi()->getThumbnail($this->id);
+
+            $attribs = array(
+                'src'    => $thumb->url,
+                'width'  => $thumb->size[0],
+                'height' => $thumb->size[1]
+            );
+
+            return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
         }
 
-        /** @var JRegistry $params */
+        /** @var Registry $params */
         $session = OscampusFactory::getSession();
         $device  = OscampusFactory::getContainer()->device;
         $params  = clone $oswistia->params;
@@ -96,24 +109,25 @@ class Wistia extends AbstractType
         return $output;
     }
 
-    /**
-     * Render a still image version of this video
-     *
-     * @return string
-     */
-    protected function renderStatic()
+    public function getThumbnail($width = null, $height = null)
     {
-        $params = OscampusComponentHelper::getParams();
-        $api    = new Api($params->get('wistia.apikey'));
+        $thumb = $this->getApi()->getThumbnail($this->id, $width, $height);
+        return $thumb->url;
+    }
 
-        $thumb = $api->getThumbnail($this->id);
+    /**
+     * Load our API object only once
+     *
+     * @return Api
+     */
+    protected function getApi()
+    {
+        if ($this->wistiaApi === null) {
+            $params          = OscampusComponentHelper::getParams();
+            $this->wistiaApi = new Api($params->get('wistia.apikey'));
+        }
 
-        $attribs = array(
-            'src'    => $thumb->url,
-            'width'  => $thumb->size[0],
-            'height' => $thumb->size[1]
-        );
-        return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+        return $this->wistiaApi;
     }
 
     /**
@@ -185,15 +199,15 @@ class Wistia extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         if ($score !== null && $status->score < $score) {
             $status->score = $score;
@@ -216,11 +230,11 @@ class Wistia extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $content = $data->get('content');
         if ($content && is_string($content)) {
@@ -235,9 +249,9 @@ class Wistia extends AbstractType
     }
 
     /**
-     * @param JRegistry $data
+     * @param Registry $data
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $content = $data->get('content');
         if (!is_string($content)) {

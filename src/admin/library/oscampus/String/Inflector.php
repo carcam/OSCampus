@@ -16,6 +16,11 @@ class Inflector extends \Joomla\String\Inflector
     {
         parent::__construct();
 
-        $this->addWord('course', 'courses');
+        $this
+            ->addWord('course', 'courses')
+            ->addWord('lesson', 'lessons')
+            ->addWord('pathway', 'pathways')
+            ->addWord('tag', 'tags')
+            ->addWord('teacher', 'teachers');
     }
 }

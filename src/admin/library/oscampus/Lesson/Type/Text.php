@@ -9,8 +9,8 @@
 namespace Oscampus\Lesson\Type;
 
 use JHtml;
-use JRegistry;
-use Oscampus\Lesson\ActivityStatus;
+use Joomla\Registry\Registry as Registry;
+use Oscampus\Activity\LessonStatus;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -24,15 +24,15 @@ class Text extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         $status->score = 100;
         if (!$status->completed) {
@@ -41,11 +41,11 @@ class Text extends AbstractType
     }
 
     /**
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return null|SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $path = __DIR__ . '/text.xml';
         if (is_file($path)) {

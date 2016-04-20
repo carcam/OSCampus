@@ -9,20 +9,27 @@
 defined('_JEXEC') or die();
 
 
-class OscampusModelCourses extends OscampusModelList
+class OscampusModelCourses extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',              'course.id',
-            'title',           'course.title',
-            'tags',            'tag.title',
-            'pathways',        'pathway.title',
-            'difficulty',      'course.difficulty',
-            'published',       'course.published',
-            'viewlevel_title', 'viewlevel.title',
-            'teacher_name',    'teacher_user.name',
-            'cp.ordering',     'ordering'
+            'published',
+            'pathways',
+            'tags',
+            'difficulty',
+            'access',
+            'teacher',
+
+            'course.id',
+            'course.title',
+            'tag.title',
+            'pathway.title',
+            'course.difficulty',
+            'course.published',
+            'viewlevel.title',
+            'teacher_user.name',
+            'cp.ordering'
         );
 
         parent::__construct($config);
@@ -57,21 +64,24 @@ class OscampusModelCourses extends OscampusModelList
             ->leftJoin('#__oscampus_tags AS tag ON course_tags.tags_id = tag.id')
             ->leftJoin('#__users AS editor_user ON editor_user.id = course.checked_out');
 
-        $this->whereTextSearch($query, 'course.id', 'course.title', 'course.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('course.title', 'course.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'course.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {
             $query->where('course.published = ' . (int)$published);
         }
 
-        if ($pathway = (int)$this->getState('filter.pathway')) {
+        if ($pathway = (int)$this->getState('filter.pathways')) {
             $query->leftJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id');
             $query->where('cp.pathways_id = ' . $pathway);
         }
         $ordering = $pathway ? 'cp.ordering' : $db->q('---');
         $query->select($ordering . ' AS ordering');
 
-        $tag = $this->getState('filter.tag');
+        $tag = $this->getState('filter.tags');
         if (is_numeric($tag) != '') {
             $queryTag = $db->getQuery(true)
                 ->select('courses_id')
@@ -118,25 +128,25 @@ class OscampusModelCourses extends OscampusModelList
 
     protected function populateState($ordering = 'course.title', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search');
         $this->setState('filter.search', $search);
 
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published');
         $this->setState('filter.published', $published);
 
-        $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'filter_pathway');
-        $this->setState('filter.pathway', $pathway);
+        $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathways', 'pathways');
+        $this->setState('filter.pathways', $pathway);
 
-        $tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag');
-        $this->setState('filter.tag', $tag);
+        $tag = $this->getUserStateFromRequest($this->context . '.filter.tags', 'tags');
+        $this->setState('filter.tags', $tag);
 
-        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty');
+        $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'difficulty');
         $this->setState('filter.difficulty', $difficulty);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'access');
         $this->setState('filter.access', $access);
 
-        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'teacher');
         $this->setState('filter.teacher', $teacher);
 
         parent::populateState($ordering, $direction);

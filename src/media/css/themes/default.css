@@ -89,6 +89,8 @@
 
 /* Form elements
  ========================================================================== */
+.osc-module-container input[type="text"],
+.osc-module-container select,
 #oscampus.osc-container input[type="text"],
 #oscampus.osc-container input[type="email"],
 #oscampus.osc-container input[type="password"],
@@ -108,6 +110,23 @@
     background: #ffffff;
 }
 
+.osc-module-container input[type="text"],
+.osc-module-container select {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 6px 10px;
+    height: 34px;
+    line-height: 18px;
+}
+
+.osc-module-container input[type="text"]:focus,
+.osc-module-container input[type="email"]:focus,
+.osc-module-container input[type="password"]:focus,
+.osc-module-container textarea:focus,
+.osc-module-container select:focus,
+.osc-module-container input:focus:invalid:focus,
+.osc-module-container textarea:focus:invalid:focus,
+.osc-module-container select:focus:invalid:focus,
 #oscampus.osc-container input[type="text"]:focus,
 #oscampus.osc-container input[type="email"]:focus,
 #oscampus.osc-container input[type="password"]:focus,
@@ -115,7 +134,7 @@
 #oscampus.osc-container select:focus,
 #oscampus.osc-container input:focus:invalid:focus,
 #oscampus.osc-container textarea:focus:invalid:focus,
-#oscampus.osc-container select:focus:invalid:focus{
+#oscampus.osc-container select:focus:invalid:focus {
     color: #666666;
     border-color: #999999;
     box-shadow: none;
@@ -129,9 +148,12 @@
     height: 38px;
 }
 
+.osc-module-container input[readonly],
+.osc-module-container input[readonly]:hover,
+.osc-module-container input[readonly]:focus,
 #oscampus.osc-container input[readonly],
 #oscampus.osc-container input[readonly]:hover,
-#oscampus.osc-container input[readonly]:focus{
+#oscampus.osc-container input[readonly]:focus {
     background: #f2f2f2;
 }
 
@@ -153,14 +175,18 @@
     width: 140px;
 }
 
+.osc-module-container input[type="radio"],
 #oscampus.osc-container input[type="radio"] {
     margin-bottom: 5px;
 }
 
+.osc-module-container input[type="checkbox"],
 #oscampus.osc-container input[type="checkbox"] {
     margin: 0 0 2px 0;
 }
 
+.osc-module-container input[type="submit"],
+.osc-module-container button
 #oscampus.osc-container input[type="submit"],
 #oscampus.osc-container button {
     background: #666666;
@@ -186,6 +212,10 @@
     margin-bottom: 10px;
 }
 
+.osc-module-container input[type="submit"]:hover,
+.osc-module-container input[type="submit"]:focus,
+.osc-module-container button:hover,
+.osc-module-container button:focus,
 #oscampus.osc-container input[type="submit"]:hover,
 #oscampus.osc-container input[type="submit"]:focus,
 #oscampus.osc-container button:hover,
@@ -193,6 +223,7 @@
     background: #999999;
 }
 
+.osc-module-container .osc-btn,
 #oscampus.osc-container .osc-btn {
     display: inline-block;
     -moz-box-sizing: border-box;
@@ -213,6 +244,8 @@
     transition: background-color 0.15s ease-in-out;
 }
 
+.osc-module-container .osc-btn:hover,
+.osc-module-container .osc-btn:focus,
 #oscampus.osc-container .osc-btn:hover,
 #oscampus.osc-container .osc-btn:focus,
 #oscampus.osc-container .osc-btn.osc-btn-active,
@@ -225,21 +258,28 @@
     color: #fff;
 }
 
+.osc-module-container .osc-btn-big,
 #oscampus.osc-container .osc-btn-big {
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
 }
 
+.osc-module-container .osc-btn-warning,
 #oscampus.osc-container .osc-btn-warning {
     background:#ff0000;
 }
 
+.osc-module-container .osc-btn-warning:hover,
+.osc-module-container .osc-btn-warning:focus,
 #oscampus.osc-container .osc-btn-warning:hover,
 #oscampus.osc-container .osc-btn-warning:focus {
     background:#FF4D4D;
 }
 
+.osc-module-container button[disabled],
+.osc-module-container button[disabled]:hover,
+.osc-module-container button[disabled]:focus,
 #oscampus.osc-container button[disabled],
 #oscampus.osc-container button[disabled]:hover,
 #oscampus.osc-container button[disabled]:focus {
@@ -250,12 +290,15 @@
     background: #f2f2f2;
 }
 
+.osc-module-container .osc-btn-main,
 #oscampus.osc-container .osc-btn-main {
     color: #3f4044;
     font-weight: 600;
     background: #feb123;
 }
 
+.osc-module-container .osc-btn-main:hover,
+.osc-module-container .osc-btn-main:focus,
 #oscampus.osc-container .osc-btn-main:hover,
 #oscampus.osc-container .osc-btn-main:focus {
     box-shadow: 0 1px 4px rgba(32, 61, 97, 0.4) inset;
@@ -266,6 +309,7 @@
     background: #ed8034;
 }
 
+.osc-module-container .osc-btn-group,
 #oscampus.osc-container .osc-btn-group {
     display: inline-block;
     vertical-align: middle;
@@ -273,14 +317,20 @@
     white-space: nowrap;
 }
 
+.osc-module-container .osc-btn-group > *,
 #oscampus.osc-container .osc-btn-group > * {
     display: inline-block;
 }
 
+.osc-module-container .osc-btn-group .osc-btn,
 #oscampus.osc-container .osc-btn-group .osc-btn {
     vertical-align: top;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-module-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
+.osc-module-container .osc-btn-group > .osc-btn:first-child,
+.osc-module-container .osc-btn-group > div:first-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
 #oscampus.osc-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:first-child,
@@ -288,6 +338,8 @@
     margin-right: 1px;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
+.osc-module-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:not(:first-child):not(:last-child),
 #oscampus.osc-container .osc-btn-group > div:not(:first-child):not(:last-child) .osc-btn {
     border-radius: 0;
@@ -296,6 +348,8 @@
     -o-border-radius: 0;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:first-child,
+.osc-module-container .osc-btn-group > div:first-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:first-child,
 #oscampus.osc-container .osc-btn-group > div:first-child .osc-btn {
     border-bottom-right-radius: 0;
@@ -308,6 +362,8 @@
     -o-border-top-right-radius: 0;
 }
 
+.osc-module-container .osc-btn-group > .osc-btn:last-child,
+.osc-module-container .osc-btn-group > div:last-child .osc-btn,
 #oscampus.osc-container .osc-btn-group > .osc-btn:last-child,
 #oscampus.osc-container .osc-btn-group > div:last-child .osc-btn {
     border-bottom-left-radius: 0;
@@ -320,6 +376,7 @@
     -o-border-top-left-radius: 0;
 }
 
+.osc-module-container label,
 #oscampus.osc-container label {
     display: block;
     margin-bottom: 5px;
@@ -328,14 +385,46 @@
     cursor: default;
 }
 
+.osc-module-container label span,
 #oscampus.osc-container label span {
     color: #ff0000;
 }
 
+.osc-module-container a i,
+.osc-module-container button i,
+.osc-module-container input[type="submit"] i,
 #oscampus.osc-container a i,
 #oscampus.osc-container button i,
 #oscampus.osc-container input[type="submit"] i {
     line-height: inherit;
+}
+
+.osc-module-container .osc-search-toggle {
+    color: #2184cd;
+}
+
+.osc-module-container .osc-clear-filters {
+    margin-top: 10px;
+}
+
+.osc-module-container input[type="text"].osc-formfield-inactive,
+.osc-module-container select.osc-formfield-inactive {
+    border-color: #ccc;
+    color: #999;
+}
+
+.osc-module-container input[type="text"].osc-formfield-active,
+.osc-module-container select.osc-formfield-active {
+    border-color: #333;
+    color: #333;
+}
+
+.osc-module-container .osc-search-advanced {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 /* Help classes
@@ -362,6 +451,12 @@
     color: #2d7091;
     padding: 15px;
     margin: 2px 0;
+}
+
+#oscampus.osc-container .osc-alert-warning.m-bottom,
+#oscampus.osc-container .osc-alert-success.m-bottom,
+#oscampus.osc-container .osc-alert-notify.m-bottom {
+    margin-bottom: 40px;
 }
 
 /* Listing
@@ -434,8 +529,17 @@
 }
 
 #oscampus.osc-container a.osc-btn i:before,
-#oscampus.osc-container button.osc-btn i:before {
+#oscampus.osc-container button.osc-btn i:before,
+#oscampus.osc-container a.osc-btn-main:hover i:before,
+#oscampus.osc-container button.osc-btn-main:hover i:before,
+#oscampus.osc-container a.osc-btn-main:focus i:before,
+#oscampus.osc-container button.osc-btn-main:focus i:before {
     color: #fff;
+}
+
+#oscampus.osc-container a.osc-btn-main i:before,
+#oscampus.osc-container button.osc-btn-main i:before {
+    color: #3f4044;
 }
 
 #oscampus.osc-container .osc-row-heading {
@@ -443,11 +547,41 @@
     border-bottom: 1px solid #f2f2f2;
 }
 
+#oscampus.osc-container .osc-progress-bar {
+    display: block;
+    width: 100%;
+    background: #f2f2f2;
+    overflow: hidden;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+
+#oscampus.osc-container .osc-progress-bar > span {
+    display: block;
+    overflow: hidden;
+    background: #706560;
+}
+
+#oscampus.osc-container .osc-progress-bar > span.osc-progress-bar-completed {
+    background: #2184cd;
+}
+
+#oscampus.osc-container .osc-progress-bar > span > span {
+    margin: 0 10px;
+    color: #fff;
+    font-size: 10px;
+    text-shadow: 0 0 2px #000;
+}
+
 /* Teacher
  ========================================================================== */
 #oscampus.osc-container .osc-teacher-image {
     float: left;
     margin: 5px 20px 10px 0;
+    width: 200px;
+    height: auto;
 }
 
 #oscampus.osc-container .osc-teacher-links > span {
@@ -469,6 +603,10 @@
     width: 69.81196581196582%;
 }
 
+#oscampus.osc-container .osc-course-description p:last-child {
+    margin-bottom: 0;
+}
+
 #oscampus.osc-container .osc-course-list {
     border-bottom: 1px solid #f2f2f2;
     margin-bottom: 25px;
@@ -485,6 +623,17 @@
 
 #oscampus.osc-container .osc-course-start {
     text-align: right;
+}
+
+#oscampus.osc-container .osc-pathway-description {
+    background: #f2f2f2;
+    color: #666;
+    padding: 30px;
+    margin-bottom: 5px;
+}
+
+#oscampus.osc-container .osc-pathway-description > p {
+    margin-bottom: 0;
 }
 
 /* Course
@@ -568,6 +717,7 @@
 #oscampus.osc-container .osc-label {
     background-color: #F2F2F2;
     color: #666;
+    margin-bottom: 4px;
 }
 
 /* Lesson
@@ -947,6 +1097,7 @@
     }
     #oscampus.osc-container .osc-course-image img {
         margin-bottom: 10px;
+        max-width: 200px;
     }
     #oscampus.osc-container .osc-course-start {
         text-align: left;

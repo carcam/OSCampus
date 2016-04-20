@@ -6,6 +6,7 @@
  * @license
  */
 
+use Oscampus\Activity\LessonStatus;
 use Oscampus\File;
 use Oscampus\Lesson;
 
@@ -29,7 +30,7 @@ class OscampusViewLesson extends OscampusViewSite
     protected $files = array();
 
     /**
-     * @var Lesson\ActivityStatus
+     * @var LessonStatus
      */
     protected $activity = null;
 
@@ -38,7 +39,7 @@ class OscampusViewLesson extends OscampusViewSite
         $this->model    = $this->getModel();
         $this->lesson   = $this->model->getItem();
         $this->files    = $this->model->getFiles();
-        $this->activity = $this->model->getActivityStatus();
+        $this->activity = $this->model->getLessonStatus();
 
         $pathway = JFactory::getApplication()->getPathway();
 

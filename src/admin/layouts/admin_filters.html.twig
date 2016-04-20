@@ -1,0 +1,12 @@
+{#
+ # @package    OSCampus
+ # @contact    www.ostraining.com, support@ostraining.com
+ # @copyright  2015-2016 Open Source Training, LLC. All rights reserved
+ # @license
+ #}
+
+{% if ordering.enabled %}
+    {% set link = 'index.php?option=com_oscampus&task='~ ordering.prefix ~'.saveOrderAjax&tmpl=component' %}
+    {{ html('sortablelist.sortable', 'admintable', 'adminForm', ordering.direction, link) }}
+{% endif %}
+{{ layout('joomla.searchtools.default', {'view' : view})|raw }}

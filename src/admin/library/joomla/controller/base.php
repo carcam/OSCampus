@@ -13,10 +13,11 @@ class OscampusControllerBase extends JControllerLegacy
     public function display($cachable = false, $urlparams = array())
     {
         if (OscampusFactory::getApplication()->isAdmin()) {
+            $app = OscampusFactory::getApplication();
             $inflector = \Oscampus\String\Inflector::getInstance();
-            $view      = JRequest::getCmd('view', $this->default_view);
-            $layout    = JRequest::getCmd('layout', '');
-            $id        = JRequest::getInt('id');
+            $view      = $app->input->getCmd('view', $this->default_view);
+            $layout    = $app->input->getCmd('layout', '');
+            $id        = $app->input->getInt('id');
 
             // Check for edit form.
             if ($inflector->isSingular($view) && $layout == 'edit' && !$this->checkEditId('com_oscampus.edit.' . $view, $id)) {
