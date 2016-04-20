@@ -149,8 +149,8 @@ class OscampusModelCourse extends OscampusModelAdmin
      */
     public function saveorder($pks = null, $order = null)
     {
-        $app = OscampusFactory::getApplication();
-        $filters = $app->input->get('filter', array(), 'array');
+        $app       = OscampusFactory::getApplication();
+        $filters   = $app->input->get('filter', array(), 'array');
         $pathwayId = isset($filters['pathways']) ? (int)$filters['pathways'] : 0;
 
         if ($pathwayId) {
@@ -275,11 +275,10 @@ class OscampusModelCourse extends OscampusModelAdmin
             foreach ($addPathways as $pid => $null) {
                 if (isset($ordering[$pid])) {
                     $insertValues[] = join(',', array(
-                            (int)$courseId,
-                            (int)$pid,
-                            (int)$ordering[$pid]->lastOrder + 1
-                        )
-                    );
+                        (int)$courseId,
+                        (int)$pid,
+                        (int)$ordering[$pid]->lastOrder + 1
+                    ));
                 } else {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
                 }
@@ -305,8 +304,8 @@ class OscampusModelCourse extends OscampusModelAdmin
      */
     protected function updateFiles($courseId, array $data)
     {
-        $app   = OscampusFactory::getApplication();
-        $db    = OscampusFactory::getDbo();
+        $app = OscampusFactory::getApplication();
+        $db  = OscampusFactory::getDbo();
 
         $fileFields = $app->input->files->get('jform', array(), 'raw');
         $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
