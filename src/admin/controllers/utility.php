@@ -27,17 +27,22 @@ class OscampusControllerUtility extends OscampusControllerBase
             array(
                 JHtml::_(
                     'link',
-                    sprintf($link, 'checkcerts'),
+                    sprintf($link, 'checkCerts'),
                     'Check for Missing Certificates'
                 ),
                 JHtml::_(
                     'link',
-                    sprintf($link, 'checkactivity'),
+                    sprintf($link, 'checkActivity'),
                     'Check for invalid certificates and missing activity entries'
                 ),
                 JHtml::_(
                     'link',
-                    sprintf($link, 'searchdb'),
+                    sprintf($link, 'checkDuplicateLog'),
+                    'Check for duplicate user log entries'
+                ),
+                JHtml::_(
+                    'link',
+                    sprintf($link, 'searchDB'),
                     'Find a string in the database'
                 )
             )
@@ -45,11 +50,95 @@ class OscampusControllerUtility extends OscampusControllerBase
     }
 
     /**
+     * Find duplicate log entries
+     */
+    public function checkDuplicateLog()
+    {
+        $legacy         = JError::$legacy;
+        JError::$legacy = false;
+
+        echo $this->heading('Check for duplicate log entries');
+
+        $app = OscampusFactory::getApplication();
+        $db  = OscampusFactory::getDbo();
+
+        $remove = $app->input->getInt('remove', 0);
+        if (!$remove) {
+            echo '<p>Duplicate entries HAVE NOT been removed (url: \'remove=1\')</p>';
+        }
+
+        $start = microtime(true);
+
+        $query = $db->getQuery(true)
+            ->select('user.username, activity.users_id, activity.lessons_id, count(*) AS duplicates')
+            ->from('#__oscampus_users_lessons AS activity')
+            ->innerJoin('#__users AS user ON user.id = activity.users_id')
+            ->group('activity.users_id, activity.lessons_id')
+            ->having('duplicates > 1');
+
+        $lessons = $db->setQuery($query)->loadObjectList();
+
+        $users = array();
+        foreach ($lessons as $lesson) {
+            if (!isset($users[$lesson->username])) {
+                $users[$lesson->username] = array(
+                    'id'      => $lesson->users_id,
+                    'lessons' => array()
+                );
+            }
+            $users[$lesson->username]['lessons'][$lesson->lessons_id] = $lesson->duplicates;
+        }
+
+        echo $this->runtime($start, 'Query');
+
+        $removalStart = microtime(true);
+
+        $fixed = array();
+        foreach ($users as $username => $user) {
+            $userId  = $user['id'];
+            $lessons = $user['lessons'];
+
+            $status = sprintf('%s: %s Duplicates in %s Lessons', $username, array_sum($lessons), count($lessons));
+            if ($remove) {
+                $affected = 0;
+                foreach ($lessons as $id => $count) {
+                    $query = $db->getQuery(true)
+                        ->delete('#__oscampus_users_lessons')
+                        ->where(
+                            array(
+                                'users_id = ' . (int)$userId,
+                                'lessons_id = ' . (int)$id
+                            )
+                        )
+                        ->order('first_visit DESC, id DESC');
+                    $db->setQuery($query . ' LIMIT ' . ($count - 1))->execute();
+                    $affected += $db->getAffectedRows();
+                }
+                $status .= sprintf(' [Removed %s]', $affected);
+            }
+            $fixed[] = $status;
+        }
+
+        if ($remove) {
+            echo $this->runtime($removalStart, 'Removal');
+        }
+        echo $this->runtime($start);
+
+        echo $this->heading(sprintf('Found duplicate activity entries for %s users', count($users)));
+
+        if ($fixed) {
+            echo $this->showList($fixed);
+        }
+
+        JError::$legacy = $legacy;
+    }
+
+    /**
      * Check all active users without certificates to verify they
      * have not passed the course. If they have passed, optionally
      * create a certificate for them when ?create=1 is specified in the url
      */
-    public function checkcerts()
+    public function checkCerts()
     {
         $legacy         = JError::$legacy;
         JError::$legacy = false;
@@ -61,7 +150,7 @@ class OscampusControllerUtility extends OscampusControllerBase
 
         $create = $app->input->getInt('create', 0);
         if (!$create) {
-            echo '<p>New certificates will not be created (url: \'create=1\')</p>';
+            echo '<p>New certificates HAVE NOT been created (url: \'create=1\')</p>';
         }
 
         $start = microtime(true);
@@ -128,7 +217,7 @@ class OscampusControllerUtility extends OscampusControllerBase
     /**
      * Look for certificates awarded for incomplete courses
      */
-    public function checkactivity()
+    public function checkActivity()
     {
         $legacy         = JError::$legacy;
         JError::$legacy = false;
@@ -142,10 +231,10 @@ class OscampusControllerUtility extends OscampusControllerBase
         echo $this->heading('Check for Invalid Certificates');
 
         if (!$fixFailed) {
-            echo '<p>Certificates for failed classes have NOT been removed (url: \'failed=1\')</p>';
+            echo '<p>Certificates for failed classes HAVE NOT been removed (url: \'failed=1\')</p>';
         }
         if (!$fixMissing) {
-            echo '<p>Missing activity logs have NOT been created (url: \'missing={lessonType}\')</p>';
+            echo '<p>Missing activity logs HAVE NOT been created (url: \'missing={lessonType}\')</p>';
         } else {
             echo sprintf('<p>Missing activity logs HAVE been created for \'%s\' lessons</p>', $fixMissing);
         }
@@ -193,7 +282,7 @@ class OscampusControllerUtility extends OscampusControllerBase
                                     'users_id'    => $userId,
                                     'lessons_id'  => $score->lessons_id,
                                     'completed'   => $activity->last_visit,
-                                    'score'       => ($score->type == 'quiz' ? 100: 0),
+                                    'score'       => ($score->type == 'quiz' ? 100 : 0),
                                     'visits'      => 1,
                                     'first_visit' => $activity->last_visit,
                                     'last_visit'  => $activity->last_visit
@@ -256,7 +345,7 @@ class OscampusControllerUtility extends OscampusControllerBase
     /**
      * search all text/varchar fields in db for desired string
      */
-    public function searchdb()
+    public function searchDB()
     {
         // The text we're looking for
         $app = OscampusFactory::getApplication();
