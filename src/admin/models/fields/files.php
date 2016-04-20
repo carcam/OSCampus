@@ -81,6 +81,7 @@ class OscampusFormFieldFiles extends JFormFieldList
 
         $upload   = sprintf('<input type="file" name="%s[upload][]" value=""/>', $this->name);
         $lessonId = empty($file->lessons_id) ? '' : $file->lessons_id;
+        $path     = empty($file->path) ? '' : $file->path;
 
         $html = '<li class="osc-file-block">'
             . $id
@@ -88,7 +89,7 @@ class OscampusFormFieldFiles extends JFormFieldList
             . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
             . $title
             . '<br class="clr"/>' . $description
-            . '<br class="clr"/>' . $this->getFileList($file->path)
+            . '<br class="clr"/>' . $this->getFileList($path)
             . JText::_('COM_OSCAMPUS_FILES_UPLOAD_PLACEHOLDER') . ' ' . $upload
             . '<br class="clr"/>' . $this->getLessonOptions($lessonId)
             . '</li>';
@@ -253,7 +254,7 @@ class OscampusFormFieldFiles extends JFormFieldList
         // If we've come back from a form failure, we need to reformat
         if (isset($files['id'])) {
             $values = $files;
-            $files = array();
+            $files  = array();
             foreach ($values['id'] as $index => $id) {
                 $file = array();
                 foreach ($values as $fieldName => $fieldValues) {
