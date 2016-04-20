@@ -12,6 +12,11 @@ defined('_JEXEC') or die();
 abstract class OscampusViewList extends OscampusViewAdmin
 {
     /**
+     * @var mixed[]
+     */
+    public $activeFilters = null;
+
+    /**
      * @var OscampusModelAdminList
      */
     protected $model = null;
@@ -41,11 +46,13 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::setup();
 
         $this->model = $this->getModel();
-
+        
+        // get model state and ensure state is initialised
         $state = $this->model->getState();
 
-        $this->setVariable('items', $this->model->getItems());
-        $this->setVariable('pagination', $this->model->getPagination());
+        // Standard properties for Joomla list views
+        $this->activeFilters = $this->model->getActiveFilters();
+        $this->filterForm    = $this->model->getFilterForm();
 
         $ordering = array(
             'enabled'   => false,
@@ -54,13 +61,15 @@ abstract class OscampusViewList extends OscampusViewAdmin
             'order'     => $this->escape($state->get('list.ordering')),
             'direction' => $this->escape($state->get('list.direction'))
         );
+
+        // Standard variables for use in twig templates
+        $this->setVariable('items', $this->model->getItems());
+        $this->setVariable('pagination', $this->model->getPagination());
         $this->setVariable('ordering', $ordering);
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
-
-        $this->filterForm    = $this->model->getFilterForm();
     }
 
     /**
