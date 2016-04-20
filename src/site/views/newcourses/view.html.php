@@ -16,11 +16,6 @@ class OscampusViewNewcourses extends OscampusViewSite
     protected $items = array();
 
     /**
-     * @var object
-     */
-    protected $item = null;
-
-    /**
      * @var DateTime
      */
     protected $cutoff = null;

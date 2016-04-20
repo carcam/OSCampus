@@ -24,10 +24,6 @@ class OscampusViewSearch extends OscampusViewSite
      * @var JPagination
      */
     protected $pagination = null;
-    /**
-     * @var object
-     */
-    protected $item = null;
 
     public function display($tpl = null)
     {

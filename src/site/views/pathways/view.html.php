@@ -20,11 +20,6 @@ class OscampusViewPathways extends OscampusViewSite
      */
     protected $pagination = null;
 
-    /**
-     * @var object
-     */
-    protected $item = null;
-
     public function display($tpl = null)
     {
         /** @var OscampusModelPathways $model */
