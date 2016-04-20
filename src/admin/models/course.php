@@ -308,7 +308,7 @@ class OscampusModelCourse extends OscampusModelAdmin
         $app   = OscampusFactory::getApplication();
         $db    = OscampusFactory::getDbo();
 
-        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $fileFields = $app->input->files->get('jform', array(), 'raw');
         $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
         $files      = $this->collectFiles($courseId, $data);
 
@@ -330,7 +330,8 @@ class OscampusModelCourse extends OscampusModelAdmin
                 $upload = $uploads[$index];
 
                 $path = Course::FILE_PATH . '/' . $upload['name'];
-                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
+                // @TODO: allowing all unsafe files. Consider reviewing for more control
+                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path, false, true)) {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_COURSE_FILE_UPLOAD', $path));
                 }
 
