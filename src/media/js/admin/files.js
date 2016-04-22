@@ -57,7 +57,7 @@
                         var newElement  = $(blocks[0]).clone(true),
                             chznSelects = newElement.find('select.chzn-done');
 
-                        newElement = $.Oscampus.admin.files.clearBlock(newElement);
+                        $.Oscampus.admin.files.clearBlock(newElement);
 
                         // Handle jui chosen selectors
                         if (chznSelects[0]) {
@@ -89,7 +89,11 @@
             fileBlock.find('select option').attr('selected', false);
             fileBlock.find('input, textarea, select').val('');
 
-            fileBlock.find('select').trigger('liszt:updated');
+            // trigger event ror jui chzn fields 
+            fileBlock.find('select.chzn-done')
+                .trigger('liszt:updated') // Old version
+                .trigger('chosen:updated'); // New Version
+
 
             fileBlock.find(options.path).html('');
 
