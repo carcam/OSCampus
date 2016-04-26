@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
+use Exception;
 use JHtml;
 use Joomla\Registry\Registry as Registry;
 use JText;
@@ -140,7 +141,7 @@ class Quiz extends AbstractType
     }
 
     /**
-     * Prepare an LessonStatus for recording user progress.
+     * Prepare a LessonStatus for recording user progress.
      *
      * @param LessonStatus $status
      * @param int          $score
@@ -236,26 +237,53 @@ class Quiz extends AbstractType
         $questions = array();
         foreach ((array)$quiz->questions as $questionId => $question) {
             $question = (array)$question;
-            if ($question['text']) {
-                $questionKey = md5($question['text']);
-                $correct     = $question['correct'];
+
+            $questionText = $question['text'];
+            if ($questionText) {
+                if (!isset($question['correct'])) {
+                    throw new Exception(JText::_('COM_OSCAMPUS_ERROR_QUIZ_CORRECT_ANSWER', $questionText));
+                }
+
+                $questionKey    = md5($questionText);
+                $correctAnswer  = $question['correct'];
+                $enteredAnswers = (array)$question['answers'];
 
                 $answers = array();
-                foreach ((array)$question['answers'] as $answerId => $answer) {
-                    $answerKey = md5($answer);
+                foreach ($enteredAnswers as $answerId => $answerText) {
+                    if (!empty($answerText)) {
+                        $answerKey = md5($answerText);
+                        if (isset($answers[$answerKey])) {
+                            throw new Exception(
+                                JText::sprintf(
+                                    'COM_OSCAMPUS_ERROR_QUIZ_DUPLICATE_ANSWER',
+                                    $answerText,
+                                    $questionText
+                                )
+                            );
+                        }
 
-                    $answers[$answerKey] = array(
-                        'text'    => $answer,
-                        'correct' => (int)($correct == $answerId)
+                        $answers[$answerKey] = array(
+                            'text'    => $answerText,
+                            'correct' => (int)($correctAnswer == $answerId)
+                        );
+                    }
+                }
+
+                $minimumAnswers = 2;
+                if (count($answers) < $minimumAnswers) {
+                    throw new Exception(
+                        JText::sprintf(
+                            'COM_OSCAMPUS_ERROR_QUIZ_MINIMUM_ANSWERS',
+                            $questionText,
+                            $minimumAnswers
+                        )
                     );
                 }
 
-                if ($answers = array_filter($answers)) {
-                    $questions[$questionKey] = array(
-                        'text'    => $question['text'],
-                        'answers' => $answers
-                    );
-                }
+                $questions[$questionKey] = array(
+                    'text'    => $question['text'],
+                    'answers' => $answers
+                );
             }
         }
 
