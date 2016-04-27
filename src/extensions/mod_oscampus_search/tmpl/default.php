@@ -47,7 +47,7 @@ JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
             <i class="fa fa-cogs"></i>
             <?php echo JText::_('MOD_OSCAMPUS_SEARCH_ADVANCED'); ?>
         </div>
-        <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced">
+        <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced" style="display: none;">
             <?php
             echo $this->getFilter('Tag');
             echo $this->getTypes();
