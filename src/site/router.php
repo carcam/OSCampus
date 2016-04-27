@@ -150,7 +150,6 @@ class OscampusRouter
 
             } else {
                 $query      = $route->getQuery($view);
-                $segments[] = $view;
                 if (!empty($query['view'])) {
                     unset($query['view']);
                 }
