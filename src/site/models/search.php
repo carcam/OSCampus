@@ -32,6 +32,22 @@ class OscampusModelSearch extends OscampusModelSiteList
      */
     protected $total = null;
 
+    public function __construct(array $config)
+    {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+                'types',
+                'text',
+                'tag',
+                'teacher',
+                'difficulty',
+                'progress'
+            );
+        }
+
+        parent::__construct($config);
+    }
+
     /**
      * @return object[]
      */
@@ -73,7 +89,7 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->course === null) {
             $this->course = array();
 
-            $types = (array)$this->getState('show.types');
+            $types = (array)$this->getState('filter.types');
 
             if (!$types || in_array('C', $types)) {
                 $model = OscampusModel::getInstance('Courselist');
@@ -96,7 +112,7 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->pathway === null) {
             $this->pathway = array();
 
-            $types = (array)$this->getState('show.types');
+            $types = (array)$this->getState('filter.types');
 
             if (!$types || in_array('P', $types)) {
                 /** @var OscampusModelPathways $model */
@@ -118,7 +134,7 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->lesson === null) {
             $this->lesson = array();
 
-            $types = (array)$this->getState('show.types');
+            $types = (array)$this->getState('filter.types');
             if (!$types || in_array('L', $types)) {
                 $db = $this->getDbo();
 
@@ -213,7 +229,7 @@ class OscampusModelSearch extends OscampusModelSiteList
             $app->input->set('types', array());
         }
         $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', null, 'array');
-        $this->setState('show.types', array_filter($types));
+        $this->setState('filter.types', array_filter($types));
 
         // Text search filter
         $minLength = 2;
