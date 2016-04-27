@@ -281,7 +281,7 @@ class Search
 
     protected function getTypes($class = null)
     {
-        $show = (array)$this->model->getState('show.types');
+        $show = (array)$this->model->getState('filter.types');
 
         $types = array(
             'P' => 'MOD_OSCAMPUS_SEARCH_TYPE_PATHWAY',
@@ -326,6 +326,12 @@ class Search
         var forms = $('form[name=oscampusFilter]');
         forms.find('select, input[type=checkbox]').on('change', function(evt) {
             this.form.submit();
+        });
+        
+        forms.find('input[type=text]').on('keypress', function(evt) {
+            if (evt.keyCode === 13) {
+                this.form.submit();
+            }
         });
         
         $('.osc-clear-filters').on('click', function(evt) {
