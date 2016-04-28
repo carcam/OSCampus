@@ -22,37 +22,17 @@ use OscampusUtilitiesArray;
 
 defined('_JEXEC') or die();
 
-class Search
+class Search extends ModuleBase
 {
-    /**
-     * @var string
-     */
-    protected $id = null;
-
     /**
      * @var string
      */
     protected $name = 'mod_oscampus_search';
 
     /**
-     * @var Registry
-     */
-    protected $params = null;
-
-    /**
      * @var OscampusModelSearch
      */
     protected $model = null;
-
-    /**
-     * @var JDatabaseDriver
-     */
-    protected $db = null;
-
-    /**
-     * @var string[]
-     */
-    protected $accessList = array();
 
     /**
      * @var int
@@ -66,23 +46,9 @@ class Search
 
     public function __construct(Registry $params)
     {
-        if (!defined('OSCAMPUS_LOADED')) {
-            $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
-            if (!is_file($path)) {
-                throw new Exception('MOD_OSCAMPUS_SEARCH_ERROR_OSCAMPUS_NOTFOUND');
-            }
-
-            require_once $path;
-        }
-
-        $this->params = $params;
+        parent::__construct($params);
 
         $this->model = OscampusModel::getInstance('Search');
-        $this->db    = OscampusFactory::getDbo();
-
-        self::$instanceCount++;
-        $this->id = $this->name . '_' . self::$instanceCount;
-
         OscampusHelperSite::loadTheme();
     }
 
@@ -365,13 +331,5 @@ JSCRIPT;
     protected function getStateClass($state)
     {
         return 'osc-formfield-' . ($state == '' ? 'inactive' : 'active');
-    }
-
-    public function output($layout = null)
-    {
-        $this->addScript();
-
-        $layout = $layout ?: $this->params->get('layout', 'default');
-        require JModuleHelper::getLayoutPath($this->name, $layout);
     }
 }
