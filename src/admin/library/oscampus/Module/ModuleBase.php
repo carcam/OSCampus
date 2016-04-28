@@ -49,9 +49,9 @@ class ModuleBase
     protected $cache = null;
 
     /**
-     * @var int
+     * @var int[]
      */
-    protected static $instanceCount = 0;
+    protected static $instanceCount = array();
 
     /**
      * ModuleBase constructor.
@@ -74,8 +74,11 @@ class ModuleBase
         $this->db    = OscampusFactory::getDbo();
         $this->cache = OscampusFactory::getCache($this->name, '');
 
-        self::$instanceCount++;
-        $this->id = $this->name . '_' . self::$instanceCount;
+        if (!isset(static::$instanceCount[$this->name])) {
+            static::$instanceCount[$this->name] = 0;
+        }
+        static::$instanceCount[$this->name]++;
+        $this->id = $this->name . '_' . static::$instanceCount[$this->name];
     }
 
     public function output($layout = null)
