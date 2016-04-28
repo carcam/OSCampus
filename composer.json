@@ -24,12 +24,6 @@
     "config"           : {
         "vendor-dir": "src/admin/vendor"
     },
-    "repositories"     : [
-        {
-            "type": "vcs",
-            "url" : "https://github.com/OSTraining/string.git"
-        }
-    ],
     "require"          : {
         "php"                         : ">= 5.3",
         "ext-curl"                    : "*",
