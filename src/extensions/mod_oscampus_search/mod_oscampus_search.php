@@ -24,6 +24,7 @@ if (defined('OSCAMPUS_LOADED')) {
     Oscampus\AutoLoader::register('Oscampus', __DIR__ . '/oscampus');
 
     /** @var Registry $params */
-    $module = new Search($params);
+    $module = new Search($params, $module);
+    $module->addScript();
     $module->output();
 }

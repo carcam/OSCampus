@@ -25,28 +25,18 @@ defined('_JEXEC') or die();
 class Search extends ModuleBase
 {
     /**
-     * @var string
-     */
-    protected $name = 'mod_oscampus_search';
-
-    /**
      * @var OscampusModelSearch
      */
     protected $model = null;
-
-    /**
-     * @var int
-     */
-    protected static $instanceCount = 0;
 
     /**
      * @var bool
      */
     protected static $javascriptLoaded = false;
 
-    public function __construct(Registry $params)
+    public function __construct(Registry $params, $module)
     {
-        parent::__construct($params);
+        parent::__construct($params, $module);
 
         $this->model = OscampusModel::getInstance('Search');
         OscampusHelperSite::loadTheme();
@@ -281,7 +271,7 @@ class Search extends ModuleBase
      *
      * @return void
      */
-    protected function addScript()
+    public function addScript()
     {
         if (!static::$javascriptLoaded) {
             JHtml::_('osc.jquery');
