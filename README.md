@@ -1,7 +1,7 @@
 OSCampus
 =========
 
-This is the video LMS that we use at OSTraining.com. It's live on OSTraining, but it's still a work in progres.
+This is the video LMS that we use at OSTraining.com. It's live on OSTraining and will soon be released to the public on Alledia.com.
 
 
 ## Limited Support Scope
