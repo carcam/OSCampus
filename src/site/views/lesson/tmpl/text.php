@@ -26,5 +26,7 @@ defined('_JEXEC') or die();
     <?php
     echo $this->loadDefaultTemplate('description');
     echo $this->loadDefaultTemplate('files');
+
+    echo OscampusHelper::renderModule('oscampus_lesson_bottom');
     ?>
 </div>
