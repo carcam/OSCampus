@@ -224,10 +224,6 @@ class OscampusModelSearch extends OscampusModelSiteList
         $app = JFactory::getApplication();
 
         // Display result types
-        $types = $app->input->get('types');
-        if ($types === null) {
-            $app->input->set('types', array());
-        }
         $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', null, 'array');
         $this->setState('filter.types', array_filter($types));
 
