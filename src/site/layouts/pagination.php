@@ -15,12 +15,28 @@ defined('_JEXEC') or die();
  * @var string      $path
  */
 
+// Normalize the uri for reliability
+$uri = JUri::getInstance();
+$vars = array_filter($uri->getQuery(true));
+if (isset($vars['start'])) {
+    unset($vars['start']);
+}
+if (isset($vars['limitstart'])) {
+    unset($vars['limitstart']);
+}
+$uri->setQuery($vars);
+
 $pages = $displayData->getPaginationPages();
 
-$displayLink = function (JPaginationObject $page, $title = null) {
+
+$displayLink = function (JPaginationObject $page, $title = null) use ($uri) {
     $text = $title ?: $page->text;
-    if ($page->link) {
-        $text = sprintf('<a href="%s">%s</a>', $page->link, $text);
+    if (!$page->active) {
+        $pageLink = clone $uri;
+        if ($page->base) {
+            $pageLink->setVar('start', $page->base);
+        }
+        $text = sprintf('<a href="%s">%s</a>', $pageLink, $text);
     } else {
         $text = '<span>' . $text . '</span>';
     }
@@ -31,7 +47,6 @@ $displayLink = function (JPaginationObject $page, $title = null) {
 
     echo $html;
 };
-
 ?>
 <div class="pagination">
     <ul class="uk-pagination">
