@@ -43,11 +43,14 @@ JHtml::_('osc.sliders', '#' . $advancedToggle, $advancedVisible);
             value="<?php echo $textValue; ?>"
             class="<?php echo $textClass; ?>"/>
 
-        <div id="<?php echo $advancedToggle; ?>" data-content="<?php echo '#' . $advancedContent; ?>" class="osc-search-toggle">
+        <div
+            id="<?php echo $advancedToggle; ?>"
+            data-content="<?php echo '#' . $advancedContent; ?>"
+            class="osc-search-toggle">
             <i class="fa fa-cogs"></i>
             <?php echo JText::_('MOD_OSCAMPUS_SEARCH_ADVANCED'); ?>
         </div>
-        <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced">
+        <div id="<?php echo $advancedContent; ?>" class="osc-search-advanced" style="display: none;">
             <?php
             echo $this->getFilter('Tag');
             echo $this->getTypes();

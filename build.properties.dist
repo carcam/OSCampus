@@ -1,4 +1,1 @@
 builder.path=/path/to/AllediaBuilder
-
-project.AllediaFramework.path=/path/to/AllediaFramework
-project.AllediaInstaller.path=/path/to/AllediaInstaller

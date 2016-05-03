@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-abstract class OscampusToolbarHelper extends JToolBarHelper
+abstract class OscampusToolbarHelper extends JToolbarHelper
 {
     public static function custom(
         $task = '',

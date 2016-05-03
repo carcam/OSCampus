@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
     <?php
     if ($this->items) :
         foreach ($this->items as $item) :
-            echo JLayoutHelper::render('course', $item);
+            echo JLayoutHelper::render('course', $item, null, array('length' => false, 'released' =>true));
         endforeach;
 
     else :

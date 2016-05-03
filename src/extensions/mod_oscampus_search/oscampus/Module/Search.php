@@ -22,67 +22,23 @@ use OscampusUtilitiesArray;
 
 defined('_JEXEC') or die();
 
-class Search
+class Search extends ModuleBase
 {
-    /**
-     * @var string
-     */
-    protected $id = null;
-
-    /**
-     * @var string
-     */
-    protected $name = 'mod_oscampus_search';
-
-    /**
-     * @var Registry
-     */
-    protected $params = null;
-
     /**
      * @var OscampusModelSearch
      */
     protected $model = null;
 
     /**
-     * @var JDatabaseDriver
-     */
-    protected $db = null;
-
-    /**
-     * @var string[]
-     */
-    protected $accessList = array();
-
-    /**
-     * @var int
-     */
-    protected static $instanceCount = 0;
-
-    /**
      * @var bool
      */
     protected static $javascriptLoaded = false;
 
-    public function __construct(Registry $params)
+    public function __construct(Registry $params, $module)
     {
-        if (!defined('OSCAMPUS_LOADED')) {
-            $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
-            if (!is_file($path)) {
-                throw new Exception('MOD_OSCAMPUS_SEARCH_ERROR_OSCAMPUS_NOTFOUND');
-            }
-
-            require_once $path;
-        }
-
-        $this->params = $params;
+        parent::__construct($params, $module);
 
         $this->model = OscampusModel::getInstance('Search');
-        $this->db    = OscampusFactory::getDbo();
-
-        self::$instanceCount++;
-        $this->id = $this->name . '_' . self::$instanceCount;
-
         OscampusHelperSite::loadTheme();
     }
 
@@ -281,7 +237,7 @@ class Search
 
     protected function getTypes($class = null)
     {
-        $show = (array)$this->model->getState('show.types');
+        $show = (array)$this->model->getState('filter.types');
 
         $types = array(
             'P' => 'MOD_OSCAMPUS_SEARCH_TYPE_PATHWAY',
@@ -315,7 +271,7 @@ class Search
      *
      * @return void
      */
-    protected function addScript()
+    public function addScript()
     {
         if (!static::$javascriptLoaded) {
             JHtml::_('osc.jquery');
@@ -326,6 +282,12 @@ class Search
         var forms = $('form[name=oscampusFilter]');
         forms.find('select, input[type=checkbox]').on('change', function(evt) {
             this.form.submit();
+        });
+        
+        forms.find('input[type=text]').on('keypress', function(evt) {
+            if (evt.keyCode === 13) {
+                this.form.submit();
+            }
         });
         
         $('.osc-clear-filters').on('click', function(evt) {
@@ -359,13 +321,5 @@ JSCRIPT;
     protected function getStateClass($state)
     {
         return 'osc-formfield-' . ($state == '' ? 'inactive' : 'active');
-    }
-
-    public function output($layout = null)
-    {
-        $this->addScript();
-
-        $layout = $layout ?: $this->params->get('layout', 'default');
-        require JModuleHelper::getLayoutPath($this->name, $layout);
     }
 }

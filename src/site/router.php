@@ -149,12 +149,9 @@ class OscampusRouter
                 $query['Itemid'] = $menuQuery['Itemid'];
 
             } else {
-                $query = array_merge($query, $route->getQuery($view));
-                if (empty($query['Itemid'])) {
-                    $segments[] = $view;
-                    if (!empty($query['view'])) {
-                        unset($query['view']);
-                    }
+                $query      = $route->getQuery($view);
+                if (!empty($query['view'])) {
+                    unset($query['view']);
                 }
             }
         }
@@ -200,7 +197,7 @@ class OscampusRouter
 
             } elseif ($view == 'pathways') {
                 $vars['view'] = 'pathway';
-                $vars['pid'] = $route->getPathwayFromSlug($segments[0]);
+                $vars['pid']  = $route->getPathwayFromSlug($segments[0]);
 
             } else {
                 $vars['view'] = $segments[0];

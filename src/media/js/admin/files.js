@@ -57,7 +57,8 @@
                         var newElement  = $(blocks[0]).clone(true),
                             chznSelects = newElement.find('select.chzn-done');
 
-                        newElement = $.Oscampus.admin.files.clearBlock(newElement);
+                        $.Oscampus.admin.files.clearBlock(newElement);
+                        $(container.children('ul').first()).append(newElement)
 
                         // Handle jui chosen selectors
                         if (chznSelects[0]) {
@@ -68,8 +69,6 @@
                                 .removeData('chosen')
                                 .chosen();
                         }
-
-                        $(container.children('ul').first()).append(newElement)
                     }
                 });
 
@@ -89,7 +88,11 @@
             fileBlock.find('select option').attr('selected', false);
             fileBlock.find('input, textarea, select').val('');
 
-            fileBlock.find('select').trigger('liszt:updated');
+            // trigger event for jui chzn fields
+            fileBlock.find('select.chzn-done')
+                .trigger('liszt:updated') // Old version
+                .trigger('chosen:updated'); // New Version
+
 
             fileBlock.find(options.path).html('');
 
