@@ -25,14 +25,6 @@
     {{ form_macro.render_fieldset(form, 'main', false) }}
     {{ form_macro.tabs_end() }}
 
-    {{ form_macro.tabs_add(form, 'pathways', 'COM_OSCAMPUS_COURSE_PATHWAYS_LABEL'|lang) }}
-    {{ form_macro.render_field(form, 'pathways', false) }}
-    {{ form_macro.tabs_end() }}
-
-    {{ form_macro.tabs_add(form, 'tags', 'COM_OSCAMPUS_COURSE_TAGS_LABEL'|lang) }}
-    {{ form_macro.render_field(form, 'tags', false) }}
-    {{ form_macro.tabs_end() }}
-
     {{ form_macro.tabs_add(form, 'description') }}
     {{ form_macro.render_field(form, 'description', true) }}
     {{ form_macro.tabs_end() }}

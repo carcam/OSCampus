@@ -37,6 +37,18 @@
             class="readonly"/>
 
         <field
+            name="pathways"
+            type="oscampus.pathways"
+            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"
+            multiple="true"/>
+
+        <field
+            name="tags"
+            type="oscampus.tags"
+            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"
+            multiple="true"/>
+
+        <field
             name="length"
             type="text"
             label="COM_OSCAMPUS_COURSE_LENGTH_LABEL"
@@ -118,16 +130,6 @@
     </fieldset>
 
     <fieldset name="special">
-        <field
-            name="pathways"
-            type="oscampus.pathways"
-            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"/>
-
-        <field
-            name="tags"
-            type="oscampus.tags"
-            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"/>
-
         <field
             name="lessons"
             type="oscampus.lessons"/>

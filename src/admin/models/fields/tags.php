@@ -8,9 +8,9 @@
 
 defined('_JEXEC') or die();
 
-JFormHelper::loadFieldType('Checkboxes');
+JFormHelper::loadFieldType('List');
 
-class OscampusFormFieldTags extends JFormFieldCheckboxes
+class OscampusFormFieldTags extends JFormFieldList
 {
     protected function getOptions()
     {
