@@ -82,9 +82,8 @@ class OscampusModelPathway extends OscampusModelCourselist
 
     protected function getStoreId($id = '')
     {
-        $keys = $this->getState()->getProperties();
-        array_unshift($keys, $this->context);
+        $id .= ($id ? '' : ':') . $this->getState('pathway.id');
 
-        return md5(join(':', $keys));
+        return parent::getStoreId($id);
     }
 }
