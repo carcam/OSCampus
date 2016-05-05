@@ -12,6 +12,8 @@ defined('_JEXEC') or die();
 class OscampusModelPathways extends OscampusModelSiteList
 {
     protected $filter_fields = array(
+        'owner',
+        'pathways',
         'tag',
         'text'
     );
@@ -26,10 +28,23 @@ class OscampusModelPathways extends OscampusModelSiteList
             ->where(
                 array(
                     'pathway.published = 1',
-                    $this->whereAccess('pathway.access', $user),
-                    'pathway.users_id = 0'
+                    $this->whereAccess('pathway.access', $user)
                 )
             );
+
+        // Various ways the pathways can be selected
+        if ($pathways = $this->getState('filter.pathways')) {
+            $pathways = array_filter(
+                array_map('intval', (array)$pathways)
+            );
+            $query->where(sprintf('pathway.id IN (%s)', join(',', $pathways)));
+
+        } elseif ($pathwayOwner = (int)$this->getState('filter.owner')) {
+            $query->where('pathway.users_id = ' . $pathwayOwner);
+
+        } else {
+            $query->where('pathway.users_id = 0');
+        }
 
         if ($tagId = (int)$this->getState('filter.tag')) {
             $subQuery = $this->getDbo()->getQuery(true)
