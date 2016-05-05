@@ -79,4 +79,12 @@ class OscampusModelPathway extends OscampusModelCourselist
 
         parent::populateState($ordering, $direction);
     }
+
+    protected function getStoreId($id = '')
+    {
+        $keys = $this->getState()->getProperties();
+        array_unshift($keys, $this->context);
+
+        return md5(join(':', $keys));
+    }
 }
