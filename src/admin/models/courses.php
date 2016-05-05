@@ -20,7 +20,6 @@ class OscampusModelCourses extends OscampusModelAdminList
             'difficulty',
             'access',
             'teacher',
-
             'course.id',
             'course.title',
             'tag.title',
