@@ -28,7 +28,6 @@ $uri->setQuery($vars);
 
 $pages = $displayData->getPaginationPages();
 
-
 $displayLink = function (JPaginationObject $page, $title = null) use ($uri) {
     $text = $title ?: $page->text;
     if (!$page->active) {
