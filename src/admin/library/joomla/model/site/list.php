@@ -48,4 +48,46 @@ abstract class OscampusModelSiteList extends OscampusModelList
 
         return $merged;
     }
+
+    /**
+     * Frontend list models should not use the core populate state method
+     * as this will cause all sorts of problems for pagination
+     *
+     * @param string $ordering
+     * @param string $direction
+     *
+     * @throws Exception
+     */
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = OscampusFactory::getApplication();
+
+        $ordering = $this->getUserStateFromRequest(
+            $this->context . '.list.ordering',
+            'ordering',
+            $ordering,
+            'cmd',
+            false
+        );
+        $this->setState('list.ordering', $ordering);
+
+        $direction = $this->getUserStateFromRequest(
+            $this->context . '.list.direction',
+            'direction',
+            $direction,
+            'cmd',
+            false
+        );
+        $this->setState('list.direction', $direction);
+
+        $this->setState('list.start', $app->input->get('limitstart', 0, 'uint'));
+
+        $limit = $app->getUserStateFromRequest(
+            $this->context . '.list.limit',
+            'limit',
+            $app->get('list_limit'),
+            'uint'
+        );
+        $this->setState('list.limit', $limit);
+    }
 }

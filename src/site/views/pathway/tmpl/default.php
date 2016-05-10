@@ -39,6 +39,6 @@ JHtml::_('behavior.core');
         }
     endif;
 
-    echo JLayoutHelper::render('pagination', $this->pagination);
+    echo $this->pagination->getPaginationLinks('pagination');
     ?>
 </div>

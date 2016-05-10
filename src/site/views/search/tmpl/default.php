@@ -47,7 +47,7 @@ JHtml::_('behavior.core');
         $lastSection = $item->section;
     endforeach;
 
-    echo JLayoutHelper::render('pagination', $this->pagination);
+    echo $this->pagination->getPaginationLinks('pagination');
     ?>
 </div>
 

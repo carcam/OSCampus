@@ -58,7 +58,13 @@ class OscampusRouter
     public function build(&$query)
     {
         $segments = array();
-        $route    = OscampusRoute::getInstance();
+
+        // Unset pointless limitstart=0
+        if (isset($query['limitstart']) && $query['limitstart'] == 0) {
+            unset($query['limitstart']);
+        }
+
+        $route = OscampusRoute::getInstance();
 
         if (!empty($query['view'])) {
             $view = $query['view'];
@@ -149,7 +155,7 @@ class OscampusRouter
                 $query['Itemid'] = $menuQuery['Itemid'];
 
             } else {
-                $query      = $route->getQuery($view);
+                $query = array_merge($query, $route->getQuery($view));
                 if (!empty($query['view'])) {
                     unset($query['view']);
                 }
