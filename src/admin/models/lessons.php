@@ -113,19 +113,19 @@ class OscampusModelLessons extends OscampusModelAdminList
 
     protected function populateState($ordering = 'lesson.title', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search', '', 'string');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
 
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published');
         $this->setState('filter.published', $published);
 
-        $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'course', null, 'int');
+        $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'filter_course', null, 'int');
         $this->setState('filter.course', $course);
 
-        $lessonType = $this->getUserStateFromRequest($this->context . '.filter.lessontype', 'lessontype', '', 'string');
+        $lessonType = $this->getUserStateFromRequest($this->context . '.filter.lessontype', 'filter_lessontype', '', 'string');
         $this->setState('filter.lessontype', $lessonType);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'access');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
         $this->setState('filter.access', $access);
 
         parent::populateState($ordering, $direction);

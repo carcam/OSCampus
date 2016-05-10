@@ -17,7 +17,6 @@ class OscampusModelPathways extends OscampusModelAdminList
             'published',
             'owner',
             'access',
-
             'pathway.ordering',
             'pathway.published',
             'pathway.title',
@@ -79,16 +78,21 @@ class OscampusModelPathways extends OscampusModelAdminList
 
     protected function populateState($ordering = 'pathway.title', $direction = 'ASC')
     {
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'search', '', 'string');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
 
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'published', '', 'string');
+        $published = $this->getUserStateFromRequest(
+            $this->context . '.filter.published',
+            'filter_published',
+            '',
+            'string'
+        );
         $this->setState('filter.published', $published);
 
-        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'owner', '', 'string');
+        $owner = $this->getUserStateFromRequest($this->context . '.filter.owner', 'filter_owner', '', 'string');
         $this->setState('filter.owner', $owner);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'access', 0, 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);
 
         parent::populateState($ordering, $direction);

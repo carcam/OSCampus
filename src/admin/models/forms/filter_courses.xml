@@ -18,7 +18,7 @@
         </field>
 
         <field
-            name="pathways"
+            name="pathway"
             type="oscampus.options"
             options="pathways"
             onchange="this.form.submit();">

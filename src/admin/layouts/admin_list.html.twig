@@ -11,7 +11,7 @@
 
 {% block page_setup %}
     {{ parent() }}
-    {{ html('behavior.multiselect') }}
+    {{ html('behavior.multiselect')|raw }}
 {% endblock %}
 
 {% block main_content %}
