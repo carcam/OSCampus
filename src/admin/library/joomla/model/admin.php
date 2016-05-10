@@ -28,7 +28,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {
         if (empty($type)) {
-            $inflector = Oscampus\String\Inflector::getInstance();
+            $inflector = \Oscampus\String\Inflector::getInstance();
             $type      = $inflector->toPlural($this->name);
         }
         return OscampusTable::getInstance($type, $prefix, $config);

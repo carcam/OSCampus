@@ -112,7 +112,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
      */
     protected function setToolbar()
     {
-        $inflector = Oscampus\String\Inflector::getInstance();
+        $inflector = \Oscampus\String\Inflector::getInstance();
 
         $plural   = $this->getName();
         $singular = $inflector->toSingular($plural);
