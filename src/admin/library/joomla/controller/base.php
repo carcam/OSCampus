@@ -13,14 +13,17 @@ class OscampusControllerBase extends JControllerLegacy
     public function display($cachable = false, $urlparams = array())
     {
         if (OscampusFactory::getApplication()->isAdmin()) {
-            $app = OscampusFactory::getApplication();
+            $app       = OscampusFactory::getApplication();
             $inflector = \Oscampus\String\Inflector::getInstance();
             $view      = $app->input->getCmd('view', $this->default_view);
             $layout    = $app->input->getCmd('layout', '');
             $id        = $app->input->getInt('id');
 
             // Check for edit form.
-            if ($inflector->isSingular($view) && $layout == 'edit' && !$this->checkEditId('com_oscampus.edit.' . $view, $id)) {
+            if ($inflector->isSingular($view)
+                && $layout == 'edit'
+                && !$this->checkEditId('com_oscampus.edit.' . $view, $id)
+            ) {
                 // Somehow the person just went to the form - we don't allow that.
                 $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
                 $this->setMessage($this->getError(), 'error');
