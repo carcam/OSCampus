@@ -89,9 +89,9 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->course === null) {
             $this->course = array();
 
-            $types = (array)$this->getState('filter.types');
+            $types = $this->getState('filter.types');
 
-            if (!$types || in_array('C', $types)) {
+            if (!$types || strpos($types, 'C') !== false) {
                 $model = OscampusModel::getInstance('Courselist');
                 $model->getState();
 
@@ -112,9 +112,9 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->pathway === null) {
             $this->pathway = array();
 
-            $types = (array)$this->getState('filter.types');
+            $types = $this->getState('filter.types');
 
-            if (!$types || in_array('P', $types)) {
+            if (!$types || strpos($types, 'P') !== false) {
                 /** @var OscampusModelPathways $model */
                 $model = OscampusModel::getInstance('Pathways');
 
@@ -134,8 +134,8 @@ class OscampusModelSearch extends OscampusModelSiteList
         if ($this->lesson === null) {
             $this->lesson = array();
 
-            $types = (array)$this->getState('filter.types');
-            if (!$types || in_array('L', $types)) {
+            $types = $this->getState('filter.types');
+            if (!$types || strpos($types, 'L') !== false) {
                 $db = $this->getDbo();
 
                 $query = $db->getQuery(true)
@@ -224,8 +224,8 @@ class OscampusModelSearch extends OscampusModelSiteList
         $app = JFactory::getApplication();
 
         // Display result types
-        $types = (array)$this->getUserStateFromRequest($this->context . '.types', 'types', null, 'array');
-        $this->setState('filter.types', array_filter($types));
+        $types = $this->getUserStateFromRequest($this->context . '.types', 'types', null, 'cmd');
+        $this->setState('filter.types', $types);
 
         // Text search filter
         $minLength = 2;

@@ -237,7 +237,7 @@ class Search extends ModuleBase
 
     protected function getTypes($class = null)
     {
-        $show = (array)$this->model->getState('filter.types');
+        $show = $this->model->getState('filter.types');
 
         $types = array(
             'P' => 'MOD_OSCAMPUS_SEARCH_TYPE_PATHWAY',
@@ -245,24 +245,24 @@ class Search extends ModuleBase
             'L' => 'MOD_OSCAMPUS_SEARCH_TYPE_LESSON'
         );
 
-        $html = array();
+        $html = array('<span class="osc-types-filter">');
         foreach ($types as $type => $label) {
             $attribs = array(
-                'name' => 'types[]',
-                'type' => 'checkbox',
+                'type'  => 'checkbox',
                 'value' => $type
             );
             if ($class) {
-                $attribs['class'] = $class;
+                $attribs['class'] .= ' ' . $class;
             }
-            if (in_array($type, $show)) {
+            if (strpos($show, $type) !== false) {
                 $attribs['checked'] = 'checked';
             }
 
             $html[] = '<div><input ' . OscampusUtilitiesArray::toString($attribs) . '/> ';
             $html[] = JText::_($label) . '</div>';
         }
-        $html[] = '<input type="hidden" name="types[]" value=""/>';
+        $html[] = sprintf('<input type="hidden" name="types" value="%s"/>', $show);
+        $html[] = '</span>';
 
         return join("\n", $html);
     }
@@ -281,11 +281,25 @@ class Search extends ModuleBase
 (function($) {
     $(document).ready(function() {
         var forms = $('form[name=oscampusFilter]');
-        forms.find('select, input[type=checkbox]').on('change', function(evt) {
+
+        forms
+            .find('.osc-types-filter')
+            .find(':checkbox')
+            .on('change', function(evt) {
+                var target = $(this).parents('.osc-types-filter').find('input[name=types]')
+                
+                var selected = target.val().replace(this.value, '');
+                if (this.checked) {
+                    selected += this.value;
+                }
+                target.val(selected);
+            });
+
+        forms.find('select, input:checkbox').on('change', function(evt) {
             this.form.submit();
         });
-        
-        forms.find('input[type=text]').on('keypress', function(evt) {
+
+        forms.find('input:text').on('keypress', function(evt) {
             if (evt.keyCode === 13) {
                 this.form.submit();
             }
@@ -295,7 +309,7 @@ class Search extends ModuleBase
             evt.preventDefault();
             $(this.form)
                 .find(':input')
-                .not(':button,:hidden')
+                .not(':button')
                 .each(function (index, element) {
                     $(element).val(null);
                 });
