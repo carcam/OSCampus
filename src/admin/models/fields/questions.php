@@ -172,10 +172,10 @@ class OscampusFormFieldQuestions extends JFormField
         $questions = (array)$this->value;
         foreach ($questions as &$question) {
             $answers = (array)$question['answers'];
-            $correct = isset($question['correct']) ? $question['correct'] : false;
+            $correct = isset($question['correct']) ? $question['correct'] : -1;
 
             foreach ($answers as $answerId => $answer) {
-                if ($correct !== false && is_string($answer)) {
+                if (is_string($answer)) {
                     $answers[$answerId] = array(
                         'text' => $answer,
                         'correct' => ($correct == $answerId)
