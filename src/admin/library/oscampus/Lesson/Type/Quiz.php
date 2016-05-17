@@ -241,7 +241,7 @@ class Quiz extends AbstractType
             $questionText = $question['text'];
             if ($questionText) {
                 if (!isset($question['correct'])) {
-                    throw new Exception(JText::_('COM_OSCAMPUS_ERROR_QUIZ_CORRECT_ANSWER', $questionText));
+                    throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_QUIZ_CORRECT_ANSWER', $questionText));
                 }
 
                 $questionKey    = md5($questionText);
