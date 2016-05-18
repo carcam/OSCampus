@@ -26,20 +26,20 @@ if (!empty($pages)) {
     $displayLink = function (JPaginationObject $page, $title = null) {
         $text = $title ?: $page->text;
         if ($page->active) {
-            return '<li class="active hidden-phone"><span>' . $text . '</span></li>';
+            return '<li><span>' . $text . '</span></li>';
         }
 
-        return '<li class="hidden-phone">' . JHtml::_('link', $page->link, $text) . '</li>';
+        return '<li>' . JHtml::_('link', $page->link, $text) . '</li>';
     };
     ?>
-    <div class="pagination">
-        <ul class="pagination-list">
+    <div class="osc-pagination">
+        <ul class="osc-pagination-list">
             <?php
             if ($pages['start']['active']) {
-                echo $displayLink($pages['start']['data'], '<i class="icon-first"></i>');
+                echo $displayLink($pages['start']['data'], '<i class="fa fa-angle-double-left"></i>');
             }
             if ($pages['previous']['active']) {
-                echo $displayLink($pages['previous']['data'], '<i class="icon-previous"></i>');
+                echo $displayLink($pages['previous']['data'], '<i class="fa fa-chevron-left"></i>');
             }
 
             foreach ($pages['pages'] as $page) {
@@ -47,10 +47,10 @@ if (!empty($pages)) {
             }
 
             if ($pages['next']['active']) {
-                echo $displayLink($pages['next']['data'], '<i class="icon-next"></i>');
+                echo $displayLink($pages['next']['data'], '<i class="fa fa-chevron-right"></i>');
             }
             if ($pages['end']['active']) {
-                echo $displayLink($pages['end']['data'], '<i class="icon-last"></i>');
+                echo $displayLink($pages['end']['data'], '<i class="fa fa-angle-double-right"></i>');
             }
             ?>
         </ul>
