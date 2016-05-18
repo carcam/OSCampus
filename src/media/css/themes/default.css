@@ -1137,6 +1137,10 @@
     #oscampus.osc-container .osc-lesson-options {
         display: none !important;
     }
+    /* pagination */
+    #oscampus.osc-container .osc-pagination li.osc-page-number {
+        display: none;
+    }
 }
 
 @media (max-width: 767px) {
