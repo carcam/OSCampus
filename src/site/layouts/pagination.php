@@ -26,10 +26,10 @@ if (!empty($pages)) {
     $displayLink = function (JPaginationObject $page, $title = null) {
         $text = $title ?: $page->text;
         if ($page->active) {
-            return '<li class="active"><span>' . $text . '</span></li>';
+            return '<li class="active hidden-phone"><span>' . $text . '</span></li>';
         }
 
-        return '<li>' . JHtml::_('link', $page->link, $text) . '</li>';
+        return '<li class="hidden-phone">' . JHtml::_('link', $page->link, $text) . '</li>';
     };
     ?>
     <div class="pagination">
