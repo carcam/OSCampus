@@ -337,4 +337,10 @@ JSCRIPT;
     {
         return 'osc-formfield-' . ($state == '' ? 'inactive' : 'active');
     }
+
+    public function output($layout = null)
+    {
+        $this->addScript();
+        parent::output($layout);
+    }
 }

@@ -26,17 +26,7 @@ defined('_JEXEC') or die();
  * @var string           $template
  */
 
-if (!defined('OSCAMPUS_LOADED')) {
-    $path = JPATH_ADMINISTRATOR . '/components/com_oscampus/include.php';
-    if (is_file($path)) {
-        require_once $path;
-    }
-}
+require_once __DIR__ . '/include.php';
 
-if (defined('OSCAMPUS_LOADED')) {
-    Oscampus\AutoLoader::register('Oscampus', __DIR__ . '/oscampus');
-
-    $helper = new Search($params, $module);
-    $helper->addScript();
-    $helper->output();
-}
+$view = new Search($params, $module);
+$view->output();
