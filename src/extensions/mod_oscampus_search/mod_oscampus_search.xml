@@ -17,5 +17,4 @@
         <filename>include.php</filename>
         <filename module="mod_oscampus_search">mod_oscampus_search.php</filename>
     </files>
-
 </extension>
