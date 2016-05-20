@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewCourses extends OscampusViewList
+class OscampusViewCourses extends OscampusViewAdminList
 {
     protected function setup()
     {

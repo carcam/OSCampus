@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-class OscampusViewTeachers extends OscampusViewList
+class OscampusViewTeachers extends OscampusViewAdminList
 {
 
 }

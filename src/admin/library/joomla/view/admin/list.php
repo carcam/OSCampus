@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 
-abstract class OscampusViewList extends OscampusViewAdmin
+abstract class OscampusViewAdminList extends OscampusViewAdmin
 {
     /**
      * @var mixed[]
@@ -46,7 +46,7 @@ abstract class OscampusViewList extends OscampusViewAdmin
         parent::setup();
 
         $this->model = $this->getModel();
-        
+
         // get model state and ensure state is initialised
         $state = $this->model->getState();
 
