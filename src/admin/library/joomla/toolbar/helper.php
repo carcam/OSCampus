@@ -10,6 +10,18 @@ defined('_JEXEC') or die();
 
 abstract class OscampusToolbarHelper extends JToolbarHelper
 {
+    /**
+     * Add a custom button with standard OSCampus styles
+     *
+     * @param string $task
+     * @param string $icon
+     * @param string $iconOver
+     * @param string $alt
+     * @param bool   $listSelect
+     * @param string $iconColor
+     *
+     * @return void
+     */
     public static function custom(
         $task = '',
         $icon = '',
@@ -22,18 +34,19 @@ abstract class OscampusToolbarHelper extends JToolbarHelper
         if ($img) {
             $doc = OscampusFactory::getDocument();
 
-            if (version_compare(JVERSION, '3.0', 'lt')) {
-                $doc->addStyleDeclaration(
-                    ".icon-32-{$icon} { background-image: url({$img}); background-repeat: no-repeat; }"
-                );
-
-            } else {
-                $doc->addStyleDeclaration(".icon-{$icon}:before { color: {$iconColor}; }");
-            }
+            $doc->addStyleDeclaration(".icon-{$icon}:before { color: {$iconColor}; }");
         }
         parent::custom($task, $icon, $iconOver, $alt, $listSelect);
     }
 
+    /**
+     * Add the batch button
+     *
+     * @param string $title
+     * @param string $layout
+     *
+     * @return void
+     */
     public static function batch($title = '', $layout = 'joomla.toolbar.batch')
     {
         // Instantiate a new JLayoutFile instance and render the batch button
