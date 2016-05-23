@@ -18,8 +18,8 @@ class OscampusViewLessons extends OscampusViewAdminList
 
         $this->setOrdering('lesson.ordering', 'lessons', $ordering == 'lesson.ordering');
 
+        // Setup and render the batch form
         OscampusFactory::getDocument()->addStyleDeclaration('.modal-body { height: 250px; }');
-
         $batchBody   = $this->loadTemplate('batch_body');
         $batchFooter = $this->loadTemplate('batch_footer');
         $this->setBatchForm($batchBody, $batchFooter);

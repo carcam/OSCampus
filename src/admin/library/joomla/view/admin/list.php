@@ -193,6 +193,16 @@ abstract class OscampusViewAdminList extends OscampusViewAdmin
         return false;
     }
 
+    /**
+     * Render a batch form for use in twig templates
+     *
+     * @param string $body
+     * @param string $footer
+     * @param array  $params
+     *
+     * @return void
+     * @throws Exception
+     */
     protected function setBatchForm($body, $footer, $params = array())
     {
         $params = array_merge(
