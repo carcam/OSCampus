@@ -128,6 +128,10 @@ abstract class OscampusViewAdminList extends OscampusViewAdmin
 
         OscampusToolbarHelper::deleteList('COM_OSCAMPUS_DELETE_CONFIRM', $plural . '.delete');
 
+        if ($this->getVariable('batchForm')) {
+            OscampusToolbarHelper::batch();
+        }
+
         parent::setToolbar();
     }
 
@@ -187,5 +191,23 @@ abstract class OscampusViewAdminList extends OscampusViewAdmin
         }
 
         return false;
+    }
+
+    protected function setBatchForm($body, $footer, $params = array())
+    {
+        $params = array_merge(
+            $params,
+            array(
+                'footer' => $footer
+            )
+        );
+        if (!isset($params['title'])) {
+            $params['title'] = JText::_('COM_OSCAMPUS_' . $this->getName() . '_BATCH_OPTIONS');
+        }
+
+        $this->setVariable(
+            'batchForm',
+            JHtml::_('bootstrap.renderModal', 'collapseModal', $params, $body)
+        );
     }
 }

@@ -33,4 +33,16 @@ abstract class OscampusToolbarHelper extends JToolbarHelper
         }
         parent::custom($task, $icon, $iconOver, $alt, $listSelect);
     }
+
+    public static function batch($title = '', $layout = 'joomla.toolbar.batch')
+    {
+        // Instantiate a new JLayoutFile instance and render the batch button
+        $layout = new JLayoutFile($layout);
+
+        $title = $title ?: JText::_('JTOOLBAR_BATCH');
+
+        $bar  = JToolbar::getInstance('toolbar');
+        $html = $layout->render(array('title' => $title));
+        $bar->appendButton('Custom', $html, 'batch');
+    }
 }

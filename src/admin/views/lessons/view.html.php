@@ -17,6 +17,12 @@ class OscampusViewLessons extends OscampusViewAdminList
         $ordering = $this->getState()->get('list.ordering');
 
         $this->setOrdering('lesson.ordering', 'lessons', $ordering == 'lesson.ordering');
+
+        OscampusFactory::getDocument()->addStyleDeclaration('.modal-body { height: 250px; }');
+
+        $batchBody   = $this->loadTemplate('batch_body');
+        $batchFooter = $this->loadTemplate('batch_footer');
+        $this->setBatchForm($batchBody, $batchFooter);
     }
 
     public function getSortGroupId($item)
