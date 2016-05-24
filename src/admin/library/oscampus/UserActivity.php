@@ -107,6 +107,13 @@ class UserActivity extends AbstractBase
                 $this->lessons[$courseId] = $this->dbo
                     ->setQuery($query)
                     ->loadObjectList('lessons_id', get_class($this->lessonStatus));
+
+                if (version_compare(phpversion(), '5.6.21', 'ge')) {
+                    /** @var LessonStatus $course */
+                    foreach ($this->lessons[$courseId] as $course) {
+                        $course->setProperties($course->toArray());
+                    }
+                }
             }
         }
 
@@ -320,7 +327,14 @@ class UserActivity extends AbstractBase
             $query->where('course.id = ' . (int)$courseId);
         }
 
-        $summary = $this->dbo->setQuery($query)->loadObjectlist('id', get_class($this->lessonSummary));
+        $summary = $this->dbo->setQuery($query)->loadObjectList('id', get_class($this->lessonSummary));
+
+        if (version_compare(phpversion(), '5.6.21', 'ge')) {
+            /** @var LessonSummary $item */
+            foreach ($summary as $item) {
+                $item->setProperties($item->toArray());
+            }
+        }
 
         return $summary;
     }

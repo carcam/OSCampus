@@ -123,6 +123,13 @@ class OscampusModelMycourses extends OscampusModelList
         $this->_db->setQuery($query, $limitstart, $limit);
         $result = $this->_db->loadObjectList('id', '\\Oscampus\\Activity\\CourseStatus');
 
+        if (version_compare(phpversion(), '5.6.21', 'ge')) {
+            /** @var CourseStatus $item */
+            foreach ($result as $item) {
+                $item->setProperties($item->toArray());
+            }
+        }
+
         return $result;
     }
 
