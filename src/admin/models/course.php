@@ -151,7 +151,7 @@ class OscampusModelCourse extends OscampusModelAdmin
     {
         $app       = OscampusFactory::getApplication();
         $filters   = $app->input->get('filter', array(), 'array');
-        $pathwayId = isset($filters['pathways']) ? (int)$filters['pathways'] : 0;
+        $pathwayId = isset($filters['pathway']) ? (int)$filters['pathway'] : 0;
 
         if ($pathwayId) {
             $db  = $this->getDbo();
