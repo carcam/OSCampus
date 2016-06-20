@@ -75,13 +75,24 @@ endif;
             <?php
         endif;
 
-        if ($options->get('teacher', true)) :
+        if ($options->get('teacher', false)) :
             ?>
             <span class="osc-label">
-                <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
+                <i class="fa fa-user"></i>
+                <?php echo $item->teacher; ?>
             </span>
             <?php
         endif;
+
+        if ($options->get('difficulty', true)) :
+            ?>
+            <span class="osc-label">
+                <i class="fa fa-signal"></i>
+                <?php echo JHtml::_('osc.course.difficulty', $item->difficulty); ?>
+            </span>
+            <?php
+        endif;
+
         ?>
     </div>
     <div class="block3 osc-course-start">
