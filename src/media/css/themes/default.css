@@ -1132,11 +1132,6 @@
     #oscampus.osc-container .osc-quiz-big-icon {
         padding: 30px 15px 0;
     }
-    /* lesson */
-    #oscampus.osc-container .osc-lesson-navigation,
-    #oscampus.osc-container .osc-lesson-options {
-        display: none !important;
-    }
     /* pagination */
     #oscampus.osc-container .osc-pagination li.osc-page-number {
         display: none;
