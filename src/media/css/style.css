@@ -136,27 +136,27 @@
 
 /* Fullscreen/Loading states
 ========================================================================== */
-main:-moz-full-screen {
+#vg-mainbody:-moz-full-screen {
     width: 100%;
     height: 100%;
 }
 
-main:-webkit-full-screen {
+#vg-mainbody:-webkit-full-screen {
     width: 100%;
     height: 100%;
 }
 
-main:-ms-fullscreen {
+#vg-mainbody:-ms-fullscreen {
     width: 100%;
     height: 100%;
 }
 
-main:fullscreen {
+#vg-mainbody:fullscreen {
     width: 100%;
     height: 100%;
 }
 
-main {
+#vg-mainbody {
     position: relative;
 }
 
@@ -165,7 +165,7 @@ body.fullscreen [id^=text_] {
     display: none;
 }
 
-body.fullscreen main {
+body.fullscreen #vg-mainbody {
     background: #000000;
 }
 

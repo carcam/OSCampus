@@ -173,7 +173,7 @@
                     if (screenfull.isFullscreen) {
                         screenfull.exit();
                     } else {
-                        screenfull.request($('main')[0]);
+                        screenfull.request($('.oscampus-lesson-content')[0]);
                     }
                 }
             });
