@@ -228,7 +228,6 @@
                                 var container = $(options.container);
 
                                 container.load(target.link, {tmpl: 'oscampus'}, function(text, status) {
-                                    console.log('component!');
                                     $('body').addClass('fullscreen');
                                     var postProcess = setInterval(function() {
                                         if (typeof wistiaEmbed.elem() !== 'undefined') {
