@@ -167,6 +167,13 @@ body.fullscreen #oscampus {
     background: #000000;
     position: relative;
     padding: 0;
+    display: table;
+    z-index: 999;
+}
+
+body.fullscreen #oscampus .oscampus-lesson-content {
+    vertical-align: middle;
+    display: table-cell;
 }
 
 #oscampus.osc-container.loading {
