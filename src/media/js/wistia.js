@@ -173,7 +173,7 @@
                     if (screenfull.isFullscreen) {
                         screenfull.exit();
                     } else {
-                        screenfull.request($('.oscampus-lesson-content')[0]);
+                        screenfull.request($('#oscampus')[0]);
                     }
                 }
             });
@@ -227,7 +227,9 @@
 
                                 var container = $(options.container);
 
-                                container.load(target.link, {tmpl: 'component'}, function(text, status) {
+                                container.load(target.link, {tmpl: 'oscampus'}, function(text, status) {
+                                    console.log('component!');
+                                    $('body').addClass('fullscreen');
                                     var postProcess = setInterval(function() {
                                         if (typeof wistiaEmbed.elem() !== 'undefined') {
                                             wistiaEmbed.ready(function() {

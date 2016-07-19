@@ -136,37 +136,37 @@
 
 /* Fullscreen/Loading states
 ========================================================================== */
-#vg-mainbody:-moz-full-screen {
+#oscampus:-moz-full-screen {
     width: 100%;
     height: 100%;
 }
 
-#vg-mainbody:-webkit-full-screen {
+#oscampus:-webkit-full-screen {
     width: 100%;
     height: 100%;
 }
 
-#vg-mainbody:-ms-fullscreen {
+#oscampus:-ms-fullscreen {
     width: 100%;
     height: 100%;
 }
 
-#vg-mainbody:fullscreen {
+#oscampus:fullscreen {
     width: 100%;
     height: 100%;
 }
 
-#vg-mainbody {
-    position: relative;
-}
-
-body.fullscreen .osc-lesson-title,
-body.fullscreen [id^=text_] {
+body.fullscreen #oscampus .osc-lesson-title,
+body.fullscreen #oscampus [id^=text_],
+body.fullscreen #oscampus .oscampus-lesson-description,
+body.fullscreen #oscampus .mod_oshelpscoutform {
     display: none;
 }
 
-body.fullscreen #vg-mainbody {
+body.fullscreen #oscampus {
     background: #000000;
+    position: relative;
+    padding: 0;
 }
 
 #oscampus.osc-container.loading {
