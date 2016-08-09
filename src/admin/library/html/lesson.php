@@ -127,7 +127,7 @@ abstract class OscLesson
      * @return string
      * @throws Exception
      */
-    public static function retrylink($lesson, $text, $attribs = null, $uriOnly)
+    public static function retrylink($lesson, $text, $attribs = null, $uriOnly = false)
     {
         $query         = static::linkQuery($lesson);
         $query['task'] = 'lesson.retry';
