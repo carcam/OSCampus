@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 
 /**
- * Class OscampusUtilitiesArrayHelper
+ * Class OscampusUtilitiesArray
  *
  * @method static array  arrayUnique($myArray)
  * @method static array  fromObject($p_obj, $recurse = true, $regex = null)
