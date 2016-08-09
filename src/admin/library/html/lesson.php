@@ -108,7 +108,6 @@ abstract class OscLesson
         // Check if we called the lesson from a normal request or ajax request.
         // An ajax request needs to print the JS right in the output, without
         // pass to the document. Otherwise it won't be added to the output.
-        var_dump(Request::isAjax());
         if (!Request::isAjax()) {
             JHtml::_('osc.jquery');
             JHtml::_('script', 'com_oscampus/lesson.js', false, true);
