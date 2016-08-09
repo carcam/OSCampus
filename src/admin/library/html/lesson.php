@@ -7,6 +7,7 @@
  */
 
 use Oscampus\Lesson;
+use Oscampus\Request;
 use Oscampus\Lesson\Properties;
 
 defined('_JEXEC') or die();
@@ -103,9 +104,17 @@ abstract class OscLesson
         JText::script('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS');
         JText::script('COM_OSCAMPUS_LESSON_LOADING_TITLE');
 
-        JHtml::_('osc.jquery');
-        JHtml::_('script', 'com_oscampus/lesson.js', false, true);
-        JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});");
+        // Fixes the fullscreen navigation.
+        // Check if we called the lesson from a normal request or ajax request.
+        // An ajax request needs to print the JS right in the output, without
+        // pass to the document. Otherwise it won't be added to the output.
+        var_dump(Request::isAjax());
+        if (!Request::isAjax()) {
+            JHtml::_('osc.jquery');
+            JHtml::_('script', 'com_oscampus/lesson.js', false, true);
+        }
+
+        JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});", Request::isAjax());
     }
 
     /**

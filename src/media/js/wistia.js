@@ -183,7 +183,7 @@
             wistiaEmbed.requestFullscreen = function() {
                 newButton.trigger('click');
             };
-            this.fullscreenNavigate();
+            this.setFullscreenNavigation();
 
             if (screenfull && screenfull.enabled) {
                 document.addEventListener(screenfull.raw.fullscreenchange, function() {
@@ -210,7 +210,7 @@
          * If we're in fullscreen mode we have to do an ajax load of the next
          * wistia lesson to retain fullscreen.
          */
-        fullscreenNavigate: function() {
+        setFullscreenNavigation: function() {
             var options = $.Oscampus.lesson.navigation.options;
 
             $.each(options.buttons, function(direction, id) {
@@ -233,6 +233,7 @@
                                         if (typeof wistiaEmbed.elem() !== 'undefined') {
                                             wistiaEmbed.ready(function() {
                                                 $.Oscampus.wistia.moveNavigationButtons();
+                                                $.Oscampus.wistia.setFullscreenNavigation();
 
                                                 // Update the url and title
                                                 window.history.pushState(null, target.title, target.link);
