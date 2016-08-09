@@ -11,7 +11,7 @@
  */
 defined('_JEXEC') or die();
 
-$component = OscampusFactory::getApplication()->input->getCmd('tmpl') == 'component';
+$component = OscampusFactory::getApplication()->input->getCmd('tmpl') === 'oscampus';
 
 if (!$component):
     ?>
