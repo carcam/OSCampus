@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 
 $component = OscampusFactory::getApplication()->input->getCmd('tmpl') === 'oscampus';
 
-if (!$component):
+if (!$component) :
     ?>
     <div class="osc-container oscampus-wistia" id="oscampus">
     <?php
@@ -38,7 +38,7 @@ if ($this->lesson->isAuthorised()) {
     echo OscampusHelper::renderModule('oscampus_lesson_bottom');
 }
 
-if (!$component):
+if (!$component) :
     ?>
     </div>
     <?php
