@@ -6,9 +6,6 @@
  * @license
  */
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
 
 $component = OscampusFactory::getApplication()->input->getCmd('tmpl') === 'oscampus';
