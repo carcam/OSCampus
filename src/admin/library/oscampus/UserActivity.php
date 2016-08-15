@@ -198,7 +198,6 @@ class UserActivity extends AbstractBase
         if (!$completed && $lessonStatus->completed) {
             $this->certificate->award($lessonStatus->courses_id, $this);
         }
-
     }
 
     /**
