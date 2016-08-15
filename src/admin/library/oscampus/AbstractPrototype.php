@@ -115,7 +115,7 @@ abstract class AbstractPrototype
     public function setProperty($name, $value)
     {
         if (in_array($name, $this->dateProperties) && property_exists($this, $name)) {
-            if (is_string($value)) {
+            if (is_string($value) && substr($value, 0, 10) != '0000-00-00') {
                 $this->$name = OscampusFactory::getDate($value);
 
             } elseif (is_numeric($value)) {
