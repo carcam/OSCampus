@@ -97,6 +97,7 @@ class OscampusModelMycourses extends OscampusModelList
             ->innerJoin('#__oscampus_modules AS module ON module.courses_id = course.id')
             ->innerJoin('#__oscampus_lessons AS lesson ON lesson.modules_id = module.id')
             ->innerJoin("({$activityQuery}) AS user_activity ON user_activity.courses_id = course.id")
+            ->where('lesson.published = 1')
             ->group('course.id');
 
         $ordering  = $this->getState('list.ordering');

@@ -298,6 +298,7 @@ class UserActivity extends AbstractBase
             ->select('m1.courses_id, count(distinct l1.id) lessons')
             ->from('#__oscampus_lessons AS l1')
             ->innerJoin('#__oscampus_modules AS m1 ON m1.id = l1.modules_id')
+            ->where('l1.published = 1')
             ->group('m1.courses_id');
 
         $query = $this->dbo->getQuery(true)
