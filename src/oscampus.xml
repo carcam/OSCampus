@@ -8,6 +8,7 @@
     <authorEmail>info@ostraining.com</authorEmail>
     <authorUrl>https://www.ostraining.com</authorUrl>
     <version>1.0.5b4</version>
+    <variant>PRO</variant>
     <description>COM_OSCAMPUS_COMPONENT_DESCRIPTION</description>
 
     <scriptfile>script.install.php</scriptfile>
@@ -72,7 +73,7 @@
     <alledia>
         <element>oscampus</element>
         <namespace>Oscampus</namespace>
-        <license>free</license>
+        <license>pro</license>
 
         <relatedExtensions>
             <extension

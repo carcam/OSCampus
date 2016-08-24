@@ -9,7 +9,7 @@
         "element-short"  : "oscampus",
         "name"           : "OSCampus",
         "client"         : "administrator",
-        "package-license": "free"
+        "package-license": "pro"
     },
     "authors"          : [
         {
