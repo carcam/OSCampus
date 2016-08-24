@@ -89,6 +89,13 @@
                 type="plugin"
                 folder="osmap"
                 element="com_oscampus">plg_osmap_com_oscampus</extension>
+
+            <extension
+                type="plugin"
+                group="system"
+                element="osmylicensesmanager"
+                publish="true"
+                ordering="last">OSMyLicensesManager</extension>
         </relatedExtensions>
 
         <obsolete>
