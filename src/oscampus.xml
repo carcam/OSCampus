@@ -120,4 +120,8 @@
             <file>/components/com_oscampus/views/search/tmpl/default_pathways.php</file>
         </obsolete>
     </alledia>
+
+    <updateservers>
+        <server type="extension" priority="1" name="Stable Release"><![CDATA[https://deploy.ostraining.com/client/update/pro/stable/com_oscampus/MDc5MTZhNDFmNDBiYTE2OWY1NWJhMDBiMWNkYzBiOTZmMmMyODI5Zgo=]]></server>
+    </updateservers>
 </extension>
