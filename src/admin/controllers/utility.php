@@ -380,9 +380,10 @@ class OscampusControllerUtility extends OscampusControllerBase
                     $idField = $idField[0];
                     array_unshift($fields, $idField);
 
-                    $where = array();
+                    $fields = array_map(array($db, 'quoteName'), $fields);
+                    $where  = array();
                     foreach ($fields as $field) {
-                        $where[] = $db->quoteName($field) . ' RLIKE ' . $db->quote($regex);
+                        $where[] = $field . ' RLIKE ' . $db->quote($regex);
                     }
                     $query = $db->getQuery(true)
                         ->select($fields)
