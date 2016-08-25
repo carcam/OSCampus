@@ -328,7 +328,7 @@ class OscampusModelCourse extends OscampusModelAdmin
             if (!empty($uploads[$index]['name'])) {
                 $upload = $uploads[$index];
 
-                $path = Course::FILE_PATH . '/' . $upload['name'];
+                $path = Course::getFilePath($upload['name']);
                 // @TODO: allowing all unsafe files. Consider reviewing for more control
                 if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path, false, true)) {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_COURSE_FILE_UPLOAD', $path));

@@ -148,11 +148,12 @@ class OscampusFormFieldFiles extends JFormFieldList
     protected function getFileList($selected)
     {
         if ($this->files === null) {
-            $files = JFolder::files(JPATH_SITE . '/' . \Oscampus\Course::FILE_PATH);
+            jimport('joomla.filesystem.folder');
+            $files = JFolder::files(JPATH_SITE . '/' . \Oscampus\Course::getFilePath());
 
             $this->files = array();
             foreach ($files as $file) {
-                $path = \Oscampus\Course::FILE_PATH . '/' . $file;
+                $path = \Oscampus\Course::getFilePath($file);
                 $this->files[] = JHtml::_('select.option', $path, $file);
             }
 

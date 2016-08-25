@@ -17,7 +17,8 @@ abstract class Course extends AbstractBase
     const ADVANCED     = 'advanced';
 
     const DEFAULT_IMAGE = 'media/com_oscampus/images/default-course.jpg';
-    const FILE_PATH     = 'images/stories/oscampus/files';
+
+    protected static $filePath = null;
 
     /**
      * Creates a snapshot of the selected course
@@ -62,5 +63,29 @@ abstract class Course extends AbstractBase
         }
 
         return null;
+    }
+
+    /**
+     * get a relative path to uploaded file assets for courses/lessons
+     *
+     * @param string $fileName
+     *
+     * @return string
+     */
+    public static function getFilePath($fileName = null)
+    {
+        if (static::$filePath === null) {
+            $filePath = \JComponentHelper::getParams('com_media')->get('file_path');
+
+            static::$filePath = rtrim($filePath, '\\/') . '/oscampus/files';
+
+            $fullPath = JPATH_SITE . '/' . static::$filePath;
+            if (!is_dir($fullPath)) {
+                jimport('joomla.filesystem.folder');
+                \JFolder::create($fullPath);
+            }
+        }
+
+        return static::$filePath . ($fileName ? '/' . $fileName : '');
     }
 }
