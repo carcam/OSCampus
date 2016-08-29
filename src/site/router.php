@@ -96,7 +96,11 @@ class OscampusRouter
                 if (empty($query['Itemid'])
                     || (!empty($menuQuery['Itemid']) && $query['Itemid'] != $menuQuery['Itemid'])
                 ) {
-                    $query['Itemid'] = $menuQuery['Itemid'];
+                    if (!empty($menuQuery['Itemid'])) {
+                        $query['Itemid'] = $menuQuery['Itemid'];
+                    } else {
+                        $segments[] = 'certificate';
+                    }
                 }
 
             } elseif (in_array($view, array('course', 'lesson'))) {
@@ -104,8 +108,12 @@ class OscampusRouter
                 $lessonId    = isset($query['lid']) ? (int)$query['lid'] : null;
                 $lessonIndex = isset($query['index']) ? (int)$query['index'] : null;
 
-                $menuQuery       = $route->getQuery('course');
-                $query['Itemid'] = $menuQuery['Itemid'];
+                $menuQuery = $route->getQuery('course');
+                if (!empty($menuQuery['Itemid'])) {
+                    $query['Itemid'] = $menuQuery['Itemid'];
+                } else {
+                    $segments[] = 'course';
+                }
 
                 if ($courseId && ($course = $route->getCourseSlug($courseId))) {
                     $segments[] = $course;
@@ -152,7 +160,11 @@ class OscampusRouter
                 }
 
                 $menuQuery       = $route->getQuery('pathways');
-                $query['Itemid'] = $menuQuery['Itemid'];
+                if (!empty($menuQuery['Itemid'])) {
+                    $query['Itemid'] = $menuQuery['Itemid'];
+                } else {
+                    $segments[] = 'pathway';
+                }
 
             } else {
                 $query = array_merge($query, $route->getQuery($view));
@@ -186,6 +198,10 @@ class OscampusRouter
         );
 
         if (!empty($segments[0])) {
+            if (in_array($segments[0], array('certificate', 'course', 'pathway'))) {
+                $view = array_shift($segments);
+            }
+
             if ($view == 'mycertificates') {
                 $vars['view'] = 'certificate';
 
