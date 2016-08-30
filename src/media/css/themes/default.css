@@ -468,6 +468,8 @@
  ========================================================================== */
 #oscampus.osc-container .osc-table {
     border-top: 1px solid #f2f2f2;
+    border-right: 1px solid #f2f2f2;
+    border-left: 1px solid #f2f2f2;
 }
 
 #oscampus.osc-container #content-teacher .osc-table div {
@@ -578,6 +580,12 @@
     color: #fff;
     font-size: 10px;
     text-shadow: 0 0 2px #000;
+}
+
+#oscampus.osc-container .oscampus-lesson-files .osc-section a:before {
+    content: "\f0ed";
+    font-family: FontAwesome;
+    margin-right: 6px;
 }
 
 /* Teacher
