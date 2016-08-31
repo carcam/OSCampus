@@ -30,7 +30,9 @@ abstract class OscampusModelList extends JModelList
      */
     public function whereTextSearch($text, $fields, $idField = null)
     {
-        if ($idField && stripos(trim($text), 'id:') === 0) {
+        $text = trim($text);
+
+        if ($idField && stripos($text, 'id:') === 0) {
             $id = (int)substr($text, 3);
             return $idField . ' = ' . $id;
         }
