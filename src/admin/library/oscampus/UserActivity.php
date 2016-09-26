@@ -247,6 +247,7 @@ class UserActivity extends AbstractBase
             ->from('#__oscampus_lessons lesson')
             ->innerJoin('#__oscampus_modules AS module ON module.id = lesson.modules_id')
             ->leftJoin('#__oscampus_users_lessons AS activity ON activity.lessons_id = lesson.id AND activity.users_id = ' . $userId)
+            ->where('lesson.published = 1')
             ->order('module.ordering ASC, lesson.ordering ASC');
 
         return $query;
