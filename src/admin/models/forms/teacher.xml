@@ -40,49 +40,37 @@
                 name="website"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_WEBSITE_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"/>
 
             <field
                 name="email"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_DESC"/>
 
             <field
                 name="blog"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_BLOG_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"/>
 
             <field
                 name="facebook"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_DESC"/>
 
             <field
                 name="twitter"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_DESC"/>
 
             <field
                 name="googleplus"
                 type="oscampus.links"
                 label="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_LABEL"
-                description="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_DESC"
-                size="35"
-            />
+                description="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_DESC"/>
 
         </fields>
     </fieldset>
