@@ -31,14 +31,6 @@ class OscampusFormFieldLinks extends JFormFieldText
             return false;
         }
 
-        // Reformat value to our needs
-        if (!empty($this->value)) {
-            $value = is_object($this->value) ? $this->value : (object)$this->value;
-
-            $this->show  = isset($value->show) ? $value->show : 0;
-            $this->value = isset($value->link) ? $value->link : '';
-        }
-
         // Common additional attributes
         if ($class = (string)$this->element['class']) {
             $this->commonAttributes['class'] = $class;
@@ -62,6 +54,20 @@ class OscampusFormFieldLinks extends JFormFieldText
         }
         if ($onchange = (string)$this->element['onchange']) {
             $this->linkAttributes['onchange'] = $onchange;
+        }
+
+        // Reformat value to our needs
+        $defaultShow = (string)$this->element['show'];
+        $defaultShow = $defaultShow == 'true' || $defaultShow == '1' || $defaultShow == '';
+
+        if (empty($this->value)) {
+            $this->show  = $defaultShow;
+            $this->value = '';
+        } else {
+            $value = is_object($this->value) ? $this->value : (object)$this->value;
+
+            $this->show  = isset($value->show) ? $value->show : $defaultShow;
+            $this->value = isset($value->link) ? $value->link : '';
         }
 
         return true;
