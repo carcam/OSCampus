@@ -39,36 +39,42 @@
             <field
                 name="website"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_WEBSITE_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"/>
 
             <field
                 name="email"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_EMAIL_DESC"/>
 
             <field
                 name="blog"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_BLOG_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_URLS_DESC"/>
 
             <field
                 name="facebook"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_FACEBOOK_DESC"/>
 
             <field
                 name="twitter"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_TWITTER_DESC"/>
 
             <field
                 name="googleplus"
                 type="oscampus.links"
+                class="chzn-color-state"
                 label="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_LABEL"
                 description="COM_OSCAMPUS_TEACHER_LINKS_GOOGLEPLUS_DESC"/>
 
