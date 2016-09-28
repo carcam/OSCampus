@@ -176,14 +176,19 @@ class Wistia extends AbstractType
         JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
         JText::script('COM_OSCAMPUS_VIDEO_RESUME');
 
-        $js = array(
-            "<script>",
-            "wistiaEmbed.ready(function() {",
-            "    jQuery.Oscampus.wistia.init({$options});",
-            "});",
-            "</script>"
-        );
-        return join("\n", $js);
+        $shortVideoId = substr($this->id, 0, 3);
+        $js = <<<JSCRIPT
+<script>
+window._wq = window._wq || [];
+window._wq.push({
+    id: '{$shortVideoId}',
+    onReady: function() {
+        jQuery.Oscampus.wistia.init({$options});
+    }
+});
+</script>
+JSCRIPT;
+        return $js;
     }
 
     /**
