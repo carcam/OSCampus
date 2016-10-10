@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
  * @license
  */
@@ -287,7 +287,7 @@ class Search extends ModuleBase
             .find(':checkbox')
             .on('change', function(evt) {
                 var target = $(this).parents('.osc-types-filter').find('input[name=types]')
-                
+
                 var selected = target.val().replace(this.value, '');
                 if (this.checked) {
                     selected += this.value;
@@ -304,7 +304,7 @@ class Search extends ModuleBase
                 this.form.submit();
             }
         });
-        
+
         $('.osc-clear-filters').on('click', function(evt) {
             evt.preventDefault();
             $(this.form)
@@ -313,7 +313,7 @@ class Search extends ModuleBase
                 .each(function (index, element) {
                     $(element).val(null);
                 });
-            
+
             this.form.submit();
         });
     });

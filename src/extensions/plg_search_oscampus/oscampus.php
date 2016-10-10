@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    plg_search_oscampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
  * @license
  */
