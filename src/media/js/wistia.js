@@ -146,27 +146,11 @@
             var oldButton = $('[id^=wistia_fullscreenButton_]'),
                 newButton = oldButton.clone();
 
-            newButton
-                .addClass('custom')
-                .css({
-                    width : '50px',
-                    height: '32px',
-                    right : 0
-                });
+            newButton.addClass('custom').addClass('w-is-visible');
 
             oldButton
                 .after(newButton)
                 .remove();
-
-            wistiaEmbed.grid.center.addEventListener('mouseenter', function(evt) {
-                newButton.removeClass('wistia_romulus_hidden');
-                newButton.addClass('wistia_romulus_visible');
-            });
-
-            wistiaEmbed.grid.center.addEventListener('mouseleave', function(evt) {
-                newButton.removeClass('wistia_romulus_visible');
-                newButton.addClass('wistia_romulus_hidden');
-            });
 
             newButton.on('click', function() {
                 if (screenfull && screenfull.enabled) {
