@@ -9,6 +9,7 @@
 namespace Oscampus\Lesson\Type;
 
 use Alledia\Framework\Factory as AllediaFactory;
+use Alledia\Framework\Joomla\Extension\Licensed;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
 use Exception;
 use JHtml;
@@ -43,6 +44,11 @@ class Wistia extends AbstractType
      */
     protected $wistiaApi = null;
 
+    /**
+     * @var Licensed
+     */
+    protected $wistiaPlugin = null;
+
     public function __construct(Lesson $lesson)
     {
         parent::__construct($lesson);
@@ -56,11 +62,11 @@ class Wistia extends AbstractType
     public function render()
     {
         try {
-            if (!$this->pluginLoaded()) {
+            $oswistia = $this->getPlugin();
+            if (!$oswistia) {
                 throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
             }
 
-            $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
             if (!$oswistia->isPro()) {
                 throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_PRO_REQUIRED'));
             }
@@ -192,22 +198,23 @@ JSCRIPT;
     }
 
     /**
-     * This lesson type requires the OSWistia plugin. Ensure that it's loaded.
+     * Get the OSWistia plugin
      *
-     * @return bool
+     * @return Licensed
      */
-    protected function pluginLoaded()
+    protected function getPlugin()
     {
-        $loaded = defined('OSWISTIA_PLUGIN_PATH');
-        if (!$loaded) {
-            $path = JPATH_PLUGINS . '/content/oswistia/include.php';
-            if (is_file($path)) {
-                require_once $path;
-                $loaded = true;
+        if ($this->wistiaPlugin === null) {
+            if (!defined('OSWISTIA_PLUGIN_PATH')) {
+                $path = JPATH_PLUGINS . '/content/oswistia/include.php';
+                if (is_file($path)) {
+                    require_once $path;
+                    $this->wistiaPlugin = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
+                }
             }
         }
 
-        return $loaded;
+        return $this->wistiaPlugin;
     }
 
     /**
