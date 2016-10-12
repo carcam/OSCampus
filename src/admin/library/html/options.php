@@ -198,6 +198,11 @@ abstract class OscOptions
                 'select.option',
                 'wistia',
                 JText::_('COM_OSCAMPUS_LESSON_TYPE_WISTIA')
+            ),
+            JHtml::_(
+                'select.option',
+                'embed',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_EMBED')
             )
         );
 
