@@ -32,12 +32,7 @@ class OscampusModelCertificate extends OscampusModelSite
                 ->innerJoin('#__users AS student ON student.id = certificate.users_id')
                 ->where('certificate.id = ' . $id);
 
-            $errorLegacy    = JError::$legacy;
-            JError::$legacy = false;
-
             $certificate = $db->setQuery($query)->loadObject();
-
-            JError::$legacy = $errorLegacy;
 
             if ($certificate->id) {
                 $user = OscampusFactory::getUser();

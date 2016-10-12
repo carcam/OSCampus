@@ -194,10 +194,6 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     public function save($data)
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
-        $success = true;
         try {
             if (empty($data['image'])) {
                 $data['image'] = Course::DEFAULT_IMAGE;
@@ -219,8 +215,6 @@ class OscampusModelCourse extends OscampusModelAdmin
             $this->setError($e->getMessage());
             $success = false;
         }
-
-        JError::$legacy = $errorLegacy;
 
         return $success;
     }

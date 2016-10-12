@@ -54,9 +54,6 @@ class OscampusControllerUtility extends OscampusControllerBase
      */
     public function checkDuplicateLog()
     {
-        $legacy         = JError::$legacy;
-        JError::$legacy = false;
-
         echo $this->heading('Check for duplicate log entries');
 
         $app = OscampusFactory::getApplication();
@@ -129,8 +126,6 @@ class OscampusControllerUtility extends OscampusControllerBase
         if ($fixed) {
             echo $this->showList($fixed);
         }
-
-        JError::$legacy = $legacy;
     }
 
     /**
@@ -140,9 +135,6 @@ class OscampusControllerUtility extends OscampusControllerBase
      */
     public function checkCerts()
     {
-        $legacy         = JError::$legacy;
-        JError::$legacy = false;
-
         echo $this->heading('Check for Missing Certificates');
 
         $app = OscampusFactory::getApplication();
@@ -211,7 +203,6 @@ class OscampusControllerUtility extends OscampusControllerBase
         echo $this->heading(number_format(count($inProgress)) . ' Classes in Progress');
         echo $this->showList($inProgress);
 
-        JError::$legacy = $legacy;
     }
 
     /**
@@ -219,9 +210,6 @@ class OscampusControllerUtility extends OscampusControllerBase
      */
     public function checkActivity()
     {
-        $legacy         = JError::$legacy;
-        JError::$legacy = false;
-
         $app = OscampusFactory::getApplication();
         $db  = OscampusFactory::getDbo();
 
@@ -338,8 +326,6 @@ class OscampusControllerUtility extends OscampusControllerBase
         echo $this->showList($notPassed);
 
         echo $this->heading(number_format(count($valid)) . ' Valid Certificates');
-
-        JError::$legacy = $legacy;
     }
 
     /**
@@ -558,9 +544,6 @@ class OscampusControllerUtility extends OscampusControllerBase
 
     protected function backupTable($source)
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
         $backup = $source . '_bak';
 
         $db = OscampusFactory::getDbo();
@@ -568,15 +551,10 @@ class OscampusControllerUtility extends OscampusControllerBase
         $db->setQuery("DROP TABLE IF EXISTS {$backup}")->execute();
         $db->setQuery("CREATE TABLE {$backup} LIKE {$source}")->execute();
         $db->setQuery("INSERT {$backup} SELECT * FROM {$source}")->execute();
-
-        JError::$legacy = $errorLegacy;
     }
 
     protected function restoreTable($source)
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
         $backup = $source . '_bak';
 
         $db     = OscampusFactory::getDbo();
@@ -589,8 +567,6 @@ class OscampusControllerUtility extends OscampusControllerBase
             $db->dropTable($backup);
             $restored = true;
         }
-
-        JError::$legacy = $errorLegacy;
 
         return $restored;
     }
