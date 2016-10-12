@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -25,7 +25,7 @@ defined('_JEXEC') or die();
             <?php
             foreach ($module->lessons as $i => $lesson) :
                 ?>
-                <div class="<?php echo 'osc-section ' . ($i%2 ? 'osc-row-two' : 'osc-row-one'); ?>">
+                <div class="<?php echo 'osc-section ' . ($i % 2 ? 'osc-row-two' : 'osc-row-one'); ?>">
                     <div class="block9 p-left-xx">
                         <?php
                         echo JHtml::_('osc.lesson.link', $lesson);
@@ -34,15 +34,15 @@ defined('_JEXEC') or die();
 
                     </div>
                     <?php if (isset($this->viewed[$lesson->id])) : ?>
-                    <div class="block3 osc-check-viewed osc-hide-tablet">
-                        <i class="fa fa-check"></i> Viewed
-                    </div>
+                        <div class="block3 osc-check-viewed osc-hide-tablet">
+                            <i class="fa fa-check"></i> Viewed
+                        </div>
                     <?php endif; ?>
                 </div>
                 <?php
             endforeach;
         endforeach;
-    ?>
+        ?>
     </div>
 </div>
 <!-- #content-lessons -->

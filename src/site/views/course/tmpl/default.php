@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -59,7 +59,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             <div data-content="#content-files" class="block2 osc-tab-disabled">
                 <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_EXERCISE_FILES'); ?>
             </div>
-        <?php
+            <?php
         endif;
         ?>
         <?php
@@ -68,7 +68,7 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             <div data-content="#content-teacher" class="block2 osc-tab-disabled">
                 <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_TEACHER'); ?>
             </div>
-        <?php
+            <?php
         endif;
         ?>
     </div>

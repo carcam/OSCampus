@@ -79,7 +79,7 @@ ul.ui-sortable {
 
 .osc-quiz-questions ul li.osc-question:nth-child(2n+1),
 .osc-file-manager ul li.osc-file-block:nth-child(2n+1) {
-    background: rgba(242,242,242,0.5);
+    background: rgba(242, 242, 242, 0.5);
 }
 
 .osc-quiz-questions ul li input[type="text"],
@@ -133,7 +133,7 @@ ul.ui-sortable {
 .osc-quiz-questions button:hover,
 .osc-quiz-questions button:focus,
 .osc-file-manager button:hover,
-.osc-file-manager button:focus{
+.osc-file-manager button:focus {
     border: none;
 }
 

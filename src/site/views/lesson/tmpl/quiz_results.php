@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Lesson\Type\Quiz;
@@ -16,8 +16,8 @@ defined('_JEXEC') or die();
  * @var Quiz $quiz
  */
 
-$quiz     = $this->lesson->renderer;
-$attempt  = $quiz->getLastAttempt($this->activity);
+$quiz    = $this->lesson->renderer;
+$attempt = $quiz->getLastAttempt($this->activity);
 
 ?>
     <div class="osc-quiz-question">

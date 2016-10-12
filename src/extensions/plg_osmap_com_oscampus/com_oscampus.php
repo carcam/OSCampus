@@ -5,7 +5,8 @@
  * @copyright 2016 Open Source Training, LLC. All rights reserved..
  * @author    Guillermo Vargas <guille@vargas.co.cr>
  * @author    Joomlashack <help@joomlashack.com>
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL   GNU General Public License version 2 or later; see LICENSE.txt
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL   GNU General Public License version 2 or later; see
+ *            LICENSE.txt
  *
  * This file is part of OSMap.
  *
@@ -173,7 +174,7 @@ class osmap_com_oscampus
             $node->browserNav = $parent->browserNav;
             $node->priority   = $params['link_priority'];
             $node->changefreq = $params['link_changefreq'];
-            $node->link       = 'index.php?option='.static::$option.'&view=pathways&pid=' . $pathwayItem->id;
+            $node->link       = 'index.php?option=' . static::$option . '&view=pathways&pid=' . $pathwayItem->id;
             $osmap->printNode($node);
             $osmap->changeLevel(-1);
         }

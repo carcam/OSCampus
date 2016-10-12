@@ -3,7 +3,7 @@
  * @package    AllediaFramework
  * @contact    www.alledia.com, support@alledia.com
  * @copyright  2015 Alledia.com, All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * Local copy of the Alledia autoloader
  */

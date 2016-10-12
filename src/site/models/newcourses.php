@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Joomla\Registry\Registry;
@@ -27,7 +27,7 @@ class OscampusModelNewcourses extends OscampusModelCourselist
 
         $query->where('course.released >= ' . $db->quote($cutoff->toSql()));
 
-        $ordering = $this->getState('list.ordering');
+        $ordering  = $this->getState('list.ordering');
         $direction = $this->getState('list.direction');
         $query->order($ordering . ' ' . $direction);
 

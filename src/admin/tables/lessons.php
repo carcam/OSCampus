@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -19,7 +19,7 @@ class OscampusTableLessons extends OscampusTable
 
         // Override Joomla global access defaulting
         $defaultAccess = OscampusComponentHelper::getParams()->get('access.lesson');
-        $this->access = $defaultAccess;
+        $this->access  = $defaultAccess;
     }
 
     public function check()
@@ -34,7 +34,7 @@ class OscampusTableLessons extends OscampusTable
             return false;
 
         } else {
-            $db = $this->getDbo();
+            $db       = $this->getDbo();
             $subQuery = $db->getQuery(true)
                 ->select('courses_id')
                 ->from('#__oscampus_modules')

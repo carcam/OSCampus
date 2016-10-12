@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -67,9 +67,9 @@ class OscampusFormFieldLessons extends JFormField
                 foreach ($lessons as $lesson) {
                     if (!isset($modules[$lesson->modules_id])) {
                         $modules[$lesson->modules_id] = (object)array(
-                            'id'        => $lesson->modules_id,
-                            'title'     => $lesson->module_title,
-                            'lessons'   => array()
+                            'id'      => $lesson->modules_id,
+                            'title'   => $lesson->module_title,
+                            'lessons' => array()
                         );
                     }
                     $modules[$lesson->modules_id]->lessons[$lesson->id] = $lesson;

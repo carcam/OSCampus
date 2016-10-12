@@ -3,12 +3,18 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
 $component = OscampusFactory::getApplication()->input->getCmd('tmpl') === 'oscampus';
+
+$classes = array(
+    'osc-section',
+    'oscampus-lesson-content',
+    $this->lesson->isAuthorised() ? 'osc-authorised-box' : 'osc-signup-box'
+);
 
 if (!$component) :
     ?>
@@ -24,7 +30,7 @@ endif;
     </div>
     <!-- .osc-lesson-links -->
 
-    <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
+    <div class="<?php echo join(' ', $classes); ?>">
         <?php echo $this->lesson->render(); ?>
     </div>
 <?php

@@ -24,7 +24,7 @@ if (is_file($includePath . '/Installer/include.php')) {
 class com_oscampusInstallerScript extends AbstractScript
 {
     /**
-     * @param string                     $type
+     * @param string              $type
      * @param JInstallerComponent $parent
      *
      * @return void

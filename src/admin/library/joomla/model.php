@@ -33,8 +33,8 @@ abstract class OscampusModel extends JModelLegacy
     /**
      * Provide a generic access search for selected field
      *
-     * @param string         $field
-     * @param JUser          $user
+     * @param string $field
+     * @param JUser  $user
      *
      * @return string
      */

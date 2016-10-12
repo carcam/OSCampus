@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
@@ -19,12 +19,12 @@ defined('_JEXEC') or die();
  *
  * @package OSCampus
  *
- * @property Certificate        $certificate
+ * @property Certificate     $certificate
  * @property JDatabaseDriver $dbo
- * @property JUser              $user
- * @property Lesson             $lesson
- * @property Mobile_Detect      $device
- * @property UserActivity       $activity
+ * @property JUser           $user
+ * @property Lesson          $lesson
+ * @property Mobile_Detect   $device
+ * @property UserActivity    $activity
  */
 class Container extends \Pimple\Container
 {

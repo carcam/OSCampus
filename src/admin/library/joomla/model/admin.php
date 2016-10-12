@@ -18,7 +18,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     {
         if ($item = parent::getItem($pk)) {
             if (!empty($item->metadata)) {
-                $metadata = new Registry($item->metadata);
+                $metadata       = new Registry($item->metadata);
                 $item->metadata = $metadata->toArray();
             }
         }

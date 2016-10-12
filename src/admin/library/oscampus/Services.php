@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
@@ -63,7 +63,7 @@ class Services implements ServiceProviderInterface
             function (Container $c) {
                 $lessonStatus  = new LessonStatus();
                 $lessonSummary = new LessonSummary();
-                $courseStatus = new CourseStatus();
+                $courseStatus  = new CourseStatus();
                 return new UserActivity(
                     $c['dbo'],
                     $c['user'],
