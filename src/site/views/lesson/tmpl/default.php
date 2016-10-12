@@ -6,9 +6,6 @@
  * @license
  */
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-lesson'); ?>" id="oscampus">

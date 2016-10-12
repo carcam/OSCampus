@@ -6,9 +6,6 @@
  * @license
  */
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
 ?>
 <div class="osc-container oscampus-text" id="oscampus">

@@ -8,9 +8,6 @@
 
 defined('_JEXEC') or die();
 
-/**
- * @var OscampusViewLesson $this
- */
 $courseId = $this->model->getState('course.id');
 if ($this->lesson->previous->id) {
     $previousLink = JHtml::_('osc.lesson.link', $this->lesson->previous, null, null, true);

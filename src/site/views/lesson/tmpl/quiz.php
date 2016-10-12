@@ -8,12 +8,8 @@
 use Oscampus\Lesson\Type\Quiz;
 use OscampusViewLesson as View;
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
 /**
- * @var View $this
  * @var Quiz $quiz
  */
 
