@@ -16,6 +16,8 @@ use OscampusFactory;
 use JUri;
 use JRoute;
 
+defined('_JEXEC') or die();
+
 class Joomla extends Twig_Extension
 {
     public function getName()
