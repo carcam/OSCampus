@@ -8,6 +8,7 @@
 
 namespace Oscampus\Lesson\Type;
 
+use JHtml;
 use Joomla\Registry\Registry;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
@@ -35,7 +36,7 @@ class Embed extends AbstractType
 
     public function render()
     {
-        return '<h2>Under Construction</h2>';
+        return JHtml::_('content.prepare', $this->url);
     }
 
 
