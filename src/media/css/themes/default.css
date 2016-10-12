@@ -750,6 +750,7 @@
 
 #oscampus.oscampus-lesson .osc-lesson-navigation,
 #oscampus.oscampus-text .osc-lesson-navigation,
+#oscampus.oscampus-embed .osc-lesson-navigation,
 #oscampus.oscampus-wistia .osc-lesson-navigation,
 #oscampus.oscampus-quiz .osc-lesson-navigation {
     float: right;
