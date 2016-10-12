@@ -264,6 +264,19 @@ JSCRIPT;
 
         $xml = simplexml_load_file($path);
 
+        $oswistia = $this->getPlugin();
+        if ($oswistia && $oswistia->isPro()) {
+            return $xml;
+        }
+
+        // Send message about needing OSWistia Pro
+        $content = $xml->xpath("//fieldset[@name='content']");
+        $content[0]->addAttribute('description', JText::_('COM_OSCAMPUS_WISTIA_PRO_PLUGIN_REQUIRED'));
+        $fields = $content[0]->xpath('//field');
+        foreach ($fields as $field) {
+            unset($field[0]);
+        }
+
         return $xml;
     }
 
