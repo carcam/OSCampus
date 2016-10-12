@@ -5,7 +5,7 @@
  * @copyright 2016 Open Source Training, LLC. All rights reserved..
  * @author    Guillermo Vargas <guille@vargas.co.cr>
  * @author    Joomlashack <help@joomlashack.com>
- * @license   GNU General Public License version 2 or later; see LICENSE.txt
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL   GNU General Public License version 2 or later; see LICENSE.txt
  *
  * This file is part of OSMap.
  *
