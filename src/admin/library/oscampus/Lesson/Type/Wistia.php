@@ -209,8 +209,10 @@ JSCRIPT;
                 $path = JPATH_PLUGINS . '/content/oswistia/include.php';
                 if (is_file($path)) {
                     require_once $path;
-                    $this->wistiaPlugin = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
                 }
+            }
+            if (class_exists('\\Alledia\\Framework\\Factory')) {
+                $this->wistiaPlugin = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
             }
         }
 
