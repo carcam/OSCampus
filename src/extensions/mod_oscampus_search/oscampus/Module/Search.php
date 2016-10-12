@@ -277,6 +277,13 @@ class Search extends ModuleBase
         if (!static::$javascriptLoaded) {
             JHtml::_('osc.jquery');
 
+            $inputClasses = json_encode(
+                array(
+                    'active'   => $this->getStateClass(true),
+                    'inactive' => $this->getStateClass(false)
+                )
+            );
+
             $js = <<< JSCRIPT
 (function($) {
     $(document).ready(function() {
@@ -299,11 +306,23 @@ class Search extends ModuleBase
             this.form.submit();
         });
 
-        forms.find('input:text').on('keypress', function(evt) {
-            if (evt.keyCode === 13) {
-                this.form.submit();
-            }
-        });
+        var inputClasses = {$inputClasses};
+        forms.find('input:text')
+            .on('keypress', function(evt) {
+                if (evt.keyCode === 13) {
+                 this.form.submit();
+                }
+            })
+            .on('focusin', function(evt) {
+                $(this).removeClass(inputClasses.inactive).addClass(inputClasses.active);
+            })
+            .on('focusout', function(evt) {
+                if ($(this).val()) {
+                    $(this).removeClass(inputClasses.inactive).addClass(inputClasses.active);
+                } else {
+                    $(this).removeClass(inputClasses.active).addClass(inputClasses.inactive);
+                }
+            });
 
         $('.osc-clear-filters').on('click', function(evt) {
             evt.preventDefault();
