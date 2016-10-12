@@ -4,9 +4,10 @@
         <fieldset name="content">
             <fields name="content">
                 <field
-                    name="id"
+                    name="url"
                     type="text"
-                    label="COM_OSCAMPUS_WISITA_ID_LABEL"
+                    label="COM_OSCAMPUS_EMBED_URL_LABEL"
+                    description="COM_OSCAMPUS_EMBED_URL_DESC"
                     required="true"/>
             </fields>
         </fieldset>

@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -122,7 +122,12 @@ class OscampusModelLessons extends OscampusModelAdminList
         $course = $this->getUserStateFromRequest($this->context . '.filter.course', 'filter_course', null, 'int');
         $this->setState('filter.course', $course);
 
-        $lessonType = $this->getUserStateFromRequest($this->context . '.filter.lessontype', 'filter_lessontype', '', 'string');
+        $lessonType = $this->getUserStateFromRequest(
+            $this->context . '.filter.lessontype',
+            'filter_lessontype',
+            '',
+            'string'
+        );
         $this->setState('filter.lessontype', $lessonType);
 
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');

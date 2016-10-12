@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Course;
@@ -194,10 +194,6 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     public function save($data)
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
-        $success = true;
         try {
             if (empty($data['image'])) {
                 $data['image'] = Course::DEFAULT_IMAGE;
@@ -219,8 +215,6 @@ class OscampusModelCourse extends OscampusModelAdmin
             $this->setError($e->getMessage());
             $success = false;
         }
-
-        JError::$legacy = $errorLegacy;
 
         return $success;
     }

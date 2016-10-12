@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Joomla\Registry\Registry as Registry;
@@ -15,7 +15,7 @@ class OscampusModelLesson extends OscampusModelAdmin
 {
     public function getItem($pk = null)
     {
-        if ($item  = parent::getItem($pk)) {
+        if ($item = parent::getItem($pk)) {
             $db    = $this->getDbo();
             $query = $db->getQuery(true)
                 ->select('module.courses_id, module.title')

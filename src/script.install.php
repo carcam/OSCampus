@@ -3,7 +3,7 @@
  * @package   com_oscampus
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Alledia\Installer\AbstractScript;
@@ -24,7 +24,7 @@ if (is_file($includePath . '/Installer/include.php')) {
 class com_oscampusInstallerScript extends AbstractScript
 {
     /**
-     * @param string                     $type
+     * @param string              $type
      * @param JInstallerComponent $parent
      *
      * @return void

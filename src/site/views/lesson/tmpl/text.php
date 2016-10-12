@@ -3,13 +3,16 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
+
+$classes = array(
+    'osc-section',
+    'oscampus-lesson-content',
+    $this->lesson->isAuthorised() ? 'osc-authorised-box' : 'osc-signup-box'
+);
 ?>
 <div class="osc-container oscampus-text" id="oscampus">
     <div class="osc-section">
@@ -19,7 +22,7 @@ defined('_JEXEC') or die();
         </div>
     </div>
 
-    <div class="osc-section oscampus-lesson-content <?php echo $this->lesson->isAuthorised() ? 'osc-authorised-box': 'osc-signup-box'; ?>">
+    <div class="<?php echo join(' ', $classes); ?>">
         <?php echo $this->lesson->render(); ?>
     </div>
 

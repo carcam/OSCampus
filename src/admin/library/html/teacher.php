@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -36,7 +36,7 @@ abstract class OscTeacher
                     $value->link = $teacher->email;
                 }
                 if ($link = static::createLink($type, $value->link, $value->show)) {
-                    $type = isset(static::$linkIcons[$type]) ? $type : 'default';
+                    $type    = isset(static::$linkIcons[$type]) ? $type : 'default';
                     $attribs = preg_match('#^https?://#', $link) ? 'target="_blank"' : '';
 
                     $html[] = '<span class="osc-teacher-' . $type . '">';

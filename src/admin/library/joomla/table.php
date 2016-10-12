@@ -3,7 +3,7 @@
  * @package   com_oscampus
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Joomla\Registry\Registry as Registry;
@@ -72,7 +72,7 @@ abstract class OscampusTable extends JTable
     /**
      * Customised handling for special cases
      *
-     * @param array $array
+     * @param array  $array
      * @param string $ignore
      *
      * @return bool
@@ -81,7 +81,7 @@ abstract class OscampusTable extends JTable
     {
         if (property_exists($this, 'metadata')) {
             if (isset($array['metadata']) && !is_string($array['metadata'])) {
-                $registry = new Registry($array['metadata']);
+                $registry          = new Registry($array['metadata']);
                 $array['metadata'] = $registry->toString();
             }
         }

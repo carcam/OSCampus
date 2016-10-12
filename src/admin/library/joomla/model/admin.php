@@ -3,7 +3,7 @@
  * @package   com_oscampus
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Joomla\Registry\Registry as Registry;
@@ -18,7 +18,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     {
         if ($item = parent::getItem($pk)) {
             if (!empty($item->metadata)) {
-                $metadata = new Registry($item->metadata);
+                $metadata       = new Registry($item->metadata);
                 $item->metadata = $metadata->toArray();
             }
         }

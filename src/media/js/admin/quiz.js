@@ -19,7 +19,7 @@
             .on('click', function(evt) {
                 evt.preventDefault();
 
-                var target = $(this).parent('li'),
+                var target   = $(this).parent('li'),
                     siblings = target.siblings();
 
                 if (siblings.length > 1) {

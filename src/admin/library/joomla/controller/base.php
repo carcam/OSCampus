@@ -79,11 +79,9 @@ class OscampusControllerBase extends JControllerLegacy
             $url = base64_decode($url);
 
         } else {
-            $url = new JURI('index.php');
+            $url = new JUri('index.php');
 
             if ($itemid = $app->input->getInt('Itemid')) {
-                $menu = $app->getMenu()->getItem($itemid);
-
                 $url->setVar('Itemid', $itemid);
 
             } elseif ($option = $app->input->getCmd('option')) {

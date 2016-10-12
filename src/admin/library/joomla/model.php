@@ -3,7 +3,7 @@
  * @package   com_oscampus
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -33,8 +33,8 @@ abstract class OscampusModel extends JModelLegacy
     /**
      * Provide a generic access search for selected field
      *
-     * @param string         $field
-     * @param JUser          $user
+     * @param string $field
+     * @param JUser  $user
      *
      * @return string
      */

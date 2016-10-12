@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -35,8 +35,6 @@ abstract class OscRender
         $fieldSets = $form->getFieldsets();
 
         if (!empty($fieldSets[$fieldSet])) {
-            $fields = $form->getFieldset($fieldSet);
-
             $html   = array();
             $html[] = "<div class=\"span{$span}\">";
 
@@ -49,13 +47,12 @@ abstract class OscRender
             }
 
             if ($description = $fieldSets[$fieldSet]->description) {
-                $html[] = '<div>' . JText::_($description) . '</div>';
+                $html[] = '<div class="tab-description alert alert-info">';
+                $html[] = '<span class="icon-info"></span> ' . JText::_($description);
+                $html[] = '</div>';
             }
 
-            /** @var JFormField $field */
-            foreach ($fields as $field) {
-                $html[] = $field->renderField();
-            }
+            $html[] = $form->renderFieldset($fieldSet);
 
             if ($legend) {
                 $html[] = '</fieldset>';

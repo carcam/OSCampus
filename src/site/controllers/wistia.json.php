@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Lesson\Type\Wistia\Download;
@@ -59,7 +59,7 @@ class OscampusControllerWistia extends OscampusControllerJson
      */
     public function downloadLimit()
     {
-        $user = JFactory::getUser();
+        $user     = JFactory::getUser();
         $download = new Download();
 
         $result = array(
@@ -75,7 +75,7 @@ class OscampusControllerWistia extends OscampusControllerJson
 
         } elseif ($download->userExceededLimit()) {
             $result['authorised'] = false;
-            $result['error'] = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
+            $result['error']      = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
         }
 
         echo json_encode($result);

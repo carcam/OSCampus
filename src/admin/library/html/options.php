@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Activity\CourseStatus;
@@ -198,6 +198,11 @@ abstract class OscOptions
                 'select.option',
                 'wistia',
                 JText::_('COM_OSCAMPUS_LESSON_TYPE_WISTIA')
+            ),
+            JHtml::_(
+                'select.option',
+                'embed',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_EMBED')
             )
         );
 

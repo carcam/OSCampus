@@ -21,7 +21,7 @@
 
     $.Oscampus.quiz = {
         options: {
-            form: '#formQuiz',
+            form : '#formQuiz',
             timer: {
                 selector  : '#oscampus-timer .osc-clock',
                 timeLimit : 600,
@@ -39,7 +39,7 @@
 
             var clock   = $(options.timer.selector),
                 seconds = $.Oscampus.cookie.get('quiz_time', options.timer.timeLimit),
-                form = $(options.form);
+                form    = $(options.form);
 
             clock.formatSeconds(seconds);
 

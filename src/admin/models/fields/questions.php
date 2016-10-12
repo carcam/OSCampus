@@ -3,7 +3,7 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -177,7 +177,7 @@ class OscampusFormFieldQuestions extends JFormField
             foreach ($answers as $answerId => $answer) {
                 if (is_string($answer)) {
                     $answers[$answerId] = array(
-                        'text' => $answer,
+                        'text'    => $answer,
                         'correct' => ($correct == $answerId)
                     );
                 }

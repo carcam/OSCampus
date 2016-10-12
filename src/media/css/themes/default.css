@@ -11,11 +11,12 @@
     color: #555555;
 }
 
-#oscampus.osc-container p{
+#oscampus.osc-container p {
     margin: 0 0 20px;
 }
+
 #oscampus.osc-container div,
-#oscampus.osc-container p{
+#oscampus.osc-container p {
     font-size: 14px;
     line-height: 24px;
     font-weight: 400;
@@ -272,14 +273,14 @@
 
 .osc-module-container .osc-btn-warning,
 #oscampus.osc-container .osc-btn-warning {
-    background:#ff0000;
+    background: #ff0000;
 }
 
 .osc-module-container .osc-btn-warning:hover,
 .osc-module-container .osc-btn-warning:focus,
 #oscampus.osc-container .osc-btn-warning:hover,
 #oscampus.osc-container .osc-btn-warning:focus {
-    background:#FF4D4D;
+    background: #FF4D4D;
 }
 
 .osc-module-container button[disabled],
@@ -434,25 +435,25 @@
 
 /* Help classes
  ========================================================================== */
-#oscampus.osc-container div.osc-alert-warning{
+#oscampus.osc-container div.osc-alert-warning {
     background: #fff1f0;
-    border: 1px solid rgba(216,80,48, 0.2);
+    border: 1px solid rgba(216, 80, 48, 0.2);
     color: #d85030;
     padding: 15px;
     margin: 2px 0;
 }
 
-#oscampus.osc-container div.osc-alert-success{
+#oscampus.osc-container div.osc-alert-success {
     background: #f2fae3;
-    border: 1px solid rgba(101,159,19, 0.2);
+    border: 1px solid rgba(101, 159, 19, 0.2);
     color: #659f13;
     padding: 15px;
     margin: 2px 0;
 }
 
-#oscampus.osc-container div.osc-alert-notify{
+#oscampus.osc-container div.osc-alert-notify {
     background: #ebf7fd;
-    border: 1px solid rgba(45,112,145,0.2);
+    border: 1px solid rgba(45, 112, 145, 0.2);
     color: #2d7091;
     padding: 15px;
     margin: 2px 0;
@@ -477,12 +478,12 @@
     line-height: 20px;
 }
 
-#oscampus.osc-container .osc-row-one{
+#oscampus.osc-container .osc-row-one {
     background: #ffffff;
     border-bottom: 1px solid #f2f2f2;
 }
 
-#oscampus.osc-container .osc-row-two{
+#oscampus.osc-container .osc-row-two {
     background: #ffffff;
     border-bottom: 1px solid #f2f2f2;
 }
@@ -493,7 +494,7 @@
 }
 
 #oscampus.osc-container .osc-row-one [class*="block"],
-#oscampus.osc-container .osc-row-two [class*="block"]{
+#oscampus.osc-container .osc-row-two [class*="block"] {
     padding: 6px 10px;
 }
 
@@ -511,7 +512,7 @@
 }
 
 #oscampus.osc-container .osc-row-one [class*="block"] label,
-#oscampus.osc-container .osc-row-two [class*="block"] label{
+#oscampus.osc-container .osc-row-two [class*="block"] label {
     margin: 0;
 }
 
@@ -550,7 +551,7 @@
 }
 
 #oscampus.osc-container .osc-row-heading {
-    background: rgba(242,242,242,0.3);
+    background: rgba(242, 242, 242, 0.3);
     border-bottom: 1px solid #f2f2f2;
 }
 
@@ -691,10 +692,10 @@
 
 #oscampus.osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
     background: #f5f5f5;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 -1px 0 #ccc inset;
-    -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 -1px 0 #ccc inset;
-    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 -1px 0 #ccc inset;
-    -o-box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 -1px 0 #ccc inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 -1px 0 #ccc inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 -1px 0 #ccc inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 -1px 0 #ccc inset;
+    -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 -1px 0 #ccc inset;
 }
 
 #oscampus.osc-container .osc-course-tabs > div {
@@ -750,6 +751,7 @@
 
 #oscampus.oscampus-lesson .osc-lesson-navigation,
 #oscampus.oscampus-text .osc-lesson-navigation,
+#oscampus.oscampus-embed .osc-lesson-navigation,
 #oscampus.oscampus-wistia .osc-lesson-navigation,
 #oscampus.oscampus-quiz .osc-lesson-navigation {
     float: right;
@@ -846,7 +848,7 @@
     box-shadow: rgba(0, 0, 0, 0.9) 0px 0px 218px 30px inset;
     color: #fff;
     display: inline-block;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e8333333',endColorStr='#e8333333');
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e8333333', endColorStr='#e8333333');
     font-size: 19px;
     font-weight: bold;
     line-height: 26px;
@@ -1066,6 +1068,7 @@
     #oscampus.osc-container .osc-section .block4.osc-course-image {
         width: 27.623931623931625%;
     }
+
     #oscampus.osc-container .osc-section .block8.osc-course-description {
         width: 69.81196581196582%;
     }
@@ -1076,6 +1079,7 @@
     #oscampus.osc-container .osc-section .block4.osc-course-image {
         width: 27.623931623931625%;
     }
+
     #oscampus.osc-container .osc-section .block8.osc-course-description {
         width: 69.81196581196582%;
         margin-left: 2.56410256410255%;
@@ -1088,10 +1092,12 @@
         padding: 20px;
         width: 75%;
     }
+
     #oscampus #signup-overlay {
         left: 20px;
         top: 20px;
     }
+
     /* form elements */
     #oscampus.osc-container input[type="text"],
     #oscampus.osc-container input[type="email"],
@@ -1100,6 +1106,7 @@
     #oscampus.osc-container select {
         width: 80%;
     }
+
     /* tabs */
     #oscampus.osc-container .osc-section.osc-course-tabs > div {
         margin-bottom: 2px;
@@ -1113,6 +1120,7 @@
         -webkit-border-radius: 4px;
         -o-border-radius: 4px;
     }
+
     #oscampus.osc-container .osc-section.osc-course-tabs > div.osc-tab-disabled {
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
         -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
@@ -1123,23 +1131,29 @@
         padding-left: 14px;
         padding-right: 14px;
     }
+
     #oscampus.osc-container .osc-section.osc-course-tabs > div:first-child {
         margin-left: 0;
     }
+
     #oscampus.osc-container .osc-course-tabs-content {
         margin-top: 0;
     }
+
     /* quiz */
     #oscampus.osc-container .osc-quiz-left {
         border-bottom: 1px solid #f2f2f2;
         border-right: none;
     }
+
     #oscampus.osc-container .osc-quiz-right {
         text-align: center;
     }
+
     #oscampus.osc-container .osc-quiz-big-icon {
         padding: 30px 15px 0;
     }
+
     /* pagination */
     #oscampus.osc-container .osc-pagination li.osc-page-number {
         display: none;
@@ -1153,14 +1167,17 @@
         width: 100%;
         margin-left: 0;
     }
+
     #oscampus.osc-container .osc-course-image img {
         margin-bottom: 10px;
         max-width: 200px;
     }
+
     #oscampus.osc-container .osc-course-start {
         text-align: left;
         margin-bottom: 15px;
     }
+
     /* labels */
     #oscampus.osc-container .osc-label {
         margin-bottom: 4px;
@@ -1173,18 +1190,22 @@
         font-size: 30px;
         line-height: 40px;
     }
+
     #oscampus.osc-container h2 {
         font-size: 25px;
         line-height: 30px;
     }
+
     #oscampus.osc-container h3 {
         font-size: 20px;
         line-height: 24px
     }
+
     #oscampus.osc-container h4 {
         font-size: 13px;
         line-height: 19px;
     }
+
     /* form elements */
     #oscampus.osc-container input[type="text"],
     #oscampus.osc-container input[type="email"],

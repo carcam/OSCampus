@@ -3,14 +3,11 @@
  * @package    OSCampus
  * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
-/**
- * @var OscampusViewLesson $this
- */
 $courseId = $this->model->getState('course.id');
 if ($this->lesson->previous->id) {
     $previousLink = JHtml::_('osc.lesson.link', $this->lesson->previous, null, null, true);
@@ -33,9 +30,9 @@ JHtml::_('osc.lesson.navigation', $this->lesson);
     if (!empty($previousLink)) :
         ?><a href="<?php echo $previousLink; ?>" class="osc-btn" id="prevbut">
         <i class="fa fa-chevron-left"></i>
-            <span class="osc-hide-tablet">
-                <?php echo JText::_('COM_OSCAMPUS_PREVIOUS'); ?>
-            </span>
+        <span class="osc-hide-tablet">
+            <?php echo JText::_('COM_OSCAMPUS_PREVIOUS'); ?>
+        </span>
         </a><?php
     endif;
 
