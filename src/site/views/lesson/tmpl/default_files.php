@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die();
 
-if ($this->files) :
+if ($this->files && $this->lesson->isAuthorised()) :
     ?>
     <div class="osc-section oscampus-lesson-files">
         <h3><?php echo JText::_('COM_OSCAMPUS_LESSON_FILES'); ?></h3>

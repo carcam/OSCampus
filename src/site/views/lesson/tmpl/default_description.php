@@ -8,9 +8,8 @@
 
 defined('_JEXEC') or die();
 
-/** @var OscampusViewLesson $this */
 
-if ($this->lesson->description) :
+if ($this->lesson->description && $this->lesson->isAuthorised()) :
     ?>
     <div class="osc-section oscampus-lesson-description">
         <?php echo $this->lesson->description; ?>
