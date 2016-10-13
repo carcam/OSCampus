@@ -5,7 +5,7 @@
             <fields name="content">
                 <field
                     name="url"
-                    type="text"
+                    type="oscampus.embed"
                     label="COM_OSCAMPUS_EMBED_URL_LABEL"
                     description="COM_OSCAMPUS_EMBED_URL_DESC"
                     required="true"/>
