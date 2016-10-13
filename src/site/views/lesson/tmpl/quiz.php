@@ -36,5 +36,6 @@ if ($this->lesson->isAuthorised()) {
     if ($this->lesson->isAuthorised()) {
         echo $this->loadDefaultTemplate('files');
     }
+    echo OscampusHelper::renderModule('oscampus_lesson_bottom');
     ?>
 </div>
