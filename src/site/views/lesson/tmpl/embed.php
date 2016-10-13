@@ -24,7 +24,18 @@ $classes = array(
 
     <div
         class="<?php echo join(' ', $classes); ?>">
-        <?php echo $this->lesson->render(); ?>
+        <?php
+        if ($content = $this->lesson->render()) :
+            echo $content;
+        else :
+            ?>
+            <div class="osc-alert-warning">
+                <i class="fa fa-info-circle"></i>
+                <?php echo JText::_('COM_OSCAMPUS_EMBED_UNRECOGNIZED'); ?>
+            </div>
+            <?php
+        endif;
+        ?>
     </div>
 
     <?php

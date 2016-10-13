@@ -36,7 +36,9 @@ class Embed extends AbstractType
 
     public function render()
     {
-        return JHtml::_('content.prepare', $this->url);
+        $html = JHtml::_('content.prepare', $this->url);
+
+        return $html == $this->url ? null : $html;
     }
 
 

@@ -36,10 +36,22 @@ class OscampusFormFieldEmbed extends JFormFieldUrl
             'icon-eye-open'
         );
 
+        if ($this->value) {
+            $preview = JHtml::_('content.prepare', $this->value);
+            if ($preview == $this->value) {
+                $preview = '<div class="alert alert-info">'
+                    . '<span class="icon-info"></span>'
+                    . JText::sprintf('COM_OSCAMPUS_EMBED_ADMIN_UNRECOGNIZED', $this->value)
+                    . '</div>';
+            }
+        }
+
+
         $previewPane = sprintf(
-            '<div id="%s_preview" style="%s"></div>',
+            '<div id="%s_preview" style="%s">%s</div>',
             $this->id,
-            'clear: both; margin-top: 5px; font-size: 13px;'
+            'clear: both; margin-top: 5px; font-size: 13px;',
+            $preview == $this->value ? JText::sprintf('COM_OSCMAPUS_EMBED_NOT_RECOGNIZED', $this->value) : $preview
         );
 
         return $button . $previewPane;
