@@ -130,7 +130,15 @@ class OscampusModelCourse extends OscampusModelSite
                     )
                 )
                 ->from('#__oscampus_files AS file')
-                ->where('file.courses_id = ' . $cid)
+                ->innerJoin('#__oscampus_courses AS course ON course.id = file.courses_id')
+                ->leftJoin('#__oscampus_lessons AS lesson ON lesson.id = file.lessons_id')
+                ->where(
+                    array(
+                        'file.courses_id = ' . $cid,
+                        $this->whereAccess('course.access'),
+                        sprintf('(%s OR lesson.id IS NULL)', $this->whereAccess('lesson.access'))
+                    )
+                )
                 ->order('file.ordering ASC, file.title ASC')
                 ->group('file.id');
 
