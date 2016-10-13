@@ -78,32 +78,34 @@ class OscampusModelLesson extends OscampusModelSite
      */
     public function getFiles()
     {
-        $courseId = (int)$this->getState('course.id');
-        $lessonId = (int)$this->getState('lesson.id');
+        if ($this->getItem()->isAuthorised()) {
+            $courseId = (int)$this->getState('course.id');
+            $lessonId = (int)$this->getState('lesson.id');
 
-        if ($courseId && $lessonId) {
-            $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                ->select(
-                    array(
-                        'file.id',
-                        'file.path',
-                        'file.title',
-                        'file.description'
+            if ($courseId && $lessonId) {
+                $db    = $this->getDbo();
+                $query = $db->getQuery(true)
+                    ->select(
+                        array(
+                            'file.id',
+                            'file.path',
+                            'file.title',
+                            'file.description'
+                        )
                     )
-                )
-                ->from('#__oscampus_files AS file')
-                ->where(
-                    array(
-                        'file.courses_id = ' . $courseId,
-                        'file.lessons_id = ' . $lessonId
+                    ->from('#__oscampus_files AS file')
+                    ->where(
+                        array(
+                            'file.courses_id = ' . $courseId,
+                            'file.lessons_id = ' . $lessonId
+                        )
                     )
-                )
-                ->order('file.ordering ASC, file.title ASC');
+                    ->order('file.ordering ASC, file.title ASC');
 
-            $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
+                $files = $db->setQuery($query)->loadObjectList(null, '\\Oscampus\\File');
 
-            return $files;
+                return $files;
+            }
         }
 
         return array();
