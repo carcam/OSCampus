@@ -37,9 +37,8 @@ endif;
 if ($this->lesson->isAuthorised()) {
     echo $this->loadDefaultTemplate('description');
     echo $this->loadDefaultTemplate('files');
-
-    echo OscampusHelper::renderModule('oscampus_lesson_bottom');
 }
+echo OscampusHelper::renderModule('oscampus_lesson_bottom');
 
 if (!$component) :
     ?>
