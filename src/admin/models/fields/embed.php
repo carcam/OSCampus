@@ -29,29 +29,18 @@ class OscampusFormFieldEmbed extends JFormFieldUrl
     protected function getPreview()
     {
         $button = sprintf(
-            '<a id="%s_btn" class="%s" title="%s"><span class="%s"></span></a>',
+            '<a id="%s_btn" class="%s" title="%s" data-target="#%s"><span class="%s"></span></a>',
             $this->id,
             'btn btn-primary btn-select',
             JText::_('COM_OSCAMPUS_EMBED_PREVIEW_BUTTON_TEXT'),
+            $this->id,
             'icon-eye-open'
         );
 
-        if ($this->value) {
-            $preview = JHtml::_('content.prepare', $this->value);
-            if ($preview == $this->value) {
-                $preview = '<div class="alert alert-info">'
-                    . '<span class="icon-info"></span>'
-                    . JText::sprintf('COM_OSCAMPUS_EMBED_ADMIN_UNRECOGNIZED', $this->value)
-                    . '</div>';
-            }
-        }
-
-
         $previewPane = sprintf(
-            '<div id="%s_preview" style="%s">%s</div>',
+            '<div id="%s_preview" style="%s"></div>',
             $this->id,
-            'clear: both; margin-top: 5px; font-size: 13px;',
-            $preview == $this->value ? JText::sprintf('COM_OSCMAPUS_EMBED_NOT_RECOGNIZED', $this->value) : $preview
+            'clear: both; margin-top: 5px; font-size: 13px;'
         );
 
         return $button . $previewPane;
@@ -72,7 +61,13 @@ class OscampusFormFieldEmbed extends JFormFieldUrl
             JHtml::_('osc.jquery');
             JHtml::_('script', 'com_oscampus/admin/embed.js', false, true);
 
-            JHtml::_('osc.onready', "$.Oscampus.admin.embed.init();");
+            $options = json_encode(
+                array(
+                    'urlbase' => JUri::root(true) ?: '/',
+                )
+            );
+
+            JHtml::_('osc.onready', "$.Oscampus.admin.embed.init({$options});");
 
             static::$javascriptLoaded = true;
         }

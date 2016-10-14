@@ -5,7 +5,9 @@
 
     $.Oscampus.admin.embed = {
         options: {
-            selector: '.osc-url-embed-field'
+            urlbase : '',
+            selector: '.osc-url-embed-field',
+            token   : null
         },
 
         init: function(options) {
@@ -15,11 +17,46 @@
 
             fields.each(function(i, el) {
                 var btn     = $('#' + el.id + '_btn'),
-                    preview = $('#' + el.id + '_preview');
+                    preview = $('#' + el.id + '_preview'),
+                    target = $(el)
 
                 btn.on('click', function(evt) {
-                    preview.append('<p>' + $(el).val() + '</p>');
+                    if (target.val()) {
+                        preview.html('Loading...');
+
+                        var data   = {
+                            option: 'com_oscampus',
+                            task  : 'embed.content',
+                            format: 'raw',
+                            url   : target.val()
+                        };
+
+                        if (options.token) {
+                            data[options.token] = 1;
+                        }
+
+                        $.get({
+                            url    : options.urlbase + 'index.php',
+                            data   : data,
+                            success: function(text, status, xhr) {
+                                console.log(text);
+                                preview.html(text);
+                            }
+                            ,
+                            error  : function(error, status, xhr) {
+                                preview.html(error.statusText);
+                            }
+                        });
+                    } else {
+                        preview.html('');
+                    }
                 });
+
+                if (target.val()) {
+                    btn.trigger('click');
+                } else {
+                    preview.html('');
+                }
             });
         }
     };
