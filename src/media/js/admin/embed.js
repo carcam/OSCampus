@@ -18,13 +18,19 @@
             fields.each(function(i, el) {
                 var btn     = $('#' + el.id + '_btn'),
                     preview = $('#' + el.id + '_preview'),
-                    target = $(el)
+                    target  = $(el);
+
+                target.css('min-width', target.css('width'));
+                target.on('keyup', function(evt) {
+                    $(this).width(($(this).val().length * .6) + 'em');
+                });
+                target.trigger('keyup');
 
                 btn.on('click', function(evt) {
                     if (target.val()) {
                         preview.html('Loading...');
 
-                        var data   = {
+                        var data = {
                             option: 'com_oscampus',
                             task  : 'embed.content',
                             format: 'raw',
@@ -39,7 +45,6 @@
                             url    : options.urlbase + 'index.php',
                             data   : data,
                             success: function(text, status, xhr) {
-                                console.log(text);
                                 preview.html(text);
                             }
                             ,
