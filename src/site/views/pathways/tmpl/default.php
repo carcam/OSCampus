@@ -8,10 +8,6 @@
 
 defined('_JEXEC') or die();
 
-/**
- * @var OscampusViewPathways $this
- */
-
 JHtml::_('behavior.core');
 
 ?>
