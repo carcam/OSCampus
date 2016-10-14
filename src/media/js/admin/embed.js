@@ -20,9 +20,10 @@
                     preview = $('#' + el.id + '_preview'),
                     target  = $(el);
 
+                // Make url field expandable with string length
                 target.css('min-width', target.css('width'));
                 target.on('keyup', function(evt) {
-                    $(this).width(($(this).val().length * .6) + 'em');
+                    $(this).width(($(this).val().length * 8) + 'px');
                 });
                 target.trigger('keyup');
 
