@@ -15,9 +15,21 @@ class OscampusControllerEmbed extends OscampusControllerBase
         throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
     }
 
+    /**
+     * Ajax endpoint for converting URLs to embedded content
+     *
+     * @throws Exception
+     */
     public function content()
     {
         if (!JSession::checkToken()) {
+            /*
+             * @TODO: This is a bit of punt.
+             * This is a frontend controller and form tokens between
+             * admin and front are not shared. So when the token check fails, we check to
+             * see if this came from our own admin site to validate. Hopefully there is a better
+             * way to do this. If we'll implement when we find it.
+             */
             $referer = new JUri($_SERVER['HTTP_REFERER']);
             $uri     = JUri::getInstance();
 
@@ -40,6 +52,16 @@ class OscampusControllerEmbed extends OscampusControllerBase
         }
     }
 
+    /**
+     * Generate standard alert html. Specifically designed for use in admin.
+     * Should it ever be used in the frontend may work as is without modification.
+     *
+     * @param string $message
+     * @param string $class
+     * @param string $icon
+     *
+     * @return string
+     */
     protected function getMessage($message, $class = 'info', $icon = null)
     {
         $icon = $icon ?: 'info';
