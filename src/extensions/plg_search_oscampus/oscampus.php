@@ -189,8 +189,7 @@ class PlgSearchOscampus extends JPlugin
         if ($phrase == 'exact') {
             $texts = array($text);
         } else {
-            // @TODO: simple explode on space? Or use a regex on word boundaries?
-            $texts = explode(' ', $text);
+            $texts = preg_split('/\W+/', $text);
         }
         foreach ($texts as $idx => $text) {
             $texts[$idx] = $db->quote('%' . $text . '%');
