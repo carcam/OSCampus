@@ -29,3 +29,9 @@ mobiledetect/mobiledetectlib/*
 !twig/**/*
 twig/twig/*
 !twig/twig/lib/
+
+# TCPDF
+!tecnick.com/
+!tecnick.com/tcpdf/
+!tecnick.com/tcpdf/**/**
+tecnick.com/tcpdf/examples/
