@@ -114,8 +114,10 @@ class Wistia extends AbstractType
                 $params->set('captions', false);
             }
 
+            $this->setControls($controls);
+
             $embed = new WistiaEmbed($this->id, $params);
-            return $embed->toString() . $this->setControls($controls);
+            return $embed->toString();
 
         } catch (Exception $e) {
             return '<div class="osc-alert-warning">' . $e->getMessage() . '</div>';
@@ -154,10 +156,6 @@ class Wistia extends AbstractType
         $device = OscampusFactory::getContainer()->device;
         $config = OscampusComponentHelper::getParams();
 
-        JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
-        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
-        JHtml::_('script', 'com_oscampus/wistia.js', false, true);
-
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
         $signupType  = 'videos.download.' . ($user->guest ? 'new' : 'upgrade');
@@ -165,6 +163,8 @@ class Wistia extends AbstractType
 
         $options = json_encode(
             array(
+                'videoId'    => $this->id,
+                'shortId'    => substr($this->id, 0, 3),
                 'mobile'     => $device->isMobile(),
                 'formToken'  => JSession::getFormToken(),
                 'upgradeUrl' => $downloadUrl,
@@ -182,19 +182,10 @@ class Wistia extends AbstractType
         JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
         JText::script('COM_OSCAMPUS_VIDEO_RESUME');
 
-        $shortVideoId = substr($this->id, 0, 3);
-        $js = <<<JSCRIPT
-<script>
-window._wq = window._wq || [];
-window._wq.push({
-    id: '{$shortVideoId}',
-    onReady: function() {
-        jQuery.Oscampus.wistia.init({$options});
-    }
-});
-</script>
-JSCRIPT;
-        return $js;
+        JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
+        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
+        JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+        JHtml::_('osc.onready', "$.Oscampus.wistia.init({$options});");
     }
 
     /**

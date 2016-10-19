@@ -52,6 +52,8 @@
 
     $.Oscampus.wistia = {
         options: {
+            videoId    : null,
+            shortId    : null,
             mobile     : false,
             formToken  : null,
             intervalPct: 10,
@@ -72,15 +74,18 @@
         init: function(options) {
             options = $.extend(true, {}, this.options, options);
 
+            window._wq = window._wq || [];
+            this.moveNavigationButtons(options);
+
             if (!options.mobile) {
-                this.addExtraControls(options);
+                //    this.addExtraControls(options);
             }
-            this.saveVolumeChange();
-            this.moveNavigationButtons();
+            //this.saveVolumeChange();
 
-            this.setFullScreen();
 
-            this.setMonitoring(options);
+            //this.setFullScreen();
+
+            //this.setMonitoring(options);
         },
 
         /**
@@ -274,33 +279,40 @@
         /**
          * Move standard navigation buttons into the video area itself
          */
-        moveNavigationButtons: function() {
-            $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
+        moveNavigationButtons: function(options) {
+            var container = $('#course-navigation'),
+                buttons   = $('.osc-btn, #course-navigation');
 
-            // Events
-            var gridMain = $(wistiaEmbed.grid.main);
+            container.css('z-index', '999999');
 
             var hideWistiaButtons = function() {
-                var buttons = $('.osc-btn, #course-navigation');
-
                 buttons.removeClass('osc-visible');
                 buttons.addClass('osc-hidden');
             };
 
             var showWistiaButtons = function() {
-                var buttons = $('.osc-btn, #course-navigation');
-
                 buttons.addClass('osc-visible');
                 buttons.removeClass('osc-hidden');
             };
 
-            gridMain.mouseenter(showWistiaButtons);
-            gridMain.mousemove(showWistiaButtons);
-            gridMain.mouseleave(hideWistiaButtons);
             $('.osc-btn').hover(showWistiaButtons);
 
-            wistiaEmbed.bind('play', hideWistiaButtons);
-            wistiaEmbed.bind('pause', hideWistiaButtons);
+            window._wq = window._wq || [];
+            window._wq.push({
+                id     : options.shortId,
+                onReady: function(video) {
+                    $(video.grid.top_inside).append(container);
+
+                    // Events
+                    $(video.grid.main)
+                        .mouseenter(showWistiaButtons)
+                        .mousemove(showWistiaButtons)
+                        .mouseleave(hideWistiaButtons);
+
+                    video.bind('play', hideWistiaButtons);
+                    video.bind('pause', hideWistiaButtons);
+                }
+            });
         },
 
         /**
