@@ -47,11 +47,11 @@ class OscampusControllerWistia extends OscampusControllerJson
      */
     public function setVolumeLevel()
     {
-        $level = JFactory::getApplication()->input->get('level', 1);
+        $level = (float)JFactory::getApplication()->input->get('level', 1);
 
         JFactory::getSession()->set('oscampus.video.volume', $level);
 
-        echo json_encode((float)$level);
+        echo json_encode($level);
     }
 
     /**

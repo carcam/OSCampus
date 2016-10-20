@@ -97,8 +97,6 @@ class Wistia extends AbstractType
             $controls = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
 
             $params->set('volume', $volume);
-            $params->set('cacheVideoID', $this->id);
-
             if ($controls) {
                 $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
                 $focus    = $session->get('oscampus.video.focus', true);
@@ -152,9 +150,10 @@ class Wistia extends AbstractType
      */
     protected function setControls($controls)
     {
-        $user   = OscampusFactory::getUser();
-        $device = OscampusFactory::getContainer()->device;
-        $config = OscampusComponentHelper::getParams();
+        $user    = OscampusFactory::getUser();
+        $device  = OscampusFactory::getContainer()->device;
+        $config  = OscampusComponentHelper::getParams();
+        $session = OscampusFactory::getSession();
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
@@ -167,6 +166,7 @@ class Wistia extends AbstractType
                 'shortId'    => substr($this->id, 0, 3),
                 'mobile'     => $device->isMobile(),
                 'formToken'  => JSession::getFormToken(),
+                'volume'     => $session->get('oscampus.video.volume', 1),
                 'upgradeUrl' => $downloadUrl,
                 'authorised' => array(
                     'download' => $authoriseDownload,

@@ -58,6 +58,7 @@
             formToken  : null,
             intervalPct: 10,
             gracePct   : 3,
+            volume     : 1,
             upgradeUrl : null,
             authorised : {
                 download: false,
@@ -76,12 +77,11 @@
 
             window._wq = window._wq || [];
             this.moveNavigationButtons(options);
+            this.saveVolumeChange(options);
 
             if (!options.mobile) {
                 //    this.addExtraControls(options);
             }
-            //this.saveVolumeChange();
-
 
             //this.setFullScreen();
 
@@ -248,32 +248,36 @@
         },
 
         /**
+         * @param {object} options
+         *
          * Save volume changes in session as user navigates through videos
          */
-        saveVolumeChange: function() {
-            if (wistiaEmbed) {
-                wistiaEmbed.volume(parseFloat(wistiaEmbed.options.volume));
+        saveVolumeChange: function(options) {
+            window._wq.push({
+                id     : options.shortId,
+                onReady: function(video) {
+                    var saveVolume;
 
-                var saveVolume;
+                    video.volume(parseFloat(options.volume));
 
-                wistiaEmbed.bind('volumechange', function(event) {
-                    if (saveVolume) {
-                        clearTimeout(saveVolume);
-                    }
-                    saveVolume = setTimeout(function() {
-                        $.Oscampus.ajax({
-                            data   : {
-                                task : 'wistia.setVolumeLevel',
-                                level: wistiaEmbed.volume()
-                            },
-                            success: function(level) {
-                                // ignore response
-                            }
-                        });
-                    }, 750);
-
-                })
-            }
+                    video.bind('volumechange', function(level) {
+                        if (saveVolume) {
+                            clearTimeout(saveVolume);
+                        }
+                        saveVolume = setTimeout(function() {
+                            $.Oscampus.ajax({
+                                data   : {
+                                    task : 'wistia.setVolumeLevel',
+                                    level: video.volume()
+                                },
+                                success: function() {
+                                    // response ignored
+                                }
+                            });
+                        }, 750);
+                    });
+                }
+            });
         },
 
         /**
