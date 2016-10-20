@@ -83,7 +83,7 @@
                 //    this.addExtraControls(options);
             }
 
-            //this.setFullScreen();
+            this.setFullScreen(options);
 
             //this.setMonitoring(options);
         },
@@ -146,52 +146,56 @@
 
         /**
          * Fullscreen switching event handling
+         *
+         * @param {object} options
          */
-        setFullScreen: function() {
-            var oldButton = $('[id^=wistia_fullscreenButton_]'),
-                newButton = oldButton.clone();
+        setFullScreen: function(options) {
+            window._wq.push({
+                id     : options.shortId,
+                onReady: function(video) {
+                    var oldButton = $('#wistia_' + video.hashedId() + ' [id^=wistia_fullscreenButton_]'),
+                        newButton = oldButton.clone();
 
-            newButton.addClass('custom').addClass('w-is-visible');
+                    newButton.addClass('custom').addClass('w-is-visible');
 
-            oldButton
-                .after(newButton)
-                .remove();
+                    oldButton
+                        .after(newButton)
+                        .remove();
 
-            newButton.on('click', function() {
-                if (screenfull && screenfull.enabled) {
-                    if (screenfull.isFullscreen) {
-                        screenfull.exit();
-                    } else {
-                        screenfull.request($('#oscampus')[0]);
+                    newButton.on('click', function() {
+                        if (screenfull && screenfull.enabled) {
+                            if (screenfull.isFullscreen) {
+                                screenfull.exit();
+                            } else {
+                                screenfull.request($('#oscampus')[0]);
+                            }
+                        }
+                    });
+
+                    //this.setFullscreenNavigation(options);
+
+                    if (screenfull && screenfull.enabled) {
+                        document.addEventListener(screenfull.raw.fullscreenchange, function() {
+                            if (!screenfull.isFullscreen) {
+                                // Restore the video size
+                                var hashedId = video.hashedId();
+                                var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
+                                elems.css('width', '100%');
+                                elems.css('height', '100%');
+                                $('body').removeClass('fullscreen');
+                            } else {
+                                $('body').addClass('fullscreen');
+                            }
+                        });
+
+                        var fullscreenError = function(event) {
+                            console.error('Failed to enable fullscreen', event);
+                        };
+                        document.removeEventListener(screenfull.raw.fullscreenerror, fullscreenError);
+                        document.addEventListener(screenfull.raw.fullscreenerror, fullscreenError);
                     }
                 }
             });
-
-            // Replace the native fullscreen mode
-            wistiaEmbed.fullscreenButton = newButton[0];
-            wistiaEmbed.requestFullscreen = function() {
-                newButton.trigger('click');
-            };
-            this.setFullscreenNavigation();
-
-            if (screenfull && screenfull.enabled) {
-                document.addEventListener(screenfull.raw.fullscreenchange, function() {
-                    if (!screenfull.isFullscreen) {
-                        // Restore the video size
-                        var hashedId = wistiaEmbed.hashedId();
-                        var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
-                        elems.css('width', '100%');
-                        elems.css('height', '100%');
-                        $('body').removeClass('fullscreen');
-                    } else {
-                        $('body').addClass('fullscreen');
-                    }
-                });
-
-                document.addEventListener(screenfull.raw.fullscreenerror, function(event) {
-                    console.error('Failed to enable fullscreen', event);
-                });
-            }
         },
 
         /**
@@ -282,7 +286,7 @@
 
         /**
          * @param {object} options
-         * 
+         *
          * Move standard navigation buttons into the video area itself
          */
         moveNavigationButtons: function(options) {
