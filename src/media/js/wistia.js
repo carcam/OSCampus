@@ -281,6 +281,8 @@
         },
 
         /**
+         * @param {object} options
+         * 
          * Move standard navigation buttons into the video area itself
          */
         moveNavigationButtons: function(options) {
