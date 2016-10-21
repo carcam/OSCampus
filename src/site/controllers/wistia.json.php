@@ -23,7 +23,7 @@ class OscampusControllerWistia extends OscampusControllerJson
         $state   = !((bool)$session->get('oscampus.video.autoplay', true));
         $session->set('oscampus.video.autoplay', $state);
 
-        echo json_encode((bool)$state);
+        echo json_encode($state);
     }
 
     /**

@@ -10,13 +10,13 @@
          *    {string} enabled  : The icon to use when option is enabled
          * }
          *
+         * @param {object} wistiaOptions
          * @param {bool} waiting
          *
          * @returns {jQuery}
          */
-        spinnerIcon: function(waiting) {
-            var data          = $(this).data(),
-                wistiaOptions = wistiaEmbed.options || null;
+        spinnerIcon: function(wistiaOptions, waiting) {
+            var data = $(this).data();
 
             if (data.icon && wistiaOptions) {
                 var disabled = data.disabled || 'fa-square-o',
@@ -84,13 +84,10 @@
         init: function(video, options) {
             options = $.extend(true, {}, this.options, options);
 
-            this.moveNavigationButtons(video, options);
             this.saveVolumeChange(video, options);
 
-            if (!options.mobile) {
-                //    this.addExtraControls(options);
-            }
-
+            this.customControls.add(video, options);
+            this.moveNavigationButtons(video, options);
             this.setFullScreen(video, options);
 
             //this.setMonitoring(options);
@@ -304,7 +301,7 @@
             var container = $('#course-navigation'),
                 buttons   = $('.osc-btn, #course-navigation');
 
-            container.css('z-index', '999999');
+            container.css('z-index', '99999');
 
             var hideWistiaButtons = function() {
                 buttons.removeClass('osc-visible');
@@ -330,223 +327,260 @@
             video.bind('pause', hideWistiaButtons);
         },
 
-        /**
-         * Create additional control buttons
-         *
-         * @param options
-         */
-        addExtraControls: function(options) {
-            // Add the container for the buttons
-            var container = $('<div>')
-                .attr('id', wistiaEmbed.uuid + '_buttons_container')
-                .addClass('osc-lesson-options osc-btn-group');
-            $(wistiaEmbed.grid.top_inside).append(container);
+        customControls: {
+            video  : null,
+            options: null,
 
-            this.buttonDownload(container, options);
+            add: function(video, options) {
+                if (!options.mobile) {
+                    this.video = video;
+                    this.options = options;
 
-            if (options.authorised.controls) {
-                this.buttonAutoplay(container, options);
-                this.buttonFocus(container, options);
-            }
-        },
+                    // Create a new container
+                    var container = $('<div>')
+                        .attr('id', video.uuid + '_buttons_container')
+                        .addClass('osc-lesson-options osc-btn-group')
+                        .css('z-index', '99999');
 
-        /**
-         * Add autoplay button to the container
-         *
-         * @param {object} container
-         * @param {object} options
-         */
-        buttonAutoplay: function(container, options) {
-            var button = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'))
+                    $(video.grid.top_inside).append(container);
 
-            if (wistiaEmbed.options.autoPlay) {
-                button.removeClass(options.offClass);
-            } else {
-                button.addClass(options.offClass);
-            }
+                    container.append(this.getDownload());
+                    if (options.authorised.controls) {
+                        container.append(this.getAutoplay());
+                        //this.buttonFocus(container, options);
 
-            button
-                .data('option', 'autoPlay')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        context : this,
-                        data    : {
-                            task: 'wistia.toggleAutoPlayState'
-                        },
-                        success : function(state) {
-                            wistiaEmbed.options.autoPlay = state;
-                            wistiaEmbed.params.autoPlay = state;
-
-                            if (state) {
-                                $(wistiaEmbed).trigger('autoplayenabled');
-                                button.removeClass(options.offClass);
-                            } else {
-                                $(wistiaEmbed).trigger('autoplaydisabled');
-                                button.addClass(options.offClass);
+                        // Autoplay move to the next lesson and turn focus off
+                        video.bind('end', function(event) {
+                            var nextButton = $($.Oscampus.lesson.navigation.options.buttons.next);
+                            if (video.options.autoPlay && nextButton) {
+                                nextButton.click();
                             }
-                        },
-                        complete: function() {
-                            $(this).spinnerIcon();
-                        }
-                    })
-                });
 
-            container.append(button);
-        },
-
-        /**
-         * Add focus button to container
-         *
-         * @param {object} container
-         * @param {object} options
-         */
-        buttonFocus: function(container, options) {
-            var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
-
-            if (wistiaEmbed.options.focus) {
-                button.removeClass(options.offClass)
-            } else {
-                button.addClass(options.offClass);
-            }
-
-            button
-                .data('option', 'focus')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        data    : {
-                            task: 'wistia.toggleFocusState'
-                        },
-                        context : this,
-                        success : function(state) {
-                            wistiaEmbed.options.focus = state;
-                            wistiaEmbed.params.focus = state;
-
-                            if (state) {
-                                wistiaEmbed.plugin['dimthelights'].dim();
-                                $(wistiaEmbed).trigger('focusenabled');
-                                button.removeClass(options.offClass);
-                            } else {
-                                wistiaEmbed.plugin['dimthelights'].undim();
-                                $(wistiaEmbed).trigger('focusdisabled');
-                                button.addClass(options.offClass);
+                            if (video.plugin['dimthelights']) {
+                                video.plugin['dimthelights'].undim();
                             }
-                        },
-                        complete: function() {
-                            $(this).spinnerIcon();
+                        });
+                    }
+                }
+            },
+
+            /**
+             * get s download button
+             *
+             * @return {jQuery}
+             */
+            getDownload: function() {
+                var video    = this.video,
+                    options  = this.options,
+                    hashedId = this.video.hashedId(),
+                    button   = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
+
+                if (!options.authorised.download) {
+                    button.addClass(this.options.offClass);
+                }
+
+                button
+                    .data('enabled', 'fa-cloud-download')
+                    .spinnerIcon(video.options)
+                    .on('click', function(event) {
+                        if (options.authorised.download) {
+                            $(this).spinnerIcon(video.options, true);
+                            video.pause();
+
+                            // Get the download limit information
+                            $.Oscampus.ajax({
+                                data    : {
+                                    task: 'wistia.downloadLimit'
+                                },
+                                context : this,
+                                success : function(response) {
+                                    if (response.authorised) {
+                                        var formId = 'formDownload-' + hashedId;
+                                        var form = $("#" + formId);
+
+                                        if (form.length == 0) {
+                                            form = $('<form>');
+
+                                            var query = {
+                                                option: 'com_oscampus',
+                                                task  : 'wistia.download',
+                                                id    : hashedId,
+                                                format: 'raw'
+                                            };
+
+                                            form.attr({
+                                                id    : formId,
+                                                method: 'POST',
+                                                action: 'index.php?' + $.param(query)
+                                            });
+
+                                            if (options.formToken) {
+                                                var tokenField = $('<input>');
+                                                tokenField.attr({
+                                                    type : 'hidden',
+                                                    name : options.formToken,
+                                                    value: 1
+                                                });
+                                                form.append(tokenField);
+                                            }
+
+                                            $('body').append(form);
+                                        }
+                                        form.submit();
+
+                                    } else {
+                                        $.Oscampus.wistia.overlay.refused(video, response.error);
+                                    }
+                                },
+                                complete: function() {
+                                    $(this).spinnerIcon(video.options);
+                                }
+                            });
+
+                        } else {
+                            video.pause();
+
+                            $.Oscampus.wistia.overlay.upgrade(video, options.upgradeUrl);
                         }
                     });
-                });
 
-            container.append(button);
+                return button;
+            },
 
-            // Fix the focus on play
-            wistiaEmbed.bind('play', function(event) {
+            /**
+             * Add autoplay button to the container
+             *
+             * @return {jQuery}
+             */
+            getAutoplay: function() {
+                var video    = this.video,
+                    options  = this.options,
+                    hashedId = this.video.hashedId(),
+                    button   = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'));
+
+                if (video.options.autoPlay) {
+                    button.removeClass(options.offClass);
+                } else {
+                    button.addClass(options.offClass);
+                }
+
+                button
+                    .data('option', 'autoPlay')
+                    .spinnerIcon(video.options)
+                    .on('click', function(event) {
+                        $(this).spinnerIcon(video.options, true);
+                        $.Oscampus.ajax({
+                            context : this,
+                            data    : {
+                                task: 'wistia.toggleAutoPlayState'
+                            },
+                            success : function(state) {
+                                video.options.autoPlay = state;
+                                video.params.autoPlay = state;
+
+                                if (state) {
+                                    $(video).trigger('autoplayenabled');
+                                    button.removeClass(options.offClass);
+                                } else {
+                                    $(video).trigger('autoplaydisabled');
+                                    button.addClass(options.offClass);
+                                }
+                            },
+                            complete: function() {
+                                $(this).spinnerIcon(video.options);
+                            }
+                        })
+                    });
+
+                return button;
+            },
+
+            /**
+             * Add focus button to container
+             *
+             * @param {object} container
+             * @param {object} options
+             */
+            buttonFocus: function(container, options) {
+                var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
+
                 if (wistiaEmbed.options.focus) {
-                    // Uses interval to make sure the plugin is loaded before call it
-                    var interval = setInterval(function() {
-                        if (typeof wistiaEmbed.plugin['dimthelights'] != 'undefined') {
-                            wistiaEmbed.plugin['dimthelights'].dim();
-                            clearInterval(interval);
-                            interval = null;
-                        }
-                    }, 500);
-                }
-            });
-
-            // Autoplay move to the next lesson and turn focus off
-            wistiaEmbed.bind('end', function(event) {
-                if (wistiaEmbed.options.autoPlay) {
-                    $('#nextbut')[0].click();
+                    button.removeClass(options.offClass)
+                } else {
+                    button.addClass(options.offClass);
                 }
 
-                wistiaEmbed.plugin['dimthelights'].undim();
-            });
-        },
-
-        /**
-         * Add download button
-         *
-         * @param container
-         * @param options
-         */
-        buttonDownload: function(container, options) {
-            options = $.extend({}, this.options, options);
-
-            var button = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
-            if (!options.authorised.download) {
-                button.addClass(options.offClass);
-            }
-
-            button
-                .data('enabled', 'fa-cloud-download')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    if (options.authorised.download) {
+                button
+                    .data('option', 'focus')
+                    .spinnerIcon()
+                    .on('click', function(event) {
                         $(this).spinnerIcon(true);
-                        wistiaEmbed.pause();
-
-                        // Get the download limit information
                         $.Oscampus.ajax({
                             data    : {
-                                task: 'wistia.downloadLimit'
+                                task: 'wistia.toggleFocusState'
                             },
                             context : this,
-                            success : function(response) {
-                                if (response.authorised) {
-                                    var formId = 'formDownload-' + wistiaEmbed.hashedId();
-                                    var form = $("#" + formId);
+                            success : function(state) {
+                                wistiaEmbed.options.focus = state;
+                                wistiaEmbed.params.focus = state;
 
-                                    if (form.length == 0) {
-                                        form = $('<form>');
-
-                                        var query = {
-                                            option: 'com_oscampus',
-                                            task  : 'wistia.download',
-                                            id    : wistiaEmbed.hashedId(),
-                                            format: 'raw'
-                                        };
-
-                                        form.attr({
-                                            id    : formId,
-                                            method: 'POST',
-                                            action: 'index.php?' + $.param(query)
-                                        });
-
-                                        if (options.formToken) {
-                                            var tokenField = $('<input>');
-                                            tokenField.attr({
-                                                type : 'hidden',
-                                                name : options.formToken,
-                                                value: 1
-                                            });
-                                            form.append(tokenField);
-                                        }
-
-                                        $('body').append(form);
-                                    }
-                                    form.submit();
-
+                                if (state) {
+                                    wistiaEmbed.plugin['dimthelights'].dim();
+                                    $(wistiaEmbed).trigger('focusenabled');
+                                    button.removeClass(options.offClass);
                                 } else {
-                                    $.Oscampus.wistia.overlay.refused(response.error);
+                                    wistiaEmbed.plugin['dimthelights'].undim();
+                                    $(wistiaEmbed).trigger('focusdisabled');
+                                    button.addClass(options.offClass);
                                 }
                             },
                             complete: function() {
                                 $(this).spinnerIcon();
                             }
                         });
+                    });
 
-                    } else {
-                        wistiaEmbed.pause();
+                container.append(button);
 
-                        $.Oscampus.wistia.overlay.upgrade(options.upgradeUrl);
+                // Fix the focus on play
+                wistiaEmbed.bind('play', function(event) {
+                    if (wistiaEmbed.options.focus) {
+                        // Uses interval to make sure the plugin is loaded before call it
+                        var interval = setInterval(function() {
+                            if (typeof wistiaEmbed.plugin['dimthelights'] != 'undefined') {
+                                wistiaEmbed.plugin['dimthelights'].dim();
+                                clearInterval(interval);
+                                interval = null;
+                            }
+                        }, 500);
                     }
                 });
+            },
 
-            container.append(button);
+            /**
+             * Create the base for standard custom control buttons
+             *
+             * @param {string} name
+             * @param {string} title
+             *
+             * @returns {jQuery}
+             */
+            createButton: function(name, title) {
+                var button = $('<div>'),
+                    icon   = $('<i class="fa">'),
+                    id     = this.video.uuid + '_' + name + '_button';
+
+                button
+                    .data('icon', icon)
+                    .attr('id', id)
+                    .addClass('osc-btn ' + name)
+                    .attr('title', title)
+                    .text(title)
+                    .prepend(icon);
+
+                return button;
+            }
+
         },
 
         /**
@@ -556,20 +590,21 @@
             /**
              * The base overlay container
              *
+             * @param {object} video
              * @param {string} html
              *
              * @returns {jQuery}
              */
-            base: function(html) {
+            base: function(video, html) {
                 var overlay = $('<div>')
-                    .attr('id', wistiaEmbed.uuid + '_overlay')
+                    .attr('id', video.uuid + '_overlay')
                     .addClass('wistia_overlay')
                     .css({
-                        height: $(wistiaEmbed.grid.main).height(),
-                        width : $(wistiaEmbed.grid.main).width()
+                        height: $(video.grid.main).height(),
+                        width : $(video.grid.main).width()
                     });
 
-                $(wistiaEmbed.grid.main).append(overlay);
+                $(video.grid.main).append(overlay);
 
                 var wrapper = $('<div>').addClass('wrapper');
                 $(overlay).append(wrapper);
@@ -578,15 +613,15 @@
 
                 this.resize(overlay, wrapper);
 
-                wistiaEmbed.bind('widthchange', this.resize(overlay, wrapper));
-                wistiaEmbed.bind('heightchange', this.resize(overlay, wrapper));
+                video.bind('widthchange', this.resize(overlay, wrapper));
+                video.bind('heightchange', this.resize(overlay, wrapper));
 
                 overlay.addClass('visible');
 
                 $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
                     overlay.fadeOut(200, function() {
                         overlay.remove();
-                        wistiaEmbed.play();
+                        video.play();
                     });
                 });
 
@@ -605,20 +640,24 @@
 
             /**
              * Create the not-authorised/suggest upgrade overlay
+             *
+             * @param {object} video
+             * @param {string} upgradeUrl
              */
-            upgrade: function(upgradeUrl) {
+            upgrade: function(video, upgradeUrl) {
                 var overlay = this.base(
+                    video,
                     '<div>' + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE') + '</div>'
-                    + '<a href="' + upgradeUrl + '" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
-                    + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
+                    + '<a href="' + upgradeUrl + '" id="' + video.uuid + '_subscribe" class="subscribe">'
+                    + '<span id="' + video.uuid + '_subscribe_icon">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK')
-                    + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
-                    + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                    + '</a><a href="#" id="' + video.uuid + '_resume_skip" class="skip">'
+                    + '  <span id="' + video.uuid + '_resume_skip_arrow">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
 
-                $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
+                $('#' + video.uuid + '_subscribe').click(function() {
                     window.location = downloadURL;
                 });
             },
@@ -626,41 +665,19 @@
             /**
              * Download request was refused overlay
              *
-             * @param message
+             * @param {object} video
+             * @param {string} message
              */
-            refused: function(message) {
+            refused: function(video, message) {
                 var overlay = this.base(
+                    video,
                     '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>'
-                    + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
-                    + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                    + '</a><a href="#" id="' + video.uuid + '_resume_skip" class="skip">'
+                    + '  <span id="' + video.uuid + '_resume_skip_arrow">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
             }
-        },
-
-        /**
-         * Create the base for standard custom control buttons
-         *
-         * @param {string} name
-         * @param {string} title
-         *
-         * @returns {jQuery}
-         */
-        createButton: function(name, title) {
-            var button = $('<div>'),
-                icon   = $('<i class="fa">'),
-                id     = wistiaEmbed.uuid + '_' + name + '_button';
-
-            button
-                .data('icon', icon)
-                .attr('id', id)
-                .addClass('osc-btn ' + name)
-                .attr('title', title)
-                .text(title)
-                .prepend(icon);
-
-            return button;
         }
     };
 })(jQuery);
