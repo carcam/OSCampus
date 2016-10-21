@@ -68,24 +68,47 @@
         },
 
         /**
-         * Initialise all custom video functions
+         * Initialise all custom video functions. Call with:
          *
-         * @param options
+         * window._wq = window._wq || [];
+         * window._wq.push({
+         *    id: {hashedId},
+         *    onReady: function(video) {
+         *       $.Oscampus.wistia.init(video, {$options});
+         *    }
+         * });
+         *
+         * @param {object} video
+         * @param {object} options
          */
-        init: function(options) {
+        init: function(video, options) {
             options = $.extend(true, {}, this.options, options);
 
-            window._wq = window._wq || [];
-            this.moveNavigationButtons(options);
-            this.saveVolumeChange(options);
+            this.moveNavigationButtons(video, options);
+            this.saveVolumeChange(video, options);
 
             if (!options.mobile) {
                 //    this.addExtraControls(options);
             }
 
-            this.setFullScreen(options);
+            this.setFullScreen(video, options);
 
             //this.setMonitoring(options);
+
+            if (this.postfix) {
+                var lesson = $.Oscampus.lesson;
+
+                // Update the url and title
+                window.history.pushState(null, lesson.current.title, lesson.current.link);
+                document.title = lesson.current.title;
+
+                // Set the custom video speed
+                if (Wistia.plugin['customspeed']) {
+                    Wistia.plugin['customspeed'](video);
+                }
+
+                $(lesson.navigation.options.container).removeClass('loading');
+            }
         },
 
         /**
@@ -147,149 +170,137 @@
         /**
          * Fullscreen switching event handling
          *
+         * @param {object} video
          * @param {object} options
          */
-        setFullScreen: function(options) {
-            window._wq.push({
-                id     : options.shortId,
-                onReady: function(video) {
-                    var oldButton = $('#wistia_' + video.hashedId() + ' [id^=wistia_fullscreenButton_]'),
-                        newButton = oldButton.clone();
+        setFullScreen: function(video, options) {
+            var oldButton = $('#wistia_' + video.hashedId() + ' [id^=wistia_fullscreenButton_]'),
+                newButton = oldButton.clone();
 
-                    newButton.addClass('custom').addClass('w-is-visible');
+            newButton.addClass('custom').addClass('w-is-visible');
 
-                    oldButton
-                        .after(newButton)
-                        .remove();
+            oldButton
+                .after(newButton)
+                .remove();
 
-                    newButton.on('click', function() {
-                        if (screenfull && screenfull.enabled) {
-                            if (screenfull.isFullscreen) {
-                                screenfull.exit();
-                            } else {
-                                screenfull.request($('#oscampus')[0]);
-                            }
-                        }
-                    });
-
-                    //this.setFullscreenNavigation(options);
-
-                    if (screenfull && screenfull.enabled) {
-                        document.addEventListener(screenfull.raw.fullscreenchange, function() {
-                            if (!screenfull.isFullscreen) {
-                                // Restore the video size
-                                var hashedId = video.hashedId();
-                                var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
-                                elems.css('width', '100%');
-                                elems.css('height', '100%');
-                                $('body').removeClass('fullscreen');
-                            } else {
-                                $('body').addClass('fullscreen');
-                            }
-                        });
-
-                        var fullscreenError = function(event) {
-                            console.error('Failed to enable fullscreen', event);
-                        };
-                        document.removeEventListener(screenfull.raw.fullscreenerror, fullscreenError);
-                        document.addEventListener(screenfull.raw.fullscreenerror, fullscreenError);
+            newButton.on('click', function() {
+                if (screenfull && screenfull.enabled) {
+                    if (screenfull.isFullscreen) {
+                        screenfull.exit();
+                    } else {
+                        screenfull.request($('#oscampus')[0]);
                     }
                 }
             });
+
+            $.Oscampus.wistia.setFullscreenNavigation(video, options);
+
+            if (screenfull && screenfull.enabled) {
+                var test = function() {
+                    if (!screenfull.isFullscreen) {
+                        // Restore the video size
+                        var hashedId = video.hashedId();
+                        var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
+                        elems.css('width', '100%');
+                        elems.css('height', '100%');
+                        $('body').removeClass('fullscreen');
+
+                    } else {
+                        $('body').addClass('fullscreen');
+                    }
+                };
+                document.removeEventListener(screenfull.raw.fullscreenchange, test);
+                document.addEventListener(screenfull.raw.fullscreenchange, test);
+
+                var fullscreenError = function(event) {
+                    console.error('Failed to enable fullscreen', event);
+                };
+                document.removeEventListener(screenfull.raw.fullscreenerror, fullscreenError);
+                document.addEventListener(screenfull.raw.fullscreenerror, fullscreenError);
+            }
         },
 
         /**
          * Set prev/next buttons for handling full screen navigation.
          * If we're in fullscreen mode we have to do an ajax load of the next
          * wistia lesson to retain fullscreen.
+         *
+         * @param {object} video
+         * @param {object} options
          */
-        setFullscreenNavigation: function() {
-            var options = $.Oscampus.lesson.navigation.options;
+        setFullscreenNavigation: function(video, options) {
+            var lesson = $.Oscampus.lesson;
 
-            $.each(options.buttons, function(direction, id) {
-                if ($.Oscampus.lesson[direction]) {
-                    $(id).bindBefore('click', function(evt) {
-                        wistiaEmbed.pause();
-                        wistiaEmbed.plugin['dimthelights'].undim();
+            if (lesson.navigation.options.buttons) {
+                var buttons = lesson.navigation.options.buttons;
+                $.each(buttons, function(direction, id) {
+                    if (lesson[direction]) {
+                        $(id).bindBefore('click', function(evt) {
+                            video.pause();
+                            if (video.plugin['dimthelights']) {
+                                video.plugin['dimthelights'].undim();
+                            }
 
-                        var target = $.Oscampus.lesson[direction];
+                            var target = lesson[direction];
 
-                        if (screenfull.enabled && screenfull.isFullscreen && target.type) {
-                            if (target.type === 'wistia') {
+                            if (screenfull
+                                && screenfull.enabled
+                                && screenfull.isFullscreen
+                                && target.type
+                                && target.type === 'wistia'
+                            ) {
                                 evt.preventDefault();
 
-                                var container = $(options.container);
-
-                                container.load(target.link, {tmpl: 'oscampus'}, function(text, status) {
+                                var container = lesson.navigation.options.container;
+                                $.get(target.link, {format: 'raw'}, function(data) {
                                     $('body').addClass('fullscreen');
-                                    var postProcess = setInterval(function() {
-                                        if (typeof wistiaEmbed.elem() !== 'undefined') {
-                                            wistiaEmbed.ready(function() {
-                                                $.Oscampus.wistia.moveNavigationButtons();
-                                                $.Oscampus.wistia.setFullscreenNavigation();
+                                    $(container).html(data);
 
-                                                // Update the url and title
-                                                window.history.pushState(null, target.title, target.link);
-                                                document.title = target.title;
-
-                                                // Set the custom video speed
-                                                if (typeof Wistia.plugin['customspeed'] != 'undefined') {
-                                                    Wistia.plugin['customspeed'](wistiaEmbed);
-                                                }
-                                            });
-
-                                            clearInterval(postProcess);
-                                            postProcess = null;
-                                            container.removeClass('loading');
-                                        }
-                                    }, 500);
+                                    $.Oscampus.wistia.postfix = true;
                                 });
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
         },
 
         /**
+         * @param {object} video
          * @param {object} options
          *
          * Save volume changes in session as user navigates through videos
          */
-        saveVolumeChange: function(options) {
-            window._wq.push({
-                id     : options.shortId,
-                onReady: function(video) {
-                    var saveVolume;
+        saveVolumeChange: function(video, options) {
+            var saveVolume;
 
-                    video.volume(parseFloat(options.volume));
+            video.volume(parseFloat(options.volume));
 
-                    video.bind('volumechange', function(level) {
-                        if (saveVolume) {
-                            clearTimeout(saveVolume);
-                        }
-                        saveVolume = setTimeout(function() {
-                            $.Oscampus.ajax({
-                                data   : {
-                                    task : 'wistia.setVolumeLevel',
-                                    level: video.volume()
-                                },
-                                success: function() {
-                                    // response ignored
-                                }
-                            });
-                        }, 750);
-                    });
+            video.bind('volumechange', function(level) {
+                if (saveVolume) {
+                    clearTimeout(saveVolume);
                 }
+                saveVolume = setTimeout(function() {
+                    $.Oscampus.ajax({
+                        data   : {
+                            task : 'wistia.setVolumeLevel',
+                            level: video.volume()
+                        },
+                        success: function() {
+                            // response ignored
+                        }
+                    });
+                }, 750);
             });
         },
 
         /**
+         * @param {object} video
          * @param {object} options
          *
          * Move standard navigation buttons into the video area itself
          */
-        moveNavigationButtons: function(options) {
+        moveNavigationButtons: function(video, options) {
             var container = $('#course-navigation'),
                 buttons   = $('.osc-btn, #course-navigation');
 
@@ -307,22 +318,16 @@
 
             $('.osc-btn').hover(showWistiaButtons);
 
-            window._wq = window._wq || [];
-            window._wq.push({
-                id     : options.shortId,
-                onReady: function(video) {
-                    $(video.grid.top_inside).append(container);
+            $(video.grid.top_inside).append(container);
 
-                    // Events
-                    $(video.grid.main)
-                        .mouseenter(showWistiaButtons)
-                        .mousemove(showWistiaButtons)
-                        .mouseleave(hideWistiaButtons);
+            // Events
+            $(video.grid.main)
+                .mouseenter(showWistiaButtons)
+                .mousemove(showWistiaButtons)
+                .mouseleave(hideWistiaButtons);
 
-                    video.bind('play', hideWistiaButtons);
-                    video.bind('pause', hideWistiaButtons);
-                }
-            });
+            video.bind('play', hideWistiaButtons);
+            video.bind('pause', hideWistiaButtons);
         },
 
         /**

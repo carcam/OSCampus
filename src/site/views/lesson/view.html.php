@@ -36,30 +36,35 @@ class OscampusViewLesson extends OscampusViewSite
 
     public function display($tmpl = null)
     {
-        $this->model    = $this->getModel();
-        $this->lesson   = $this->model->getItem();
-        $this->files    = $this->model->getFiles();
-        $this->activity = $this->model->getLessonStatus();
+        try {
+            $this->model    = $this->getModel();
+            $this->lesson   = $this->model->getItem();
+            $this->files    = $this->model->getFiles();
+            $this->activity = $this->model->getLessonStatus();
 
-        $pathway = JFactory::getApplication()->getPathway();
+            $pathway = JFactory::getApplication()->getPathway();
 
-        $link = JHtml::_('osc.link.course', $this->lesson->courses_id, null, null, true);
-        $pathway->addItem($this->lesson->courseTitle, $link);
+            $link = JHtml::_('osc.link.course', $this->lesson->courses_id, null, null, true);
+            $pathway->addItem($this->lesson->courseTitle, $link);
 
-        $pathway->addItem($this->lesson->title);
+            $pathway->addItem($this->lesson->title);
 
-        $this->setLayout($this->lesson->type);
+            $this->setLayout($this->lesson->type);
 
-        $this->setMetadata(
-            $this->lesson->metadata,
-            $this->lesson->title . ' - ' . $this->lesson->courseTitle,
-            $this->lesson->description
-        );
+            $this->setMetadata(
+                $this->lesson->metadata,
+                $this->lesson->title . ' - ' . $this->lesson->courseTitle,
+                $this->lesson->description
+            );
 
-        parent::display($tmpl);
+            parent::display($tmpl);
 
-        if (!$this->lesson->isAuthorised()) {
-            echo $this->loadDefaultTemplate('noauth');
+            if (!$this->lesson->isAuthorised()) {
+                echo $this->loadDefaultTemplate('noauth');
+            }
+
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 

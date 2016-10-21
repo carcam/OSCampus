@@ -19,6 +19,7 @@ use JText;
 use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
 use Oscampus\Lesson\Type\Wistia\Api;
+use Oscampus\Request;
 use OscampusComponentHelper;
 use OscampusFactory;
 use OscampusHelper;
@@ -112,14 +113,14 @@ class Wistia extends AbstractType
                 $params->set('captions', false);
             }
 
-            $this->setControls($controls);
-
             $embed = new WistiaEmbed($this->id, $params);
-            return $embed->toString();
+            $html  = $embed->toString() . $this->setControls($controls);
 
         } catch (Exception $e) {
-            return '<div class="osc-alert-warning">' . $e->getMessage() . '</div>';
+            $html = '<div class="osc-alert-warning">' . $e->getMessage() . '</div>';
         }
+
+        return $html;
     }
 
     public function getThumbnail($width = null, $height = null)
@@ -150,6 +151,19 @@ class Wistia extends AbstractType
      */
     protected function setControls($controls)
     {
+        if (!Request::isAjax()) {
+            JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK');
+            JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
+            JText::script('COM_OSCAMPUS_VIDEO_RESUME');
+
+            JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
+            JHtml::_('script', 'com_oscampus/utilities.js', false, true);
+            JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+        }
+
         $user    = OscampusFactory::getUser();
         $device  = OscampusFactory::getContainer()->device;
         $config  = OscampusComponentHelper::getParams();
@@ -160,10 +174,12 @@ class Wistia extends AbstractType
         $signupType  = 'videos.download.' . ($user->guest ? 'new' : 'upgrade');
         $downloadUrl = OscampusHelper::normalizeUrl($config->get($signupType));
 
+        $shortId = substr($this->id, 0, 3);
+
         $options = json_encode(
             array(
                 'videoId'    => $this->id,
-                'shortId'    => substr($this->id, 0, 3),
+                'shortId'    => $shortId,
                 'mobile'     => $device->isMobile(),
                 'formToken'  => JSession::getFormToken(),
                 'volume'     => $session->get('oscampus.video.volume', 1),
@@ -175,17 +191,20 @@ class Wistia extends AbstractType
             )
         );
 
-        JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK');
-        JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
-        JText::script('COM_OSCAMPUS_VIDEO_RESUME');
+        $script = array(
+            "<script>",
+            "window._wq = window._wq || [];",
+            "window._wq.push({",
+            "   id: '{$shortId}',",
+            "   onReady: function(video) {",
+            "      $.Oscampus.wistia.init(video, {$options});",
+            "   }",
+            "});",
+            "</script>"
+        );
 
-        JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
-        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
-        JHtml::_('script', 'com_oscampus/wistia.js', false, true);
-        JHtml::_('osc.onready', "$.Oscampus.wistia.init({$options});");
+
+        return join("\n", $script);
     }
 
     /**
@@ -219,8 +238,11 @@ class Wistia extends AbstractType
      *
      * @return void
      */
-    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
-    {
+    public function prepareActivityProgress(
+        LessonStatus $status,
+        $score = null,
+        $data = null
+    ) {
         if ($score !== null && $status->score < $score) {
             $status->score = $score;
         }
@@ -246,8 +268,9 @@ class Wistia extends AbstractType
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(Registry $data)
-    {
+    public function prepareAdminData(
+        Registry $data
+    ) {
         $content = $data->get('content');
         if ($content && is_string($content)) {
             $data->set('content', json_decode($content, true));
@@ -276,8 +299,9 @@ class Wistia extends AbstractType
     /**
      * @param Registry $data
      */
-    public function saveAdminChanges(Registry $data)
-    {
+    public function saveAdminChanges(
+        Registry $data
+    ) {
         $content = $data->get('content');
         if (!is_string($content)) {
             $content = json_encode($content);
