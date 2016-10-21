@@ -114,7 +114,7 @@ class Wistia extends AbstractType
             }
 
             $embed = new WistiaEmbed($this->id, $params);
-            $html  = $embed->toString() . $this->setControls($controls);
+            $html  = $embed->toString() . $this->setControls($params, $controls);
 
         } catch (Exception $e) {
             $html = '<div class="osc-alert-warning">' . $e->getMessage() . '</div>';
@@ -145,11 +145,12 @@ class Wistia extends AbstractType
     }
 
     /**
-     * @param bool $controls
+     * @param Registry $params
+     * @param bool     $controls
      *
      * @return string
      */
-    protected function setControls($controls)
+    protected function setControls(Registry $params, $controls)
     {
         if (!Request::isAjax()) {
             JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
@@ -167,7 +168,6 @@ class Wistia extends AbstractType
         $user    = OscampusFactory::getUser();
         $device  = OscampusFactory::getContainer()->device;
         $config  = OscampusComponentHelper::getParams();
-        $session = OscampusFactory::getSession();
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
@@ -182,7 +182,7 @@ class Wistia extends AbstractType
                 'shortId'    => $shortId,
                 'mobile'     => $device->isMobile(),
                 'formToken'  => JSession::getFormToken(),
-                'volume'     => $session->get('oscampus.video.volume', 1),
+                'volume'     => $params->get('volume', 1),
                 'upgradeUrl' => $downloadUrl,
                 'authorised' => array(
                     'download' => $authoriseDownload,

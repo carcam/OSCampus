@@ -455,7 +455,6 @@
             getAutoplay: function() {
                 var video    = this.video,
                     options  = this.options,
-                    hashedId = this.video.hashedId(),
                     button   = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'));
 
                 if (video.options.autoPlay) {
@@ -476,7 +475,6 @@
                             },
                             success : function(state) {
                                 video.options.autoPlay = state;
-                                video.params.autoPlay = state;
 
                                 if (state) {
                                     $(video).trigger('autoplayenabled');
