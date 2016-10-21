@@ -347,19 +347,7 @@
                     container.append(this.getDownload());
                     if (options.authorised.controls) {
                         container.append(this.getAutoplay());
-                        //this.buttonFocus(container, options);
-
-                        // Autoplay move to the next lesson and turn focus off
-                        video.bind('end', function(event) {
-                            var nextButton = $($.Oscampus.lesson.navigation.options.buttons.next);
-                            if (video.options.autoPlay && nextButton) {
-                                nextButton.click();
-                            }
-
-                            if (video.plugin['dimthelights']) {
-                                video.plugin['dimthelights'].undim();
-                            }
-                        });
+                        container.append(this.getFocus());
                     }
                 }
             },
@@ -453,9 +441,9 @@
              * @return {jQuery}
              */
             getAutoplay: function() {
-                var video    = this.video,
-                    options  = this.options,
-                    button   = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'));
+                var video   = this.video,
+                    options = this.options,
+                    button  = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'));
 
                 if (video.options.autoPlay) {
                     button.removeClass(options.offClass);
@@ -475,6 +463,7 @@
                             },
                             success : function(state) {
                                 video.options.autoPlay = state;
+                                video.params.autoPlay = state;
 
                                 if (state) {
                                     $(video).trigger('autoplayenabled');
@@ -490,19 +479,32 @@
                         })
                     });
 
+                // Autoplay move to the next lesson and turn focus off
+                video.bind('end', function(event) {
+                    var nextButton = $($.Oscampus.lesson.navigation.options.buttons.next);
+                    if (video.options.autoPlay && nextButton) {
+                        nextButton.click();
+                    }
+
+                    if (video.plugin['dimthelights']) {
+                        video.plugin['dimthelights'].undim();
+                    }
+                });
+
                 return button;
             },
 
             /**
              * Add focus button to container
              *
-             * @param {object} container
-             * @param {object} options
+             * @return {jQuery}
              */
-            buttonFocus: function(container, options) {
-                var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
+            getFocus: function() {
+                var video   = this.video,
+                    options = this.options,
+                    button  = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
 
-                if (wistiaEmbed.options.focus) {
+                if (video.options.focus) {
                     button.removeClass(options.offClass)
                 } else {
                     button.addClass(options.offClass);
@@ -510,49 +512,50 @@
 
                 button
                     .data('option', 'focus')
-                    .spinnerIcon()
+                    .spinnerIcon(video.options)
                     .on('click', function(event) {
-                        $(this).spinnerIcon(true);
+                        $(this).spinnerIcon(video.options, true);
                         $.Oscampus.ajax({
                             data    : {
                                 task: 'wistia.toggleFocusState'
                             },
                             context : this,
                             success : function(state) {
-                                wistiaEmbed.options.focus = state;
-                                wistiaEmbed.params.focus = state;
+                                video.options.focus = state;
+                                video.params.focus = state;
 
                                 if (state) {
-                                    wistiaEmbed.plugin['dimthelights'].dim();
-                                    $(wistiaEmbed).trigger('focusenabled');
+                                    video.plugin['dimthelights'].dim();
+                                    $(video).trigger('focusenabled');
                                     button.removeClass(options.offClass);
                                 } else {
-                                    wistiaEmbed.plugin['dimthelights'].undim();
-                                    $(wistiaEmbed).trigger('focusdisabled');
+                                    video.plugin['dimthelights'].undim();
+                                    $(video).trigger('focusdisabled');
                                     button.addClass(options.offClass);
                                 }
                             },
                             complete: function() {
-                                $(this).spinnerIcon();
+                                $(this).spinnerIcon(video.options);
                             }
                         });
                     });
 
-                container.append(button);
-
                 // Fix the focus on play
-                wistiaEmbed.bind('play', function(event) {
-                    if (wistiaEmbed.options.focus) {
+                video.bind('play', function(event) {
+                    if (video.options.focus) {
                         // Uses interval to make sure the plugin is loaded before call it
                         var interval = setInterval(function() {
-                            if (typeof wistiaEmbed.plugin['dimthelights'] != 'undefined') {
-                                wistiaEmbed.plugin['dimthelights'].dim();
+                            console.log('focus working...')
+                            if (video.plugin['dimthelights']) {
+                                video.plugin['dimthelights'].dim();
                                 clearInterval(interval);
                                 interval = null;
                             }
                         }, 500);
                     }
                 });
+
+                return button;
             },
 
             /**
