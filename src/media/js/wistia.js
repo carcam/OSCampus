@@ -90,7 +90,7 @@
             this.moveNavigationButtons(video, options);
             this.setFullScreen(video, options);
 
-            //this.setMonitoring(options);
+            this.setMonitoring(video, options);
 
             if (this.postfix) {
                 var lesson = $.Oscampus.lesson;
@@ -111,9 +111,10 @@
         /**
          * Setup progress recording for this video
          *
+         * @param {object} video
          * @param {object} options
          */
-        setMonitoring: function(options) {
+        setMonitoring: function(video, options) {
             var nextRecord = options.intervalPct,
                 lesson     = $.Oscampus.lesson.current;
 
@@ -130,7 +131,7 @@
             };
             ajaxOptions.data[options.formToken] = 1;
 
-            wistiaEmbed.bind('secondchange', function(currentSecond) {
+            video.bind('secondchange', function(currentSecond) {
                 var currentPercent = parseInt(this.percentWatched() * 100, 10);
 
                 // Use a grace period to consider a video completely watched
@@ -148,7 +149,7 @@
                 }
             });
 
-            wistiaEmbed.bind('end', function() {
+            video.bind('end', function() {
                 var finalPercent = parseInt(this.percentWatched() * 100, 10);
 
                 // Because percentWatched hardly ever returns 100% even when it's true
@@ -482,8 +483,9 @@
                 // Autoplay move to the next lesson and turn focus off
                 video.bind('end', function(event) {
                     var nextButton = $($.Oscampus.lesson.navigation.options.buttons.next);
+
                     if (video.options.autoPlay && nextButton) {
-                        nextButton.click();
+                        nextButton[0].click();
                     }
 
                     if (video.plugin['dimthelights']) {
