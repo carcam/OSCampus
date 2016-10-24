@@ -63,6 +63,11 @@
 
 /* Wistia Lesson Overlays
  ========================================================================== */
+#oscampus.oscampus-wistia {
+    width: 100%;
+    height: 100%;
+}
+
 .wistia_overlay {
     background-color: rgba(48, 48, 48, 0.82);
     box-shadow: rgba(0, 0, 0, 0.9) 0px 0px 218px 30px inset;
