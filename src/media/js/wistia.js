@@ -545,7 +545,6 @@
                     if (video.options.focus) {
                         // Uses interval to make sure the plugin is loaded before call it
                         var interval = setInterval(function() {
-                            console.log('focus working...')
                             if (video.plugin['dimthelights']) {
                                 video.plugin['dimthelights'].dim();
                                 clearInterval(interval);
