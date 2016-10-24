@@ -45,7 +45,7 @@ abstract class OscLesson
     {
         $query = static::linkQuery($lesson);
 
-        $link = 'index.php?' . http_build_query($query);
+        $link = JRoute::_('index.php?' . http_build_query($query));
 
         if ($uriOnly) {
             return $link;
