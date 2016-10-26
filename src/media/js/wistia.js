@@ -2,10 +2,10 @@
     $.extend($.fn, {
         /**
          * Toggle a spinner icon with a base icon.
-         * Uses the data store to determine behaviors and requires wistiaEmbed initialised
+         * Uses the data store to determine behaviors
          * {
          *    {jQuery} icon     : the html element displaying the icon
-         *    {string} option   : the wistiaEmbed option to determined enabled/disabled
+         *    {string} option   : Video options to determine enabled/disabled
          *    {string} disabled : The icon to use when option is disabled
          *    {string} enabled  : The icon to use when option is enabled
          * }
@@ -602,8 +602,9 @@
                     .attr('id', video.uuid + '_overlay')
                     .addClass('wistia_overlay')
                     .css({
-                        height: $(video.grid.main).height(),
-                        width : $(video.grid.main).width()
+                        height   : $(video.grid.main).height(),
+                        width    : $(video.grid.main).width(),
+                        'z-index': 9999
                     });
 
                 $(video.grid.main).append(overlay);
@@ -620,7 +621,7 @@
 
                 overlay.addClass('visible');
 
-                $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+                $('#' + video.uuid + '_resume_skip').click(function() {
                     overlay.fadeOut(200, function() {
                         overlay.remove();
                         video.play();
