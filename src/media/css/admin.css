@@ -58,6 +58,10 @@ ul.ui-sortable {
     list-style: none;
 }
 
+#footer {
+    text-align: center;
+}
+
 /* Quizzes & File assets
  ========================================================================== */
 

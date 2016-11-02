@@ -11,9 +11,13 @@ defined('_JEXEC') or die();
 
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
+    protected $option = null;
+
     protected function setup()
     {
         parent::setup();
+
+        $this->option = OscampusFactory::getApplication()->input->getCmd('option', 'com_oscampus');
 
         $this->setTitle();
         $this->setToolbar();
@@ -93,5 +97,21 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
         }
 
         $this->setVariable('show_sidebar', !$hide);
+    }
+
+    protected function displayFooter()
+    {
+        $result = '';
+
+        $path = JPATH_COMPONENT_ADMINISTRATOR .'/views/footer/tmpl/default.php';
+        if (is_file($path)) {
+            ob_start();
+            include_once $path;
+
+            $result = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return parent::displayFooter() . $result;
     }
 }
