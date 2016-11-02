@@ -29,29 +29,32 @@ class OscampusView extends JViewLegacy
     public function display($tpl = null)
     {
         $this->setup();
-        $this->displayHeader();
+
+        echo $this->displayHeader();
         parent::display($tpl);
-        $this->displayFooter();
+        echo $this->displayFooter();
     }
 
     /**
      * Display a header on admin pages
      *
-     * @return void
+     * @return string
      */
     protected function displayHeader()
     {
         // To be set in subclasses
+        return '';
     }
 
     /**
      * Display a standard footer on all admin pages
      *
-     * @return void
+     * @return string
      */
     protected function displayFooter()
     {
         // To be set in subclassess
+        return '';
     }
 
     /**
