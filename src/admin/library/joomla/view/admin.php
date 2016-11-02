@@ -11,25 +11,13 @@ defined('_JEXEC') or die();
 
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
-    /**
-     * Render the view
-     *
-     * @param  string $tpl
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function display($tpl = null)
+    protected function setup()
     {
-        $this->setup();
+        parent::setup();
 
         $this->setTitle();
         $this->setToolbar();
         $this->setSubmenu();
-
-        $this->displayHeader();
-        parent::display($tpl);
-        $this->displayFooter();
     }
 
     /**

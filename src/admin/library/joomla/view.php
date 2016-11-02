@@ -19,15 +19,19 @@ class OscampusView extends JViewLegacy
     }
 
     /**
-     * @return JObject
+     * Render the view
+     *
+     * @param  string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
-    public function getState($property = null, $default = null)
+    public function display($tpl = null)
     {
-        if ($model = $this->getModel()) {
-            return $model->getState($property, $default);
-        }
-
-        return $default;
+        $this->setup();
+        $this->displayHeader();
+        parent::display($tpl);
+        $this->displayFooter();
     }
 
     /**
@@ -48,5 +52,17 @@ class OscampusView extends JViewLegacy
     protected function displayFooter()
     {
         // To be set in subclassess
+    }
+
+    /**
+     * @return JObject
+     */
+    public function getState($property = null, $default = null)
+    {
+        if ($model = $this->getModel()) {
+            return $model->getState($property, $default);
+        }
+
+        return $default;
     }
 }
