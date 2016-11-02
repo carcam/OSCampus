@@ -11,6 +11,14 @@ defined('_JEXEC') or die();
 class OscampusView extends JViewLegacy
 {
     /**
+     * @return void
+     */
+    protected function setup()
+    {
+        // For use in subclasses
+    }
+
+    /**
      * @return JObject
      */
     public function getState($property = null, $default = null)
@@ -20,5 +28,25 @@ class OscampusView extends JViewLegacy
         }
 
         return $default;
+    }
+
+    /**
+     * Display a header on admin pages
+     *
+     * @return void
+     */
+    protected function displayHeader()
+    {
+        // To be set in subclasses
+    }
+
+    /**
+     * Display a standard footer on all admin pages
+     *
+     * @return void
+     */
+    protected function displayFooter()
+    {
+        // To be set in subclassess
     }
 }

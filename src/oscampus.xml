@@ -75,6 +75,8 @@
         <namespace>Oscampus</namespace>
         <license>pro</license>
 
+        <include>AllediaFreeDefaultFiles</include>
+
         <relatedExtensions>
             <extension
                 type="plugin"

@@ -12,19 +12,12 @@ defined('_JEXEC') or die();
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
     /**
-     * @return void
-     */
-    protected function setup()
-    {
-        // For use in subclasses
-    }
-
-    /**
      * Render the view
      *
      * @param  string $tpl
      *
-     * @return void|Exception
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -80,26 +73,6 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
 
             OscampusToolbarHelper::preferences('com_oscampus');
         }
-    }
-
-    /**
-     * Display a header on admin pages
-     *
-     * @return void
-     */
-    protected function displayHeader()
-    {
-        // To be set in subclasses
-    }
-
-    /**
-     * Display a standard footer on all admin pages
-     *
-     * @return void
-     */
-    protected function displayFooter()
-    {
-        // To be set in subclassess
     }
 
     /**
