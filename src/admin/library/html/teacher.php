@@ -35,7 +35,7 @@ abstract class OscTeacher
                 if ($type == 'email' && !$value->link && !empty($teacher->email)) {
                     $value->link = $teacher->email;
                 }
-                if ($link = static::createLink($type, $value->link, $value->show)) {
+                if ($link = static::createLink($type, $value->link)) {
                     $type    = isset(static::$linkIcons[$type]) ? $type : 'default';
                     $attribs = preg_match('#^https?://#', $link) ? 'target="_blank"' : '';
 
@@ -65,13 +65,12 @@ abstract class OscTeacher
      *
      * @param string $type
      * @param string $link
-     * @param string $show
      *
      * @return null|string
      */
-    protected static function createLink($type, $link, $show)
+    protected static function createLink($type, $link)
     {
-        if ($link && $show) {
+        if ($link) {
             switch ($type) {
                 case 'twitter':
                     $link = 'https://www.twitter.com/' . $link;

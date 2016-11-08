@@ -88,21 +88,6 @@ class OscampusFormFieldLinks extends JFormFieldText
 
         $link = '<input ' . OscampusUtilitiesArray::toString($linkAttribs) . '/>';
 
-        $options = array(
-            JHtml::_('select.option', 0, JText::_('COM_OSCAMPUS_OPTION_HIDE')),
-            JHtml::_('select.option', 1, JText::_('COM_OSCAMPUS_OPTION_SHOW'))
-        );
-        $show    = JHtml::_(
-            'select.genericlist',
-            $options,
-            $this->name . '[show]',
-            $this->commonAttributes,
-            'value',
-            'text',
-            $this->show,
-            $this->id
-        );
-
-        return $link . $show;
+        return $link;
     }
 }
