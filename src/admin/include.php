@@ -38,6 +38,19 @@ if (!defined('OSCAMPUS_LOADED')) {
 
         case 'administrator':
             OscampusModel::addIncludePath(OSCAMPUS_ADMIN . '/models');
+
+            // Alledia Framework
+            if (!defined('ALLEDIA_FRAMEWORK_LOADED')) {
+                $allediaFrameworkPath = JPATH_SITE . '/libraries/allediaframework/include.php';
+
+                if (file_exists($allediaFrameworkPath)) {
+                    require_once $allediaFrameworkPath;
+                } else {
+                    JFactory::getApplication()
+                        ->enqueueMessage(JText::_('COM_OSCAMPUS_ERROR_ALLEDIA_NOT_FOUND'), 'error');
+                }
+            }
+
             break;
     }
 }

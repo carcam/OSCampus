@@ -2,7 +2,7 @@
 <extension type="component" version="3.5" method="upgrade">
     <name>COM_OSCAMPUS</name>
     <author>Joomlashack</author>
-    <creationDate>October 24, 2016</creationDate>
+    <creationDate>November 01 2016</creationDate>
     <copyright>Copyright (C) 2015-2016 OSTraining.com</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>help@joomlashack.com</authorEmail>
@@ -54,6 +54,7 @@
 
         <files folder="admin">
             <folder>controllers</folder>
+            <folder>form</folder>
             <folder>language</folder>
             <folder>layouts</folder>
             <folder>library</folder>
@@ -78,6 +79,10 @@
         <include>AllediaFreeDefaultFiles</include>
 
         <relatedExtensions>
+            <extension
+                type="library"
+                element="allediaframework">AllediaFramework</extension>
+
             <extension
                 type="plugin"
                 folder="search"
