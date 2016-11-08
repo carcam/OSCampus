@@ -6,6 +6,8 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+use Alledia\Framework\Joomla\Extension\Licensed;
+
 defined('_JEXEC') or die();
 
 
@@ -56,13 +58,9 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     protected function setToolbar()
     {
         $user = OscampusFactory::getUser();
-        if ($user->authorise('core.admin', 'com_oscampus')) {
-            $items = JToolbar::getInstance('toolbar')->getItems();
 
-            if (!empty($items)) {
-                OscampusToolbarHelper::divider();
-            }
-
+        $admin = $user->authorise('core.admin', 'com_oscampus');
+        if ($admin) {
             OscampusToolbarHelper::preferences('com_oscampus');
         }
     }
@@ -85,7 +83,8 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      */
     protected function setSubmenu()
     {
-        $app = OscampusFactory::getApplication();
+        $app  = OscampusFactory::getApplication();
+        $user = OscampusFactory::getUser();
 
         $hide = $app->input->getBool('hidemainmenu', false);
         if (!$hide) {
@@ -96,21 +95,23 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
         }
 
+        if ($user->authorise('core.utilities', 'com_oscampus')) {
+            $spacer = sprintf(
+                '<span class="osc-sidebar-spacer";">%s</span>',
+                JText::_('COM_OSCAMPUS_SUBMENU_ADMIN_SPACER')
+            );
+
+            JHtmlSidebar::addEntry($spacer);
+            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_UTILITIES', 'utilities', $this->_name == 'utilities');
+        }
+
         $this->setVariable('show_sidebar', !$hide);
     }
 
     protected function displayFooter()
     {
-        $result = '';
-
-        $path = JPATH_COMPONENT_ADMINISTRATOR .'/views/footer/tmpl/default.php';
-        if (is_file($path)) {
-            ob_start();
-            include_once $path;
-
-            $result = ob_get_contents();
-            ob_end_clean();
-        }
+        $extension = new Licensed('OSCampus', 'component');
+        $result    = $extension->getFooterMarkup();
 
         return parent::displayFooter() . $result;
     }
