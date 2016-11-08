@@ -28,6 +28,7 @@ if (!defined('OSCAMPUS_LOADED')) {
     // Any additional helper paths
     JHtml::addIncludePath(OSCAMPUS_LIBRARY . '/html');
     OscampusHelper::loadOptionLanguage('com_oscampus', OSCAMPUS_ADMIN, OSCAMPUS_SITE);
+    JLoader::register('TCPDF', JPATH_ROOT . '/libraries/tcpdf/tcpdf.php');
 
     // Application specific loads
     switch (OscampusFactory::getApplication()->getName()) {
