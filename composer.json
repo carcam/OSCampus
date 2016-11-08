@@ -29,7 +29,6 @@
         "ext-curl"                    : "*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "pimple/pimple"               : "~3.0",
-        "twig/twig"                   : "~1.0",
-        "tecnick.com/tcpdf"           : "6.2.11"
+        "twig/twig"                   : "~1.0"
     }
 }
