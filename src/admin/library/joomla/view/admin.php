@@ -95,16 +95,6 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
         }
 
-        if ($user->authorise('core.utilities', 'com_oscampus')) {
-            $spacer = sprintf(
-                '<span class="osc-sidebar-spacer";">%s</span>',
-                JText::_('COM_OSCAMPUS_SUBMENU_ADMIN_SPACER')
-            );
-
-            JHtmlSidebar::addEntry($spacer);
-            $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_UTILITIES', 'utilities', $this->_name == 'utilities');
-        }
-
         $this->setVariable('show_sidebar', !$hide);
     }
 
