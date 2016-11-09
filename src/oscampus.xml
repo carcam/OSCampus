@@ -107,6 +107,7 @@
 
         <obsolete>
             <folder>/administrator/components/com_oscampus/vendor/joomla</folder>
+            <folder>/administrator/components/com_oscampus/vendor/tecnick.com</folder>
             <folder>/administrator/components/com_oscampus/views/dashboard</folder>
             <folder>/components/com_oscampus/views/dashboard</folder>
             <file>/administrator/components/com_oscampus/controllers/import.php</file>
