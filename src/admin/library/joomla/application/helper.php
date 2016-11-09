@@ -10,12 +10,4 @@ defined('_JEXEC') or die();
 
 abstract class OscampusApplicationHelper extends JApplicationHelper
 {
-    public static function stringURLSafe($string)
-    {
-        if (version_compare(JVERSION, '3.0', 'lt')) {
-            return JApplication::stringURLSafe($string);
-        }
-
-        return parent::stringURLSafe($string);
-    }
 }
