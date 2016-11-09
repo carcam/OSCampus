@@ -43,15 +43,17 @@ abstract class OscLesson
      */
     public static function link($lesson, $text = null, $attribs = null, $uriOnly = false)
     {
-        $query = static::linkQuery($lesson);
+        if ($query = static::linkQuery($lesson)) {
+            $link = JRoute::_('index.php?' . http_build_query($query));
 
-        $link = JRoute::_('index.php?' . http_build_query($query));
+            if ($uriOnly) {
+                return $link;
+            }
 
-        if ($uriOnly) {
-            return $link;
+            return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
         }
 
-        return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
+        return null;
     }
 
     /**
