@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
@@ -115,7 +115,7 @@ abstract class AbstractPrototype
     public function setProperty($name, $value)
     {
         if (in_array($name, $this->dateProperties) && property_exists($this, $name)) {
-            if (is_string($value)) {
+            if (is_string($value) && substr($value, 0, 10) != '0000-00-00') {
                 $this->$name = OscampusFactory::getDate($value);
 
             } elseif (is_numeric($value)) {

@@ -1,6 +1,6 @@
 {#
  # @package    OSCampus
- # @contact    www.ostraining.com, support@ostraining.com
+ # @contact    www.joomlashack.com, help@joomlashack.com
  # @copyright  2015-2016 Open Source Training, LLC. All rights reserved
  # @license
  #}
@@ -9,12 +9,8 @@
 
 {% block page_setup %}
     {{ html('osc.jquery')|raw }}
-    {% if joomla2 %}
-        {{ html('behavior.tooltip')|raw }}
-    {% else %}
-        {{ html('bootstrap.tooltip')|raw }}
-        {{ html('formbehavior.chosen', 'select')|raw }}
-    {% endif %}
+    {{ html('bootstrap.tooltip')|raw }}
+    {{ html('formbehavior.chosen', 'select')|raw }}
 {% endblock %}
 
 {% if show_sidebar %}
@@ -23,6 +19,7 @@
     </div>
     {% set class = ' class="span10"' %}
 {% endif %}
+
 <div id="j-main-container"{{ class }}>
     {% block main_content %}<p>Under Construction</p>{% endblock %}
 </div>

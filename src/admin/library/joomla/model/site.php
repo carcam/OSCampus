@@ -1,14 +1,16 @@
 <?php
 /**
  * @package   Oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+use Joomla\Registry\Registry as Registry;
+
 defined('_JEXEC') or die();
 
-abstract class OscampusModelSite extends JModelLegacy
+abstract class OscampusModelSite extends OscampusModel
 {
     /**
      * @var string
@@ -35,7 +37,7 @@ abstract class OscampusModelSite extends JModelLegacy
     /**
      * Get component params merged with menu params
      *
-     * @return JRegistry
+     * @return Registry
      */
     public function getParams()
     {

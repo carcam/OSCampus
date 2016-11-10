@@ -1,10 +1,12 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 
@@ -13,7 +15,7 @@ class OscampusModelLesson extends OscampusModelAdmin
 {
     public function getItem($pk = null)
     {
-        if ($item  = parent::getItem($pk)) {
+        if ($item = parent::getItem($pk)) {
             $db    = $this->getDbo();
             $query = $db->getQuery(true)
                 ->select('module.courses_id, module.title')
@@ -34,7 +36,7 @@ class OscampusModelLesson extends OscampusModelAdmin
         $form = parent::getForm($data, $loadData);
 
         if ($data) {
-            $fixedData = new JRegistry($data);
+            $fixedData = new Registry($data);
             OscampusFactory::getContainer()
                 ->lesson
                 ->loadAdminForm($form, $fixedData);
@@ -47,7 +49,7 @@ class OscampusModelLesson extends OscampusModelAdmin
     {
         if ($data) {
             $fixedData = $data instanceof JObject ? $data->getProperties() : $data;
-            $fixedData = new JRegistry($fixedData);
+            $fixedData = new Registry($fixedData);
 
             if (!$fixedData->get('courses_id')) {
                 $app      = OscampusFactory::getApplication();
@@ -97,7 +99,7 @@ class OscampusModelLesson extends OscampusModelAdmin
         try {
             unset($data['courses_id'], $data['module_title']);
 
-            $fixedData = new JRegistry($data);
+            $fixedData = new Registry($data);
 
             OscampusFactory::getContainer()
                 ->lesson
@@ -141,7 +143,7 @@ class OscampusModelLesson extends OscampusModelAdmin
     /**
      * @param JTable $table
      */
-    protected function prepareTable(&$table)
+    protected function prepareTable($table)
     {
         if (!$table->id) {
             $ordering = 0;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="2.5" method="upgrade" client="site">
+    <name>MOD_OSCAMPUS_SEARCH</name>
+    <author>OSTraining</author>
+    <creationDate>March 11, 2016</creationDate>
+    <copyright>Copyright (C) 2015-2016 OSTraining.com</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <authorEmail>help@joomlashack.com</authorEmail>
+    <authorUrl>http://www.joomlashack.com</authorUrl>
+    <version>1.0.0</version>
+    <description>MOD_OSCAMPUS_SEARCH_DESC</description>
+
+    <files>
+        <folder>language</folder>
+        <folder>oscampus</folder>
+        <folder>tmpl</folder>
+        <filename>include.php</filename>
+        <filename module="mod_oscampus_search">mod_oscampus_search.php</filename>
+    </files>
+</extension>

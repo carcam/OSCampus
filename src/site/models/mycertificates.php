@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -12,7 +12,7 @@ class OscampusModelMycertificates extends OscampusModelList
 {
     public function getListQuery()
     {
-        $user   = OscampusFactory::getUser($this->getState('user.id'));
+        $user = OscampusFactory::getUser($this->getState('user.id'));
 
         $query = parent::getListQuery()
             ->select(

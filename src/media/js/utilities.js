@@ -79,7 +79,7 @@
             var elements = $(this),
                 element, lastEvent;
 
-            for (var i=0; i<elements.length; i++) {
+            for (var i = 0; i < elements.length; i++) {
                 element = elements.get(i);
                 $(element).on(event, handler);
                 lastEvent = $._data(element, 'events').click.pop();
@@ -152,6 +152,7 @@
                 .css('cursor', 'pointer')
                 .data('contentPanel', $($(this).attr('data-content')))
                 .on('click', function(evt, options) {
+                    evt.preventDefault();
                     var contentPanel = $(this).data('contentPanel');
                     contentPanel.closePanelSlide(contentPanel.is(':visible'), options);
                 })
@@ -230,7 +231,7 @@
         get: function(name, defaultValue) {
             var cookies = document.cookie.split('; ');
 
-            for (var i=0; i<cookies.length; i++) {
+            for (var i = 0; i < cookies.length; i++) {
                 if (cookies[i].indexOf(name + '=') == 0) {
                     return cookies[i].split('=').pop();
                 }

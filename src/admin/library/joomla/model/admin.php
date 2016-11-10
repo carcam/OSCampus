@@ -1,12 +1,12 @@
 <?php
 /**
  * @package   com_oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
-use Oscampus\String;
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 
@@ -18,7 +18,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     {
         if ($item = parent::getItem($pk)) {
             if (!empty($item->metadata)) {
-                $metadata = new JRegistry($item->metadata);
+                $metadata       = new Registry($item->metadata);
                 $item->metadata = $metadata->toArray();
             }
         }
@@ -28,7 +28,7 @@ abstract class OscampusModelAdmin extends JModelAdmin
     public function getTable($type = '', $prefix = 'OscampusTable', $config = array())
     {
         if (empty($type)) {
-            $inflector = String\Inflector::getInstance();
+            $inflector = \Oscampus\String\Inflector::getInstance();
             $type      = $inflector->toPlural($this->name);
         }
         return OscampusTable::getInstance($type, $prefix, $config);
@@ -36,8 +36,11 @@ abstract class OscampusModelAdmin extends JModelAdmin
 
     public function getForm($data = array(), $loadData = true)
     {
-        $form = $this->loadForm('com_oscampus.' . $this->name, $this->name,
-            array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm(
+            'com_oscampus.' . $this->name,
+            $this->name,
+            array('control' => 'jform', 'load_data' => $loadData)
+        );
         if (empty($form)) {
             return false;
         }

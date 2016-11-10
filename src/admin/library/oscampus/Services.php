@@ -1,17 +1,18 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
 
 use Mobile_Detect;
+use Oscampus\Activity\CourseStatus;
+use Oscampus\Activity\LessonStatus;
+use Oscampus\Activity\LessonSummary;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
-use Oscampus\Lesson\ActivitySummary;
 use Oscampus\Lesson\Properties;
 use OscampusFactory;
 use Pimple\Container AS Pimple;
@@ -60,14 +61,17 @@ class Services implements ServiceProviderInterface
 
         $pimple['activity'] = $pimple->factory(
             function (Container $c) {
-                $status  = new ActivityStatus();
-                $summary = new ActivitySummary();
+                $lessonStatus  = new LessonStatus();
+                $lessonSummary = new LessonSummary();
+                $courseStatus  = new CourseStatus();
                 return new UserActivity(
                     $c['dbo'],
                     $c['user'],
-                    $status,
-                    $summary,
-                    $c['certificate']);
+                    $lessonStatus,
+                    $lessonSummary,
+                    $courseStatus,
+                    $c['certificate']
+                );
             }
         );
 

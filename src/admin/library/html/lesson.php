@@ -1,12 +1,13 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Lesson;
+use Oscampus\Request;
 use Oscampus\Lesson\Properties;
 
 defined('_JEXEC') or die();
@@ -42,15 +43,17 @@ abstract class OscLesson
      */
     public static function link($lesson, $text = null, $attribs = null, $uriOnly = false)
     {
-        $query = static::linkQuery($lesson);
+        if ($query = static::linkQuery($lesson)) {
+            $link = JRoute::_('index.php?' . http_build_query($query));
 
-        $link = 'index.php?' . http_build_query($query);
+            if ($uriOnly) {
+                return $link;
+            }
 
-        if ($uriOnly) {
-            return $link;
+            return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
         }
 
-        return JHtml::_('link', JRoute::_($link), $text ?: $lesson->title, $attribs);
+        return null;
     }
 
     /**
@@ -103,9 +106,16 @@ abstract class OscLesson
         JText::script('COM_OSCAMPUS_LESSON_LOADING_PREVIOUS');
         JText::script('COM_OSCAMPUS_LESSON_LOADING_TITLE');
 
-        JHtml::_('osc.jquery');
-        JHtml::_('script', 'com_oscampus/lesson.js', false, true);
-        JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});");
+        // Fixes the fullscreen navigation.
+        // Check if we called the lesson from a normal request or ajax request.
+        // An ajax request needs to print the JS right in the output, without
+        // pass to the document. Otherwise it won't be added to the output.
+        if (!Request::isAjax()) {
+            JHtml::_('osc.jquery');
+            JHtml::_('script', 'com_oscampus/lesson.js', false, true);
+        }
+
+        JHtml::_('osc.onready', "$.Oscampus.lesson.navigation({$lessons});", Request::isAjax());
     }
 
     /**
@@ -119,7 +129,7 @@ abstract class OscLesson
      * @return string
      * @throws Exception
      */
-    public static function retrylink($lesson, $text, $attribs = null, $uriOnly)
+    public static function retrylink($lesson, $text, $attribs = null, $uriOnly = false)
     {
         $query         = static::linkQuery($lesson);
         $query['task'] = 'lesson.retry';
@@ -161,7 +171,7 @@ abstract class OscLesson
             return null;
         }
 
-        $query = OscampusRoute::getInstance()->getQuery('`course`');
+        $query = OscampusRoute::getInstance()->getQuery('course');
 
         $query['view'] = 'lesson';
         $query['cid']  = $properties->courses_id;

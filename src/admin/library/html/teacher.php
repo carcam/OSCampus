@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -11,12 +11,13 @@ defined('_JEXEC') or die();
 abstract class OscTeacher
 {
     protected static $linkIcons = array(
-        'default'  => '<i class="fa"></i>',
-        'twitter'  => '<i class="fa fa-twitter"></i>',
-        'facebook' => '<i class="fa fa-facebook"></i>',
-        'blog'     => '<i class="fa fa-pencil"></i>',
-        'email'    => '<i class="fa fa-envelope"></i>',
-        'website'  => '<i class="fa fa-globe"></i>'
+        'default'    => '<i class="fa fa-link"></i>',
+        'twitter'    => '<i class="fa fa-twitter"></i>',
+        'facebook'   => '<i class="fa fa-facebook"></i>',
+        'blog'       => '<i class="fa fa-pencil"></i>',
+        'email'      => '<i class="fa fa-envelope"></i>',
+        'website'    => '<i class="fa fa-globe"></i>',
+        'googleplus' => '<i class="fa fa-google-plus"></i>'
     );
 
     /**
@@ -35,8 +36,8 @@ abstract class OscTeacher
                 if ($type == 'email' && !$value->link && !empty($teacher->email)) {
                     $value->link = $teacher->email;
                 }
-                if ($link = static::createLink($type, $value->link, $value->show)) {
-                    $type = isset(static::$linkIcons[$type]) ? $type : 'default';
+                if ($link = static::createLink($type, $value->link)) {
+                    $type    = isset(static::$linkIcons[$type]) ? $type : 'default';
                     $attribs = preg_match('#^https?://#', $link) ? 'target="_blank"' : '';
 
                     $html[] = '<span class="osc-teacher-' . $type . '">';
@@ -65,13 +66,12 @@ abstract class OscTeacher
      *
      * @param string $type
      * @param string $link
-     * @param string $show
      *
      * @return null|string
      */
-    protected static function createLink($type, $link, $show)
+    protected static function createLink($type, $link)
     {
-        if ($link && $show) {
+        if ($link) {
             switch ($type) {
                 case 'twitter':
                     $link = 'https://www.twitter.com/' . $link;

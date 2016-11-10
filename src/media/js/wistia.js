@@ -2,21 +2,21 @@
     $.extend($.fn, {
         /**
          * Toggle a spinner icon with a base icon.
-         * Uses the data store to determine behaviors and requires wistiaEmbed initialised
+         * Uses the data store to determine behaviors
          * {
          *    {jQuery} icon     : the html element displaying the icon
-         *    {string} option   : the wistiaEmbed option to determined enabled/disabled
+         *    {string} option   : Video options to determine enabled/disabled
          *    {string} disabled : The icon to use when option is disabled
          *    {string} enabled  : The icon to use when option is enabled
          * }
          *
+         * @param {object} wistiaOptions
          * @param {bool} waiting
          *
          * @returns {jQuery}
          */
-        spinnerIcon: function(waiting) {
-            var data          = $(this).data(),
-                wistiaOptions = wistiaEmbed.options || null;
+        spinnerIcon: function(wistiaOptions, waiting) {
+            var data = $(this).data();
 
             if (data.icon && wistiaOptions) {
                 var disabled = data.disabled || 'fa-square-o',
@@ -52,10 +52,13 @@
 
     $.Oscampus.wistia = {
         options: {
+            videoId    : null,
+            shortId    : null,
             mobile     : false,
             formToken  : null,
             intervalPct: 10,
             gracePct   : 3,
+            volume     : 1,
             upgradeUrl : null,
             authorised : {
                 download: false,
@@ -65,30 +68,53 @@
         },
 
         /**
-         * Initialise all custom video functions
+         * Initialise all custom video functions. Call with:
          *
-         * @param options
+         * window._wq = window._wq || [];
+         * window._wq.push({
+         *    id: {hashedId},
+         *    onReady: function(video) {
+         *       $.Oscampus.wistia.init(video, {$options});
+         *    }
+         * });
+         *
+         * @param {object} video
+         * @param {object} options
          */
-        init: function(options) {
+        init: function(video, options) {
             options = $.extend(true, {}, this.options, options);
 
-            if (!options.mobile) {
-                this.addExtraControls(options);
+            this.saveVolumeChange(video, options);
+
+            this.customControls.add(video, options);
+            this.moveNavigationButtons(video, options);
+            this.setFullScreen(video, options);
+
+            this.setMonitoring(video, options);
+
+            if (this.postfix) {
+                var lesson = $.Oscampus.lesson;
+
+                // Update the url and title
+                window.history.pushState(null, lesson.current.title, lesson.current.link);
+                document.title = lesson.current.title;
+
+                // Set the custom video speed
+                if (Wistia.plugin['customspeed']) {
+                    Wistia.plugin['customspeed'](video);
+                }
+
+                $(lesson.navigation.options.container).removeClass('loading');
             }
-            this.saveVolumeChange();
-            this.moveNavigationButtons();
-
-            this.setFullScreen();
-
-            this.setMonitoring(options);
         },
 
         /**
          * Setup progress recording for this video
          *
+         * @param {object} video
          * @param {object} options
          */
-        setMonitoring: function(options) {
+        setMonitoring: function(video, options) {
             var nextRecord = options.intervalPct,
                 lesson     = $.Oscampus.lesson.current;
 
@@ -105,7 +131,7 @@
             };
             ajaxOptions.data[options.formToken] = 1;
 
-            wistiaEmbed.bind('secondchange', function(currentSecond) {
+            video.bind('secondchange', function(currentSecond) {
                 var currentPercent = parseInt(this.percentWatched() * 100, 10);
 
                 // Use a grace period to consider a video completely watched
@@ -123,7 +149,7 @@
                 }
             });
 
-            wistiaEmbed.bind('end', function() {
+            video.bind('end', function() {
                 var finalPercent = parseInt(this.percentWatched() * 100, 10);
 
                 // Because percentWatched hardly ever returns 100% even when it's true
@@ -141,67 +167,54 @@
 
         /**
          * Fullscreen switching event handling
+         *
+         * @param {object} video
+         * @param {object} options
          */
-        setFullScreen: function() {
-            var oldButton = $('[id^=wistia_fullscreenButton_]'),
+        setFullScreen: function(video, options) {
+            var oldButton = $('#wistia_' + video.hashedId() + ' [id^=wistia_fullscreenButton_]'),
                 newButton = oldButton.clone();
 
-            newButton
-                .addClass('custom')
-                .css({
-                    width : '50px',
-                    height: '32px',
-                    right : 0
-                });
+            newButton.addClass('custom').addClass('w-is-visible');
 
             oldButton
                 .after(newButton)
                 .remove();
-
-            wistiaEmbed.grid.center.addEventListener('mouseenter', function(evt) {
-                newButton.removeClass('wistia_romulus_hidden');
-                newButton.addClass('wistia_romulus_visible');
-            });
-
-            wistiaEmbed.grid.center.addEventListener('mouseleave', function(evt) {
-                newButton.removeClass('wistia_romulus_visible');
-                newButton.addClass('wistia_romulus_hidden');
-            });
 
             newButton.on('click', function() {
                 if (screenfull && screenfull.enabled) {
                     if (screenfull.isFullscreen) {
                         screenfull.exit();
                     } else {
-                        screenfull.request($('main')[0]);
+                        screenfull.request($('#oscampus')[0]);
                     }
                 }
             });
 
-            // Replace the native fullscreen mode
-            wistiaEmbed.fullscreenButton = newButton[0];
-            wistiaEmbed.requestFullscreen = function() {
-                newButton.trigger('click');
-            };
-            this.fullscreenNavigate();
+            $.Oscampus.wistia.setFullscreenNavigation(video, options);
 
             if (screenfull && screenfull.enabled) {
-                document.addEventListener(screenfull.raw.fullscreenchange, function() {
+                var test = function() {
                     if (!screenfull.isFullscreen) {
                         // Restore the video size
-                        var hashedId = wistiaEmbed.hashedId();
+                        var hashedId = video.hashedId();
                         var elems = $('#wistia_' + hashedId + '_grid_wrapper, #wistia_' + hashedId + '_grid_main');
                         elems.css('width', '100%');
                         elems.css('height', '100%');
                         $('body').removeClass('fullscreen');
+
                     } else {
                         $('body').addClass('fullscreen');
                     }
-                });
+                };
+                document.removeEventListener(screenfull.raw.fullscreenchange, test);
+                document.addEventListener(screenfull.raw.fullscreenchange, test);
 
-                document.addEventListener(screenfull.raw.fullscreenerror, function(event) {
+                var fullscreenError = function(event) {
                     console.error('Failed to enable fullscreen', event);
-                });
+                };
+                document.removeEventListener(screenfull.raw.fullscreenerror, fullscreenError);
+                document.addEventListener(screenfull.raw.fullscreenerror, fullscreenError);
             }
         },
 
@@ -209,331 +222,367 @@
          * Set prev/next buttons for handling full screen navigation.
          * If we're in fullscreen mode we have to do an ajax load of the next
          * wistia lesson to retain fullscreen.
+         *
+         * @param {object} video
+         * @param {object} options
          */
-        fullscreenNavigate: function() {
-            var options = $.Oscampus.lesson.navigation.options;
+        setFullscreenNavigation: function(video, options) {
+            var lesson = $.Oscampus.lesson;
 
-            $.each(options.buttons, function(direction, id) {
-                if ($.Oscampus.lesson[direction]) {
-                    $(id).bindBefore('click', function(evt) {
-                        wistiaEmbed.pause();
-                        wistiaEmbed.plugin['dimthelights'].undim();
+            if (lesson.navigation.options.buttons) {
+                var buttons = lesson.navigation.options.buttons;
+                $.each(buttons, function(direction, id) {
+                    if (lesson[direction]) {
+                        $(id).bindBefore('click', function(evt) {
+                            video.pause();
+                            if (video.plugin['dimthelights']) {
+                                video.plugin['dimthelights'].undim();
+                            }
 
-                        var target = $.Oscampus.lesson[direction];
+                            var target = lesson[direction];
 
-                        if (screenfull.enabled && screenfull.isFullscreen && target.type) {
-                            if (target.type === 'wistia') {
+                            if (screenfull
+                                && screenfull.enabled
+                                && screenfull.isFullscreen
+                                && target.type
+                                && target.type === 'wistia'
+                            ) {
                                 evt.preventDefault();
 
-                                var container = $(options.container);
+                                var container = lesson.navigation.options.container;
+                                $.get(target.link, {format: 'raw'}, function(data) {
+                                    $('body').addClass('fullscreen');
+                                    $(container).html(data);
 
-                                container.load(target.link, {tmpl: 'component'}, function(text, status) {
-                                    var postProcess = setInterval(function() {
-                                        if (typeof wistiaEmbed.elem() !== 'undefined') {
-                                            wistiaEmbed.ready(function() {
-                                                $.Oscampus.wistia.moveNavigationButtons();
-
-                                                // Update the url and title
-                                                window.history.pushState(null, target.title, target.link);
-                                                document.title = target.title;
-
-                                                // Set the custom video speed
-                                                if (typeof Wistia.plugin['customspeed'] != 'undefined') {
-                                                    Wistia.plugin['customspeed'](wistiaEmbed);
-                                                }
-                                            });
-
-                                            clearInterval(postProcess);
-                                            postProcess = null;
-                                            container.removeClass('loading');
-                                        }
-                                    }, 500);
+                                    $.Oscampus.wistia.postfix = true;
                                 });
                             }
-                        }
-                    });
-                }
-            });
-        },
-
-        /**
-         * Save volume changes in session as user navigates through videos
-         */
-        saveVolumeChange: function() {
-            if (wistiaEmbed) {
-                wistiaEmbed.volume(parseFloat(wistiaEmbed.options.volume));
-
-                var saveVolume;
-
-                wistiaEmbed.bind('volumechange', function(event) {
-                    if (saveVolume) {
-                        clearTimeout(saveVolume);
-                    }
-                    saveVolume = setTimeout(function() {
-                        $.Oscampus.ajax({
-                            data   : {
-                                task : 'wistia.setVolumeLevel',
-                                level: wistiaEmbed.volume()
-                            },
-                            success: function(level) {
-                                // ignore response
-                            }
                         });
-                    }, 750);
-
-                })
+                    }
+                });
             }
         },
 
         /**
+         * @param {object} video
+         * @param {object} options
+         *
+         * Save volume changes in session as user navigates through videos
+         */
+        saveVolumeChange: function(video, options) {
+            var saveVolume;
+
+            video.volume(parseFloat(options.volume));
+
+            video.bind('volumechange', function(level) {
+                if (saveVolume) {
+                    clearTimeout(saveVolume);
+                }
+                saveVolume = setTimeout(function() {
+                    $.Oscampus.ajax({
+                        data   : {
+                            task : 'wistia.setVolumeLevel',
+                            level: video.volume()
+                        },
+                        success: function() {
+                            // response ignored
+                        }
+                    });
+                }, 750);
+            });
+        },
+
+        /**
+         * @param {object} video
+         * @param {object} options
+         *
          * Move standard navigation buttons into the video area itself
          */
-        moveNavigationButtons: function() {
-            $(wistiaEmbed.grid.top_inside).append($('#course-navigation'));
+        moveNavigationButtons: function(video, options) {
+            var container = $('#course-navigation'),
+                buttons   = $('.osc-btn, #course-navigation');
 
-            // Events
-            var gridMain = $(wistiaEmbed.grid.main);
+            container.css('z-index', '99999');
 
             var hideWistiaButtons = function() {
-                var buttons = $('.osc-btn, #course-navigation');
-
                 buttons.removeClass('osc-visible');
                 buttons.addClass('osc-hidden');
             };
 
             var showWistiaButtons = function() {
-                var buttons = $('.osc-btn, #course-navigation');
-
                 buttons.addClass('osc-visible');
                 buttons.removeClass('osc-hidden');
             };
 
-            gridMain.mouseenter(showWistiaButtons);
-            gridMain.mousemove(showWistiaButtons);
-            gridMain.mouseleave(hideWistiaButtons);
             $('.osc-btn').hover(showWistiaButtons);
 
-            wistiaEmbed.bind('play', hideWistiaButtons);
-            wistiaEmbed.bind('pause', hideWistiaButtons);
+            $(video.grid.top_inside).append(container);
+
+            // Events
+            $(video.grid.main)
+                .mouseenter(showWistiaButtons)
+                .mousemove(showWistiaButtons)
+                .mouseleave(hideWistiaButtons);
+
+            video.bind('play', hideWistiaButtons);
+            video.bind('pause', hideWistiaButtons);
         },
 
-        /**
-         * Create additional control buttons
-         *
-         * @param options
-         */
-        addExtraControls: function(options) {
-            // Add the container for the buttons
-            var container = $('<div>')
-                .attr('id', wistiaEmbed.uuid + '_buttons_container')
-                .addClass('osc-lesson-options osc-btn-group');
-            $(wistiaEmbed.grid.top_inside).append(container);
+        customControls: {
+            video  : null,
+            options: null,
 
-            this.buttonDownload(container, options);
+            add: function(video, options) {
+                if (!options.mobile) {
+                    this.video = video;
+                    this.options = options;
 
-            if (options.authorised.controls) {
-                this.buttonAutoplay(container, options);
-                this.buttonFocus(container, options);
-            }
-        },
+                    // Create a new container
+                    var container = $('<div>')
+                        .attr('id', video.uuid + '_buttons_container')
+                        .addClass('osc-lesson-options osc-btn-group')
+                        .css('z-index', '99999');
 
-        /**
-         * Add autoplay button to the container
-         *
-         * @param {object} container
-         * @param {object} options
-         */
-        buttonAutoplay: function(container, options) {
-            var button = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'))
+                    $(video.grid.top_inside).append(container);
 
-            if (wistiaEmbed.options.autoPlay) {
-                button.removeClass(options.offClass);
-            } else {
-                button.addClass(options.offClass);
-            }
+                    container.append(this.getDownload());
+                    if (options.authorised.controls) {
+                        container.append(this.getAutoplay());
+                        container.append(this.getFocus());
+                    }
+                }
+            },
 
-            button
-                .data('option', 'autoPlay')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        context : this,
-                        data    : {
-                            task: 'wistia.toggleAutoPlayState'
-                        },
-                        success : function(state) {
-                            wistiaEmbed.options.autoPlay = state;
-                            wistiaEmbed.params.autoPlay = state;
+            /**
+             * get s download button
+             *
+             * @return {jQuery}
+             */
+            getDownload: function() {
+                var video    = this.video,
+                    options  = this.options,
+                    hashedId = this.video.hashedId(),
+                    button   = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
 
-                            if (state) {
-                                $(wistiaEmbed).trigger('autoplayenabled');
-                                button.removeClass(options.offClass);
-                            } else {
-                                $(wistiaEmbed).trigger('autoplaydisabled');
-                                button.addClass(options.offClass);
-                            }
-                        },
-                        complete: function() {
-                            $(this).spinnerIcon();
-                        }
-                    })
-                });
+                if (!options.authorised.download) {
+                    button.addClass(this.options.offClass);
+                }
 
-            container.append(button);
-        },
+                button
+                    .data('enabled', 'fa-cloud-download')
+                    .spinnerIcon(video.options)
+                    .on('click', function(event) {
+                        if (options.authorised.download) {
+                            $(this).spinnerIcon(video.options, true);
+                            video.pause();
 
-        /**
-         * Add focus button to container
-         *
-         * @param {object} container
-         * @param {object} options
-         */
-        buttonFocus: function(container, options) {
-            var button = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
+                            // Get the download limit information
+                            $.Oscampus.ajax({
+                                data    : {
+                                    task: 'wistia.downloadLimit'
+                                },
+                                context : this,
+                                success : function(response) {
+                                    if (response.authorised) {
+                                        var formId = 'formDownload-' + hashedId;
+                                        var form = $("#" + formId);
 
-            if (wistiaEmbed.options.focus) {
-                button.removeClass(options.offClass)
-            } else {
-                button.addClass(options.offClass);
-            }
+                                        if (form.length == 0) {
+                                            form = $('<form>');
 
-            button
-                .data('option', 'focus')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    $(this).spinnerIcon(true);
-                    $.Oscampus.ajax({
-                        data    : {
-                            task: 'wistia.toggleFocusState'
-                        },
-                        context : this,
-                        success : function(state) {
-                            wistiaEmbed.options.focus = state;
-                            wistiaEmbed.params.focus = state;
+                                            var query = {
+                                                option: 'com_oscampus',
+                                                task  : 'wistia.download',
+                                                id    : hashedId,
+                                                format: 'raw'
+                                            };
 
-                            if (state) {
-                                wistiaEmbed.plugin['dimthelights'].dim();
-                                $(wistiaEmbed).trigger('focusenabled');
-                                button.removeClass(options.offClass);
-                            } else {
-                                wistiaEmbed.plugin['dimthelights'].undim();
-                                $(wistiaEmbed).trigger('focusdisabled');
-                                button.addClass(options.offClass);
-                            }
-                        },
-                        complete: function() {
-                            $(this).spinnerIcon();
+                                            form.attr({
+                                                id    : formId,
+                                                method: 'POST',
+                                                action: 'index.php?' + $.param(query)
+                                            });
+
+                                            if (options.formToken) {
+                                                var tokenField = $('<input>');
+                                                tokenField.attr({
+                                                    type : 'hidden',
+                                                    name : options.formToken,
+                                                    value: 1
+                                                });
+                                                form.append(tokenField);
+                                            }
+
+                                            $('body').append(form);
+                                        }
+                                        form.submit();
+
+                                    } else {
+                                        $.Oscampus.wistia.overlay.refused(video, response.error);
+                                    }
+                                },
+                                complete: function() {
+                                    $(this).spinnerIcon(video.options);
+                                }
+                            });
+
+                        } else {
+                            video.pause();
+
+                            $.Oscampus.wistia.overlay.upgrade(video, options.upgradeUrl);
                         }
                     });
-                });
 
-            container.append(button);
+                return button;
+            },
 
-            // Fix the focus on play
-            wistiaEmbed.bind('play', function(event) {
-                if (wistiaEmbed.options.focus) {
-                    // Uses interval to make sure the plugin is loaded before call it
-                    var interval = setInterval(function() {
-                        if (typeof wistiaEmbed.plugin['dimthelights'] != 'undefined') {
-                            wistiaEmbed.plugin['dimthelights'].dim();
-                            clearInterval(interval);
-                            interval = null;
-                        }
-                    }, 500);
-                }
-            });
+            /**
+             * Add autoplay button to the container
+             *
+             * @return {jQuery}
+             */
+            getAutoplay: function() {
+                var video   = this.video,
+                    options = this.options,
+                    button  = this.createButton('autoplay', Joomla.JText._('COM_OSCAMPUS_VIDEO_AUTOPLAY'));
 
-            // Autoplay move to the next lesson and turn focus off
-            wistiaEmbed.bind('end', function(event) {
-                if (wistiaEmbed.options.autoPlay) {
-                    $('#nextbut')[0].click();
+                if (video.options.autoPlay) {
+                    button.removeClass(options.offClass);
+                } else {
+                    button.addClass(options.offClass);
                 }
 
-                wistiaEmbed.plugin['dimthelights'].undim();
-            });
-        },
-
-        /**
-         * Add download button
-         *
-         * @param container
-         * @param options
-         */
-        buttonDownload: function(container, options) {
-            options = $.extend({}, this.options, options);
-
-            var button = this.createButton('download', Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD'));
-            if (!options.authorised.download) {
-                button.addClass(options.offClass);
-            }
-
-            button
-                .data('enabled', 'fa-cloud-download')
-                .spinnerIcon()
-                .on('click', function(event) {
-                    if (options.authorised.download) {
-                        $(this).spinnerIcon(true);
-                        wistiaEmbed.pause();
-
-                        // Get the download limit information
+                button
+                    .data('option', 'autoPlay')
+                    .spinnerIcon(video.options)
+                    .on('click', function(event) {
+                        $(this).spinnerIcon(video.options, true);
                         $.Oscampus.ajax({
-                            data    : {
-                                task: 'wistia.downloadLimit'
-                            },
                             context : this,
-                            success : function(response) {
-                                if (response.authorised) {
-                                    var formId = 'formDownload-' + wistiaEmbed.hashedId();
-                                    var form = $("#" + formId);
+                            data    : {
+                                task: 'wistia.toggleAutoPlayState'
+                            },
+                            success : function(state) {
+                                video.options.autoPlay = state;
+                                video.params.autoPlay = state;
 
-                                    if (form.length == 0) {
-                                        form = $('<form>');
-
-                                        var query = {
-                                            option: 'com_oscampus',
-                                            task  : 'wistia.download',
-                                            id    : wistiaEmbed.hashedId(),
-                                            format: 'raw'
-                                        };
-
-                                        form.attr({
-                                            id    : formId,
-                                            method: 'POST',
-                                            action: 'index.php?' + $.param(query)
-                                        });
-
-                                        if (options.formToken) {
-                                            var tokenField = $('<input>');
-                                            tokenField.attr({
-                                                type : 'hidden',
-                                                name : options.formToken,
-                                                value: 1
-                                            });
-                                            form.append(tokenField);
-                                        }
-
-                                        $('body').append(form);
-                                    }
-                                    form.submit();
-
+                                if (state) {
+                                    $(video).trigger('autoplayenabled');
+                                    button.removeClass(options.offClass);
                                 } else {
-                                    $.Oscampus.wistia.overlay.refused(data.error);
+                                    $(video).trigger('autoplaydisabled');
+                                    button.addClass(options.offClass);
                                 }
                             },
                             complete: function() {
-                                $(this).spinnerIcon();
+                                $(this).spinnerIcon(video.options);
                             }
-                        });
+                        })
+                    });
 
-                    } else {
-                        wistiaEmbed.pause();
+                // Autoplay move to the next lesson and turn focus off
+                video.bind('end', function(event) {
+                    var nextButton = $($.Oscampus.lesson.navigation.options.buttons.next);
 
-                        $.Oscampus.wistia.overlay.upgrade(options.upgradeUrl);
+                    if (video.options.autoPlay && nextButton) {
+                        nextButton[0].click();
+                    }
+
+                    if (video.plugin['dimthelights']) {
+                        video.plugin['dimthelights'].undim();
                     }
                 });
 
-            container.append(button);
+                return button;
+            },
+
+            /**
+             * Add focus button to container
+             *
+             * @return {jQuery}
+             */
+            getFocus: function() {
+                var video   = this.video,
+                    options = this.options,
+                    button  = this.createButton('focus', Joomla.JText._('COM_OSCAMPUS_VIDEO_FOCUS'));
+
+                if (video.options.focus) {
+                    button.removeClass(options.offClass)
+                } else {
+                    button.addClass(options.offClass);
+                }
+
+                button
+                    .data('option', 'focus')
+                    .spinnerIcon(video.options)
+                    .on('click', function(event) {
+                        $(this).spinnerIcon(video.options, true);
+                        $.Oscampus.ajax({
+                            data    : {
+                                task: 'wistia.toggleFocusState'
+                            },
+                            context : this,
+                            success : function(state) {
+                                video.options.focus = state;
+                                video.params.focus = state;
+
+                                if (state) {
+                                    video.plugin['dimthelights'].dim();
+                                    $(video).trigger('focusenabled');
+                                    button.removeClass(options.offClass);
+                                } else {
+                                    video.plugin['dimthelights'].undim();
+                                    $(video).trigger('focusdisabled');
+                                    button.addClass(options.offClass);
+                                }
+                            },
+                            complete: function() {
+                                $(this).spinnerIcon(video.options);
+                            }
+                        });
+                    });
+
+                // Fix the focus on play
+                video.bind('play', function(event) {
+                    if (video.options.focus) {
+                        // Uses interval to make sure the plugin is loaded before call it
+                        var interval = setInterval(function() {
+                            if (video.plugin['dimthelights']) {
+                                video.plugin['dimthelights'].dim();
+                                clearInterval(interval);
+                                interval = null;
+                            }
+                        }, 500);
+                    }
+                });
+
+                return button;
+            },
+
+            /**
+             * Create the base for standard custom control buttons
+             *
+             * @param {string} name
+             * @param {string} title
+             *
+             * @returns {jQuery}
+             */
+            createButton: function(name, title) {
+                var button = $('<div>'),
+                    icon   = $('<i class="fa">'),
+                    id     = this.video.uuid + '_' + name + '_button';
+
+                button
+                    .data('icon', icon)
+                    .attr('id', id)
+                    .addClass('osc-btn ' + name)
+                    .attr('title', title)
+                    .text(title)
+                    .prepend(icon);
+
+                return button;
+            }
+
         },
 
         /**
@@ -543,20 +592,22 @@
             /**
              * The base overlay container
              *
+             * @param {object} video
              * @param {string} html
              *
              * @returns {jQuery}
              */
-            base: function(html) {
+            base: function(video, html) {
                 var overlay = $('<div>')
-                    .attr('id', wistiaEmbed.uuid + '_overlay')
+                    .attr('id', video.uuid + '_overlay')
                     .addClass('wistia_overlay')
                     .css({
-                        height: $(wistiaEmbed.grid.main).height(),
-                        width : $(wistiaEmbed.grid.main).width()
+                        height   : $(video.grid.main).height(),
+                        width    : $(video.grid.main).width(),
+                        'z-index': 9999
                     });
 
-                $(wistiaEmbed.grid.main).append(overlay);
+                $(video.grid.main).append(overlay);
 
                 var wrapper = $('<div>').addClass('wrapper');
                 $(overlay).append(wrapper);
@@ -565,15 +616,15 @@
 
                 this.resize(overlay, wrapper);
 
-                wistiaEmbed.bind('widthchange', this.resize(overlay, wrapper));
-                wistiaEmbed.bind('heightchange', this.resize(overlay, wrapper));
+                video.bind('widthchange', this.resize(overlay, wrapper));
+                video.bind('heightchange', this.resize(overlay, wrapper));
 
                 overlay.addClass('visible');
 
-                $('#' + wistiaEmbed.uuid + '_resume_skip').click(function() {
+                $('#' + video.uuid + '_resume_skip').click(function() {
                     overlay.fadeOut(200, function() {
                         overlay.remove();
-                        wistiaEmbed.play();
+                        video.play();
                     });
                 });
 
@@ -592,20 +643,24 @@
 
             /**
              * Create the not-authorised/suggest upgrade overlay
+             *
+             * @param {object} video
+             * @param {string} upgradeUrl
              */
-            upgrade: function(upgradeUrl) {
+            upgrade: function(video, upgradeUrl) {
                 var overlay = this.base(
+                    video,
                     '<div>' + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE') + '</div>'
-                    + '<a href="' + upgradeUrl + '" id="' + wistiaEmbed.uuid + '_subscribe" class="subscribe">'
-                    + '<span id="' + wistiaEmbed.uuid + '_subscribe_icon">&nbsp;</span>'
+                    + '<a href="' + upgradeUrl + '" id="' + video.uuid + '_subscribe" class="subscribe">'
+                    + '<span id="' + video.uuid + '_subscribe_icon">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK')
-                    + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
-                    + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                    + '</a><a href="#" id="' + video.uuid + '_resume_skip" class="skip">'
+                    + '  <span id="' + video.uuid + '_resume_skip_arrow">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
 
-                $('#' + wistiaEmbed.uuid + '_subscribe').click(function() {
+                $('#' + video.uuid + '_subscribe').click(function() {
                     window.location = downloadURL;
                 });
             },
@@ -613,41 +668,19 @@
             /**
              * Download request was refused overlay
              *
-             * @param message
+             * @param {object} video
+             * @param {string} message
              */
-            refused: function(message) {
+            refused: function(video, message) {
                 var overlay = this.base(
+                    video,
                     '<div style="padding-left: 25%; padding-right: 25%;">' + message + '</div>'
-                    + '</a><a href="#" id="' + wistiaEmbed.uuid + '_resume_skip" class="skip">'
-                    + '  <span id="' + wistiaEmbed.uuid + '_resume_skip_arrow">&nbsp;</span>'
+                    + '</a><a href="#" id="' + video.uuid + '_resume_skip" class="skip">'
+                    + '  <span id="' + video.uuid + '_resume_skip_arrow">&nbsp;</span>'
                     + Joomla.JText._('COM_OSCAMPUS_VIDEO_RESUME')
                     + '</a>'
                 );
             }
-        },
-
-        /**
-         * Create the base for standard custom control buttons
-         *
-         * @param {string} name
-         * @param {string} title
-         *
-         * @returns {jQuery}
-         */
-        createButton: function(name, title) {
-            var button = $('<div>'),
-                icon   = $('<i class="fa">'),
-                id     = wistiaEmbed.uuid + '_' + name + '_button';
-
-            button
-                .data('icon', icon)
-                .attr('id', id)
-                .addClass('osc-btn ' + name)
-                .attr('title', title)
-                .text(title)
-                .prepend(icon);
-
-            return button;
         }
     };
 })(jQuery);

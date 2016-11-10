@@ -1,18 +1,19 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus\Lesson\Type;
 
+use Exception;
 use JHtml;
-use JRegistry;
+use Joomla\Registry\Registry as Registry;
 use JText;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -90,11 +91,11 @@ class Quiz extends AbstractType
     }
 
     /**
-     * @param ActivityStatus $activity
+     * @param LessonStatus $activity
      *
      * @return object[]
      */
-    public function getLastAttempt(ActivityStatus $activity)
+    public function getLastAttempt(LessonStatus $activity)
     {
         if (isset($activity->data) && $activity->data) {
             $questions = json_decode($activity->data);
@@ -140,15 +141,15 @@ class Quiz extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare a LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         if (is_array($data)) {
             $status->score = 0;
@@ -205,11 +206,11 @@ class Quiz extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $content = $data->get('content');
         if ($content && is_string($content)) {
@@ -223,7 +224,7 @@ class Quiz extends AbstractType
         return $xml;
     }
 
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         $quiz = $data->get('content');
 
@@ -235,26 +236,54 @@ class Quiz extends AbstractType
 
         $questions = array();
         foreach ((array)$quiz->questions as $questionId => $question) {
-            if ($question['text']) {
-                $questionKey = md5($question['text']);
-                $correct     = $question['correct'];
+            $question = (array)$question;
+
+            $questionText = $question['text'];
+            if ($questionText) {
+                if (!isset($question['correct'])) {
+                    throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_QUIZ_CORRECT_ANSWER', $questionText));
+                }
+
+                $questionKey    = md5($questionText);
+                $correctAnswer  = $question['correct'];
+                $enteredAnswers = (array)$question['answers'];
 
                 $answers = array();
-                foreach ((array)$question['answers'] as $answerId => $answer) {
-                    $answerKey = md5($answer);
+                foreach ($enteredAnswers as $answerId => $answerText) {
+                    if (!empty($answerText)) {
+                        $answerKey = md5($answerText);
+                        if (isset($answers[$answerKey])) {
+                            throw new Exception(
+                                JText::sprintf(
+                                    'COM_OSCAMPUS_ERROR_QUIZ_DUPLICATE_ANSWER',
+                                    $answerText,
+                                    $questionText
+                                )
+                            );
+                        }
 
-                    $answers[$answerKey] = array(
-                        'text'    => $answer,
-                        'correct' => (int)($correct == $answerId)
+                        $answers[$answerKey] = array(
+                            'text'    => $answerText,
+                            'correct' => (int)($correctAnswer == $answerId)
+                        );
+                    }
+                }
+
+                $minimumAnswers = 2;
+                if (count($answers) < $minimumAnswers) {
+                    throw new Exception(
+                        JText::sprintf(
+                            'COM_OSCAMPUS_ERROR_QUIZ_MINIMUM_ANSWERS',
+                            $questionText,
+                            $minimumAnswers
+                        )
                     );
                 }
 
-                if ($answers = array_filter($answers)) {
-                    $questions[$questionKey] = array(
-                        'text'    => $question['text'],
-                        'answers' => $answers
-                    );
-                }
+                $questions[$questionKey] = array(
+                    'text'    => $question['text'],
+                    'answers' => $answers
+                );
             }
         }
 

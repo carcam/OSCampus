@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -23,21 +23,6 @@ class OscampusFormFieldQuestions extends JFormField
         JHtml::_('script', 'com_oscampus/admin/quiz.js', false, true);
         JHtml::_('osc.onready', '$.Oscampus.admin.quiz.init();');
 
-        // Make sure we have at least one question/answer to work with
-        if (empty($this->value)) {
-            $this->value = array(
-                array(
-                    'text'    => '',
-                    'answers' => array(
-                        array(
-                            'text'    => '',
-                            'correct' => 0
-                        )
-                    )
-                )
-            );
-        }
-
         $html = array(
             '<div class="clr"></div>',
             '<div class="osc-quiz-questions">',
@@ -45,8 +30,10 @@ class OscampusFormFieldQuestions extends JFormField
         );
 
         // Begin build questions for current quiz
+        $questions = $this->getQuestions();
+
         $questionCount = 0;
-        foreach ($this->value as $question) {
+        foreach ($questions as $question) {
             $questionId   = $this->id . '_' . $questionCount;
             $questionName = $this->name . '[' . $questionCount . ']';
 
@@ -158,5 +145,46 @@ class OscampusFormFieldQuestions extends JFormField
             . '</li>';
 
         return $html;
+    }
+
+    /**
+     * Normalize the question/answer blocks since they will be different
+     * on form failure
+     *
+     * @return array[]
+     */
+    protected function getQuestions()
+    {
+        if (empty($this->value)) {
+            return array(
+                array(
+                    'text'    => '',
+                    'answers' => array(
+                        array(
+                            'text'    => '',
+                            'correct' => 0
+                        )
+                    )
+                )
+            );
+        }
+
+        $questions = (array)$this->value;
+        foreach ($questions as &$question) {
+            $answers = (array)$question['answers'];
+            $correct = isset($question['correct']) ? $question['correct'] : -1;
+
+            foreach ($answers as $answerId => $answer) {
+                if (is_string($answer)) {
+                    $answers[$answerId] = array(
+                        'text'    => $answer,
+                        'correct' => ($correct == $answerId)
+                    );
+                }
+            }
+            $question['answers'] = $answers;
+        }
+
+        return $questions;
     }
 }

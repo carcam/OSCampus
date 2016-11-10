@@ -1,6 +1,6 @@
 {#
  # @package    OSCampus
- # @contact    www.ostraining.com, support@ostraining.com
+ # @contact    www.joomlashack.com, help@joomlashack.com
  # @copyright  2015-2016 Open Source Training, LLC. All rights reserved
  # @license
  #}
@@ -15,10 +15,10 @@
 {% endblock %}
 
 {% block form_body %}
-    {{ form_macro.tabs_startset(form, {'active' : 'main-panel', 'useCookie' : 1}) }}
+    {{ form_macro.tabs_startset(form, {'active' : 'main-panel'}) }}
 
     {{ form_macro.tabs_add(form, 'main') }}
-    {{ form_macro.render_fieldset(form, 'main') }}
+    {{ form_macro.render_fieldset(form, 'main', false) }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'content', 'COM_OSCAMPUS_LESSON_TAB_CONTENT_LABEL'|lang) }}
@@ -30,7 +30,7 @@
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_add(form, 'metadata') }}
-    {{ html('osc.render.adminfieldset', form, 'metadata', true)|raw }}
+    {{ html('osc.render.adminfieldset', form, 'metadata', false)|raw }}
     {{ form_macro.tabs_end() }}
 
     {{ form_macro.tabs_endset() }}

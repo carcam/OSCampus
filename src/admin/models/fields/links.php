@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -31,14 +31,6 @@ class OscampusFormFieldLinks extends JFormFieldText
             return false;
         }
 
-        // Reformat value to our needs
-        if (!empty($this->value)) {
-            $value = is_object($this->value) ? $this->value : (object)$this->value;
-
-            $this->show  = isset($value->show) ? $value->show : 0;
-            $this->value = isset($value->link) ? $value->link : '';
-        }
-
         // Common additional attributes
         if ($class = (string)$this->element['class']) {
             $this->commonAttributes['class'] = $class;
@@ -64,6 +56,20 @@ class OscampusFormFieldLinks extends JFormFieldText
             $this->linkAttributes['onchange'] = $onchange;
         }
 
+        // Reformat value to our needs
+        $defaultShow = (string)$this->element['show'];
+        $defaultShow = $defaultShow == 'true' || $defaultShow == '1' || $defaultShow == '';
+
+        if (empty($this->value)) {
+            $this->show  = $defaultShow;
+            $this->value = '';
+        } else {
+            $value = is_object($this->value) ? $this->value : (object)$this->value;
+
+            $this->show  = isset($value->show) ? $value->show : $defaultShow;
+            $this->value = isset($value->link) ? $value->link : '';
+        }
+
         return true;
     }
 
@@ -82,21 +88,6 @@ class OscampusFormFieldLinks extends JFormFieldText
 
         $link = '<input ' . OscampusUtilitiesArray::toString($linkAttribs) . '/>';
 
-        $options = array(
-            JHtml::_('select.option', 0, JText::_('COM_OSCAMPUS_OPTION_HIDE')),
-            JHtml::_('select.option', 1, JText::_('COM_OSCAMPUS_OPTION_SHOW'))
-        );
-        $show    = JHtml::_(
-            'select.genericlist',
-            $options,
-            $this->name . '[show]',
-            $this->commonAttributes,
-            'value',
-            'text',
-            $this->show,
-            $this->id
-        );
-
-        return $link . $show;
+        return $link;
     }
 }

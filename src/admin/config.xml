@@ -94,7 +94,8 @@
     <fieldset
         name="permissions"
         label="JCONFIG_PERMISSIONS_LABEL"
-        description="JCONFIG_PERMISSIONS_DESC">
+        description="JCONFIG_PERMISSIONS_DESC"
+        addfieldpath="/administrator/components/com_oscampus/form/fields">
         <field
             name="rules"
             label="JCONFIG_PERMISSIONS_LABEL"
@@ -104,5 +105,12 @@
             validate="rules"
             component="com_oscampus"
             section="component"/>
+
+        <field
+            type="customfooter"
+            name="customfooter"
+            media="com_oscampus"
+            showgoproad="0"
+            jedurl=" https://extensions.joomla.org/extension/oscampus" />
     </fieldset>
 </config>

@@ -1,17 +1,16 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
 
-use JDatabaseInterface;
+use JDatabaseDriver;
 use JUser;
 use Mobile_Detect;
-use Oscampus\UserActivity;
 
 defined('_JEXEC') or die();
 
@@ -20,12 +19,12 @@ defined('_JEXEC') or die();
  *
  * @package OSCampus
  *
- * @property Certificate        $certificate
- * @property JDatabaseInterface $dbo
- * @property JUser              $user
- * @property Lesson             $lesson
- * @property Mobile_Detect      $device
- * @property UserActivity       $activity
+ * @property Certificate     $certificate
+ * @property JDatabaseDriver $dbo
+ * @property JUser           $user
+ * @property Lesson          $lesson
+ * @property Mobile_Detect   $device
+ * @property UserActivity    $activity
  */
 class Container extends \Pimple\Container
 {

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -32,12 +32,7 @@ class OscampusModelCertificate extends OscampusModelSite
                 ->innerJoin('#__users AS student ON student.id = certificate.users_id')
                 ->where('certificate.id = ' . $id);
 
-            $errorLegacy    = JError::$legacy;
-            JError::$legacy = false;
-
             $certificate = $db->setQuery($query)->loadObject();
-
-            JError::$legacy = $errorLegacy;
 
             if ($certificate->id) {
                 $user = OscampusFactory::getUser();

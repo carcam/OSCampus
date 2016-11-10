@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -117,9 +117,7 @@ abstract class OscSelect
      */
     public static function access($name, $selected, $addOptions = null, $attribs = null, $id = null)
     {
-        $accessGroups = JHtml::_('access.assetgroups');
-
-        $options = array_merge(static::createAddOptions($addOptions), $accessGroups);
+        $options = array_merge(static::createAddOptions($addOptions), JHtml::_('osc.options.access'));
 
         return JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $selected, $id);
     }

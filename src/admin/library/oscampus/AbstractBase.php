@@ -1,28 +1,28 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
 
-use JDatabase;
+use JDatabaseDriver;
 
 defined('_JEXEC') or die();
 
 abstract class AbstractBase
 {
     /**
-     * @var JDatabase
+     * @var JDatabaseDriver
      */
     protected $dbo = null;
 
     /**
-     * @param JDatabase $dbo
+     * @param JDatabaseDriver $dbo
      */
-    public function __construct(JDatabase $dbo)
+    public function __construct(JDatabaseDriver $dbo)
     {
         $this->dbo = $dbo;
     }

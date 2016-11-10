@@ -1,98 +1,28 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
-class OscampusViewLessons extends OscampusViewList
+class OscampusViewLessons extends OscampusViewAdminList
 {
     protected function setup()
     {
         parent::setup();
 
-        $state = $this->getState();
+        $ordering = $this->getState()->get('list.ordering');
 
-        $ordering = array_merge(
-            $this->getVariable('ordering', array()),
-            array(
-                'field'   => 'lesson.ordering',
-                'prefix'  => 'lessons.',
-                'enabled' => $this->enableOrdering()
-            )
-        );
-        $this->setVariable('ordering', $ordering);
+        $this->setOrdering('lesson.ordering', 'lessons', $ordering == 'lesson.ordering');
 
-
-        $courseOptions = JHtml::_('osc.options.courses');
-        array_unshift($courseOptions, JHtml::_('select.option', '', JText::_('COM_OSCAMPUS_OPTION_SELECT_COURSE')));
-        $courses = JHtml::_(
-            'select.genericlist',
-            $courseOptions,
-            'filter_course',
-            null,
-            'value',
-            'text',
-            $state->get('filter.course')
-        );
-
-        $published = JHtml::_(
-            'osc.select.published',
-            'filter_published',
-            $state->get('filter.published'),
-            'COM_OSCAMPUS_OPTION_SELECT_PUBLISHED'
-        );
-
-        $types = JHtml::_(
-            'osc.select.lessontype',
-            'filter_lessontype',
-            $state->get('filter.lessontype'),
-            'COM_OSCAMPUS_OPTION_SELECT_LESSONTYPE'
-        );
-
-        $access = JHtml::_(
-            'osc.select.access',
-            'filter_access',
-            $state->get('filter.access'),
-            'COM_OSCAMPUS_OPTION_SELECT_ACCESS'
-        );
-
-        $filters = array(
-            'text'  => array(
-                'value' => $state->get('filter.search')
-            ),
-            'items' => array(
-                array($published, $courses, $types, $access)
-            )
-        );
-
-        $this->setVariable('filters', $filters);
-    }
-
-    /**
-     * Determine whether it's okay to enable ordering
-     *
-     * @return bool
-     */
-    protected function enableOrdering()
-    {
-        $state = $this->getState();
-
-        $enabled = false;
-        if ($state->get('list.ordering') == 'lesson.ordering') {
-            $enabled = true;
-            $stateVars = $state->getProperties();
-            foreach ($stateVars as $name => $value) {
-                if ($value && strpos($name, 'filter.') === 0 && $name != 'filter.course') {
-                    return false;
-                }
-            }
-        }
-
-        return $enabled;
+        // Setup and render the batch form
+        OscampusFactory::getDocument()->addStyleDeclaration('.modal-body { height: 250px; }');
+        $batchBody   = $this->loadTemplate('batch_body');
+        $batchFooter = $this->loadTemplate('batch_footer');
+        $this->setBatchForm($batchBody, $batchFooter);
     }
 
     public function getSortGroupId($item)

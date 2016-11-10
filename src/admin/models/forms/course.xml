@@ -10,7 +10,6 @@
             type="text"
             label="COM_OSCAMPUS_TITLE"
             class="input-xxlarge input-large-text"
-            size="50"
             required="true"/>
 
         <field
@@ -18,8 +17,7 @@
             type="text"
             label="COM_OSCAMPUS_ALIAS"
             description="JFIELD_ALIAS_PLACEHOLDER"
-            hint="JFIELD_ALIAS_PLACEHOLDER"
-            size="50"/>
+            hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
 
     <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
@@ -35,6 +33,18 @@
             type="media"
             label="COM_OSCAMPUS_COURSE_IMAGE_LABEL"
             class="readonly"/>
+
+        <field
+            name="pathways"
+            type="oscampus.pathways"
+            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"
+            multiple="true"/>
+
+        <field
+            name="tags"
+            type="oscampus.tags"
+            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"
+            multiple="true"/>
 
         <field
             name="length"
@@ -118,16 +128,6 @@
     </fieldset>
 
     <fieldset name="special">
-        <field
-            name="pathways"
-            type="oscampus.pathways"
-            label="COM_OSCAMPUS_COURSE_PATHWAYS_LABEL"/>
-
-        <field
-            name="tags"
-            type="oscampus.tags"
-            label="COM_OSCAMPUS_COURSE_TAGS_LABEL"/>
-
         <field
             name="lessons"
             type="oscampus.lessons"/>

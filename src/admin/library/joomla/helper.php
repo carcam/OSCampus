@@ -1,10 +1,12 @@
 <?php
 /**
  * @package   com_oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 
@@ -13,11 +15,11 @@ abstract class OscampusHelper
     /**
      * get component information
      *
-     * @return JRegistry
+     * @return Registry
      */
     public static function getInfo()
     {
-        $info = new jRegistry();
+        $info = new Registry();
         $path = OSCAMPUS_ADMIN . '/oscampus.xml';
         if (is_file($path)) {
             $xml = JFactory::getXML($path);

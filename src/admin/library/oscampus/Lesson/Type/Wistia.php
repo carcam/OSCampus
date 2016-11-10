@@ -1,23 +1,25 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus\Lesson\Type;
 
 use Alledia\Framework\Factory as AllediaFactory;
+use Alledia\Framework\Joomla\Extension\Licensed;
 use Alledia\OSWistia\Pro\Embed as WistiaEmbed;
+use Exception;
 use JHtml;
-use JRegistry;
-use JRoute;
+use Joomla\Registry\Registry as Registry;
 use JSession;
 use JText;
+use Oscampus\Activity\LessonStatus;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use Oscampus\Lesson\Type\Wistia\Api;
+use Oscampus\Request;
 use OscampusComponentHelper;
 use OscampusFactory;
 use OscampusHelper;
@@ -38,6 +40,16 @@ class Wistia extends AbstractType
      */
     protected $autoplay = false;
 
+    /**
+     * @var Api
+     */
+    protected $wistiaApi = null;
+
+    /**
+     * @var Licensed
+     */
+    protected $wistiaPlugin = null;
+
     public function __construct(Lesson $lesson)
     {
         parent::__construct($lesson);
@@ -50,96 +62,127 @@ class Wistia extends AbstractType
 
     public function render()
     {
-        if (!$this->pluginLoaded()) {
-            throw new \Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
+        try {
+            $oswistia = $this->getPlugin();
+            if (!$oswistia) {
+                throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_NOT_INSTALLED'));
+            }
+
+            if (!$oswistia->isPro()) {
+                throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_PRO_REQUIRED'));
+            }
+            $oswistia->loadLibrary();
+
+            if (!$this->lesson->isAuthorised()) {
+                $thumb = $this->getApi()->getThumbnail($this->id);
+
+                $attribs = array(
+                    'src'    => $thumb->url,
+                    'width'  => $thumb->size[0],
+                    'height' => $thumb->size[1]
+                );
+
+                return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
+            }
+
+            if (!class_exists('\\Alledia\\OSWistia\\Pro\\Embed')) {
+                throw new Exception(JText::_('COM_OSCAMPUS_ERROR_WISTIA_EMBED_NOT_FOUND'));
+            }
+
+            /** @var Registry $params */
+            $session = OscampusFactory::getSession();
+            $device  = OscampusFactory::getContainer()->device;
+            $params  = clone $oswistia->params;
+
+            $volume   = $session->get('oscampus.video.volume', 1);
+            $controls = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
+
+            $params->set('volume', $volume);
+            if ($controls) {
+                $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
+                $focus    = $session->get('oscampus.video.focus', true);
+                $isMobile = $device->isMobile();
+
+                $params->set('autoplay', $autoplay);
+                $params->set('plugin-focus', $focus && !$isMobile);
+
+            } else {
+                // Block features for non-authorised users
+                $params->set('autoplay', false);
+                $params->set('plugin-focus', false);
+                $params->set('captions', false);
+            }
+
+            $embed = new WistiaEmbed($this->id, $params);
+            $html  = $embed->toString() . $this->setControls($params, $controls);
+
+        } catch (Exception $e) {
+            $html = '<div class="osc-alert-warning">' . $e->getMessage() . '</div>';
         }
 
-        $oswistia = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
-        $oswistia->loadLibrary();
+        return $html;
+    }
 
-        if (!$this->lesson->isAuthorised()) {
-            return $this->renderStatic();
+    public function getThumbnail($width = null, $height = null)
+    {
+        $thumb = $this->getApi()->getThumbnail($this->id, $width, $height);
+        return $thumb->url;
+    }
+
+    /**
+     * Load our API object only once
+     *
+     * @return Api
+     */
+    protected function getApi()
+    {
+        if ($this->wistiaApi === null) {
+            $params          = OscampusComponentHelper::getParams();
+            $this->wistiaApi = new Api($params->get('wistia.apikey'));
         }
 
-        /** @var JRegistry $params */
-        $session = OscampusFactory::getSession();
+        return $this->wistiaApi;
+    }
+
+    /**
+     * @param Registry $params
+     * @param bool     $controls
+     *
+     * @return string
+     */
+    protected function setControls(Registry $params, $controls)
+    {
+        if (!Request::isAjax()) {
+            JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE');
+            JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK');
+            JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
+            JText::script('COM_OSCAMPUS_VIDEO_RESUME');
+
+            JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
+            JHtml::_('script', 'com_oscampus/utilities.js', false, true);
+            JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+        }
+
+        $user    = OscampusFactory::getUser();
         $device  = OscampusFactory::getContainer()->device;
-        $params  = clone $oswistia->params;
-
-        $volume   = $session->get('oscampus.video.volume', 1);
-        $controls = OscampusFactory::getUser()->authorise('video.control', 'com_oscampus');
-
-        $params->set('volume', $volume);
-        $params->set('cacheVideoID', $this->id);
-
-        if ($controls) {
-            $autoplay = $session->get('oscampus.video.autoplay', $this->autoplay);
-            $focus    = $session->get('oscampus.video.focus', true);
-            $isMobile = $device->isMobile();
-
-            $params->set('autoplay', $autoplay);
-            $params->set('plugin-focus', $focus && !$isMobile);
-
-        } else {
-            // Block features for non-authorised users
-            $params->set('autoplay', false);
-            $params->set('plugin-focus', false);
-            $params->set('captions', false);
-        }
-
-        $embed = new WistiaEmbed($this->id, $params);
-
-        $output = $embed->toString();
-        if ($this->lesson->isAuthorised()) {
-            $output .= $this->setControls($controls);
-        }
-        return $output;
-    }
-
-    /**
-     * Render a still image version of this video
-     *
-     * @return string
-     */
-    protected function renderStatic()
-    {
-        $params = OscampusComponentHelper::getParams();
-        $api    = new Api($params->get('wistia.apikey'));
-
-        $thumb = $api->getThumbnail($this->id);
-
-        $attribs = array(
-            'src'    => $thumb->url,
-            'width'  => $thumb->size[0],
-            'height' => $thumb->size[1]
-        );
-        return '<img ' . OscampusUtilitiesArray::toString($attribs) . '/>';
-    }
-
-    /**
-     * @param bool $controls
-     *
-     * @return string
-     */
-    protected function setControls($controls)
-    {
-        $user   = OscampusFactory::getUser();
-        $device = OscampusFactory::getContainer()->device;
-        $config = OscampusComponentHelper::getParams();
-
-        JHtml::_('script', 'com_oscampus/screenfull.js', false, true);
-        JHtml::_('script', 'com_oscampus/utilities.js', false, true);
-        JHtml::_('script', 'com_oscampus/wistia.js', false, true);
+        $config  = OscampusComponentHelper::getParams();
 
         $authoriseDownload = $user->authorise('video.download', 'com_oscampus');
 
         $signupType  = 'videos.download.' . ($user->guest ? 'new' : 'upgrade');
         $downloadUrl = OscampusHelper::normalizeUrl($config->get($signupType));
 
+        $shortId = substr($this->id, 0, 3);
+
         $options = json_encode(
             array(
+                'videoId'    => $this->id,
+                'shortId'    => $shortId,
                 'mobile'     => $device->isMobile(),
                 'formToken'  => JSession::getFormToken(),
+                'volume'     => $params->get('volume', 1),
                 'upgradeUrl' => $downloadUrl,
                 'authorised' => array(
                     'download' => $authoriseDownload,
@@ -148,53 +191,58 @@ class Wistia extends AbstractType
             )
         );
 
-        JText::script('COM_OSCAMPUS_VIDEO_AUTOPLAY');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE');
-        JText::script('COM_OSCAMPUS_VIDEO_DOWNLOAD_UPGRADE_LINK');
-        JText::script('COM_OSCAMPUS_VIDEO_FOCUS');
-        JText::script('COM_OSCAMPUS_VIDEO_RESUME');
-
-        $js = array(
+        $script = array(
             "<script>",
-            "wistiaEmbed.ready(function() {",
-            "    jQuery.Oscampus.wistia.init({$options});",
+            "window._wq = window._wq || [];",
+            "window._wq.push({",
+            "   id: '{$shortId}',",
+            "   onReady: function(video) {",
+            "      $.Oscampus.wistia.init(video, {$options});",
+            "   }",
             "});",
             "</script>"
         );
-        return join("\n", $js);
+
+
+        return join("\n", $script);
     }
 
     /**
-     * This lesson type requires the OSWistia plugin. Ensure that it's loaded.
+     * Get the OSWistia plugin
      *
-     * @return bool
+     * @return Licensed
      */
-    protected function pluginLoaded()
+    protected function getPlugin()
     {
-        $loaded = defined('OSWISTIA_PLUGIN_PATH');
-        if (!$loaded) {
-            $path = JPATH_PLUGINS . '/content/oswistia/include.php';
-            if (is_file($path)) {
-                require_once $path;
-                $loaded = true;
+        if ($this->wistiaPlugin === null) {
+            if (!defined('OSWISTIA_PLUGIN_PATH')) {
+                $path = JPATH_PLUGINS . '/content/oswistia/include.php';
+                if (is_file($path)) {
+                    require_once $path;
+                }
+            }
+            if (class_exists('\\Alledia\\Framework\\Factory')) {
+                $this->wistiaPlugin = AllediaFactory::getExtension('OSWistia', 'plugin', 'content');
             }
         }
 
-        return $loaded;
+        return $this->wistiaPlugin;
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null)
-    {
+    public function prepareActivityProgress(
+        LessonStatus $status,
+        $score = null,
+        $data = null
+    ) {
         if ($score !== null && $status->score < $score) {
             $status->score = $score;
         }
@@ -216,12 +264,13 @@ class Wistia extends AbstractType
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    public function prepareAdminData(JRegistry $data)
-    {
+    public function prepareAdminData(
+        Registry $data
+    ) {
         $content = $data->get('content');
         if ($content && is_string($content)) {
             $data->set('content', json_decode($content, true));
@@ -231,14 +280,28 @@ class Wistia extends AbstractType
 
         $xml = simplexml_load_file($path);
 
+        $oswistia = $this->getPlugin();
+        if ($oswistia && $oswistia->isPro()) {
+            return $xml;
+        }
+
+        // Send message about needing OSWistia Pro
+        $content = $xml->xpath("//fieldset[@name='content']");
+        $content[0]->addAttribute('description', JText::_('COM_OSCAMPUS_WISTIA_PRO_PLUGIN_REQUIRED'));
+        $fields = $content[0]->xpath('//field');
+        foreach ($fields as $field) {
+            unset($field[0]);
+        }
+
         return $xml;
     }
 
     /**
-     * @param JRegistry $data
+     * @param Registry $data
      */
-    public function saveAdminChanges(JRegistry $data)
-    {
+    public function saveAdminChanges(
+        Registry $data
+    ) {
         $content = $data->get('content');
         if (!is_string($content)) {
             $content = json_encode($content);

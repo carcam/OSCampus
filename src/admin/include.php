@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\AutoLoader;
@@ -28,5 +28,29 @@ if (!defined('OSCAMPUS_LOADED')) {
     // Any additional helper paths
     JHtml::addIncludePath(OSCAMPUS_LIBRARY . '/html');
     OscampusHelper::loadOptionLanguage('com_oscampus', OSCAMPUS_ADMIN, OSCAMPUS_SITE);
-    JLoader::register('TCPDF', JPATH_ROOT.'/libraries/tcpdf/tcpdf.php');
+    JLoader::register('TCPDF', JPATH_ROOT . '/libraries/tcpdf/tcpdf.php');
+
+    // Application specific loads
+    switch (OscampusFactory::getApplication()->getName()) {
+        case 'site':
+            OscampusModel::addIncludePath(OSCAMPUS_SITE . '/models');
+            break;
+
+        case 'administrator':
+            OscampusModel::addIncludePath(OSCAMPUS_ADMIN . '/models');
+
+            // Alledia Framework
+            if (!defined('ALLEDIA_FRAMEWORK_LOADED')) {
+                $allediaFrameworkPath = JPATH_SITE . '/libraries/allediaframework/include.php';
+
+                if (file_exists($allediaFrameworkPath)) {
+                    require_once $allediaFrameworkPath;
+                } else {
+                    JFactory::getApplication()
+                        ->enqueueMessage(JText::_('COM_OSCAMPUS_ERROR_ALLEDIA_NOT_FOUND'), 'error');
+                }
+            }
+
+            break;
+    }
 }

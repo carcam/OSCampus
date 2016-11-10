@@ -1,19 +1,15 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 use Oscampus\Lesson\Type\Quiz;
 use OscampusViewLesson as View;
 
-/**
- * @var OscampusViewLesson $this
- */
 defined('_JEXEC') or die();
 /**
- * @var View $this
  * @var Quiz $quiz
  */
 
@@ -40,5 +36,6 @@ if ($this->lesson->isAuthorised()) {
     if ($this->lesson->isAuthorised()) {
         echo $this->loadDefaultTemplate('files');
     }
+    echo OscampusHelper::renderModule('oscampus_lesson_bottom');
     ?>
 </div>

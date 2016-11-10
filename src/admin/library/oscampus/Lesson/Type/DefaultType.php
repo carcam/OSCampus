@@ -1,15 +1,15 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus\Lesson\Type;
 
-use JRegistry;
-use Oscampus\Lesson\ActivityStatus;
+use Joomla\Registry\Registry as Registry;
+use Oscampus\Activity\LessonStatus;
 
 defined('_JEXEC') or die();
 
@@ -27,20 +27,20 @@ class DefaultType extends AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    public function prepareActivityProgress(ActivityStatus $status, $score, $data)
+    public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null)
     {
         // Nothing to do
     }
 
-    public function prepareAdminData(JRegistry $data)
+    public function prepareAdminData(Registry $data)
     {
         $path = __DIR__ . '/default_type.xml';
         if (is_file($path)) {

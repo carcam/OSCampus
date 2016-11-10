@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\File;
@@ -52,20 +52,20 @@ class OscampusViewCourse extends OscampusViewSite
                 $this->viewed  = $model->getViewedLessons();
             }
 
-            $pathway = JFactory::getApplication()->getPathway();
-
-            $link = JHtml::_('osc.link.pathway', $this->course->pathways_id, null, null, true);
-            $pathway->addItem($this->course->pathway_title, $link);
-
             $this->setMetadata(
                 $this->course->metadata,
                 $this->course->title,
                 $this->course->introtext ?: $this->course->description
             );
 
-            parent::display($tpl);
         } catch (Exception $e) {
-            echo $e->getMessage();
+            if ($e->getCode() == 404) {
+                $this->setLayout('notfound');
+            } else {
+                throw $e;
+            }
         }
+
+        parent::display($tpl);
     }
 }

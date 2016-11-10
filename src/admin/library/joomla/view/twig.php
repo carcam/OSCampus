@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Oscampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
  * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
@@ -115,8 +115,9 @@ class OscampusViewTwig extends OscampusView
 
         // If alternate layout can't be found, fall back to default layout
         if ($this->_template == false) {
-            $filetofind      = $this->_createFileName('',
-                array('name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)));
+            $fileName   = 'default' . (isset($tpl) ? '_' . $tpl : $tpl);
+            $filetofind = $this->_createFileName('', array('name' => $fileName));
+
             $this->_template = JPath::find($this->_path['template'], $filetofind);
         }
 

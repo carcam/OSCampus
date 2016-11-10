@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -66,19 +66,22 @@ class OscampusFormFieldFiles extends JFormFieldList
         );
 
         $title = sprintf(
-            '<input type="text" name="%s[title][]" value="%s" size="40"/>',
+            '<input type="text" name="%s[title][]" value="%s" size="40" placeholder="%s"/>',
             $this->name,
-            empty($file->title) ? '' : htmlspecialchars($file->title)
+            empty($file->title) ? '' : htmlspecialchars($file->title),
+            JText::_('COM_OSCAMPUS_FILES_TITLE_PLACEHOLDER')
         );
 
         $description = sprintf(
-            '<textarea name="%s[description][]">%s</textarea>',
+            '<textarea name="%s[description][]" placeholder="%s">%s</textarea>',
             $this->name,
+            JText::_('COM_OSCAMPUS_FILES_DESCRIPTION_PLACEHOLDER'),
             empty($file->description) ? '' : htmlspecialchars($file->description)
         );
 
         $upload   = sprintf('<input type="file" name="%s[upload][]" value=""/>', $this->name);
         $lessonId = empty($file->lessons_id) ? '' : $file->lessons_id;
+        $path     = empty($file->path) ? '' : $file->path;
 
         $html = '<li class="osc-file-block">'
             . $id
@@ -86,9 +89,9 @@ class OscampusFormFieldFiles extends JFormFieldList
             . $this->createButton('osc-btn-warning-admin osc-file-delete', 'fa-times')
             . $title
             . '<br class="clr"/>' . $description
-            . '<br class="clr"/>' . $this->getFileList($file->path)
-            . $this->getLessonOptions($lessonId)
-            . '<br class="clr"/>' . $upload
+            . '<br class="clr"/>' . $this->getFileList($path)
+            . JText::_('COM_OSCAMPUS_FILES_UPLOAD_PLACEHOLDER') . ' ' . $upload
+            . '<br class="clr"/>' . $this->getLessonOptions($lessonId)
             . '</li>';
 
         return $html;
@@ -145,11 +148,12 @@ class OscampusFormFieldFiles extends JFormFieldList
     protected function getFileList($selected)
     {
         if ($this->files === null) {
-            $files = JFolder::files(JPATH_SITE . '/' . \Oscampus\Course::FILE_PATH);
+            jimport('joomla.filesystem.folder');
+            $files = JFolder::files(JPATH_SITE . '/' . \Oscampus\Course::getFilePath());
 
             $this->files = array();
             foreach ($files as $file) {
-                $path = \Oscampus\Course::FILE_PATH . '/' . $file;
+                $path          = \Oscampus\Course::getFilePath($file);
                 $this->files[] = JHtml::_('select.option', $path, $file);
             }
 
@@ -163,10 +167,10 @@ class OscampusFormFieldFiles extends JFormFieldList
             'select.genericlist',
             $this->files,
             $this->name . '[path][]',
-            null,
-            'value',
-            'text',
-            $selected
+            array(
+                'id'          => '',
+                'list.select' => $selected
+            )
         );
 
         return $html;
@@ -251,7 +255,7 @@ class OscampusFormFieldFiles extends JFormFieldList
         // If we've come back from a form failure, we need to reformat
         if (isset($files['id'])) {
             $values = $files;
-            $files = array();
+            $files  = array();
             foreach ($values['id'] as $index => $id) {
                 $file = array();
                 foreach ($values as $fieldName => $fieldValues) {

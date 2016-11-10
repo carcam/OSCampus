@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -27,7 +27,7 @@ foreach ($paths as $path) {
 
 abstract class OscTabs
 {
-    protected static function joomla_version()
+    protected static function joomlaVersion()
     {
         $version = explode('.', JVERSION);
         return (string)array_shift($version);
@@ -35,7 +35,7 @@ abstract class OscTabs
 
     public static function startset($group = 'tabs', $params = array())
     {
-        if (static::joomla_version() == '2') {
+        if (static::joomlaVersion() == '2') {
             return JHtml::_('tabs.start', $group, $params);
         }
 
@@ -44,7 +44,7 @@ abstract class OscTabs
 
     public static function add($group, $text, $id)
     {
-        if (static::joomla_version() == '2') {
+        if (static::joomlaVersion() == '2') {
             return JHtml::_('tabs.panel', $text, $id) . '<div class="row-fluid">';
         }
 
@@ -54,7 +54,7 @@ abstract class OscTabs
 
     public static function end()
     {
-        if (static::joomla_version() == '2') {
+        if (static::joomlaVersion() == '2') {
             return '<div class="clr"></div>';
         }
 
@@ -63,7 +63,7 @@ abstract class OscTabs
 
     public static function endset()
     {
-        if (static::joomla_version() == '2') {
+        if (static::joomlaVersion() == '2') {
             return JHtml::_('tabs.end');
         }
 

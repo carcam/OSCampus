@@ -52,13 +52,23 @@ fieldset.checkboxes input[type=checkbox] {
     margin-right: 4px;
 }
 
-ul ul.ui-sortable {
+ul.ui-sortable {
     padding-left: 10px;
     padding-top: 5px;
+    list-style: none;
+}
+
+#footer {
+    text-align: center;
 }
 
 /* Quizzes & File assets
  ========================================================================== */
+
+.osc-quiz-questions > ul {
+    list-style: none;
+    margin-left: 0;
+}
 
 .osc-quiz-questions > ul > li.osc-question,
 .osc-file-manager > ul > li.osc-file-block {
@@ -73,7 +83,7 @@ ul ul.ui-sortable {
 
 .osc-quiz-questions ul li.osc-question:nth-child(2n+1),
 .osc-file-manager ul li.osc-file-block:nth-child(2n+1) {
-    background: rgba(242,242,242,0.5);
+    background: rgba(242, 242, 242, 0.5);
 }
 
 .osc-quiz-questions ul li input[type="text"],
@@ -121,12 +131,13 @@ ul ul.ui-sortable {
     color: #fff;
     background: #999;
     border: none;
+    padding: 4px 8px;
 }
 
 .osc-quiz-questions button:hover,
 .osc-quiz-questions button:focus,
 .osc-file-manager button:hover,
-.osc-file-manager button:focus{
+.osc-file-manager button:focus {
     border: none;
 }
 
@@ -161,18 +172,22 @@ ul ul.ui-sortable {
     margin: 0 0 0 5px;
 }
 
-.osc-quiz-questions ul li.osc-question > button,
-.osc-quiz-questions ul li.osc-add-question > button,
+.osc-quiz-questions ul li.osc-question > button {
+    padding: 5px 8px 6px;
+}
+
+.osc-quiz-questions ul li.osc-quiz-add-question > button,
 .osc-file-manager button.osc-file-add {
-    font-size: 14px;
-    padding: 8px 5px;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 6px 12px;
 }
 
 .osc-quiz-questions ul li.osc-answer > button,
 .osc-quiz-questions ul li.osc-add-answer > button,
 .osc-file-manager ul li.osc-file-block > button {
     font-size: 12px;
-    padding: 6px 6px;
+    padding: 2px 8px;
 }
 
 .osc-quiz-questions ul li h4 {
@@ -182,25 +197,29 @@ ul ul.ui-sortable {
 
 .osc-quiz-questions li.osc-question ul {
     padding-bottom: 10px;
+    list-style: none;
+    margin-left: 0;
 }
 
 .osc-quiz-questions ul li.osc-answer {
     padding-left: 40px;
 }
 
-.osc-quiz-questions ul li.osc-add-answer {
-    padding-left: 62px;
+.osc-quiz-questions ul li.osc-quiz-add-answer {
+    padding-left: 58px;
 }
 
-.osc-quiz-questions ul li.osc-add-question {
+.osc-quiz-questions ul li.osc-quiz-add-question {
     margin-top: 20px;
-    padding-top: 20px;
+    padding-top: 40px;
     border-top: 1px solid #ccc;
 }
 
 .osc-file-manager .ui-sortable {
     margin-bottom: 20px;
+    margin-left: 0;
     padding-bottom: 20px;
+    padding-left: 0;
     border-bottom: 1px solid #ccc;
 }
 

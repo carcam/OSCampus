@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Course;
@@ -149,8 +149,11 @@ class OscampusModelCourse extends OscampusModelAdmin
      */
     public function saveorder($pks = null, $order = null)
     {
-        $app = OscampusFactory::getApplication();
-        if ($pathwayId = $app->input->getInt('filter_pathway')) {
+        $app       = OscampusFactory::getApplication();
+        $filters   = $app->input->get('filter', array(), 'array');
+        $pathwayId = isset($filters['pathway']) ? (int)$filters['pathway'] : 0;
+
+        if ($pathwayId) {
             $db  = $this->getDbo();
             $sql = 'UPDATE #__oscampus_courses_pathways SET ordering = %s WHERE courses_id = %s AND pathways_id = ' . $pathwayId;
             foreach ($pks as $index => $courseId) {
@@ -181,7 +184,7 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     protected function prepareTable($table)
     {
-        $descriptions = preg_split('#<.*?id=["\']system-readmore["\'].*?>#', $table->description, 2);
+        $descriptions = preg_split('#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i', $table->description, 2);
 
         $table->description = trim(array_pop($descriptions));
         $table->introtext   = trim(array_pop($descriptions));
@@ -191,11 +194,10 @@ class OscampusModelCourse extends OscampusModelAdmin
 
     public function save($data)
     {
-        $errorLegacy    = JError::$legacy;
-        JError::$legacy = false;
-
-        $success = true;
         try {
+            if (empty($data['image'])) {
+                $data['image'] = Course::DEFAULT_IMAGE;
+            }
             $success = parent::save($data);
 
             // Handle additional update tasks
@@ -213,8 +215,6 @@ class OscampusModelCourse extends OscampusModelAdmin
             $this->setError($e->getMessage());
             $success = false;
         }
-
-        JError::$legacy = $errorLegacy;
 
         return $success;
     }
@@ -269,11 +269,10 @@ class OscampusModelCourse extends OscampusModelAdmin
             foreach ($addPathways as $pid => $null) {
                 if (isset($ordering[$pid])) {
                     $insertValues[] = join(',', array(
-                            (int)$courseId,
-                            (int)$pid,
-                            (int)$ordering[$pid]->lastOrder + 1
-                        )
-                    );
+                        (int)$courseId,
+                        (int)$pid,
+                        (int)$ordering[$pid]->lastOrder + 1
+                    ));
                 } else {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_MISSING_ADD_PATHWAY', $pid));
                 }
@@ -299,10 +298,10 @@ class OscampusModelCourse extends OscampusModelAdmin
      */
     protected function updateFiles($courseId, array $data)
     {
-        $app   = OscampusFactory::getApplication();
-        $db    = OscampusFactory::getDbo();
+        $app = OscampusFactory::getApplication();
+        $db  = OscampusFactory::getDbo();
 
-        $fileFields = $app->input->files->get('jform', array(), 'array');
+        $fileFields = $app->input->files->get('jform', array(), 'raw');
         $uploads    = empty($fileFields['files']['upload']) ? array() : $fileFields['files']['upload'];
         $files      = $this->collectFiles($courseId, $data);
 
@@ -323,8 +322,9 @@ class OscampusModelCourse extends OscampusModelAdmin
             if (!empty($uploads[$index]['name'])) {
                 $upload = $uploads[$index];
 
-                $path = Course::FILE_PATH . '/' . $upload['name'];
-                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path)) {
+                $path = Course::getFilePath($upload['name']);
+                // @TODO: allowing all unsafe files. Consider reviewing for more control
+                if (!JFile::upload($upload['tmp_name'], JPATH_SITE . '/' . $path, false, true)) {
                     throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_COURSE_FILE_UPLOAD', $path));
                 }
 

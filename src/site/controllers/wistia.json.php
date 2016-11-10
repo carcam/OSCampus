@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 use Oscampus\Lesson\Type\Wistia\Download;
@@ -23,7 +23,7 @@ class OscampusControllerWistia extends OscampusControllerJson
         $state   = !((bool)$session->get('oscampus.video.autoplay', true));
         $session->set('oscampus.video.autoplay', $state);
 
-        echo json_encode((bool)$state);
+        echo json_encode($state);
     }
 
     /**
@@ -47,11 +47,11 @@ class OscampusControllerWistia extends OscampusControllerJson
      */
     public function setVolumeLevel()
     {
-        $level = JFactory::getApplication()->input->get('level', 1);
+        $level = (float)JFactory::getApplication()->input->get('level', 1);
 
         JFactory::getSession()->set('oscampus.video.volume', $level);
 
-        echo json_encode((float)$level);
+        echo json_encode($level);
     }
 
     /**
@@ -59,7 +59,7 @@ class OscampusControllerWistia extends OscampusControllerJson
      */
     public function downloadLimit()
     {
-        $user = JFactory::getUser();
+        $user     = JFactory::getUser();
         $download = new Download();
 
         $result = array(
@@ -75,7 +75,7 @@ class OscampusControllerWistia extends OscampusControllerJson
 
         } elseif ($download->userExceededLimit()) {
             $result['authorised'] = false;
-            $result['error'] = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
+            $result['error']      = JText::sprintf('COM_OSCAMPUS_ERROR_VIDEO_DOWNLOAD_LIMIT', $result['period']);
         }
 
         echo json_encode($result);

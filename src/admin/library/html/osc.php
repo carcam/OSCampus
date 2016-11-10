@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -126,15 +126,22 @@ abstract class JHtmlOsc
     }
 
     /**
-     * Add a script to run when dom ready
+     * Add a script to run when dom ready. You can choose between echoing a
+     * script tag into the output or passing that to the current document.
      *
      * @param string $js
+     * @param bool   $echoScriptTag
      *
      * @return void
      */
-    public static function onready($js)
+    public static function onready($js, $echoScriptTag = false)
     {
         $js = "(function($) { $(document).ready(function () { " . $js . " });})(jQuery);";
-        OscampusFactory::getDocument()->addScriptDeclaration($js);
+
+        if (!$echoScriptTag) {
+            OscampusFactory::getDocument()->addScriptDeclaration($js);
+        } else {
+            echo '<script>' . $js . '</script>';
+        }
     }
 }

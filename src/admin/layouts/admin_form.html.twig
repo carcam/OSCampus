@@ -1,6 +1,6 @@
 {#
  # @package    OSCampus
- # @contact    www.ostraining.com, support@ostraining.com
+ # @contact    www.joomlashack.com, help@joomlashack.com
  # @copyright  2015-2016 Open Source Training, LLC. All rights reserved
  # @license
  #}
@@ -12,7 +12,7 @@
 {% block page_setup %}
     {{ parent() }}
     {{ html('behavior.keepalive') }}
-    {{ html(joomla2 ? 'behavior.formvalidation' : 'behavior.formvalidator') }}
+    {{ html('behavior.formvalidator') }}
 {% endblock %}
 
 {% block main_content %}

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package   com_oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -51,7 +51,7 @@ abstract class OscampusViewForm extends OscampusViewAdmin
      */
     protected function setTitle($sub = null, $icon = 'oscampus')
     {
-        $isNew = ($this->item->id == 0);
+        $isNew = empty($this->item->id);
         $name  = strtoupper($this->getName());
         $title = "COM_OSCAMPUS_PAGE_VIEW_{$name}_" . ($isNew ? 'ADD' : 'EDIT');
 
@@ -72,9 +72,9 @@ abstract class OscampusViewForm extends OscampusViewAdmin
         OscampusToolbarHelper::apply($controller . '.apply');
         OscampusToolbarHelper::save($controller . '.save');
         OscampusToolbarHelper::save2new($controller . '.save2new');
-        OscampusToolbarHelper::save2copy($controller . '.save2copy');
+        //OscampusToolbarHelper::save2copy($controller . '.save2copy');
 
-        $isNew = ($this->item->id == 0);
+        $isNew = empty($this->item->id);
         $alt   = $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
         OscampusToolbarHelper::cancel($controller . '.cancel', $alt);
     }

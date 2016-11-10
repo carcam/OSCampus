@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -46,7 +46,7 @@ try {
     $pdf->Write(1, $this->certificate->course_title, null, false, 'C');
 
     // Domain name of the site
-    $uri = OscampusFactory::getURI();
+    $uri = JUri::getInstance();
     $pdf->SetXY(0, 3.84 + $adjust);
     $pdf->Write(1, $uri->getHost(), null, false, 'C');
 

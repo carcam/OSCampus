@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus;
@@ -29,9 +29,9 @@ class Certificate extends AbstractBase
     public function award($courseId, UserActivity $activity)
     {
         if ($courseId) {
-            $summary = $activity->summary($courseId);
+            $summary = array_pop($activity->getLessonSummary($courseId));
             if ($summary->viewed == $summary->lessons) {
-                $lessons = $activity->getCourse($courseId);
+                $lessons = $activity->getCourseLessons($courseId);
                 foreach ($lessons as $lessonId => $lesson) {
                     if ($lesson->type == 'quiz') {
                         if ($lesson->score < Quiz::PASSING_SCORE) {

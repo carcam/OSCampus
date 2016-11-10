@@ -1,16 +1,18 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-require_once __DIR__ . '/pathway.php';
+JLoader::import('courselist', __DIR__);
 
-class OscampusModelNewcourses extends OscampusModelPathway
+class OscampusModelNewcourses extends OscampusModelCourselist
 {
     protected function getListQuery()
     {
@@ -18,49 +20,38 @@ class OscampusModelNewcourses extends OscampusModelPathway
          * @var JDate $cutoff
          */
 
-        $db         = $this->getDbo();
-        $user       = OscampusFactory::getUser();
-        $viewLevels = join(',', $user->getAuthorisedViewLevels());
-        $cutoff     = $this->getState('cutoff');
+        $db     = $this->getDbo();
+        $cutoff = $this->getState('filter.cutoff');
 
-        $query = $db->getQuery(true)
-            ->select('user.name AS teacher, course.*, cp.pathways_id')
-            ->from('#__oscampus_courses AS course')
-            ->innerJoin('#__oscampus_courses_pathways AS cp ON cp.courses_id = course.id')
-            ->innerJoin('#__oscampus_pathways AS pathway ON pathway.id = cp.pathways_id')
-            ->leftJoin('#__oscampus_teachers AS teacher ON teacher.id = course.teachers_id')
-            ->leftJoin('#__users user ON user.id = teacher.users_id')
-            ->where(
-                array(
-                    'course.published = 1',
-                    'course.access IN (' . $viewLevels . ')',
-                    'course.released >= ' . $db->quote($cutoff->toSql()),
-                    'pathway.access IN (' . $viewLevels . ')',
-                    'pathway.published = 1'
-                )
-            )
-            ->group('course.id')
-            ->order('course.released desc');
+        $query = parent::getListQuery();
+
+        $query->where('course.released >= ' . $db->quote($cutoff->toSql()));
+
+        $ordering  = $this->getState('list.ordering');
+        $direction = $this->getState('list.direction');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }
 
-    /**
-     * Get the current pathway information
-     *
-     * @return object
-     */
-    public function getPathway()
+    protected function populateState($ordering = 'course.released', $direction = 'DESC')
     {
-        return null;
-    }
+        $app = OscampusFactory::getApplication();
 
-    protected function populateState($ordering = null, $direction = null)
-    {
-        $params = OscampusFactory::getApplication()->getParams();
+        if (method_exists($app, 'getParams')) {
+            $params = $app->getParams();
+        } else {
+            $params = new Registry();
+        }
 
         $releasePeriod = $params->get('releasePeriod', '1 month');
         $cutoff        = OscampusFactory::getDate('now - ' . $releasePeriod);
-        $this->setState('cutoff', $cutoff);
+        $this->setState('filter.cutoff', $cutoff);
+
+        parent::populateState($ordering, $direction);
+
+        // Ignore pagination for now
+        $this->setState('list.start', 0);
+        $this->setState('list.limit');
     }
 }

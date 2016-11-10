@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -12,12 +12,12 @@ class OscampusViewPdf extends OscampusViewSite
 {
     public function display($tpl = null)
     {
-        if (!defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
-            define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
+        if (!class_exists('TCPDF')) {
+            $this->redirect(JText::_('COM_OSCAMPUS_ERROR_TCPDF_REQUIRED'));
         }
 
-        if (!class_exists('TCPDF')) {
-            $this->redirect('TCPDF Library has not been installed');
+        if (!defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
+            define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
         }
 
         parent::display($tpl);
@@ -54,7 +54,7 @@ class OscampusViewPdf extends OscampusViewSite
         if (isset($_SERVER['HTTP_REFERER'])) {
             $referer = filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE);
         } else {
-            $referer = JURI::base();
+            $referer = JUri::base();
         }
 
         $app->redirect($referer, $message, $type);

@@ -1,40 +1,43 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
+
+JHtml::_('behavior.core');
+
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathways'); ?>" id="oscampus">
-    <?php if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_ONLINE_TRAINING')): ?>
+    <?php
+    if ($heading = $this->getHeading('COM_OSCAMPUS_HEADING_ONLINE_TRAINING')) :
+        ?>
         <div class="page-header">
             <h1><?php echo $heading; ?></h1>
         </div>
-    <?php endif; ?>
-
-    <?php
-    foreach ($this->items as $item) :
-        ?>
-        <div class="osc-section osc-course-list">
-            <div class="block4 osc-course-image">
-                <?php
-                $link  = JHtml::_('osc.pathway.link', $item, null, null, true);
-                $image = JHtml::_('image', $item->image, $item->title);
-                echo JHtml::_('link', $link, $image);
-                ?>
-            </div>
-            <div class="block8 osc-course-description">
-                <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
-
-                <?php echo $item->description; ?>
-            </div>
-        </div>
-        <!-- .osc-section -->
-    <?php
-    endforeach;
+        <?php
+    endif;
     ?>
 
+    <?php
+    if (!$this->items) :
+        ?>
+        <div class="osc-alert-notify">
+            <i class="fa fa-info-circle"></i>
+            <?php echo JText::sprintf('COM_OSCAMPUS_PATHWAYS_NOTFOUND'); ?>
+        </div>
+        <?php
+    else :
+        foreach ($this->items as $item) :
+            echo JLayoutHelper::render('pathway', $item);
+        endforeach;
+        ?>
+        <?php
+    endif;
+
+    echo $this->pagination->getPaginationLinks('pagination');
+    ?>
 </div>

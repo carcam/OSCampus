@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -19,7 +19,7 @@ class OscampusTableLessons extends OscampusTable
 
         // Override Joomla global access defaulting
         $defaultAccess = OscampusComponentHelper::getParams()->get('access.lesson');
-        $this->access = $defaultAccess;
+        $this->access  = $defaultAccess;
     }
 
     public function check()
@@ -34,7 +34,7 @@ class OscampusTableLessons extends OscampusTable
             return false;
 
         } else {
-            $db = $this->getDbo();
+            $db       = $this->getDbo();
             $subQuery = $db->getQuery(true)
                 ->select('courses_id')
                 ->from('#__oscampus_modules')
@@ -48,7 +48,7 @@ class OscampusTableLessons extends OscampusTable
                     array(
                         "module.courses_id IN ({$subQuery})",
                         'lesson.alias = ' . $db->quote($this->alias),
-                        'lesson.id != ' . $this->id
+                        'lesson.id != ' . (int)$this->id
                     )
                 );
 

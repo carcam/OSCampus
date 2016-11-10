@@ -1,73 +1,44 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
 /** @var OscampusViewPathway $this */
+
+JHtml::_('behavior.core');
 ?>
 <div class="<?php echo $this->getPageClass('osc-container oscampus-pathway'); ?>" id="oscampus">
     <div class="page-header">
         <h1><?php echo $this->pathway->title; ?></h1>
     </div>
 
+    <div class="osc-section osc-course-list">
+        <div class="block12">
+            <div class="osc-pathway-description">
+                <?php echo $this->pathway->description; ?>
+            </div>
+        </div>
+    </div>
+
     <?php
-    foreach ($this->items as $item) :
-        $link = JRoute::_(JHtml::_('osc.course.link', $item, null, null, true));
-        $image = JHtml::_('image', $item->image, $item->title);
+    if (!$this->items) :
         ?>
-        <div class="osc-section osc-course-item">
-            <div class="block4 osc-course-image">
-                <?php echo JHtml::_('link', $link, $image); ?>
-            </div>
-            <div class="block8 osc-course-description">
-                <h2><?php echo JHtml::_('link', $link, $item->title); ?></h2>
-                <?php echo $item->introtext ?: $item->description; ?>
-                <div class="osc-course-start">
-                    <?php
-                    echo JHtml::_(
-                        'osc.link.lesson',
-                        $item->id,
-                        0,
-                        '<i class="fa fa-play"></i> ' . JText::_('COM_OSCAMPUS_START_THIS_CLASS'),
-                        'class="osc-btn"'
-                    );
-                    ?>
-                </div>
-            </div>
+        <div class="osc-alert-notify">
+            <i class="fa fa-info-circle"></i>
+            <?php echo JText::_('COM_OSCAMPUS_PATHWAY_NO_COURSES'); ?>
         </div>
-        <!-- .osc-section -->
-
-        <div class="osc-section osc-course-list">
-            <div class="block12">
-                <?php
-                if ($item->tags) :
-                    ?>
-                    <span class="osc-label">
-                <i class="fa fa-tag"></i> <?php echo $item->tags; ?>
-            </span>
-                    <?php
-                endif;
-                ?>
-                <span class="osc-label">
-                <i class="fa fa-signal"></i> <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $item->difficulty); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-clock-o"></i> <?php echo JText::plural('COM_OSCAMPUS_COURSE_LENGTH_MINUTES',
-                    $item->length); ?>
-            </span>
-            <span class="osc-label">
-                <i class="fa fa-user"></i> <?php echo $item->teacher; ?>
-            </span>
-            </div>
-        </div>
-        <!-- .osc-section -->
         <?php
-    endforeach;
-    ?>
+    else :
+        foreach ($this->items as $item) {
+            echo JLayoutHelper::render('course', $item);
+        }
+    endif;
 
+    echo $this->pagination->getPaginationLinks('pagination');
+    ?>
 </div>

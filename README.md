@@ -1,7 +1,9 @@
+[![Joomlashack](https://www.joomlashack.com/images/logo_circle_small.png)](https://www.joomlashack.com)
+
 OSCampus
 =========
 
-This is the video LMS that we use at OSTraining.com. It's live on OSTraining, but it's still a work in progres.
+This is the video LMS that we use at OSTraining.com. It's live on OSTraining and will soon be released to the public on Alledia.com.
 
 
 ## Limited Support Scope
@@ -11,4 +13,4 @@ We've open sourced it under the GPL license so that others can use it as an LMS 
 
 * PHP 5.3+
 * MySQL 5.0.3+
-* Joomla! 2.5, 3.2+
+* Joomla! 3.5+

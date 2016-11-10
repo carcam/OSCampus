@@ -1,17 +1,18 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 namespace Oscampus\Lesson\Type;
 
 use Exception;
-use JRegistry;
+use Joomla\Registry\Registry as Registry;
+use Oscampus\Activity\LessonStatus;
+use Oscampus\Course;
 use Oscampus\Lesson;
-use Oscampus\Lesson\ActivityStatus;
 use OscampusFactory;
 use SimpleXMLElement;
 
@@ -19,6 +20,8 @@ defined('_JEXEC') or die();
 
 abstract class AbstractType
 {
+    const PASSING_SCORE = 0;
+
     /**
      * @var Lesson
      */
@@ -36,6 +39,17 @@ abstract class AbstractType
      * @return string
      */
     abstract public function render();
+
+    /**
+     * @param int $width
+     * @param int $height
+     *
+     * @return string
+     */
+    public function getThumbnail($width = null, $height = null)
+    {
+        return Course::DEFAULT_IMAGE;
+    }
 
     /**
      * get the current user state from a cookie
@@ -71,35 +85,35 @@ abstract class AbstractType
     }
 
     /**
-     * Prepare an ActivityStatus for recording user progress.
+     * Prepare an LessonStatus for recording user progress.
      *
-     * @param ActivityStatus $status
-     * @param int            $score
-     * @param mixed          $data
+     * @param LessonStatus $status
+     * @param int          $score
+     * @param mixed        $data
      *
      * @return void
      */
-    abstract public function prepareActivityProgress(ActivityStatus $status, $score = null, $data = null);
+    abstract public function prepareActivityProgress(LessonStatus $status, $score = null, $data = null);
 
     /**
      * Prepare data and provide XML for use in lesson admin UI.
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @return SimpleXMLElement
      */
-    abstract public function prepareAdminData(JRegistry $data);
+    abstract public function prepareAdminData(Registry $data);
 
     /**
      * The default procedure to vet the lesson content on saving
      * changes in admin. Note passing of data object allowing
      * modification of any of the form POST data
      *
-     * @param JRegistry $data
+     * @param Registry $data
      *
      * @throws Exception
      */
-    public function saveAdminChanges(JRegistry $data)
+    public function saveAdminChanges(Registry $data)
     {
         // Subclasses indicate a problem by throwing Exception
     }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.5" method="upgrade">
     <name>COM_OSCAMPUS</name>
-    <author>OSTraining</author>
-    <creationDate>February 3, 2016</creationDate>
+    <author>Joomlashack</author>
+    <creationDate>November 8, 2016</creationDate>
     <copyright>Copyright (C) 2015-2016 OSTraining.com</copyright>
-    <license>GPL v3</license>
-    <authorEmail>info@ostraining.com</authorEmail>
-    <authorUrl>https://www.ostraining.com</authorUrl>
-    <version>1.0.3</version>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <authorEmail>help@joomlashack.com</authorEmail>
+    <authorUrl>https://www.joomlashack.com</authorUrl>
+    <version>1.0.6</version>
+    <variant>PRO</variant>
     <description>COM_OSCAMPUS_COMPONENT_DESCRIPTION</description>
 
     <scriptfile>script.install.php</scriptfile>
@@ -40,6 +41,7 @@
     <files folder="site">
         <folder>controllers</folder>
         <folder>language</folder>
+        <folder>layouts</folder>
         <folder>models</folder>
         <folder>views</folder>
         <filename>controller.php</filename>
@@ -52,6 +54,7 @@
 
         <files folder="admin">
             <folder>controllers</folder>
+            <folder>form</folder>
             <folder>language</folder>
             <folder>layouts</folder>
             <folder>library</folder>
@@ -71,15 +74,62 @@
     <alledia>
         <element>oscampus</element>
         <namespace>Oscampus</namespace>
-        <license>free</license>
+        <license>pro</license>
+
+        <include>AllediaFreeDefaultFiles</include>
+
+        <relatedExtensions>
+            <extension
+                type="library"
+                element="allediaframework">AllediaFramework</extension>
+
+            <extension
+                type="plugin"
+                folder="search"
+                element="oscampus">plg_search_oscampus</extension>
+
+            <extension
+                type="module"
+                element="oscampus_search">mod_oscampus_search</extension>
+
+            <extension
+                type="plugin"
+                folder="osmap"
+                element="com_oscampus">plg_osmap_com_oscampus</extension>
+
+            <extension
+                type="plugin"
+                group="system"
+                element="osmylicensesmanager"
+                publish="true"
+                ordering="last">OSMyLicensesManager</extension>
+        </relatedExtensions>
 
         <obsolete>
+            <folder>/administrator/components/com_oscampus/vendor/joomla</folder>
+            <folder>/administrator/components/com_oscampus/vendor/tecnick.com</folder>
             <folder>/administrator/components/com_oscampus/views/dashboard</folder>
             <folder>/components/com_oscampus/views/dashboard</folder>
             <file>/administrator/components/com_oscampus/controllers/import.php</file>
+            <file>/administrator/components/com_oscampus/layouts/admin_filters_j2.html.twig</file>
+            <file>/administrator/components/com_oscampus/layouts/admin_filters_j3.html.twig</file>
+            <file>/administrator/components/com_oscampus/library/oscampus/Lesson/ActivityStatus.php</file>
+            <file>/administrator/components/com_oscampus/library/oscampus/Lesson/ActivitySummary.php</file>
+            <file>/components/com_oscampus/controllers/filter.php</file>
             <file>/components/com_oscampus/model/dashboard.php</file>
+            <file>/components/com_oscampus/models/courses.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_footer.php</file>
             <file>/components/com_oscampus/views/lesson/tmpl/default_header.php</file>
+            <file>/components/com_oscampus/views/pathway/tmpl/default_course.php</file>
+            <file>/components/com_oscampus/views/pathways/tmpl/default_pathway.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_courses.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_lesson.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_lessons.php</file>
+            <file>/components/com_oscampus/views/search/tmpl/default_pathways.php</file>
         </obsolete>
     </alledia>
+
+    <updateservers>
+        <server type="extension" priority="1" name="Stable Release"><![CDATA[https://deploy.ostraining.com/client/update/pro/stable/com_oscampus/MDc5MTZhNDFmNDBiYTE2OWY1NWJhMDBiMWNkYzBiOTZmMmMyODI5Zgo=]]></server>
+    </updateservers>
 </extension>

@@ -1,10 +1,12 @@
 <?php
 /**
  * @package   Oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 
@@ -13,12 +15,12 @@ abstract class OscampusHelperSite
     protected static $googleFonts = 'https://fonts.googleapis.com';
 
     /**
-     * @var JRegistry
+     * @var Registry
      */
     protected static $params = null;
 
     /**
-     * @return JRegistry
+     * @return Registry
      */
     public static function getParams()
     {
@@ -49,7 +51,7 @@ abstract class OscampusHelperSite
             *  400,700 is the font-weight */
             if (count($font) > 2) {
                 $href = static::$googleFonts . '/css?family=' . $font[0] . ':' . $font[2];
-                JHtml::stylesheet($href);
+                JHtml::_('stylesheet', $href);
             }
 
             // Assign font-family to specific tags
@@ -75,20 +77,20 @@ abstract class OscampusHelperSite
 
         // Load font Awesome
         if ($params->get('themes.fontAwesome', true)) {
-            JHtml::stylesheet('com_oscampus/awesome/css/font-awesome.min.css', null, true);
+            JHtml::_('stylesheet', 'com_oscampus/awesome/css/font-awesome.min.css', null, true);
         }
 
         // Load responsive grids
-        JHtml::stylesheet('com_oscampus/grid.css', null, true);
-        JHtml::stylesheet('com_oscampus/grid-responsive.css', null, true);
-        JHtml::stylesheet('com_oscampus/style.css', null, true);
+        JHtml::_('stylesheet', 'com_oscampus/grid.css', null, true);
+        JHtml::_('stylesheet', 'com_oscampus/grid-responsive.css', null, true);
+        JHtml::_('stylesheet', 'com_oscampus/style.css', null, true);
 
         // Load the selected theme
         if ($theme === null) {
             $theme = $params->get('themes.theme', 'default.css');
         }
         if ($theme != 'none') {
-            JHtml::stylesheet('com_oscampus/themes/' . $theme, null, true);
+            JHtml::_('stylesheet', 'com_oscampus/themes/' . $theme, null, true);
         }
     }
 }

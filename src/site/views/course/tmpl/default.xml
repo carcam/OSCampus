@@ -5,4 +5,13 @@
             <![CDATA[COM_OSCAMPUS_VIEW_COURSE_DEFAULT_DESC]]>
         </message>
     </layout>
+
+    <fields name="request">
+        <fieldset name="request">
+            <field
+                type="note"
+                label="COM_OSCAMPUS_VIEW_COURSE_NOTE_LABEL"
+                description="COM_OSCAMPUS_VIEW_COURSE_NOTE_DESC"/>
+        </fieldset>
+    </fields>
 </metadata>

@@ -1,28 +1,34 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
 
-class OscampusModelCourses extends OscampusModelList
+class OscampusModelCourses extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',              'course.id',
-            'title',           'course.title',
-            'tags',            'tag.title',
-            'pathways',        'pathway.title',
-            'difficulty',      'course.difficulty',
-            'published',       'course.published',
-            'viewlevel_title', 'viewlevel.title',
-            'teacher_name',    'teacher_user.name',
-            'cp.ordering',     'ordering'
+            'published',
+            'pathway',
+            'tags',
+            'difficulty',
+            'access',
+            'teacher',
+            'course.id',
+            'course.title',
+            'tag.title',
+            'pathway.title',
+            'course.difficulty',
+            'course.published',
+            'viewlevel.title',
+            'teacher_user.name',
+            'cp.ordering'
         );
 
         parent::__construct($config);
@@ -57,7 +63,10 @@ class OscampusModelCourses extends OscampusModelList
             ->leftJoin('#__oscampus_tags AS tag ON course_tags.tags_id = tag.id')
             ->leftJoin('#__users AS editor_user ON editor_user.id = course.checked_out');
 
-        $this->whereTextSearch($query, 'course.id', 'course.title', 'course.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('course.title', 'course.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'course.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {
@@ -71,7 +80,7 @@ class OscampusModelCourses extends OscampusModelList
         $ordering = $pathway ? 'cp.ordering' : $db->q('---');
         $query->select($ordering . ' AS ordering');
 
-        $tag = $this->getState('filter.tag');
+        $tag = $this->getState('filter.tags');
         if (is_numeric($tag) != '') {
             $queryTag = $db->getQuery(true)
                 ->select('courses_id')
@@ -127,8 +136,8 @@ class OscampusModelCourses extends OscampusModelList
         $pathway = $this->getUserStateFromRequest($this->context . '.filter.pathway', 'filter_pathway');
         $this->setState('filter.pathway', $pathway);
 
-        $tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag');
-        $this->setState('filter.tag', $tag);
+        $tag = $this->getUserStateFromRequest($this->context . '.filter.tags', 'filter_tags');
+        $this->setState('filter.tags', $tag);
 
         $difficulty = $this->getUserStateFromRequest($this->context . '.filter.difficulty', 'filter_difficulty');
         $this->setState('filter.difficulty', $difficulty);

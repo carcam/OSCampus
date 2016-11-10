@@ -1,11 +1,12 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+use Oscampus\Activity\CourseStatus;
 use Oscampus\Course;
 
 defined('_JEXEC') or die();
@@ -197,6 +198,11 @@ abstract class OscOptions
                 'select.option',
                 'wistia',
                 JText::_('COM_OSCAMPUS_LESSON_TYPE_WISTIA')
+            ),
+            JHtml::_(
+                'select.option',
+                'embed',
+                JText::_('COM_OSCAMPUS_LESSON_TYPE_EMBED')
             )
         );
 
@@ -263,5 +269,43 @@ abstract class OscOptions
         }
 
         return static::$cache[$key];
+    }
+
+    /**
+     * Course progress statuses
+     *
+     * @return object[]
+     */
+    public static function progress()
+    {
+        $options = array(
+            JHtml::_(
+                'select.option',
+                CourseStatus::NOT_STARTED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_NOT_STARTED')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::IN_PROGRESS,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_IN_PROGRESS')
+            ),
+            JHtml::_(
+                'select.option',
+                CourseStatus::COMPLETED,
+                JText::_('COM_OSCAMPUS_OPTION_COURSE_COMPLETED')
+            )
+        );
+
+        return $options;
+    }
+
+    /**
+     * Standard method for retrieving access levels
+     *
+     * @return string
+     */
+    public static function access()
+    {
+        return JHtml::_('access.assetgroups');
     }
 }

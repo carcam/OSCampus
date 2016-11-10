@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   Oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
@@ -87,16 +87,16 @@ class OscampusRoute
 
         $default = null;
         foreach ($this->items as $item) {
-            $mView   = empty($item->query['view']) ? '' : $item->query['view'];
-            $mLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
-            $access  = in_array($item->access, $viewLevels);
+            $menuView   = empty($item->query['view']) ? '' : $item->query['view'];
+            $menuLayout = empty($item->query['layout']) ? '' : $item->query['layout'];
+            $menuAccess = in_array($item->access, $viewLevels);
 
-            if ($access && $mView == $view && $mLayout == $layout) {
+            if ($menuAccess && $menuView == $view && $menuLayout == $layout) {
                 // Found an exact match
                 return $item;
 
-            } elseif ($access && $mView == 'pathways' && empty($mLayout)) {
-                // The pathways view can always be used as a base
+            } elseif ($menuAccess && $menuView == 'pathways' && empty($menuLayout) && $view == 'pathway') {
+                // The pathways view can be used as a base for pathway view
                 $default = $item;
             }
         }
@@ -152,13 +152,13 @@ class OscampusRoute
         if ($menuItem = $this->getMenu($view, $layout)) {
             $query['Itemid'] = $menuItem->id;
 
-            $mView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
-            if ($mView == $view) {
+            $menuView = empty($menuItem->query['view']) ? '' : $menuItem->query['view'];
+            if ($menuView == $view) {
                 unset($query['view']);
             }
 
-            $mLayout = empty($menuItem->query['layout']) ? '' : $menuItem->query['layout'];
-            if ($layout && $mLayout == $layout) {
+            $menuLayout = empty($menuItem->query['layout']) ? '' : $menuItem->query['layout'];
+            if ($layout && $menuLayout == $layout) {
                 unset($query['layout']);
             }
         }

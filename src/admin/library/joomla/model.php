@@ -1,9 +1,9 @@
 <?php
 /**
  * @package   com_oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -15,17 +15,42 @@ abstract class OscampusModel extends JModelLegacy
      */
     private static $pathAdded = false;
 
-    public static function addIncludePath($path = '', $prefix = '')
+    /**
+     * @var string[]
+     */
+    protected $accessList = array();
+
+    public static function addIncludePath($path = '', $prefix = 'OscampusModel')
     {
         return parent::addIncludePath($path, $prefix);
     }
 
     public static function getInstance($type, $prefix = 'OscampusModel', $config = array())
     {
-        if ($prefix == 'OscampusModel' && !static::$pathAdded) {
-            parent::addIncludePath(OSCAMPUS_ADMIN . '/models');
-            static::$pathAdded = true;
-        }
         return parent::getInstance($type, $prefix, $config);
+    }
+
+    /**
+     * Provide a generic access search for selected field
+     *
+     * @param string $field
+     * @param JUser  $user
+     *
+     * @return string
+     */
+    protected function whereAccess($field, JUser $user = null)
+    {
+        $user   = $user ?: OscampusFactory::getUser();
+        $userId = $user->id;
+
+        if (!isset($this->accessList[$userId])) {
+            $this->accessList[$userId] = join(', ', array_unique($user->getAuthorisedViewLevels()));
+        }
+
+        if ($this->accessList[$userId]) {
+            return sprintf($field . ' IN (%s)', $this->accessList[$userId]);
+        }
+
+        return 'TRUE';
     }
 }

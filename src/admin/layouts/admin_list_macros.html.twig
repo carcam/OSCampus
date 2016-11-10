@@ -1,6 +1,6 @@
 {#
  # @package    OSCampus
- # @contact    www.ostraining.com, support@ostraining.com
+ # @contact    www.joomlashack.com, help@joomlashack.com
  # @copyright  2015-2016 Open Source Training, LLC. All rights reserved
  # @license
  #}
@@ -12,29 +12,20 @@
 {% endmacro %}
 
 {% macro th_ordering(ordering, items) %}
-    {% if joomla2 %}
-        <th width="10%">
-            {{ html('osc.grid.sort', 'JGRID_HEADING_ORDERING', ordering.field, ordering.direction, ordering.order)|raw }}
-            {% if ordering.enabled %}
-                {{ html('osc.grid.order', items, 'filesave.png', ordering.prefix ~ 'saveorder')|raw }}
-            {% endif %}
-        </th>
-    {% elseif joomla3 %}
-        <th width="1%" class="nowrap center hidden-phone">
-            {{ html('searchtools.sort', '', ordering.field, ordering.direction, ordering.order, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2')|raw }}
-        </th>
-    {% endif %}
-{% endmacro %}
-
-{% macro th_published(field, list_dir, list_order) %}
-    <th width="1%" style="min-width:55px" class="nowrap center">
-        {{ html('osc.grid.sort', 'COM_OSCAMPUS_PUBLISHED', field, list_dir, list_order)|raw }}
+    <th width="1%" class="nowrap center hidden-phone">
+        {{ html('searchtools.sort', '', ordering.field, ordering.direction, ordering.order, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2')|raw }}
     </th>
 {% endmacro %}
 
-{% macro th_sort(order_field, title, list_dir, list_order, width = '') %}
+{% macro th_published(field, direction, order) %}
+    <th width="1%" style="min-width:55px" class="nowrap center">
+        {{ html('searchtools.sort', 'COM_OSCAMPUS_PUBLISHED', field, direction, order)|raw }}
+    </th>
+{% endmacro %}
+
+{% macro th_sort(field_name, title, direction, order, width = '') %}
     <th class="nowrap"{{ width ? ' width="{{ width }}"' : '' }}>
-        {{ html('osc.grid.sort', title, order_field, list_dir, list_order)|raw }}
+        {{ html('searchtools.sort', title, field_name, direction, order)|raw }}
     </th>
 {% endmacro %}
 
@@ -44,40 +35,24 @@
     </th>
 {% endmacro %}
 
-{% macro td_ordering(index, order_value, items, ordering, pagination) %}
-    {% if joomla2 %}
-        <td class="order">
-            {% if ordering.enabled %}
-                {% if ordering.direction|lower == 'asc' %}
-                    <span>{{ pagination.orderUpIcon(index, not view.isSortGroupTop(index, items), ordering.prefix ~'orderup')|raw }}</span>
-                    <span>{{ pagination.orderDownIcon(index, pagination.total, not view.isSortGroupBottom(index, items), ordering.prefix ~ 'orderdown')|raw }}</span>
-                {% elseif list_dir|lower == 'desc' %}
-                    <span>{{ pagination.orderUpIcon(index, not view.isSortGroupTop(index, items), ordering.prefix ~ 'orderdown')|raw }}</span>
-                    <span>{{ pagination.orderDownIcon(index, pagination.total, not view.isSortGroupBottom(index, items), ordering.prefix ~ 'orderup')|raw }}</span>
-                {% endif %}
-                <input {{ ordering.enabled ? '' : 'disabled="disabled"' }}
-                        type="text"
-                        name="order[]"
-                        size="5"
-                        value="{{ order_value }}"
-                        class="text-area-order"/>
-            {% else %}
-                {{ order_value }}
-            {% endif %}
-        </td>
-    {% else %}
-        <td class="order nowrap center hidden-phone">
-            {% set tt_text = html('tooltipText', 'JORDERINGDISABLED') %}
-            {% set iconClass = 'sortable-handler' ~ (ordering.enabled ? '' : ' inactive tip-top hasTooltip" title="{{ tt_text }}"') %}
-            <span class="{{ iconClass }}">
+{% macro td_ordering(index, order_value, ordering) %}
+    <td class="order nowrap center hidden-phone">
+        {% set tt_text = html('tooltipText', 'JORDERINGDISABLED') %}
+        {% set iconClass = 'sortable-handler' ~ (ordering.enabled ? '' : ' inactive tip-top hasTooltip" title="{{ tt_text }}"') %}
+        <span class="{{ iconClass }}">
                 <span class="icon-menu"></span>
             </span>
-            {% if enabled %}
-                <input type="text" style="display:none" name="order[]" size="5" value="{{ order_value }}"
-                       class="width-20 text-area-order "/>
-            {% endif %}
-        </td>
-    {% endif %}
+        {% if ordering.enabled %}
+            <input
+                    type="text"
+                    style="display:none"
+                    name="order[]"
+                    size="5"
+                    value="{{ order_value }}"
+                    class="width-20 text-area-order "/>
+        {% endif %}
+
+    </td>
 {% endmacro %}
 
 {% macro td_check(index, id) %}
@@ -108,6 +83,7 @@
             </a>
 
             {% if alias or row.alias %}
+                <br/>
                 <span class="small break-word">
                     ({{ 'COM_OSCAMPUS_ALIAS'|lang }}: {{ alias ?: row.alias }})
                 </span>
@@ -126,10 +102,4 @@
     <td class="{{ class }}">
         {{ text|lang }}
     </td>
-{% endmacro %}
-
-{% macro filter_tools(filters) %}
-    {% if filters %}
-        {% include (joomla2 ? 'admin_filters_j2' : 'admin_filters_j3') ~'.html.twig' %}
-    {% endif %}
 {% endmacro %}

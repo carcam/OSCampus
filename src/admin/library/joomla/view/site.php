@@ -1,17 +1,19 @@
 <?php
 /**
  * @package   Oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Joomla\Registry\Registry as Registry;
 
 defined('_JEXEC') or die();
 
 abstract class OscampusViewSite extends OscampusView
 {
     /**
-     * @var JRegistry
+     * @var Registry
      */
     protected $params = null;
 
@@ -38,7 +40,7 @@ abstract class OscampusViewSite extends OscampusView
     }
 
     /**
-     * @return JRegistry
+     * @return Registry
      */
     protected function getParams()
     {
@@ -50,7 +52,7 @@ abstract class OscampusViewSite extends OscampusView
                 }
             }
             if (!($this->params = $this->get('Params'))) {
-                $this->params = new JRegistry();
+                $this->params = new Registry();
             }
         }
         return $this->params;
@@ -92,14 +94,14 @@ abstract class OscampusViewSite extends OscampusView
     /**
      * Set document title and metadata
      *
-     * @param array|object|JRegistry $metadata
-     * @param string                 $defaultTitle
-     * @param string                 $defaultDescription
+     * @param array|object|Registry $metadata
+     * @param string                $defaultTitle
+     * @param string                $defaultDescription
      */
     protected function setMetadata($metadata, $defaultTitle = null, $defaultDescription = null)
     {
-        if (!$metadata instanceof JRegistry) {
-            $metadata = new JRegistry($metadata);
+        if (!$metadata instanceof Registry) {
+            $metadata = new Registry($metadata);
         }
         $doc = OscampusFactory::getDocument();
 
@@ -120,5 +122,32 @@ abstract class OscampusViewSite extends OscampusView
         if ($description) {
             $doc->setMetaData('description', $description);
         }
+    }
+
+    /**
+     * Load a template from a different view
+     *
+     * @param string $view
+     * @param string $name
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function loadViewTemplate($view, $name)
+    {
+        $path = OSCAMPUS_SITE . '/views/' . strtolower($view) . '/tmpl';
+        if (!is_dir($path)) {
+            throw new Exception(JText::sprintf('COM_OSCAMPUS_ERROR_VIEW_NAME_INVALID', $view));
+        }
+
+        // Add include path. This will override any local version
+        $originalPaths = $this->_path['template'];
+        $this->addTemplatePath($path);
+
+        $output = $this->loadTemplate($name);
+
+        $this->_path['template'] = $originalPaths;
+
+        return $output;
     }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -58,7 +58,13 @@ class OscampusRouter
     public function build(&$query)
     {
         $segments = array();
-        $route    = OscampusRoute::getInstance();
+
+        // Unset pointless limitstart=0
+        if (isset($query['limitstart']) && $query['limitstart'] == 0) {
+            unset($query['limitstart']);
+        }
+
+        $route = OscampusRoute::getInstance();
 
         if (!empty($query['view'])) {
             $view = $query['view'];
@@ -90,7 +96,11 @@ class OscampusRouter
                 if (empty($query['Itemid'])
                     || (!empty($menuQuery['Itemid']) && $query['Itemid'] != $menuQuery['Itemid'])
                 ) {
-                    $query['Itemid'] = $menuQuery['Itemid'];
+                    if (!empty($menuQuery['Itemid'])) {
+                        $query['Itemid'] = $menuQuery['Itemid'];
+                    } else {
+                        $segments[] = 'certificate';
+                    }
                 }
 
             } elseif (in_array($view, array('course', 'lesson'))) {
@@ -98,8 +108,12 @@ class OscampusRouter
                 $lessonId    = isset($query['lid']) ? (int)$query['lid'] : null;
                 $lessonIndex = isset($query['index']) ? (int)$query['index'] : null;
 
-                $menuQuery       = $route->getQuery('course');
-                $query['Itemid'] = $menuQuery['Itemid'];
+                $menuQuery = $route->getQuery('course');
+                if (!empty($menuQuery['Itemid'])) {
+                    $query['Itemid'] = $menuQuery['Itemid'];
+                } else {
+                    $segments[] = 'course';
+                }
 
                 if ($courseId && ($course = $route->getCourseSlug($courseId))) {
                     $segments[] = $course;
@@ -145,9 +159,18 @@ class OscampusRouter
                     unset($query['pid']);
                 }
 
-                $menuQuery       = $route->getQuery('pathways');
-                $query['Itemid'] = $menuQuery['Itemid'];
+                $menuQuery = $route->getQuery('pathways');
+                if (!empty($menuQuery['Itemid'])) {
+                    $query['Itemid'] = $menuQuery['Itemid'];
+                } else {
+                    $segments[] = 'pathway';
+                }
 
+            } else {
+                $query = array_merge($query, $route->getQuery($view));
+                if (!empty($query['view'])) {
+                    unset($query['view']);
+                }
             }
         }
 
@@ -175,6 +198,10 @@ class OscampusRouter
         );
 
         if (!empty($segments[0])) {
+            if (in_array($segments[0], array('certificate', 'course', 'pathway'))) {
+                $view = array_shift($segments);
+            }
+
             if ($view == 'mycertificates') {
                 $vars['view'] = 'certificate';
 
@@ -190,10 +217,12 @@ class OscampusRouter
                     $vars['view'] = 'lesson';
                 }
 
-            } elseif ($view = 'pathways') {
+            } elseif ($view == 'pathways') {
                 $vars['view'] = 'pathway';
-                $vars['pid'] = $route->getPathwayFromSlug($segments[0]);
+                $vars['pid']  = $route->getPathwayFromSlug($segments[0]);
 
+            } else {
+                $vars['view'] = $segments[0];
             }
         }
 

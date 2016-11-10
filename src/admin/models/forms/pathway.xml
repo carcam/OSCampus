@@ -4,7 +4,7 @@
         <field name="id" type="hidden"/>
     </fieldset>
 
-    <fieldset name="main">
+    <fieldset name="heading">
         <field
             name="title"
             type="text"
@@ -18,7 +18,9 @@
             label="COM_OSCAMPUS_ALIAS"
             description="JFIELD_ALIAS_PLACEHOLDER"
             hint="JFIELD_ALIAS_PLACEHOLDER"/>
+    </fieldset>
 
+    <fieldset name="main" label="COM_OSCAMPUS_COURSE_TAB_MAIN_LABEL">
         <field
             name="image"
             type="media"

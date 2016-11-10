@@ -1,42 +1,29 @@
 <?php
 /**
  * @package   com_oscampus
- * @contact   www.ostraining.com, support@ostraining.com
+ * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Alledia\Framework\Joomla\Extension\Licensed;
 
 defined('_JEXEC') or die();
 
 
 abstract class OscampusViewAdmin extends OscampusViewTwig
 {
-    /**
-     * @return void
-     */
+    protected $option = null;
+
     protected function setup()
     {
-        // For use in subclasses
-    }
+        parent::setup();
 
-    /**
-     * Render the view
-     *
-     * @param  string $tpl
-     *
-     * @return void|Exception
-     */
-    public function display($tpl = null)
-    {
-        $this->setup();
+        $this->option = OscampusFactory::getApplication()->input->getCmd('option', 'com_oscampus');
 
         $this->setTitle();
-        $this->setToolBar();
+        $this->setToolbar();
         $this->setSubmenu();
-
-        $this->displayHeader();
-        parent::display($tpl);
-        $this->displayFooter();
     }
 
     /**
@@ -60,7 +47,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $title .= ': ' . JText::_($sub);
         }
 
-        JToolbarHelper::title($title, $icon);
+        OscampusToolbarHelper::title($title, $icon);
     }
 
     /**
@@ -71,35 +58,11 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     protected function setToolbar()
     {
         $user = OscampusFactory::getUser();
-        if ($user->authorise('core.admin', 'com_oscampus')) {
-            $items = JToolbar::getInstance('toolbar')->getItems();
 
-            if (!empty($items)) {
-                JToolBarHelper::divider();
-            }
-
-            JToolBarHelper::preferences('com_oscampus');
+        $admin = $user->authorise('core.admin', 'com_oscampus');
+        if ($admin) {
+            OscampusToolbarHelper::preferences('com_oscampus');
         }
-    }
-
-    /**
-     * Display a header on admin pages
-     *
-     * @return void
-     */
-    protected function displayHeader()
-    {
-        // To be set in subclasses
-    }
-
-    /**
-     * Display a standard footer on all admin pages
-     *
-     * @return void
-     */
-    protected function displayFooter()
-    {
-        // To be set in subclassess
     }
 
     /**
@@ -112,12 +75,7 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
     {
         $link = 'index.php?option=com_oscampus&view=' . $view;
 
-        if (method_exists('JHtmlSidebar', 'addEntry')) {
-            JHtmlSidebar::addEntry(JText::_($name), $link, $active);
-        } else {
-            // Deprecated after J2.5
-            JSubMenuHelper::addEntry(JText::_($name), $link, $active);
-        }
+        JHtmlSidebar::addEntry(JText::_($name), $link, $active);
     }
 
     /**
@@ -125,11 +83,11 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
      */
     protected function setSubmenu()
     {
-        $app = OscampusFactory::getApplication();
+        $app  = OscampusFactory::getApplication();
+        $user = OscampusFactory::getUser();
 
         $hide = $app->input->getBool('hidemainmenu', false);
         if (!$hide) {
-            //$this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_DASHBOARD', 'dashboard', $this->_name == 'dashboard');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_COURSES', 'courses', $this->_name == 'courses');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_LESSONS', 'lessons', $this->_name == 'lessons');
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_PATHWAYS', 'pathways', $this->_name == 'pathways');
@@ -137,6 +95,14 @@ abstract class OscampusViewAdmin extends OscampusViewTwig
             $this->addSubmenuItem('COM_OSCAMPUS_SUBMENU_TEACHERS', 'teachers', $this->_name == 'teachers');
         }
 
-        $this->setVariable('show_sidebar', !$hide && version_compare(JVERSION, '3', 'ge'));
+        $this->setVariable('show_sidebar', !$hide);
+    }
+
+    protected function displayFooter()
+    {
+        $extension = new Licensed('OSCampus', 'component');
+        $result    = $extension->getFooterMarkup();
+
+        return parent::displayFooter() . $result;
     }
 }

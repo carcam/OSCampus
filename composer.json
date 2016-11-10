@@ -1,5 +1,5 @@
 {
-    "name"             : "Alledia/OSCampus",
+    "name"             : "joomlashack/oscampus",
     "description"      : "OS Training's LMS",
     "minimum-stability": "stable",
     "license"          : "GPL-2+",
@@ -9,12 +9,12 @@
         "element-short"  : "oscampus",
         "name"           : "OSCampus",
         "client"         : "administrator",
-        "package-license": "free"
+        "package-license": "pro"
     },
     "authors"          : [
         {
-            "name" : "Open Source Training",
-            "email": "info@ostraining.com"
+            "name" : "Joomlashack",
+            "email": "help@joomlashack.com"
         },
         {
             "name" : "Bill Tomczak",
@@ -24,18 +24,11 @@
     "config"           : {
         "vendor-dir": "src/admin/vendor"
     },
-    "repositories"     : [
-        {
-            "type": "vcs",
-            "url" : "https://github.com/OSTraining/string.git"
-        }
-    ],
     "require"          : {
         "php"                         : ">= 5.3",
         "ext-curl"                    : "*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "pimple/pimple"               : "~3.0",
-        "twig/twig"                   : "~1.0",
-        "joomla/string"               : "~1.3"
+        "twig/twig"                   : "~1.0"
     }
 }

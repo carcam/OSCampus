@@ -1,32 +1,40 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
 
-class OscampusModelLessons extends OscampusModelList
+class OscampusModelLessons extends OscampusModelAdminList
 {
     public function __construct($config = array())
     {
         $config['filter_fields'] = array(
-            'id',                'lesson.id',
-            'title',             'lesson.title',
-            'type',              'lesson.type',
-            'published',         'lesson.published',
-            'module_title',      'module.title',
-            'course_title',      'course.title',
-            'course_published',  'course.published',
-            'course_released',   'course.released',
-            'course_defficulty', 'course.difficulty',
-            'lesson_ordering',   'lesson.ordering',
-            'viewlevel_title',   'lesson_view.title'
+            'search',
+            'course',
+            'lessontype',
+            'access',
+            'lesson.ordering',
+            'lesson.published',
+            'module.title',
+            'lesson.title',
+            'lesson.type',
+            'lesson.access',
+            'lesson.id',
+            'course.published',
+            'course.title'
         );
 
         parent::__construct($config);
+
+        $app = OscampusFactory::getApplication();
+
+        if ($context = $app->input->getCmd('context', null)) {
+            $this->context .= '.' . $context;
+        }
     }
 
     protected function getListQuery()
@@ -62,7 +70,10 @@ class OscampusModelLessons extends OscampusModelList
             ->leftJoin('#__viewlevels AS course_view ON course_view.id = course.access')
             ->leftJoin('#__users AS editor_user ON editor_user.id = lesson.checked_out');
 
-        $this->whereTextSearch($query, 'lesson.id', 'lesson.title', 'lesson.alias');
+        if ($search = $this->getState('filter.search')) {
+            $fields = array('lesson.title', 'lesson.alias');
+            $query->where($this->whereTextSearch($search, $fields, 'lesson.id'));
+        }
 
         $published = $this->getState('filter.published');
         if ($published != '') {
@@ -102,11 +113,6 @@ class OscampusModelLessons extends OscampusModelList
 
     protected function populateState($ordering = 'lesson.title', $direction = 'ASC')
     {
-        $app = OscampusFactory::getApplication();
-        if ($app->input->getBool('clear', false)) {
-            $app->setUserState($this->context, null);
-        }
-
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '', 'string');
         $this->setState('filter.search', $search);
 

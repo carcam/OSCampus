@@ -1,9 +1,9 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
 defined('_JEXEC') or die();
@@ -26,14 +26,20 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
             </div>
             <div class="block8 osc-course-description">
                 <div class="osc-course-info">
-                    <strong>Teacher:</strong> <?php echo $this->teacher->name; ?>
+                    <strong><?php echo JText::_('COM_OSCAMPUS_COURSE_LABEL_TEACHER'); ?></strong>
+                    <?php echo $this->teacher->name; ?>
                     <br/>
-                    <strong>Released:</strong> <?php echo date('F j, Y', strtotime($this->course->released)); ?>
+
+                    <strong><?php echo JText::_('COM_OSCAMPUS_COURSE_LABEL_RELEASED'); ?></strong>
+                    <?php echo date('F j, Y', strtotime($this->course->released)); ?>
                     <br/>
-                    <strong>Level:</strong>
+
+                    <strong><?php echo JText::_('COM_OSCAMPUS_COURSE_LABEL_LEVEL'); ?></strong>
                     <?php echo JText::_('COM_OSCAMPUS_DIFFICULTY_' . $this->course->difficulty); ?>
+
                     <br/>
-                    <strong>Certificate:</strong> <?php echo JText::_('COM_OSCAMPUS_CERTIFICATE_REQUIREMENT'); ?>
+                    <strong><?php echo JText::_('COM_OSCAMPUS_COURSE_LABEL_CETIFICATE'); ?></strong>
+                    <?php echo JText::_('COM_OSCAMPUS_CERTIFICATE_REQUIREMENT'); ?>
                 </div>
             </div>
         </div>
@@ -42,27 +48,27 @@ JHtml::_('osc.tabs', '.osc-course-tabs div');
 
     <div class="osc-section osc-course-tabs">
         <div data-content="#content-content" class="block2">
-            <?php echo JText::_('COM_OSCAMPUS_COURSE_TOC'); ?>
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_TOC'); ?>
         </div>
         <div data-content="#content-description" class="block2 osc-tab-disabled">
-            <?php echo JText::_('COM_OSCAMPUS_COURSE_DESCRIPTION'); ?>
+            <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_DESCRIPTION'); ?>
         </div>
         <?php
         if ($this->files) :
             ?>
             <div data-content="#content-files" class="block2 osc-tab-disabled">
-                <?php echo JText::_('COM_OSCAMPUS_COURSE_EXERCISE_FILES'); ?>
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_EXERCISE_FILES'); ?>
             </div>
-        <?php
+            <?php
         endif;
         ?>
         <?php
         if ($this->teacher->id) :
             ?>
             <div data-content="#content-teacher" class="block2 osc-tab-disabled">
-                <?php echo JText::_('COM_OSCAMPUS_COURSE_TEACHER'); ?>
+                <?php echo JText::_('COM_OSCAMPUS_COURSE_TAB_TEACHER'); ?>
             </div>
-        <?php
+            <?php
         endif;
         ?>
     </div>

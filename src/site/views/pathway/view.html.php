@@ -1,19 +1,31 @@
 <?php
 /**
  * @package    OSCampus
- * @contact    www.ostraining.com, support@ostraining.com
+ * @contact    www.joomlashack.com, help@joomlashack.com
  * @copyright  2015-2016 Open Source Training, LLC. All rights reserved
- * @license
+ * @license    http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
+
+use Oscampus\Activity\CourseStatus;
 
 defined('_JEXEC') or die();
 
 class OscampusViewPathway extends OscampusViewSite
 {
     /**
-     * @var array
+     * @var OscampusModelPathway
+     */
+    protected $model = null;
+
+    /**
+     * @var object[]
      */
     protected $items = array();
+
+    /**
+     * @var JPagination
+     */
+    protected $pagination = null;
 
     /**
      * @var object
@@ -22,11 +34,11 @@ class OscampusViewPathway extends OscampusViewSite
 
     public function display($tpl = null)
     {
-        /** @var OscampusModelPathway $model */
-        $model = $this->getModel();
+        $this->model = $this->getModel();
 
-        $this->items   = $model->getItems();
-        $this->pathway = $model->getPathway();
+        $this->items      = $this->model->getItems();
+        $this->pathway    = $this->model->getPathway();
+        $this->pagination = $this->model->getPagination();
 
         $pathway = JFactory::getApplication()->getPathway();
         $pathway->addItem($this->pathway->title);
